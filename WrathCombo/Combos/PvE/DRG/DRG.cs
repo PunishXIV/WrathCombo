@@ -29,7 +29,7 @@ internal partial class DRG : Melee
                     if (CanLifeSurge())
                         return LifeSurge;
 
-                    if (CanMirageDive(simpleMode: true))
+                    if (CanMirageDive(ignoreDoubleMirageHold: true))
                         return MirageDive;
 
                     if (CanUseGeirskogul())
@@ -74,8 +74,8 @@ internal partial class DRG : Melee
             }
 
             return !InMeleeRange() && HasBattleTarget()
-                ? OutsideOfMelee(actionID, true)
-                : DoBasicCombo(actionID, true);
+                ? OutsideOfMelee(actionID, OutsideOfMeleeOptions.SimpleSt)
+                : DoBasicCombo(actionID, useTrueNorth: true);
         }
     }
 
@@ -104,7 +104,7 @@ internal partial class DRG : Melee
                     if (CanLifeSurge(true))
                         return LifeSurge;
 
-                    if (CanMirageDive(true, simpleMode: true))
+                    if (CanMirageDive(true, ignoreDoubleMirageHold: true))
                         return MirageDive;
 
                     if (CanUseGeirskogul(true))
@@ -146,8 +146,8 @@ internal partial class DRG : Melee
             }
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
-                ? OutsideOfMelee(actionID, true, true)
-                : DoBasicCombo(actionID, onAoE: true, simpleAoE: true);
+                ? OutsideOfMelee(actionID, OutsideOfMeleeOptions.SimpleAoE)
+                : DoBasicCombo(actionID, onAoE: true, includeDisembowel: true);
         }
     }
 
@@ -237,24 +237,40 @@ internal partial class DRG : Melee
                     if (CanDRGWeave(0.8f))
                     {
                         if (IsEnabled(Preset.DRG_ST_HighJump) &&
-                            CanHighJump(simpleMode: false))
+                            CanHighJump(holdOptions: DRG_ST_JumpMovingOrInRanged, allowDoubleMirageHold: false))
                             return OriginalHook(Jump);
 
                         if (IsEnabled(Preset.DRG_ST_DragonfireDive) &&
-                            CanDragonfireDive(hpThreshold: DragonfireDiveHPThreshold, simpleMode: false))
+                            CanDragonfireDive(holdOptions: DRG_ST_DragonfireDiveMovingOrInRanged,
+                                hpThreshold: DragonfireDiveHPThreshold))
                             return DragonfireDive;
                     }
 
                     if (IsEnabled(Preset.DRG_ST_Stardiver) &&
-                        CanStardiver(simpleMode: false) &&
+                        CanStardiver(holdOptions: DRG_ST_StardiverMovingOrInRanged) &&
                         CanDRGWeave(1.5f, true))
                         return Stardiver;
                 }
             }
 
+            OutsideOfMeleeOptions stRanged = new()
+            {
+                GeirskogulHpThreshold = ComputeHpThresholdGeirskogul(),
+                UseDamage = IsEnabled(Preset.DRG_ST_Damage),
+                UseMirage = IsEnabled(Preset.DRG_ST_Mirage),
+                UseWyrmwind = IsEnabled(Preset.DRG_ST_Wyrmwind),
+                UseStarcross = IsEnabled(Preset.DRG_ST_Starcross),
+                UseRiseOfTheDragon = IsEnabled(Preset.DRG_ST_RiseOfTheDragon),
+                UseGeirskogul = IsEnabled(Preset.DRG_ST_Geirskogul),
+                UseNastrond = IsEnabled(Preset.DRG_ST_Nastrond),
+                UseRangedUptime = IsEnabled(Preset.DRG_ST_RangedUptime),
+                UseTrueNorth = IsEnabled(Preset.DRG_TrueNorthDynamic),
+                TrueNorthCharges = DRG_ManualTN
+            };
+
             return !InMeleeRange() && HasBattleTarget()
-                ? OutsideOfMelee(actionID, geirskogulHpThreshold: ComputeHpThresholdGeirskogul())
-                : DoBasicCombo(actionID, IsEnabled(Preset.DRG_TrueNorthDynamic));
+                ? OutsideOfMelee(actionID, stRanged)
+                : DoBasicCombo(actionID, IsEnabled(Preset.DRG_TrueNorthDynamic), trueNorthCharges: DRG_ManualTN);
         }
     }
 
@@ -335,24 +351,39 @@ internal partial class DRG : Melee
                     if (CanDRGWeave(0.8f))
                     {
                         if (IsEnabled(Preset.DRG_AoE_HighJump) &&
-                            CanHighJump(true, false))
+                            CanHighJump(true))
                             return OriginalHook(Jump);
 
                         if (IsEnabled(Preset.DRG_AoE_DragonfireDive) &&
-                            CanDragonfireDive(true, false, DRG_AoE_DragonfireDiveHPThreshold))
+                            CanDragonfireDive(true, DRG_AoE_DragonfireDiveMovingOrInRanged, DRG_AoE_DragonfireDiveHPThreshold))
                             return DragonfireDive;
                     }
 
                     if (IsEnabled(Preset.DRG_AoE_Stardiver) &&
-                        CanStardiver(true, false) &&
+                        CanStardiver(true, DRG_AoE_StardiverMovingOrInRanged) &&
                         CanDRGWeave(1.5f, true))
                         return Stardiver;
                 }
             }
 
+            OutsideOfMeleeOptions aoeRanged = new()
+            {
+                OnAoE = true,
+                GeirskogulHpThreshold = DRG_AoE_GeirskogulHPThreshold,
+                UseDamage = IsEnabled(Preset.DRG_AoE_Damage),
+                UseMirage = IsEnabled(Preset.DRG_AoE_Mirage),
+                UseWyrmwind = IsEnabled(Preset.DRG_AoE_Wyrmwind),
+                UseStarcross = IsEnabled(Preset.DRG_AoE_Starcross),
+                UseRiseOfTheDragon = IsEnabled(Preset.DRG_AoE_RiseOfTheDragon),
+                UseGeirskogul = IsEnabled(Preset.DRG_AoE_Geirskogul),
+                UseNastrond = IsEnabled(Preset.DRG_AoE_Nastrond),
+                UseRangedUptime = IsEnabled(Preset.DRG_AoE_RangedUptime),
+                IncludeDisembowel = IsEnabled(Preset.DRG_AoE_Disembowel)
+            };
+
             return !InActionRange(DoomSpike) && HasBattleTarget()
-                ? OutsideOfMelee(actionID, onAoE: true, geirskogulHpThreshold: DRG_AoE_GeirskogulHPThreshold)
-                : DoBasicCombo(actionID, onAoE: true);
+                ? OutsideOfMelee(actionID, aoeRanged)
+                : DoBasicCombo(actionID, onAoE: true, includeDisembowel: IsEnabled(Preset.DRG_AoE_Disembowel));
         }
     }
 

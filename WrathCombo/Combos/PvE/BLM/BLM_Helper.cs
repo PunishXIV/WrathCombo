@@ -40,25 +40,25 @@ internal partial class BLM
     private static bool PolyglotOvercapProtection() =>
         HasMaxPolyglotStacks && PolyglotTimer <= 5;
 
-    private static bool ShouldSpendPolyglotInFire(bool simpleMode)
+    private static bool ShouldSpendPolyglotInFire(
+        bool alwaysSpend = true,
+        bool useMovementSwiftcastPolyglot = false,
+        int polyglotMovementThreshold = 0,
+        int polyglotSaveUsage = 0)
     {
         if (!HasPolyglot)
             return false;
 
-        if (simpleMode)
+        if (alwaysSpend)
             return true;
 
-        if (!IsEnabled(Preset.BLM_ST_UsePolyglot))
-            return false;
-
-        // When Swiftcast movement is enabled, keep extra charges for movement windows.
-        if (BLM_ST_MovementOption[MovementSwiftcast] &&
-            PolyglotStacks > BLM_ST_PolyglotMovement &&
-            PolyglotStacks > BLM_ST_PolyglotSaveUsage)
+        if (useMovementSwiftcastPolyglot &&
+            PolyglotStacks > polyglotMovementThreshold &&
+            PolyglotStacks > polyglotSaveUsage)
             return true;
 
-        return !BLM_ST_MovementOption[MovementSwiftcast] &&
-               PolyglotStacks > BLM_ST_PolyglotSaveUsage;
+        return !useMovementSwiftcastPolyglot &&
+               PolyglotStacks > polyglotSaveUsage;
     }
 
     #endregion
@@ -153,13 +153,18 @@ internal partial class BLM
     #region Phase GCDs
 
     private static uint UseFirePhaseGcd(
-        bool simpleMode,
         bool useFlareStar = true,
         bool useDespair = true,
         bool useTranspose = true,
-        bool usePolyglot = true)
+        bool usePolyglot = true,
+        bool alwaysSpendPolyglot = true,
+        bool useMovementSwiftcastPolyglot = false,
+        int polyglotMovementThreshold = 0,
+        int polyglotSaveUsage = 0)
     {
-        if (usePolyglot && ShouldSpendPolyglotInFire(simpleMode))
+        if (usePolyglot &&
+            ShouldSpendPolyglotInFire(alwaysSpendPolyglot, useMovementSwiftcastPolyglot, polyglotMovementThreshold,
+                polyglotSaveUsage))
             return PolyglotSpell;
 
         if (CanFireParadox)

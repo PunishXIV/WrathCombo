@@ -13,14 +13,14 @@ internal partial class VPR
 {
     #region Basic Combo
 
-    private static bool TrueNorthReady(bool useTrueNorth) =>
+    private static bool TrueNorthReady(bool useTrueNorth, int trueNorthCharges = 0) =>
         useTrueNorth &&
         (VPR_ST_TrueNorthDynamicHoldCharge && GetRemainingCharges(Role.TrueNorth) is 2 ||
          !VPR_ST_TrueNorthDynamicHoldCharge) &&
-        GetRemainingCharges(Role.TrueNorth) > TnCharges &&
+        GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
         Role.CanTrueNorth();
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool onAoE = false)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool onAoE = false, int trueNorthCharges = 0)
     {
         if (onAoE)
         {
@@ -81,7 +81,7 @@ internal partial class VPR
             {
                 if ((HasStatusEffect(Buffs.FlanksbaneVenom) || HasStatusEffect(Buffs.HindsbaneVenom)) &&
                     LevelChecked(HindstingStrike))
-                    return TrueNorthReady(useTrueNorth) &&
+                    return TrueNorthReady(useTrueNorth, trueNorthCharges) &&
                            (!OnTargetsRear() && HasStatusEffect(Buffs.HindsbaneVenom) ||
                             !OnTargetsFlank() && HasStatusEffect(Buffs.FlanksbaneVenom))
                         ? Role.TrueNorth
@@ -89,7 +89,7 @@ internal partial class VPR
 
                 if ((HasStatusEffect(Buffs.FlankstungVenom) || HasStatusEffect(Buffs.HindstungVenom)) &&
                     LevelChecked(FlanksbaneFang))
-                    return TrueNorthReady(useTrueNorth) &&
+                    return TrueNorthReady(useTrueNorth, trueNorthCharges) &&
                            (!OnTargetsRear() && HasStatusEffect(Buffs.HindstungVenom) ||
                             !OnTargetsFlank() && HasStatusEffect(Buffs.FlankstungVenom))
                         ? Role.TrueNorth
@@ -277,8 +277,6 @@ internal partial class VPR
 
     private static float GCD => GetCooldown(OriginalHook(ReavingFangs)).CooldownTotal;
 
-    private static int TnCharges => IsNotEnabled(Preset.VPR_ST_SimpleMode) ? VPR_ManualTN : 0;
-
     private static bool IsHoningExpiring(float times)
     {
         float gcd = GCD * times;
@@ -431,24 +429,31 @@ internal partial class VPR
         (ignoreRange || InActionRange(Vicepit)) &&
         (!HasBothBuffs || IreCD >= GCD * 4 || !LevelChecked(SerpentsIre));
 
-    private static uint UseVicewinder(bool advancedTrueNorth = false)
+    private static uint UseVicewinder(
+        bool useSimpleTrueNorth = true,
+        bool useDynamicTrueNorth = false,
+        int trueNorthCharges = 0)
     {
-        if (!advancedTrueNorth)
+        if (useSimpleTrueNorth)
             return Role.CanTrueNorth() ? Role.TrueNorth : Vicewinder;
 
         return VPR_TrueNorthVicewinder &&
-               (IsEnabled(Preset.VPR_TrueNorthDynamic) &&
-                GetRemainingCharges(Role.TrueNorth) > TnCharges ||
+               (useDynamicTrueNorth && GetRemainingCharges(Role.TrueNorth) > trueNorthCharges ||
                 HasCharges(Role.TrueNorth)) &&
                Role.CanTrueNorth()
             ? Role.TrueNorth
             : Vicewinder;
     }
 
-    private static uint UseCombo(uint actionId, bool onAoE, bool useReawakenCombo, bool useTrueNorth = false) =>
+    private static uint UseCombo(
+        uint actionId,
+        bool onAoE,
+        bool useReawakenCombo,
+        bool useTrueNorth = false,
+        int trueNorthCharges = 0) =>
         useReawakenCombo && HasStatusEffect(Buffs.Reawakened)
             ? ReawakenCombo(actionId)
-            : DoBasicCombo(actionId, useTrueNorth, onAoE);
+            : DoBasicCombo(actionId, useTrueNorth, onAoE, trueNorthCharges);
 
     #endregion
 

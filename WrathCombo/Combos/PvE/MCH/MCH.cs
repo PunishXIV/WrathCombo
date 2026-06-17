@@ -32,7 +32,7 @@ internal partial class MCH : PhysicalRanged
                     GetTargetHPPercent() <= 1)
                     return OriginalHook(RookOverdrive);
 
-                if (CanWildfireWeave(simpleMode: true))
+                if (CanWildfireWeave(requireBoss: true))
                     return Wildfire;
 
                 if (CanHypercharge(false))
@@ -46,7 +46,7 @@ internal partial class MCH : PhysicalRanged
                     if (CanReassemble(false))
                         return Reassemble;
 
-                    if (CanBarrelStabilizer(false, true))
+                    if (CanBarrelStabilizer(requireBoss: true))
                         return BarrelStabilizer;
 
                     if (CanQueen())
@@ -119,10 +119,10 @@ internal partial class MCH : PhysicalRanged
                     if (CanReassemble(true))
                         return Reassemble;
 
-                    if (CanBarrelStabilizer(true, true))
+                    if (CanBarrelStabilizer(onAoE: true))
                         return BarrelStabilizer;
 
-                    if (CanQueen(true, true))
+                    if (CanQueen(onAoE: true, batteryOnly: true))
                         return OriginalHook(RookAutoturret);
 
                     if (GaussRicochetWeaves(out gaussRico, true, false))
@@ -196,12 +196,27 @@ internal partial class MCH : PhysicalRanged
                     GetTargetHPPercent() <= MCH_ST_QueenOverDriveHPThreshold)
                     return OriginalHook(RookOverdrive);
 
-                if (IsEnabled(Preset.MCH_ST_Adv_WildFire) && CanWildfireWeave())
+                if (IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
+                    CanWildfireWeave(WildfireHPThreshold, MCH_ST_WildfireBossOnlyOption))
                     return Wildfire;
 
-                if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge) &&
-                    CanHypercharge(false, hpThreshold: HyperchargeHPThreshold))
-                    return Hypercharge;
+                if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge))
+                {
+                    bool wildfireAboutToBeUsed = IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
+                        IsWildfireAboutToBeUsed(WildfireHPThreshold, MCH_ST_WildfireBossOnlyOption);
+
+                    if (CanHypercharge(false,
+                            hpThreshold: HyperchargeHPThreshold,
+                            skipExcavatorHold: IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) &&
+                                               wildfireAboutToBeUsed,
+                            skipHyperchargeHold: IsEnabled(Preset.MCH_ST_Adv_Tools_AllowClainsawPostWildfire) &&
+                                                 wildfireAboutToBeUsed,
+                            wildfireHyperchargeCutoff: wildfireAboutToBeUsed
+                                ? MCH_ST_WildfireHyperchargeCutoffThreshold
+                                : 9f,
+                            wildfireBossOnlyOption: MCH_ST_WildfireBossOnlyOption))
+                        return Hypercharge;
+                }
 
                 if (IsEnabled(Preset.MCH_ST_Adv_GaussRicochet) &&
                     GaussRicochetWeaves(out gaussRico, false, true,
@@ -216,11 +231,12 @@ internal partial class MCH : PhysicalRanged
                         return Reassemble;
 
                     if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer) &&
-                        CanBarrelStabilizer(onAoE: false))
+                        CanBarrelStabilizer(false, BarrelStabilizerHPThreshold, MCH_ST_BarrelStabilizerBossOnlyOption))
                         return BarrelStabilizer;
 
                     if (IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
-                        CanQueen())
+                        CanQueen(hpThreshold: QueenHPThreshold, wildfireBossOnlyOption: MCH_ST_WildfireBossOnlyOption,
+                            turretUsage: MCH_ST_TurretUsage))
                         return OriginalHook(RookAutoturret);
 
                     if (IsEnabled(Preset.MCH_ST_Adv_GaussRicochet) &&
@@ -255,7 +271,8 @@ internal partial class MCH : PhysicalRanged
                     // Queen in hypercharge
                     if (IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
                         IsEnabled(Preset.MCH_ST_Adv_QueenInHypercharge) &&
-                        CanQueen())
+                        CanQueen(hpThreshold: QueenHPThreshold, wildfireBossOnlyOption: MCH_ST_WildfireBossOnlyOption,
+                            turretUsage: MCH_ST_TurretUsage))
                         return OriginalHook(RookAutoturret);
                 }
             }
@@ -267,9 +284,17 @@ internal partial class MCH : PhysicalRanged
 
             //Tools
             if (IsEnabled(Preset.MCH_ST_Adv_Tools) &&
-                GetTargetHPPercent() > ToolsHPThreshold &&
-                CanUseTools(ref actionID, false) && !IsOverheated)
-                return actionID;
+                GetTargetHPPercent() > ToolsHPThreshold)
+            {
+                bool wildfireAboutToBeUsed = IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
+                    IsWildfireAboutToBeUsed(WildfireHPThreshold, MCH_ST_WildfireBossOnlyOption);
+                bool holdExcavatorForWildfire =
+                    IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) && wildfireAboutToBeUsed;
+
+                if (CanUseTools(ref actionID, false, holdExcavatorForWildfire: holdExcavatorForWildfire) &&
+                    !IsOverheated)
+                    return actionID;
+            }
 
             // Heatblast
             if (IsEnabled(Preset.MCH_ST_Adv_Heatblast) &&
@@ -323,11 +348,12 @@ internal partial class MCH : PhysicalRanged
                         return Reassemble;
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_Stabilizer) &&
-                        CanBarrelStabilizer(onAoE: true))
+                        CanBarrelStabilizer(onAoE: true, hpThreshold: MCH_AoE_BarrelStabilizerHPThreshold))
                         return BarrelStabilizer;
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_Queen) &&
-                        CanQueen(onAoE: true))
+                        CanQueen(onAoE: true, batteryThreshold: MCH_AoE_TurretBatteryUsage,
+                            hpThreshold: MCH_AoE_QueenHpThreshold))
                         return OriginalHook(RookAutoturret);
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet) &&

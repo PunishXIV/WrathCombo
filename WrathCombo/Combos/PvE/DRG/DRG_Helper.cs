@@ -18,16 +18,18 @@ internal partial class DRG
     #endregion
     #region Basic Combo
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool onAoE = false, bool simpleAoE = false)
+    private static uint DoBasicCombo(
+        uint actionId,
+        bool useTrueNorth = false,
+        bool onAoE = false,
+        bool includeDisembowel = false,
+        int trueNorthCharges = 0)
     {
-        int tnCharges = IsNotEnabled(Preset.DRG_ST_SimpleMode) ? DRG_ManualTN : 0;
-
         if (onAoE)
         {
             if (ComboTimer > 0)
             {
-                if ((simpleAoE || IsEnabled(Preset.DRG_AoE_Disembowel)) &&
-                    !LevelChecked(SonicThrust))
+                if (includeDisembowel && !LevelChecked(SonicThrust))
                 {
                     if (ComboAction == TrueThrust && LevelChecked(Disembowel))
                         return Disembowel;
@@ -45,8 +47,7 @@ internal partial class DRG
                 }
             }
 
-            if ((simpleAoE || IsEnabled(Preset.DRG_AoE_Disembowel)) &&
-                !HasStatusEffect(Buffs.PowerSurge) && !LevelChecked(SonicThrust))
+            if (includeDisembowel && !HasStatusEffect(Buffs.PowerSurge) && !LevelChecked(SonicThrust))
                 return OriginalHook(TrueThrust);
 
             return actionId;
@@ -64,14 +65,14 @@ internal partial class DRG
 
             if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
                 return useTrueNorth &&
-                       GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                       GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                        Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
                     ? Role.TrueNorth
                     : OriginalHook(ChaosThrust);
 
             if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
                 return useTrueNorth &&
-                       GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                       GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                        Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
                     ? Role.TrueNorth
                     : WheelingThrust;
@@ -81,7 +82,7 @@ internal partial class DRG
 
             if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
                 return useTrueNorth &&
-                       GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                       GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                        Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsFlank()
                     ? Role.TrueNorth
                     : FangAndClaw;
@@ -192,13 +193,13 @@ internal partial class DRG
          HasStatusEffect(Buffs.RaidenThrustReady) ||
          NumberOfEnemiesInRange(WyrmwindThrust, CurrentTarget) >= 2);
 
-    private static bool CanMirageDive(bool onAoE = false, bool simpleMode = false)
+    private static bool CanMirageDive(bool onAoE = false, bool ignoreDoubleMirageHold = false)
     {
         if (!ActionReady(MirageDive) || !HasStatusEffect(Buffs.DiveReady) ||
             OriginalHook(Jump) is not MirageDive || !InActionRange(MirageDive))
             return false;
 
-        if (onAoE || simpleMode || LoTDActive)
+        if (onAoE || ignoreDoubleMirageHold || LoTDActive)
             return true;
 
         bool diveExpiring = GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
@@ -231,103 +232,145 @@ internal partial class DRG
     private static bool CanNastrond() =>
         ActionReady(Nastrond) && HasStatusEffect(Buffs.NastrondReady) && LoTDActive && InActionRange(Nastrond);
 
-    private static bool CanHighJump(bool onAoE = false, bool simpleMode = true) =>
-        ActionReady(OriginalHook(Jump)) && CanUseWithHoldOptions(onAoE || simpleMode ? null : DRG_ST_JumpMovingOrInRanged) &&
+    private static bool CanHighJump(
+        bool onAoE = false,
+        UserBoolArray? holdOptions = null,
+        bool allowDoubleMirageHold = true) =>
+        ActionReady(OriginalHook(Jump)) && CanUseWithHoldOptions(holdOptions) &&
         (onAoE
             ? IsOriginal(Jump) || IsOriginal(HighJump)
             : !LevelChecked(HighJump) && IsOriginal(Jump) ||
               LevelChecked(HighJump) && IsOriginal(HighJump) &&
-              (simpleMode || !DRG_ST_DoubleMirage ||
+              (allowDoubleMirageHold || !DRG_ST_DoubleMirage ||
                DRG_ST_DoubleMirage && (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDTimerActive)));
 
-    private static bool CanDragonfireDive(bool onAoE = false, bool simpleMode = true, int hpThreshold = 0) =>
+    private static bool CanDragonfireDive(
+        bool onAoE = false,
+        UserBoolArray? holdOptions = null,
+        int hpThreshold = 0) =>
         ActionReady(DragonfireDive) && !HasStatusEffect(Buffs.DragonsFlight) &&
         GetTargetHPPercent() > hpThreshold &&
-        CanUseWithHoldOptions(simpleMode ? null : onAoE ? DRG_AoE_DragonfireDiveMovingOrInRanged : DRG_ST_DragonfireDiveMovingOrInRanged) &&
+        CanUseWithHoldOptions(holdOptions) &&
         (LoTDTimerActive || !LevelChecked(Geirskogul));
 
-    private static bool CanStardiver(bool onAoE = false, bool simpleMode = true) =>
+    private static bool CanStardiver(bool onAoE = false, UserBoolArray? holdOptions = null) =>
         ActionReady(Stardiver) && LoTDActive && !HasStatusEffect(Buffs.StarcrossReady) &&
-        CanUseWithHoldOptions(simpleMode ? null : onAoE ? DRG_AoE_StardiverMovingOrInRanged : DRG_ST_StardiverMovingOrInRanged);
+        CanUseWithHoldOptions(holdOptions);
 
-    private static uint OutsideOfMelee(uint actionId, bool simpleMode = false, bool onAoE = false, int geirskogulHpThreshold = 0)
+    private readonly struct OutsideOfMeleeOptions
     {
-        if (onAoE)
+        public bool OnAoE { get; init; }
+        public int GeirskogulHpThreshold { get; init; }
+        public bool UseDamage { get; init; }
+        public bool UseMirage { get; init; }
+        public bool UseWyrmwind { get; init; }
+        public bool UseStarcross { get; init; }
+        public bool UseRiseOfTheDragon { get; init; }
+        public bool UseGeirskogul { get; init; }
+        public bool UseNastrond { get; init; }
+        public bool UseRangedUptime { get; init; }
+        public bool UseTrueNorth { get; init; }
+        public int TrueNorthCharges { get; init; }
+        public bool IncludeDisembowel { get; init; }
+        public bool IgnoreDoubleMirageHold { get; init; }
+
+        public static OutsideOfMeleeOptions SimpleSt => new()
         {
-            if (simpleMode || IsEnabled(Preset.DRG_AoE_Damage))
-            {
-                if ((simpleMode || IsEnabled(Preset.DRG_AoE_Mirage)) &&
-                    CanMirageDive(true) && InCombat())
-                    return MirageDive;
+            UseDamage = true,
+            UseMirage = true,
+            UseWyrmwind = true,
+            UseStarcross = true,
+            UseRiseOfTheDragon = true,
+            UseGeirskogul = true,
+            UseNastrond = true,
+            UseRangedUptime = true,
+            UseTrueNorth = true,
+            IgnoreDoubleMirageHold = true
+        };
 
-                if ((simpleMode || IsEnabled(Preset.DRG_AoE_Wyrmwind)) &&
-                    CanUseWyrmwind() && InCombat())
-                    return WyrmwindThrust;
+        public static OutsideOfMeleeOptions SimpleAoE => new()
+        {
+            OnAoE = true,
+            UseDamage = true,
+            UseMirage = true,
+            UseWyrmwind = true,
+            UseStarcross = true,
+            UseRiseOfTheDragon = true,
+            UseGeirskogul = true,
+            UseNastrond = true,
+            UseRangedUptime = true,
+            IncludeDisembowel = true,
+            IgnoreDoubleMirageHold = true
+        };
+    }
 
-                if ((simpleMode || IsEnabled(Preset.DRG_AoE_Starcross)) &&
-                    CanStarcross() && InCombat())
-                    return Starcross;
-
-                if ((simpleMode || IsEnabled(Preset.DRG_AoE_RiseOfTheDragon)) &&
-                    CanRiseOfTheDragon() && InCombat())
-                    return RiseOfTheDragon;
-
-                if ((simpleMode || IsEnabled(Preset.DRG_AoE_Geirskogul)) &&
-                    CanUseGeirskogul(true, geirskogulHpThreshold) && InCombat())
-                    return Geirskogul;
-
-                if ((simpleMode || IsEnabled(Preset.DRG_AoE_Nastrond)) &&
-                    CanNastrond() && InCombat())
-                    return Nastrond;
-
-                if ((simpleMode || IsEnabled(Preset.DRG_AoE_RangedUptime)) &&
-                    ActionReady(PiercingTalon) && !CanDRGWeave())
-                    return PiercingTalon;
-
-                return simpleMode
-                    ? DoBasicCombo(actionId, onAoE: true, simpleAoE: true)
-                    : DoBasicCombo(actionId, onAoE: true);
-            }
-
+    private static uint OutsideOfMelee(uint actionId, in OutsideOfMeleeOptions options)
+    {
+        if (!options.UseDamage)
             return actionId;
-        }
 
-        if (simpleMode || IsEnabled(Preset.DRG_ST_Damage))
+        if (options.OnAoE)
         {
-            if ((simpleMode || IsEnabled(Preset.DRG_ST_Mirage)) &&
-                CanMirageDive() && InCombat())
+            if (options.UseMirage &&
+                CanMirageDive(true, options.IgnoreDoubleMirageHold) && InCombat())
                 return MirageDive;
 
-            if ((simpleMode || IsEnabled(Preset.DRG_ST_Wyrmwind)) &&
+            if (options.UseWyrmwind &&
                 CanUseWyrmwind() && InCombat())
                 return WyrmwindThrust;
 
-            if ((simpleMode || IsEnabled(Preset.DRG_ST_Starcross)) &&
+            if (options.UseStarcross &&
                 CanStarcross() && InCombat())
                 return Starcross;
 
-            if ((simpleMode || IsEnabled(Preset.DRG_ST_RiseOfTheDragon)) &&
+            if (options.UseRiseOfTheDragon &&
                 CanRiseOfTheDragon() && InCombat())
                 return RiseOfTheDragon;
 
-            if ((simpleMode || IsEnabled(Preset.DRG_ST_Geirskogul)) &&
-                CanUseGeirskogul(false, geirskogulHpThreshold) && InCombat())
+            if (options.UseGeirskogul &&
+                CanUseGeirskogul(true, options.GeirskogulHpThreshold) && InCombat())
                 return Geirskogul;
 
-            if ((simpleMode || IsEnabled(Preset.DRG_ST_Nastrond)) &&
+            if (options.UseNastrond &&
                 CanNastrond() && InCombat())
                 return Nastrond;
 
-            if ((simpleMode || IsEnabled(Preset.DRG_ST_RangedUptime)) &&
-                ActionReady(PiercingTalon))
+            if (options.UseRangedUptime &&
+                ActionReady(PiercingTalon) && !CanDRGWeave())
                 return PiercingTalon;
 
-            return simpleMode
-                ? DoBasicCombo(actionId, true)
-                : DoBasicCombo(actionId, IsEnabled(Preset.DRG_TrueNorthDynamic));
+            return DoBasicCombo(actionId, onAoE: true, includeDisembowel: options.IncludeDisembowel);
         }
 
-        return actionId;
+        if (options.UseMirage &&
+            CanMirageDive(ignoreDoubleMirageHold: options.IgnoreDoubleMirageHold) && InCombat())
+            return MirageDive;
+
+        if (options.UseWyrmwind &&
+            CanUseWyrmwind() && InCombat())
+            return WyrmwindThrust;
+
+        if (options.UseStarcross &&
+            CanStarcross() && InCombat())
+            return Starcross;
+
+        if (options.UseRiseOfTheDragon &&
+            CanRiseOfTheDragon() && InCombat())
+            return RiseOfTheDragon;
+
+        if (options.UseGeirskogul &&
+            CanUseGeirskogul(hpThreshold: options.GeirskogulHpThreshold) && InCombat())
+            return Geirskogul;
+
+        if (options.UseNastrond &&
+            CanNastrond() && InCombat())
+            return Nastrond;
+
+        if (options.UseRangedUptime &&
+            ActionReady(PiercingTalon))
+            return PiercingTalon;
+
+        return DoBasicCombo(actionId, options.UseTrueNorth, trueNorthCharges: options.TrueNorthCharges);
     }
 
     #endregion

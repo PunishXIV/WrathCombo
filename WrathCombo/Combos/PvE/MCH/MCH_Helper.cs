@@ -12,27 +12,33 @@ internal partial class MCH
 {
     #region Queen
 
-    private static bool CanQueen(bool onAoE = false, bool simpleBatteryOnly = false)
+    private static bool CanQueen(
+        bool onAoE = false,
+        int batteryThreshold = 100,
+        int hpThreshold = 0,
+        bool batteryOnly = false,
+        int wildfireBossOnlyOption = 1,
+        int turretUsage = 100)
     {
         if (onAoE)
         {
             if (!ActionReady(OriginalHook(RookAutoturret)))
                 return false;
 
-            return simpleBatteryOnly
+            return batteryOnly
                 ? Battery is 100
-                : Battery >= MCH_AoE_TurretBatteryUsage &&
-                  GetTargetHPPercent() > MCH_AoE_QueenHpThreshold;
+                : Battery >= batteryThreshold &&
+                  GetTargetHPPercent() > hpThreshold;
         }
 
         if (!HasStatusEffect(Buffs.Wildfire) &&
             ActionReady(OriginalHook(RookAutoturret)) &&
             !RobotActive &&
-            GetTargetHPPercent() > QueenHPThreshold)
+            GetTargetHPPercent() > hpThreshold)
         {
             if (LevelChecked(Wildfire))
             {
-                if (MCH_ST_WildfireBossOnlyOption == 0 || TargetIsBoss())
+                if (wildfireBossOnlyOption == 0 || TargetIsBoss())
                 {
                     //Always use at 100, as a failsafe above 80 with a tool ready, or above 90 mid-combo
                     if (Battery is 100 ||
@@ -44,11 +50,11 @@ internal partial class MCH
                         return true;
                 }
 
-                if (MCH_ST_WildfireBossOnlyOption == 1 && !TargetIsBoss() && Battery >= MCH_ST_TurretUsage)
+                if (wildfireBossOnlyOption == 1 && !TargetIsBoss() && Battery >= turretUsage)
                     return true;
             }
 
-            if (!LevelChecked(Wildfire) && Battery >= MCH_ST_TurretUsage)
+            if (!LevelChecked(Wildfire) && Battery >= turretUsage)
                 return true;
         }
 
@@ -59,23 +65,39 @@ internal partial class MCH
 
     #region Hypercharge
 
-    private static bool CanHypercharge(bool onAoE, bool useAirAnchor = true, float toolHoldThreshold = 8f, int hpThreshold = 25) =>
-        onAoE ? CanHyperchargeAoE(useAirAnchor, toolHoldThreshold, hpThreshold) : CanHyperchargeST(hpThreshold);
+    private static bool CanHypercharge(
+        bool onAoE,
+        bool useAirAnchor = true,
+        float toolHoldThreshold = 8f,
+        int hpThreshold = 25,
+        bool skipExcavatorHold = false,
+        bool skipHyperchargeHold = false,
+        float wildfireHyperchargeCutoff = 9f,
+        int wildfireBossOnlyOption = 1) =>
+        onAoE
+            ? CanHyperchargeAoE(useAirAnchor, toolHoldThreshold, hpThreshold)
+            : CanHyperchargeST(hpThreshold, skipExcavatorHold, skipHyperchargeHold, wildfireHyperchargeCutoff,
+                wildfireBossOnlyOption);
 
-    private static bool CanHyperchargeST(int hpThreshold = 25)
+    private static bool CanHyperchargeST(
+        int hpThreshold = 25,
+        bool skipExcavatorHold = false,
+        bool skipHyperchargeHold = false,
+        float wildfireHyperchargeCutoff = 9f,
+        int wildfireBossOnlyOption = 1)
     {
         if (GetTargetHPPercent() <= hpThreshold)
             return false;
 
         return (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-               (!IsComboExpiring(6) || ShouldSkipHyperchargeHold()) && !IsOverheated &&
-               IsDrillCD(CustomCooldownForHyperHold) && IsAirAnchorCD(CustomCooldownForHyperHold) &&
-               (IsChainSawCD(CustomCooldownForHyperHold) || ShouldSkipHyperchargeHold()) &&
-               (!HasStatusEffect(Buffs.ExcavatorReady) || ShouldSkipExcavatorHold()) &&
+               (!IsComboExpiring(6) || skipHyperchargeHold) && !IsOverheated &&
+               IsDrillCD(wildfireHyperchargeCutoff) && IsAirAnchorCD(wildfireHyperchargeCutoff) &&
+               (IsChainSawCD(wildfireHyperchargeCutoff) || skipHyperchargeHold) &&
+               (!HasStatusEffect(Buffs.ExcavatorReady) || skipExcavatorHold) &&
                !HasStatusEffect(Buffs.FullMetalMachinist) &&
                (ActionReady(Wildfire) ||
                 JustUsed(FullMetalField, GCD / 2) ||
-                MCH_ST_WildfireBossOnlyOption == 1 && !TargetIsBoss() ||
+                wildfireBossOnlyOption == 1 && !TargetIsBoss() ||
                 GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
                 Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10 ||
                 !LevelChecked(Wildfire));
@@ -107,19 +129,10 @@ internal partial class MCH
         return !useAirAnchor || IsAirAnchorCD(toolHoldThreshold);
     }
 
-    public static bool IsWildfireAboutToBeUsed() =>
-        IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
-        ((MCH_ST_WildfireBossOnlyOption == 0 && GetTargetHPPercent() > WildfireHPThreshold) || TargetIsBoss()) &&
+    private static bool IsWildfireAboutToBeUsed(int wildfireHpThreshold, int wildfireBossOnlyOption) =>
+        (wildfireBossOnlyOption == 0 && GetTargetHPPercent() > wildfireHpThreshold || TargetIsBoss()) &&
         CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
         ActionReady(Wildfire);
-
-    public static bool ShouldSkipExcavatorHold() =>
-        IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) &&
-        IsWildfireAboutToBeUsed();
-
-    public static bool ShouldSkipHyperchargeHold() =>
-        IsEnabled(Preset.MCH_ST_Adv_Tools_AllowClainsawPostWildfire) &&
-        IsWildfireAboutToBeUsed();
 
     #endregion
 
@@ -132,9 +145,6 @@ internal partial class MCH
          GetCooldownRemainingTime(Wildfire) > 90 ||
          GetCooldownRemainingTime(Wildfire) <= GCD ||
          GetStatusEffectRemainingTime(Buffs.FullMetalMachinist) <= 6);
-
-    private static float CustomCooldownForHyperHold =>
-        IsWildfireAboutToBeUsed() ? MCH_ST_WildfireHyperchargeCutoffThreshold : 9f;
 
     private static bool JustUsedOverheatGCD(float window, bool onAoE) =>
         onAoE
@@ -157,25 +167,33 @@ internal partial class MCH
         return OriginalHook(Heatblast);
     }
 
-    private static bool CanBarrelStabilizer(bool onAoE, bool simpleMode = false) =>
+    private static bool CanBarrelStabilizer(
+        bool onAoE = false,
+        int hpThreshold = 0,
+        int bossOnlyOption = 1,
+        bool requireBoss = false) =>
         ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist) &&
         (onAoE
-            ? simpleMode || GetTargetHPPercent() > MCH_AoE_BarrelStabilizerHPThreshold
-            : (simpleMode
+            ? GetTargetHPPercent() > hpThreshold
+            : (requireBoss
                   ? TargetIsBoss()
-                  : MCH_ST_BarrelStabilizerBossOnlyOption == 0 &&
-                  GetTargetHPPercent() > BarrelStabilizerHPThreshold || TargetIsBoss()) &&
+                  : bossOnlyOption == 0 &&
+                    GetTargetHPPercent() > hpThreshold || TargetIsBoss()) &&
               GetCooldownRemainingTime(Wildfire) <= 20);
 
-    private static bool CanWildfireWeave(bool simpleMode = false, bool requireBoss = true, float? hyperchargeWindow = null) =>
+    private static bool CanWildfireWeave(
+        int hpThreshold = 0,
+        int bossOnlyOption = 1,
+        bool requireBoss = false,
+        float? hyperchargeWindow = null) =>
         CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
         ActionReady(Wildfire) &&
         JustUsed(Hypercharge, hyperchargeWindow ?? GCD + 0.9f) &&
         !HasStatusEffect(Buffs.Wildfire) &&
-        (simpleMode
-            ? !requireBoss || TargetIsBoss()
-            : MCH_ST_WildfireBossOnlyOption == 0 &&
-            GetTargetHPPercent() > WildfireHPThreshold || TargetIsBoss());
+        (requireBoss
+            ? TargetIsBoss()
+            : bossOnlyOption == 0 &&
+              GetTargetHPPercent() > hpThreshold || TargetIsBoss());
 
     #endregion
 
@@ -474,7 +492,7 @@ internal partial class MCH
         JustUsed(Drill, window) ||
         JustUsed(Excavator, window);
 
-    private static bool CanUseTools(ref uint actionID, bool onAoE, bool useAirAnchor = true)
+    private static bool CanUseTools(ref uint actionID, bool onAoE, bool useAirAnchor = true, bool holdExcavatorForWildfire = false)
     {
         if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
         {
@@ -483,9 +501,7 @@ internal partial class MCH
         }
 
         if (ActionReady(Excavator) &&
-            (onAoE ||
-             !IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) ||
-             !ShouldSkipExcavatorHold()))
+            (onAoE || !holdExcavatorForWildfire))
         {
             actionID = Excavator;
             return true;

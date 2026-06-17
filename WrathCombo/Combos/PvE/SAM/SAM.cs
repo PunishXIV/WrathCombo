@@ -34,7 +34,7 @@ internal partial class SAM : Melee
                     return Ikishoten;
 
                 if (GetTargetHPPercent() < 1)
-                    return UseKenkiSpender(actionID, true);
+                    return UseKenkiSpender(actionID, useZanshin: true, useSenei: true, useShinten: true);
 
                 //Senei Feature
                 if (CanSenei())
@@ -66,10 +66,10 @@ internal partial class SAM : Melee
                     return OriginalHook(ThirdEye);
 
                 // healing
-                if (Role.CanSecondWind(SAM_ST_SecondWindHPThreshold))
+                if (Role.CanSecondWind(25))
                     return Role.SecondWind;
 
-                if (Role.CanBloodBath(SAM_ST_BloodbathHPThreshold))
+                if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
 
                 if (RoleActions.Melee.CanLegSweep())
@@ -80,7 +80,7 @@ internal partial class SAM : Melee
                 return OriginalHook(TsubameGaeshi);
 
             //Ogi Namikiri feature
-            if (CanOgiNamikiri(simpleMode: true))
+            if (CanOgiNamikiri(onlyWhenStationary: true))
                 return OriginalHook(OgiNamikiri);
 
             // Iaijutsu feature
@@ -91,7 +91,7 @@ internal partial class SAM : Melee
             if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
                 return Enpi;
 
-            return ResolveStCombo(actionID, true, true);
+            return ResolveStCombo(actionID, true);
         }
     }
 
@@ -145,7 +145,7 @@ internal partial class SAM : Melee
                     return Role.Bloodbath;
             }
 
-            if (CanAoEOgiNamikiri(simpleMode: true))
+            if (CanAoEOgiNamikiri(onlyWhenStationary: true))
                 return OriginalHook(OgiNamikiri);
 
             return CanAoESenGcd(out uint senAction, onlyWhenStationary: true)
@@ -200,7 +200,10 @@ internal partial class SAM : Melee
                 if (IsEnabled(Preset.SAM_ST_Damage))
                 {
                     if (GetTargetHPPercent() < SAM_ST_ExecuteThreshold)
-                        return UseKenkiSpender(actionID);
+                        return UseKenkiSpender(actionID,
+                            useZanshin: IsEnabled(Preset.SAM_ST_CDs_Zanshin),
+                            useSenei: IsEnabled(Preset.SAM_ST_CDs_Senei),
+                            useShinten: IsEnabled(Preset.SAM_ST_Shinten));
 
                     //Senei feature
                     if (IsEnabled(Preset.SAM_ST_CDs_Senei))
@@ -268,7 +271,10 @@ internal partial class SAM : Melee
 
                 //Ogi Namikiri Feature
                 if (IsEnabled(Preset.SAM_ST_CDs_OgiNamikiri) &&
-                    CanOgiNamikiri())
+                    CanOgiNamikiri(
+                        respectMovementOption: SAM_ST_CDs_OgiNamikiri_Movement,
+                        useHiganbanaBurstRules: IsEnabled(Preset.SAM_ST_CDs_UseHiganbana),
+                        higanbanaBossOnly: SAM_ST_HiganbanaBossHPOption == 1))
                     return OriginalHook(OgiNamikiri);
 
                 // Iaijutsu Feature
@@ -288,7 +294,12 @@ internal partial class SAM : Melee
                     return Enpi;
             }
 
-            return ResolveStCombo(actionID, IsEnabled(Preset.SAM_ST_TrueNorth), false);
+            return ResolveStCombo(actionID,
+                IsEnabled(Preset.SAM_ST_TrueNorth),
+                IsEnabled(Preset.SAM_ST_Yukikaze),
+                IsEnabled(Preset.SAM_ST_Kasha),
+                IsEnabled(Preset.SAM_ST_Gekko),
+                SAM_ST_ManualTN);
         }
     }
 

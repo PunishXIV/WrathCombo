@@ -72,7 +72,7 @@ internal partial class RPR : Melee
 
             if (CanGibbetGallowsGCD())
             {
-                uint gg = GibbetGallowsAction(simpleMode: true);
+                uint gg = GibbetGallowsAction();
                 if (gg != 0)
                     return gg;
             }
@@ -88,7 +88,7 @@ internal partial class RPR : Melee
 
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
-                ? RangedAttack(actionID, true)
+                ? RangedAttack(actionID, useHarvestMoon: true, useRangedFiller: true)
                 : DoBasicCombo(actionID);
         }
     }
@@ -215,7 +215,8 @@ internal partial class RPR : Melee
 
                 if (UseEnshroudWeaves(out uint weave, false,
                     IsEnabled(Preset.RPR_ST_Sacrificium),
-                    IsEnabled(Preset.RPR_ST_Lemure)))
+                    IsEnabled(Preset.RPR_ST_Lemure),
+                    arcaneCircleEnabled: IsEnabled(Preset.RPR_ST_ArcaneCircle)))
                     return weave;
 
                 if (IsEnabled(Preset.RPR_ST_Feint) &&
@@ -246,16 +247,19 @@ internal partial class RPR : Melee
                 return OriginalHook(Communio);
 
             if (IsEnabled(Preset.RPR_ST_SoD) &&
-                CanUseShadowOfDeath(RPR_SoDRefreshRange, RPR_ST_ArcaneCircleHPBossOption == 1) &&
+                CanUseShadowOfDeath(RPR_SoDRefreshRange, RPR_ST_ArcaneCircleHPBossOption == 1,
+                    IsEnabled(Preset.RPR_ST_ArcaneCircle)) &&
                 GetTargetHPPercent() > RPR_SoDHPThreshold)
                 return ShadowOfDeath;
 
             if (IsEnabled(Preset.RPR_ST_GibbetGallows) &&
                 CanGibbetGallowsGCD())
             {
-                uint gg = GibbetGallowsAction(false, positionalChoice,
-                    IsEnabled(Preset.RPR_ST_TrueNorthDynamic),
-                    RPR_ManualTN, RPR_ST_TrueNorthDynamicHoldCharge);
+                uint gg = GibbetGallowsAction(positionalChoice,
+                    useSimpleTrueNorth: false,
+                    useDynamicTrueNorth: IsEnabled(Preset.RPR_ST_TrueNorthDynamic),
+                    tnChargePool: RPR_ManualTN,
+                    holdTnCharge: RPR_ST_TrueNorthDynamicHoldCharge);
                 if (gg != 0)
                     return gg;
             }
@@ -275,7 +279,11 @@ internal partial class RPR : Melee
 
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
-                ? RangedAttack(actionID)
+                ? RangedAttack(actionID,
+                    useHarvestMoon: IsEnabled(Preset.RPR_ST_RangedFillerHarvestMoon),
+                    useRangedFiller: IsEnabled(Preset.RPR_ST_RangedFiller),
+                    enhancedHarpeOnly: RPR_ST_EnhancedHarpe,
+                    allowHarpeWhileMoving: !RPR_ST_EnhancedHarpe)
                 : DoBasicCombo(actionID);
         }
     }

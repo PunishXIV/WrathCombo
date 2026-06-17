@@ -13,7 +13,7 @@ internal partial class RPR
 {
     #region SoD
 
-    private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool sodTrashOnly = true)
+    private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool sodTrashOnly = true, bool arcaneCircleEnabled = true)
     {
         if (LevelChecked(ShadowOfDeath) && !HasStatusEffect(Buffs.SoulReaver) &&
             !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.PerfectioParata) &&
@@ -26,8 +26,8 @@ internal partial class RPR
                 GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
                 return true;
 
-            if (RPR_ST_ArcaneCircleHPBossOption == 0 || InBossEncounter() ||
-                IsNotEnabled(Preset.RPR_ST_ArcaneCircle))
+            if (!sodTrashOnly || InBossEncounter() ||
+                !arcaneCircleEnabled)
             {
                 //Balance burst prep: SoD near 60s / 30s on Arcane Circle
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
@@ -61,10 +61,15 @@ internal partial class RPR
 
     #region Ranged Attack
 
-    private static uint RangedAttack(uint actionId, bool simpleMode = false)
+    private static uint RangedAttack(
+        uint actionId,
+        bool useHarvestMoon = false,
+        bool useRangedFiller = false,
+        bool enhancedHarpeOnly = false,
+        bool allowHarpeWhileMoving = true)
     {
         //Harvest Moon
-        if ((simpleMode || IsEnabled(Preset.RPR_ST_RangedFillerHarvestMoon)) &&
+        if (useHarvestMoon &&
             ActionReady(HarvestMoon) && HasStatusEffect(Buffs.Soulsow))
             return HarvestMoon;
 
@@ -74,7 +79,7 @@ internal partial class RPR
             return PerfectioAction;
 
         //Ranged Attacks
-        if ((simpleMode || IsEnabled(Preset.RPR_ST_RangedFiller)) &&
+        if (useRangedFiller &&
             ActionReady(OriginalHook(Harpe)))
         {
             //Communio
@@ -82,8 +87,9 @@ internal partial class RPR
                 LevelChecked(Communio))
                 return Communio;
 
-            if (RPR_ST_EnhancedHarpe && HasStatusEffect(Buffs.EnhancedHarpe) ||
-                (!RPR_ST_EnhancedHarpe || simpleMode) && (!IsMoving() || HasStatusEffect(Buffs.EnhancedHarpe)))
+            if (enhancedHarpeOnly && HasStatusEffect(Buffs.EnhancedHarpe) ||
+                (!enhancedHarpeOnly || allowHarpeWhileMoving) &&
+                (!IsMoving() || HasStatusEffect(Buffs.EnhancedHarpe)))
                 return OriginalHook(Harpe);
         }
 
@@ -207,7 +213,7 @@ internal partial class RPR
         (!LevelChecked(Gluttony) ||
          LevelChecked(Gluttony) && (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 5));
 
-    private static bool CanSacrificiumWeave(bool onAoE = false, bool useArcaneCircleBoss = true) =>
+    private static bool CanSacrificiumWeave(bool onAoE = false, bool useArcaneCircleBoss = true, bool arcaneCircleEnabled = true) =>
         HasStatusEffect(Buffs.Enshrouded) && HasStatusEffect(Buffs.Oblatio) &&
         (onAoE
             ? Lemure is 2 && Void is 1
@@ -217,7 +223,7 @@ internal partial class RPR
          (RPR_ST_ArcaneCircleHPBossOption == 0 ||
           InBossEncounter() ||
           RPR_ST_ArcaneCircleHPBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)) ||
-         IsNotEnabled(Preset.RPR_ST_ArcaneCircle));
+         !arcaneCircleEnabled);
 
     private static bool CanLemureWeave(bool onAoE = false) =>
         HasStatusEffect(Buffs.Enshrouded) && Void >= 2 &&
@@ -225,14 +231,14 @@ internal partial class RPR
         (!onAoE || InActionRange(OriginalHook(GrimSwathe)));
 
     private static bool UseEnshroudWeaves(out uint action, bool onAoE, bool sacrificium = true, bool lemure = true,
-        bool useArcaneCircleBoss = true)
+        bool useArcaneCircleBoss = true, bool arcaneCircleEnabled = true)
     {
         action = 0;
 
         if (!HasStatusEffect(Buffs.Enshrouded))
             return false;
 
-        if (sacrificium && CanSacrificiumWeave(onAoE, useArcaneCircleBoss))
+        if (sacrificium && CanSacrificiumWeave(onAoE, useArcaneCircleBoss, arcaneCircleEnabled))
         {
             action = OriginalHook(Gluttony);
             return true;
@@ -343,37 +349,42 @@ internal partial class RPR
         LevelChecked(Gibbet) && !HasStatusEffect(Buffs.Enshrouded) &&
         (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner));
 
-    private static uint GibbetGallowsAction(bool simpleMode, int positionalChoice = 0, bool advancedTrueNorth = false,
-        int tnChargePool = 0, bool holdTnCharge = false)
+    private static uint GibbetGallowsAction(
+        int positionalChoice = 1,
+        bool useSimpleTrueNorth = true,
+        bool useDynamicTrueNorth = false,
+        int tnChargePool = 0,
+        bool holdTnCharge = false)
     {
+        bool neitherEnhanced = !HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows);
+
         if (HasStatusEffect(Buffs.EnhancedGibbet) ||
-            !simpleMode && positionalChoice is 1 &&
-            !HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows))
+            useSimpleTrueNorth && neitherEnhanced ||
+            !useSimpleTrueNorth && positionalChoice is 1 && neitherEnhanced)
         {
-            if (!simpleMode && advancedTrueNorth &&
+            if (useSimpleTrueNorth && Role.CanTrueNorth() && !OnTargetsFlank())
+                return Role.TrueNorth;
+
+            if (useDynamicTrueNorth &&
                 (holdTnCharge && GetRemainingCharges(Role.TrueNorth) is 2 || !holdTnCharge) &&
                 Role.CanTrueNorth() && !OnTargetsFlank() &&
                 GetRemainingCharges(Role.TrueNorth) > tnChargePool)
-                return Role.TrueNorth;
-
-            if (simpleMode && Role.CanTrueNorth() && !OnTargetsFlank())
                 return Role.TrueNorth;
 
             return OriginalHook(Gibbet);
         }
 
         if (HasStatusEffect(Buffs.EnhancedGallows) ||
-            simpleMode && !HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows) ||
-            !simpleMode && positionalChoice is 0 &&
-            !HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows))
+            useSimpleTrueNorth && neitherEnhanced ||
+            !useSimpleTrueNorth && positionalChoice is 0 && neitherEnhanced)
         {
-            if (!simpleMode && advancedTrueNorth &&
+            if (useSimpleTrueNorth && Role.CanTrueNorth() && !OnTargetsRear())
+                return Role.TrueNorth;
+
+            if (useDynamicTrueNorth &&
                 (holdTnCharge && GetRemainingCharges(Role.TrueNorth) is 2 || !holdTnCharge) &&
                 Role.CanTrueNorth() && !OnTargetsRear() &&
                 GetRemainingCharges(Role.TrueNorth) > tnChargePool)
-                return Role.TrueNorth;
-
-            if (simpleMode && Role.CanTrueNorth() && !OnTargetsRear())
                 return Role.TrueNorth;
 
             return OriginalHook(Gallows);

@@ -122,7 +122,7 @@ internal partial class BLM : Caster
 
             if (FirePhase)
             {
-                uint gcd = UseFirePhaseGcd(simpleMode: true);
+                uint gcd = UseFirePhaseGcd();
                 if (gcd != 0)
                     return gcd;
             }
@@ -363,10 +363,14 @@ internal partial class BLM : Caster
             if (FirePhase)
             {
                 uint gcd = UseFirePhaseGcd(
-                    false,
                     IsEnabled(Preset.BLM_ST_FlareStar),
                     IsEnabled(Preset.BLM_ST_Despair),
-                    IsEnabled(Preset.BLM_ST_Transpose));
+                    IsEnabled(Preset.BLM_ST_Transpose),
+                    IsEnabled(Preset.BLM_ST_UsePolyglot),
+                    alwaysSpendPolyglot: false,
+                    BLM_ST_MovementOption[MovementSwiftcast],
+                    BLM_ST_PolyglotMovement,
+                    BLM_ST_PolyglotSaveUsage);
                 if (gcd != 0)
                     return gcd;
             }
