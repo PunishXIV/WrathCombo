@@ -194,29 +194,29 @@ internal partial class MNK : Melee
             if (CanWeave() && (InCombat() || ComboAction > 0))
             {
                 if (IsEnabled(Preset.MNK_STUsePerfectBalance) &&
-                    UsePBAfterBurstHolding(false))
+                    UsePBAfterBurstHolding(false, checkBurstHold: true))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_STUseBuffs))
                 {
                     if (IsEnabled(Preset.MNK_STUseBrotherhood) &&
-                        GetTargetHPPercent() > HPThresholdBH &&
+                        GetTargetHPPercent() > BrotherhoodHPThreshold &&
                         CanBrotherhood())
                         return Brotherhood;
 
                     if (IsEnabled(Preset.MNK_STUseROF) &&
-                        GetTargetHPPercent() > HPThresholdRoF &&
+                        GetTargetHPPercent() > RiddleOfFireHPThreshold &&
                         CanRoF())
                         return RiddleOfFire;
                 }
 
                 if (IsEnabled(Preset.MNK_STUsePerfectBalance) &&
-                    CanPerfectBalance(false, IsEnabled(Preset.MNK_STUseOpener)))
+                    CanPerfectBalance(false, IsEnabled(Preset.MNK_STUseOpener), checkBurstHold: true))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_STUseBuffs) &&
                     IsEnabled(Preset.MNK_STUseROW) &&
-                    GetTargetHPPercent() > HPThresholdRoW &&
+                    GetTargetHPPercent() > RiddleOfWindHPThreshold &&
                     CanRoW())
                     return RiddleOfWind;
 
@@ -300,7 +300,7 @@ internal partial class MNK : Melee
             if (CanWeave() && (InCombat() || ComboAction > 0))
             {
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
-                    UsePBAfterBurstHolding(true))
+                    UsePBAfterBurstHolding(true, checkBurstHold: true, perfectBalanceHpThreshold: MNK_AoE_PerfectBalanceHPThreshold))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_AoEUseBuffs) &&
@@ -316,7 +316,7 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
-                    CanPerfectBalance(true))
+                    CanPerfectBalance(true, checkBurstHold: true, perfectBalanceHpThreshold: MNK_AoE_PerfectBalanceHPThreshold))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_AoEUseBuffs) &&

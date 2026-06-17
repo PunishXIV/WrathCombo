@@ -21,9 +21,11 @@ internal partial class BLM
     private static bool HasMaxPolyglotStacks =>
         PolyglotStacks == MaxPolyglot;
 
-    private static int HPThresholdLeylines =>
-        BLM_ST_LeyLinesBossOption == 1 || !InBossEncounter()
-            ? BLM_ST_LeyLinesHPOption : 0;
+    private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
+        hpBossOption == 1 || !isBoss ? hpOption : 0;
+
+    private static int LeyLinesHPThreshold =>
+        BossHpThreshold(BLM_ST_LeyLinesHPBossOption, BLM_ST_LeyLinesHPOption, InBossEncounter());
 
     private static bool HasPolyglot =>
         PolyglotStacks > 0;
@@ -115,12 +117,10 @@ internal partial class BLM
     private static IStatus? ThunderDebuffAoE =>
         GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
 
-    internal static bool CanThunder()
+    internal static bool CanThunder(int hpThreshold = 0, float dotRefresh = 5f)
     {
         uint dotAction = OriginalHook(Thunder);
-        int hpThreshold = IsNotEnabled(Preset.BLM_ST_SimpleMode) ? ComputeHpThreshold() : 0;
         ThunderList.TryGetValue(dotAction, out ushort dotDebuffID);
-        float dotRefresh = IsNotEnabled(Preset.BLM_ST_SimpleMode) ? BLM_ST_ThunderRefresh : 5;
         float dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
@@ -134,9 +134,9 @@ internal partial class BLM
     internal static int ComputeHpThreshold()
     {
         if (InBossEncounter())
-            return TargetIsBoss() ? BLM_ST_ThunderBossOption : BLM_ST_ThunderBossAddsOption;
+            return TargetIsBoss() ? BLM_ST_ThunderBossHPOption : BLM_ST_ThunderBossAddsHPOption;
 
-        return BLM_ST_ThunderTrashOption;
+        return BLM_ST_ThunderTrashHPOption;
     }
 
     private static bool CanAoEThunder(int hpThreshold = 0, float dotRefresh = 3f) =>

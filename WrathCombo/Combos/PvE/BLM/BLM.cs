@@ -268,7 +268,7 @@ internal partial class BLM : Caster
                     GetRemainingCharges(LeyLines) > BLM_ST_LeyLinesCharges &&
                     (BLM_ST_LeyLinesMovement == 1 ||
                      BLM_ST_LeyLinesMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(BLM_ST_LeyLinesTimeStill)) &&
-                    GetTargetHPPercent() > HPThresholdLeylines)
+                    GetTargetHPPercent() > LeyLinesHPThreshold)
                     return LeyLines;
 
                 if (EndOfFirePhase)
@@ -339,7 +339,7 @@ internal partial class BLM : Caster
                 return PolyglotSpell;
 
             if (IsEnabled(Preset.BLM_ST_Thunder) &&
-                CanThunder())
+                CanThunder(ComputeHpThreshold(), BLM_ST_ThunderRefresh))
                 return OriginalHook(Thunder);
 
             if (IsEnabled(Preset.BLM_ST_Amplifier) &&

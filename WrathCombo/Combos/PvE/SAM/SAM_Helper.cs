@@ -70,14 +70,19 @@ internal partial class SAM
 
     #region Iaijutsu
 
-    private static bool CanIaijutsu(bool useHiganbana, bool useTenkaGoken, bool useMidare)
+    private static bool CanIaijutsu(
+        bool useHiganbana,
+        bool useTenkaGoken,
+        bool useMidare,
+        int higanbanaHpThreshold = 0,
+        double higanbanaDotRefresh = 15)
     {
         if (LevelChecked(Iaijutsu) && InActionRange(OriginalHook(Iaijutsu)))
         {
             //Higanbana
             if (useHiganbana &&
                 SenCount is 1 &&
-                CanHiganbana())
+                CanHiganbana(higanbanaHpThreshold, higanbanaDotRefresh))
                 return true;
 
             //Tenka Goken
@@ -99,16 +104,15 @@ internal partial class SAM
 
     #region Higanbana
 
-    private static bool CanHiganbana()
+    private static bool CanHiganbana(int hpThreshold = 0, double dotRefresh = 15)
     {
-        int hpThreshold = IsNotEnabled(Preset.SAM_ST_SimpleMode) ? ComputeHpThresholdHiganbana() : 0;
         float dotRemaining = GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget);
 
         return ActionReady(Higanbana) && SenCount is 1 &&
                CanApplyStatus(CurrentTarget, Debuffs.Higanbana) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
-               dotRemaining <= DotRefresh &&
+               dotRemaining <= dotRefresh &&
                HasStatusEffect(Buffs.Fuka) && HasStatusEffect(Buffs.Fugetsu) &&
                (EnhancedSenei && (JustUsed(Senei, 35f) || JustUsed(Ikishoten, 35f) || !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)) ||
                 !EnhancedSenei);
@@ -117,9 +121,9 @@ internal partial class SAM
     private static int ComputeHpThresholdHiganbana()
     {
         if (InBossEncounter())
-            return TargetIsBoss() ? SAM_ST_HiganbanaBossOption : SAM_ST_HiganbanaBossAddsOption;
+            return TargetIsBoss() ? SAM_ST_HiganbanaBossHPOption : SAM_ST_HiganbanaBossAddsHPOption;
 
-        return SAM_ST_HiganbanaTrashOption;
+        return SAM_ST_HiganbanaTrashHPOption;
     }
 
     #endregion
@@ -149,14 +153,69 @@ internal partial class SAM
         !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(SAM_ST_MeditateTimeStill) &&
         InCombat() && !HasBattleTarget();
 
-    private static int ShintenThreshold =>
-        IsNotEnabled(Preset.SAM_ST_SimpleMode) ? SAM_ST_ExecuteThreshold : 1;
+    private static bool CanShoha(double higanbanaDotRefresh = 15) =>
+        ActionReady(Shoha) &&
+        MeditationStacks is 3 &&
+        InActionRange(Shoha) &&
+        (SenCount is 3 ||
+         SenCount is 1 && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) < higanbanaDotRefresh ||
+         HasStatusEffect(Buffs.OgiNamikiriReady) ||
+         EnhancedSenei && JustUsed(Senei, 30f) ||
+         !EnhancedSenei && JustUsed(KaeshiSetsugekka, 20f));
+
+    private static bool CanShinten(int executeThreshold = 1)
+    {
+        float gcd = GetCooldown(OriginalHook(Hakaze)).CooldownTotal;
+
+        if (ActionReady(Shinten) && InActionRange(Shinten))
+        {
+            if (GetTargetHPPercent() < executeThreshold)
+                return true;
+
+            if (Kenki is 100 && ComboAction == OriginalHook(Gyofu) ||
+                Kenki >= 95 && (ComboAction is Jinpu or Shifu || SenCount is 3) ||
+                Kenki >= 80 && !HasSetsu && (JustUsed(MidareSetsugekka, 5f) || JustUsed(Higanbana, 5f)))
+                return true;
+
+            if (EnhancedSenei &&
+                !HasStatusEffect(Buffs.ZanshinReady))
+            {
+                if (GetCooldownRemainingTime(Senei) < gcd * 2 &&
+                    Kenki >= 90)
+                    return true;
+
+                if (JustUsed(Senei, 20f) &&
+                    !JustUsed(Ikishoten))
+                    return true;
+
+                if (Kenki >= 95 && JustUsed(MeikyoShisui))
+                    return true;
+
+                if (Kenki >= 90 && JustUsed(MeikyoShisui) && ComboAction is Yukikaze)
+                    return true;
+
+                if (Kenki >= 65 && SenCount >= 2 && (HasStatusEffect(Buffs.Tendo) || JustUsed(TendoKaeshiSetsugekka, 5f)))
+                    return true;
+
+                if (GetCooldownRemainingTime(Senei) >= 25 &&
+                    Kenki >= SAM_ST_KenkiOvercapAmount)
+                    return true;
+            }
+
+            if (!EnhancedSenei)
+            {
+                if (GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= SAM_ST_KenkiOvercapAmount)
+                    return true;
+
+                if (GetCooldownRemainingTime(Ikishoten) <= 10 && Kenki > 50)
+                    return true;
+            }
+        }
+        return false;
+    }
 
     private static float GCD =>
         GetAdjustedRecastTime(ActionType.Action, Hakaze) / 100f;
-
-    private static double DotRefresh =>
-        IsNotEnabled(Preset.SAM_ST_SimpleMode) ? SAM_ST_HiganbanaRefresh : 15;
 
     #endregion
 
@@ -214,9 +273,11 @@ internal partial class SAM
         bool useHiganbana,
         bool useTenkaGoken,
         bool useMidare,
-        bool onlyWhenStationary = false) =>
+        bool onlyWhenStationary = false,
+        int higanbanaHpThreshold = 0,
+        double higanbanaDotRefresh = 15) =>
         (!onlyWhenStationary || !IsMoving()) &&
-        CanIaijutsu(useHiganbana, useTenkaGoken, useMidare);
+        CanIaijutsu(useHiganbana, useTenkaGoken, useMidare, higanbanaHpThreshold, higanbanaDotRefresh);
 
     #endregion
 
@@ -368,73 +429,12 @@ internal partial class SAM
          EnhancedSenei && GetCooldownRemainingTime(Senei) > 33 ||
          GetStatusEffectRemainingTime(Buffs.TsubameReady) < 5);
 
-    private static bool CanShoha() =>
-        ActionReady(Shoha) &&
-        MeditationStacks is 3 &&
-        InActionRange(Shoha) &&
-        (SenCount is 3 ||
-         SenCount is 1 && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) < DotRefresh ||
-         HasStatusEffect(Buffs.OgiNamikiriReady) ||
-         EnhancedSenei && JustUsed(Senei, 30f) ||
-         !EnhancedSenei && JustUsed(KaeshiSetsugekka, 20f));
-
     private static bool CanZanshin() =>
         ActionReady(Zanshin) &&
         InActionRange(Zanshin) &&
         HasStatusEffect(Buffs.ZanshinReady) &&
         (JustUsed(Senei, 20f) ||
          GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8);
-
-    private static bool CanShinten()
-    {
-        float gcd = GetCooldown(OriginalHook(Hakaze)).CooldownTotal;
-
-        if (ActionReady(Shinten) && InActionRange(Shinten))
-        {
-            if (GetTargetHPPercent() < ShintenThreshold)
-                return true;
-
-            if (Kenki is 100 && ComboAction == OriginalHook(Gyofu) ||
-                Kenki >= 95 && (ComboAction is Jinpu or Shifu || SenCount is 3) ||
-                Kenki >= 80 && !HasSetsu && (JustUsed(MidareSetsugekka, 5f) || JustUsed(Higanbana, 5f)))
-                return true;
-
-            if (EnhancedSenei &&
-                !HasStatusEffect(Buffs.ZanshinReady))
-            {
-                if (GetCooldownRemainingTime(Senei) < gcd * 2 &&
-                    Kenki >= 90)
-                    return true;
-
-                if (JustUsed(Senei, 20f) &&
-                    !JustUsed(Ikishoten))
-                    return true;
-
-                if (Kenki >= 95 && JustUsed(MeikyoShisui))
-                    return true;
-
-                if (Kenki >= 90 && JustUsed(MeikyoShisui) && ComboAction is Yukikaze)
-                    return true;
-
-                if (Kenki >= 65 && SenCount >= 2 && (HasStatusEffect(Buffs.Tendo) || JustUsed(TendoKaeshiSetsugekka, 5f)))
-                    return true;
-
-                if (GetCooldownRemainingTime(Senei) >= 25 &&
-                    Kenki >= SAM_ST_KenkiOvercapAmount)
-                    return true;
-            }
-
-            if (!EnhancedSenei)
-            {
-                if (GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= SAM_ST_KenkiOvercapAmount)
-                    return true;
-
-                if (GetCooldownRemainingTime(Ikishoten) <= 10 && Kenki > 50)
-                    return true;
-            }
-        }
-        return false;
-    }
 
     private static bool CanOgiNamikiri(bool simpleMode = false)
     {
@@ -457,7 +457,7 @@ internal partial class SAM
                 return true;
 
             if (!simpleMode &&
-                SAM_ST_HiganbanaBossOption == 1 && !TargetIsBoss())
+                SAM_ST_HiganbanaBossHPOption == 1 && !TargetIsBoss())
                 return true;
         }
         return false;

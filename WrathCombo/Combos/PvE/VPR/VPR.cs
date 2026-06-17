@@ -146,7 +146,7 @@ internal partial class VPR : Melee
                     UseViceTwinWeaves(out twin, false, IsEnabled(Preset.VPR_ST_VicewinderWeaves)))
                     return twin;
 
-                if (IsEnabled(Preset.VPR_ST_SerpentsIre) && CanSerpentsIre(HPThresholdSerpentsIre))
+                if (IsEnabled(Preset.VPR_ST_SerpentsIre) && CanSerpentsIre(SerpentsIreHPThreshold))
                     return SerpentsIre;
 
                 if (IsEnabled(Preset.VPR_ST_Feint) &&
@@ -173,7 +173,7 @@ internal partial class VPR : Melee
                 return actionID;
 
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
-                CanReawaken())
+                CanReawaken(hpThresholdUsage: ComputeHpThresholdReawaken(), hpThresholdDontSave: VPR_ST_ReAwakenAlwaysUse))
                 return Reawaken;
 
             if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&
@@ -185,7 +185,7 @@ internal partial class VPR : Melee
                 return UseVicewinder(advancedTrueNorth: true);
 
             if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&
-                CanUseUncoiledFury())
+                CanUseUncoiledFury(stHoldCharges: VPR_ST_UncoiledFuryHoldCharges, stHpThreshold: VPR_ST_UncoiledFuryAlwaysUse))
                 return UncoiledFury;
 
             if (!InMeleeRange() && HasBattleTarget() &&
@@ -247,7 +247,7 @@ internal partial class VPR : Melee
                 return actionID;
 
             if (IsEnabled(Preset.VPR_AoE_Reawaken) &&
-                CanReawaken(true) &&
+                CanReawaken(true, hpThresholdUsageAoE: VPR_AoE_ReawakenHPThreshold) &&
                 (InActionRange(Reawaken) || VPR_AoE_ReawakenRangecheck == 1))
                 return Reawaken;
 
@@ -260,7 +260,7 @@ internal partial class VPR : Melee
                 return Vicepit;
 
             if (IsEnabled(Preset.VPR_AoE_UncoiledFury) &&
-                CanUseUncoiledFury(true))
+                CanUseUncoiledFury(true, aoeHoldCharges: VPR_AoE_UncoiledFuryHoldCharges, aoeHpThreshold: VPR_AoE_UncoiledFuryAlwaysUse))
                 return UncoiledFury;
 
             return UseCombo(actionID, true, IsEnabled(Preset.VPR_AoE_ReawakenCombo));

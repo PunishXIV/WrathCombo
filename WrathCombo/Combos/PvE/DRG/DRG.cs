@@ -29,7 +29,7 @@ internal partial class DRG : Melee
                     if (CanLifeSurge())
                         return LifeSurge;
 
-                    if (CanMirageDive())
+                    if (CanMirageDive(simpleMode: true))
                         return MirageDive;
 
                     if (CanUseGeirskogul())
@@ -104,7 +104,7 @@ internal partial class DRG : Melee
                     if (CanLifeSurge(true))
                         return LifeSurge;
 
-                    if (CanMirageDive(true))
+                    if (CanMirageDive(true, simpleMode: true))
                         return MirageDive;
 
                     if (CanUseGeirskogul(true))
@@ -174,11 +174,11 @@ internal partial class DRG : Melee
                     if (IsEnabled(Preset.DRG_ST_Buffs))
                     {
                         if (IsEnabled(Preset.DRG_ST_BattleLitany) &&
-                            CanBattleLitany(HPThresholdSTBattleLitany))
+                            CanBattleLitany(BattleLitanyHPThreshold))
                             return BattleLitany;
 
                         if (IsEnabled(Preset.DRG_ST_LanceCharge) &&
-                            CanLanceCharge(HPThresholdSTLanceCharge))
+                            CanLanceCharge(LanceChargeHPThreshold))
                             return LanceCharge;
 
                         if (IsEnabled(Preset.DRG_ST_LifeSurge) &&
@@ -193,7 +193,7 @@ internal partial class DRG : Melee
                             return MirageDive;
 
                         if (IsEnabled(Preset.DRG_ST_Geirskogul) &&
-                            CanUseGeirskogul())
+                            CanUseGeirskogul(hpThreshold: ComputeHpThresholdGeirskogul()))
                             return Geirskogul;
 
                         if (IsEnabled(Preset.DRG_ST_Wyrmwind) &&
@@ -241,7 +241,7 @@ internal partial class DRG : Melee
                             return OriginalHook(Jump);
 
                         if (IsEnabled(Preset.DRG_ST_DragonfireDive) &&
-                            CanDragonfireDive(hpThreshold: HPThresholdSTDragonfireDive, simpleMode: false))
+                            CanDragonfireDive(hpThreshold: DragonfireDiveHPThreshold, simpleMode: false))
                             return DragonfireDive;
                     }
 
@@ -253,7 +253,7 @@ internal partial class DRG : Melee
             }
 
             return !InMeleeRange() && HasBattleTarget()
-                ? OutsideOfMelee(actionID)
+                ? OutsideOfMelee(actionID, geirskogulHpThreshold: ComputeHpThresholdGeirskogul())
                 : DoBasicCombo(actionID, IsEnabled(Preset.DRG_TrueNorthDynamic));
         }
     }
@@ -296,7 +296,7 @@ internal partial class DRG : Melee
                             return MirageDive;
 
                         if (IsEnabled(Preset.DRG_AoE_Geirskogul) &&
-                            CanUseGeirskogul(true))
+                            CanUseGeirskogul(true, DRG_AoE_GeirskogulHPThreshold))
                             return Geirskogul;
 
                         if (IsEnabled(Preset.DRG_AoE_Wyrmwind) &&
@@ -351,7 +351,7 @@ internal partial class DRG : Melee
             }
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
-                ? OutsideOfMelee(actionID, onAoE: true)
+                ? OutsideOfMelee(actionID, onAoE: true, geirskogulHpThreshold: DRG_AoE_GeirskogulHPThreshold)
                 : DoBasicCombo(actionID, onAoE: true);
         }
     }

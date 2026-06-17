@@ -13,23 +13,20 @@ internal partial class RPR
 {
     #region SoD
 
-    private static bool CanUseShadowOfDeath()
+    private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool sodTrashOnly = true)
     {
-        int dotRefresh = IsNotEnabled(Preset.RPR_ST_SimpleMode) ? RPR_SoDRefreshRange : 8;
-
         if (LevelChecked(ShadowOfDeath) && !HasStatusEffect(Buffs.SoulReaver) &&
             !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.PerfectioParata) &&
             !HasStatusEffect(Buffs.ImmortalSacrifice) && !IsComboExpiring(3) &&
             CanApplyStatus(CurrentTarget, Debuffs.DeathsDesign) &&
             !JustUsed(ShadowOfDeath) && InActionRange(ShadowOfDeath))
         {
-            if ((IsNotEnabled(Preset.RPR_ST_SimpleMode) && RPR_ST_ArcaneCircleBossOption == 1 && !InBossEncounter() ||
-                 IsEnabled(Preset.RPR_ST_SimpleMode) && !InBossEncounter()) &&
+            if (sodTrashOnly && !InBossEncounter() &&
                 !HasStatusEffect(Buffs.Enshrouded) &&
                 GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
                 return true;
 
-            if (RPR_ST_ArcaneCircleBossOption == 0 || InBossEncounter() ||
+            if (RPR_ST_ArcaneCircleHPBossOption == 0 || InBossEncounter() ||
                 IsNotEnabled(Preset.RPR_ST_ArcaneCircle))
             {
                 //Balance burst prep: SoD near 60s / 30s on Arcane Circle
@@ -217,9 +214,9 @@ internal partial class RPR
             : Lemure <= 4) &&
         (!useArcaneCircleBoss || onAoE ||
          GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
-         (RPR_ST_ArcaneCircleBossOption == 0 ||
+         (RPR_ST_ArcaneCircleHPBossOption == 0 ||
           InBossEncounter() ||
-          RPR_ST_ArcaneCircleBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)) ||
+          RPR_ST_ArcaneCircleHPBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)) ||
          IsNotEnabled(Preset.RPR_ST_ArcaneCircle));
 
     private static bool CanLemureWeave(bool onAoE = false) =>
@@ -459,9 +456,11 @@ internal partial class RPR
         (GroupDamageIncoming(3f) ||
          !IsInParty() && IsPlayerTargeted());
 
-    private static int HPThresholdArcaneCircle =>
-        RPR_ST_ArcaneCircleBossOption == 1 ||
-        !InBossEncounter() ? RPR_ST_ArcaneCircleHPOption : 0;
+    private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
+        hpBossOption == 1 || !isBoss ? hpOption : 0;
+
+    private static int ArcaneCircleHPThreshold =>
+        BossHpThreshold(RPR_ST_ArcaneCircleHPBossOption, RPR_ST_ArcaneCircleHPOption, InBossEncounter());
 
     #endregion
 

@@ -266,16 +266,32 @@ internal partial class MNK
         return HasElapsedSinceBlitz(2.5f);
     }
 
-    private static bool IsBurstHolding(bool onAoE) =>
-        onAoE
-            ? IsNotEnabled(Preset.MNK_AOE_SimpleMode) &&
-              IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
+    private static bool IsBurstHolding(bool onAoE, bool checkBurstHold = false) =>
+        checkBurstHold &&
+        (onAoE
+            ? IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
               !IsEnabled(Preset.MNK_AoEUseBrotherhood) &&
               !IsEnabled(Preset.MNK_AoEUseROF)
-            : IsNotEnabled(Preset.MNK_ST_SimpleMode) &&
-              IsEnabled(Preset.MNK_STUsePerfectBalance) &&
+            : IsEnabled(Preset.MNK_STUsePerfectBalance) &&
               !IsEnabled(Preset.MNK_STUseBrotherhood) &&
-              !IsEnabled(Preset.MNK_STUseROF);
+              !IsEnabled(Preset.MNK_STUseROF));
+
+    private static bool UsePBAfterBurstHolding(bool onAoE, bool checkBurstHold = false, int perfectBalanceHpThreshold = 0)
+    {
+        if ((checkBurstHold && IsBurstHolding(onAoE, true)) || !IsBurstHoldReleaseReady())
+            return false;
+
+        if (!HasBattleTarget() || !JustUsedOpoGCD(GCD, onAoE))
+            return false;
+
+        if (onAoE && perfectBalanceHpThreshold > 0 && GetTargetHPPercent() < perfectBalanceHpThreshold)
+            return false;
+
+        if (JustUsed(PerfectBalance, 20 + GCD * 5))
+            return false;
+
+        return true;
+    }
 
     // Both burst buffs are ready but PB must weave first (burst-hold release / drift recovery).
     private static bool IsBurstHoldReleaseReady()
@@ -297,26 +313,9 @@ internal partial class MNK
         return true;
     }
 
-    private static bool UsePBAfterBurstHolding(bool onAoE)
+    private static bool CanPerfectBalance(bool onAoE, bool useOpenerBalance = false, bool checkBurstHold = false, int perfectBalanceHpThreshold = 0)
     {
-        if (IsBurstHolding(onAoE) || !IsBurstHoldReleaseReady())
-            return false;
-
-        if (!HasBattleTarget() || !JustUsedOpoGCD(GCD, onAoE))
-            return false;
-
-        if (onAoE && GetTargetHPPercent() < MNK_AoE_PerfectBalanceHPThreshold)
-            return false;
-
-        if (JustUsed(PerfectBalance, 20 + GCD * 5))
-            return false;
-
-        return true;
-    }
-
-    private static bool CanPerfectBalance(bool onAoE, bool useOpenerBalance = false)
-    {
-        if (IsBurstHolding(onAoE))
+        if (checkBurstHold && IsBurstHolding(onAoE, true))
             return false;
 
         if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
@@ -324,7 +323,7 @@ internal partial class MNK
             !HasBattleTarget() || JustUsed(PerfectBalance) || !JustUsedOpoGCD(GCD, onAoE))
             return false;
 
-        if (onAoE && GetTargetHPPercent() < MNK_AoE_PerfectBalanceHPThreshold)
+        if (onAoE && perfectBalanceHpThreshold > 0 && GetTargetHPPercent() < perfectBalanceHpThreshold)
             return false;
 
         if (!JustUsed(PerfectBalance, 20 + GCD * 5))
@@ -376,17 +375,17 @@ internal partial class MNK
     private static float GCD =>
         GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
 
-    private static int HPThresholdBH =>
-        MNK_ST_BHBossOption == 1 ||
-        !InBossEncounter() ? MNK_ST_BHHPThreshold : 0;
+    private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
+        hpBossOption == 1 || !isBoss ? hpOption : 0;
 
-    private static int HPThresholdRoF =>
-        MNK_ST_RoFBossOption == 1 ||
-        !InBossEncounter() ? MNK_ST_RoFHPThreshold : 0;
+    private static int BrotherhoodHPThreshold =>
+        BossHpThreshold(MNK_ST_BHHPBossOption, MNK_ST_BHHPOption, InBossEncounter());
 
-    private static int HPThresholdRoW =>
-        MNK_ST_RoWBossOption == 1 ||
-        !InBossEncounter() ? MNK_ST_RoWHPThreshold : 0;
+    private static int RiddleOfFireHPThreshold =>
+        BossHpThreshold(MNK_ST_RoFHPBossOption, MNK_ST_RoFHPOption, InBossEncounter());
+
+    private static int RiddleOfWindHPThreshold =>
+        BossHpThreshold(MNK_ST_RoWHPBossOption, MNK_ST_RoWHPOption, InBossEncounter());
 
     private static bool CanMantra() =>
         ActionReady(Mantra) &&

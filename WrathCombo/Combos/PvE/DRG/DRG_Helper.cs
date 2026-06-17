@@ -192,13 +192,13 @@ internal partial class DRG
          HasStatusEffect(Buffs.RaidenThrustReady) ||
          NumberOfEnemiesInRange(WyrmwindThrust, CurrentTarget) >= 2);
 
-    private static bool CanMirageDive(bool onAoE = false)
+    private static bool CanMirageDive(bool onAoE = false, bool simpleMode = false)
     {
         if (!ActionReady(MirageDive) || !HasStatusEffect(Buffs.DiveReady) ||
             OriginalHook(Jump) is not MirageDive || !InActionRange(MirageDive))
             return false;
 
-        if (onAoE || IsEnabled(Preset.DRG_ST_SimpleMode) || LoTDActive)
+        if (onAoE || simpleMode || LoTDActive)
             return true;
 
         bool diveExpiring = GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
@@ -207,30 +207,19 @@ internal partial class DRG
         return diveExpiring || !DRG_ST_DoubleMirage;
     }
 
-    private static int GeirskogulHpThreshold(bool onAoE) =>
-        onAoE
-            ? IsNotEnabled(Preset.DRG_AoE_SimpleMode) ? DRG_AoE_GeirskogulHPThreshold : 0
-            : IsNotEnabled(Preset.DRG_ST_SimpleMode)
-                ? ComputeHpThresholdGeirskogul()
-                : 0;
-
-    private static bool CanUseGeirskogul(bool onAoE = false, int hpThreshold = int.MinValue)
-    {
-        int threshold = hpThreshold == int.MinValue ? GeirskogulHpThreshold(onAoE) : hpThreshold;
-
-        return ActionReady(Geirskogul) &&
-               InActionRange(Geirskogul) &&
-               HasBattleTarget() &&
-               !LoTDTimerActive &&
-               GetTargetHPPercent() > threshold;
-    }
+    private static bool CanUseGeirskogul(bool onAoE = false, int hpThreshold = 0) =>
+        ActionReady(Geirskogul) &&
+        InActionRange(Geirskogul) &&
+        HasBattleTarget() &&
+        !LoTDTimerActive &&
+        GetTargetHPPercent() > hpThreshold;
 
     private static int ComputeHpThresholdGeirskogul()
     {
         if (InBossEncounter())
-            return TargetIsBoss() ? DRG_ST_GeirskogulBossOption : DRG_ST_GeirskogulBossAddsOption;
+            return TargetIsBoss() ? DRG_ST_GeirskogulBossHPOption : DRG_ST_GeirskogulBossAddsHPOption;
 
-        return DRG_ST_GeirskogulTrashOption;
+        return DRG_ST_GeirskogulTrashHPOption;
     }
 
     private static bool CanStarcross() =>
@@ -261,7 +250,7 @@ internal partial class DRG
         ActionReady(Stardiver) && LoTDActive && !HasStatusEffect(Buffs.StarcrossReady) &&
         CanUseWithHoldOptions(simpleMode ? null : onAoE ? DRG_AoE_StardiverMovingOrInRanged : DRG_ST_StardiverMovingOrInRanged);
 
-    private static uint OutsideOfMelee(uint actionId, bool simpleMode = false, bool onAoE = false)
+    private static uint OutsideOfMelee(uint actionId, bool simpleMode = false, bool onAoE = false, int geirskogulHpThreshold = 0)
     {
         if (onAoE)
         {
@@ -284,7 +273,7 @@ internal partial class DRG
                     return RiseOfTheDragon;
 
                 if ((simpleMode || IsEnabled(Preset.DRG_AoE_Geirskogul)) &&
-                    CanUseGeirskogul(true) && InCombat())
+                    CanUseGeirskogul(true, geirskogulHpThreshold) && InCombat())
                     return Geirskogul;
 
                 if ((simpleMode || IsEnabled(Preset.DRG_AoE_Nastrond)) &&
@@ -322,7 +311,7 @@ internal partial class DRG
                 return RiseOfTheDragon;
 
             if ((simpleMode || IsEnabled(Preset.DRG_ST_Geirskogul)) &&
-                CanUseGeirskogul() && InCombat())
+                CanUseGeirskogul(false, geirskogulHpThreshold) && InCombat())
                 return Geirskogul;
 
             if ((simpleMode || IsEnabled(Preset.DRG_ST_Nastrond)) &&
@@ -345,17 +334,17 @@ internal partial class DRG
 
     #region HP Thresholds
 
-    private static int HPThresholdSTBattleLitany =>
-        DRG_ST_BattleLitanyBossOption == 1 ||
-        !InBossEncounter() ? DRG_ST_BattleLitanyHPOption : 0;
+    private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
+        hpBossOption == 1 || !isBoss ? hpOption : 0;
 
-    private static int HPThresholdSTLanceCharge =>
-        DRG_ST_LanceChargeBossOption == 1 ||
-        !InBossEncounter() ? DRG_ST_LanceChargeHPOption : 0;
+    private static int BattleLitanyHPThreshold =>
+        BossHpThreshold(DRG_ST_BattleLitanyHPBossOption, DRG_ST_BattleLitanyHPOption, InBossEncounter());
 
-    private static int HPThresholdSTDragonfireDive =>
-        DRG_ST_DragonfireDiveBossOption == 1 ||
-        !InBossEncounter() ? DRG_ST_DragonfireDiveHPOption : 0;
+    private static int LanceChargeHPThreshold =>
+        BossHpThreshold(DRG_ST_LanceChargeHPBossOption, DRG_ST_LanceChargeHPOption, InBossEncounter());
+
+    private static int DragonfireDiveHPThreshold =>
+        BossHpThreshold(DRG_ST_DragonfireDiveHPBossOption, DRG_ST_DragonfireDiveHPOption, InBossEncounter());
 
     #endregion
 

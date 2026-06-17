@@ -193,7 +193,7 @@ internal partial class RPR : Melee
             if (CanWeave())
             {
                 if (IsEnabled(Preset.RPR_ST_ArcaneCircle) &&
-                    CanArcaneCircleWeave(hpThreshold: HPThresholdArcaneCircle))
+                    CanArcaneCircleWeave(hpThreshold: ArcaneCircleHPThreshold))
                     return ArcaneCircle;
 
                 if (IsEnabled(Preset.RPR_ST_Enshroud) &&
@@ -229,10 +229,10 @@ internal partial class RPR : Melee
 
                 if (IsEnabled(Preset.RPR_ST_ComboHeals))
                 {
-                    if (Role.CanSecondWind(RPR_STSecondWindHPThreshold))
+                    if (Role.CanSecondWind(RPR_ST_SecondWindHPThreshold))
                         return Role.SecondWind;
 
-                    if (Role.CanBloodBath(RPR_STBloodbathHPThreshold))
+                    if (Role.CanBloodBath(RPR_ST_BloodbathHPThreshold))
                         return Role.Bloodbath;
                 }
 
@@ -246,7 +246,8 @@ internal partial class RPR : Melee
                 return OriginalHook(Communio);
 
             if (IsEnabled(Preset.RPR_ST_SoD) &&
-                CanUseShadowOfDeath() && GetTargetHPPercent() > RPR_SoDHPThreshold)
+                CanUseShadowOfDeath(RPR_SoDRefreshRange, RPR_ST_ArcaneCircleHPBossOption == 1) &&
+                GetTargetHPPercent() > RPR_SoDHPThreshold)
                 return ShadowOfDeath;
 
             if (IsEnabled(Preset.RPR_ST_GibbetGallows) &&
@@ -323,10 +324,10 @@ internal partial class RPR : Melee
 
                 if (IsEnabled(Preset.RPR_AoE_ComboHeals))
                 {
-                    if (Role.CanSecondWind(RPR_AoESecondWindHPThreshold))
+                    if (Role.CanSecondWind(RPR_AoE_SecondWindHPThreshold))
                         return Role.SecondWind;
 
-                    if (Role.CanBloodBath(RPR_AoEBloodbathHPThreshold))
+                    if (Role.CanBloodBath(RPR_AoE_BloodbathHPThreshold))
                         return Role.Bloodbath;
                 }
 

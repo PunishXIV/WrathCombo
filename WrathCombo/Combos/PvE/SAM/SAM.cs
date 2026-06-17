@@ -33,7 +33,7 @@ internal partial class SAM : Melee
                 if (CanIkishoten())
                     return Ikishoten;
 
-                if (GetTargetHPPercent() < ShintenThreshold)
+                if (GetTargetHPPercent() < 1)
                     return UseKenkiSpender(actionID, true);
 
                 //Senei Feature
@@ -66,10 +66,10 @@ internal partial class SAM : Melee
                     return OriginalHook(ThirdEye);
 
                 // healing
-                if (Role.CanSecondWind(SAM_STSecondWindHPThreshold))
+                if (Role.CanSecondWind(SAM_ST_SecondWindHPThreshold))
                     return Role.SecondWind;
 
-                if (Role.CanBloodBath(SAM_STBloodbathHPThreshold))
+                if (Role.CanBloodBath(SAM_ST_BloodbathHPThreshold))
                     return Role.Bloodbath;
 
                 if (RoleActions.Melee.CanLegSweep())
@@ -199,7 +199,7 @@ internal partial class SAM : Melee
 
                 if (IsEnabled(Preset.SAM_ST_Damage))
                 {
-                    if (GetTargetHPPercent() < ShintenThreshold)
+                    if (GetTargetHPPercent() < SAM_ST_ExecuteThreshold)
                         return UseKenkiSpender(actionID);
 
                     //Senei feature
@@ -221,11 +221,11 @@ internal partial class SAM : Melee
                         return Zanshin;
 
                     if (IsEnabled(Preset.SAM_ST_CDs_Shoha) &&
-                        CanShoha())
+                        CanShoha(SAM_ST_HiganbanaRefresh))
                         return Shoha;
 
                     if (IsEnabled(Preset.SAM_ST_Shinten) &&
-                        CanShinten())
+                        CanShinten(SAM_ST_ExecuteThreshold))
                         return Shinten;
                 }
 
@@ -247,10 +247,10 @@ internal partial class SAM : Melee
                 // healing
                 if (IsEnabled(Preset.SAM_ST_ComboHeals))
                 {
-                    if (Role.CanSecondWind(SAM_STSecondWindHPThreshold))
+                    if (Role.CanSecondWind(SAM_ST_SecondWindHPThreshold))
                         return Role.SecondWind;
 
-                    if (Role.CanBloodBath(SAM_STBloodbathHPThreshold))
+                    if (Role.CanBloodBath(SAM_ST_BloodbathHPThreshold))
                         return Role.Bloodbath;
                 }
 
@@ -277,7 +277,9 @@ internal partial class SAM : Melee
                         IsEnabled(Preset.SAM_ST_CDs_UseHiganbana),
                         IsEnabled(Preset.SAM_ST_CDs_UseTenkaGoken),
                         IsEnabled(Preset.SAM_ST_CDs_UseMidare),
-                        IsEnabled(Preset.SAM_ST_CDs_Iaijutsu_Movement)))
+                        IsEnabled(Preset.SAM_ST_CDs_Iaijutsu_Movement),
+                        ComputeHpThresholdHiganbana(),
+                        SAM_ST_HiganbanaRefresh))
                     return OriginalHook(Iaijutsu);
 
                 //Ranged
@@ -347,10 +349,10 @@ internal partial class SAM : Melee
 
                 if (IsEnabled(Preset.SAM_AoE_ComboHeals))
                 {
-                    if (Role.CanSecondWind(SAM_AoESecondWindHPThreshold))
+                    if (Role.CanSecondWind(SAM_AoE_SecondWindHPThreshold))
                         return Role.SecondWind;
 
-                    if (Role.CanBloodBath(SAM_AoEBloodbathHPThreshold))
+                    if (Role.CanBloodBath(SAM_AoE_BloodbathHPThreshold))
                         return Role.Bloodbath;
                 }
 

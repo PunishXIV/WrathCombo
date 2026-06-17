@@ -161,9 +161,11 @@ internal partial class VPR
         HasStatusEffect(Buffs.Swiftscaled) &&
         HasStatusEffect(Buffs.HuntersInstinct);
 
-    private static int HPThresholdSerpentsIre =>
-        VPR_ST_SerpentsIreBossOption == 1 ||
-        !InBossEncounter() ? VPR_ST_SerpentsIreHPOption : 0;
+    private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
+        hpBossOption == 1 || !isBoss ? hpOption : 0;
+
+    private static int SerpentsIreHPThreshold =>
+        BossHpThreshold(VPR_ST_SerpentsIreHPBossOption, VPR_ST_SerpentsIreHPOption, InBossEncounter());
 
     private const float IreDualWieldWindow = 10f;
 
@@ -190,12 +192,12 @@ internal partial class VPR
 
     #region Reawaken
 
-    private static bool CanReawaken(bool onAoE = false)
+    private static bool CanReawaken(
+        bool onAoE = false,
+        int hpThresholdUsage = 0,
+        int hpThresholdDontSave = 5,
+        int hpThresholdUsageAoE = 40)
     {
-        int hpThresholdUsageST = IsNotEnabled(Preset.VPR_ST_SimpleMode) ? ComputeHpThresholdReawaken() : 0;
-        int hpThresholdDontSaveST = IsNotEnabled(Preset.VPR_ST_SimpleMode) ? VPR_ST_ReAwakenAlwaysUse : 5;
-        int hpThresholdUsageAoE = IsNotEnabled(Preset.VPR_AoE_SimpleMode) ? VPR_AoE_ReawakenHPThreshold : 40;
-
         if (onAoE)
         {
             if (!ActionReady(Reawaken) || GetTargetHPPercent() <= hpThresholdUsageAoE ||
@@ -212,11 +214,11 @@ internal partial class VPR
         if (!(ActionReady(Reawaken) && !HasStatusEffect(Buffs.Reawakened) &&
               InActionRange(Reawaken) && NoSTComboWeaves && HasBattleTarget() &&
               !IsEmpowermentExpiring(6) && !IsComboExpiring(6) &&
-              GetTargetHPPercent() > hpThresholdUsageST))
+              GetTargetHPPercent() > hpThresholdUsage))
             return false;
 
         if (TargetIsBoss() &&
-            GetTargetHPPercent() < hpThresholdDontSaveST)
+            GetTargetHPPercent() < hpThresholdDontSave)
             return true;
 
         // Standard double burst: one GCD after Ire, then first Reawaken
@@ -264,9 +266,9 @@ internal partial class VPR
     private static int ComputeHpThresholdReawaken()
     {
         if (InBossEncounter())
-            return TargetIsBoss() ? VPR_ST_ReawakenBossOption : VPR_ST_ReawakenBossAddsOption;
+            return TargetIsBoss() ? VPR_ST_ReawakenBossHPOption : VPR_ST_ReawakenBossAddsHPOption;
 
-        return VPR_ST_ReawakenTrashOption;
+        return VPR_ST_ReawakenTrashHPOption;
     }
 
    #endregion
@@ -462,13 +464,13 @@ internal partial class VPR
         (!HasBothBuffs ||
          IreCD >= GCD * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
 
-    private static bool CanUseUncoiledFury(bool onAoE = false)
+    private static bool CanUseUncoiledFury(
+        bool onAoE = false,
+        int stHoldCharges = 1,
+        int stHpThreshold = 1,
+        int aoeHoldCharges = 1,
+        int aoeHpThreshold = 1)
     {
-        int ufHoldChargesST = IsNotEnabled(Preset.VPR_ST_SimpleMode) ? VPR_ST_UncoiledFuryHoldCharges : 1;
-        int ufHPThresholdST = IsNotEnabled(Preset.VPR_ST_SimpleMode) ? VPR_ST_UncoiledFuryAlwaysUse : 1;
-        int ufHoldChargesAoE = IsNotEnabled(Preset.VPR_AoE_SimpleMode) ? VPR_AoE_UncoiledFuryHoldCharges : 1;
-        int ufHPThresholdAoE = IsNotEnabled(Preset.VPR_AoE_SimpleMode) ? VPR_AoE_UncoiledFuryAlwaysUse : 1;
-
         //AoE rotation
         if (onAoE)
             return ActionReady(UncoiledFury) && InActionRange(UncoiledFury) &&
@@ -476,7 +478,7 @@ internal partial class VPR
                    HasBothBuffs && !UsedVicepit && !UsedHuntersDen && !UsedSwiftskinsDen && NoAoEComboWeaves &&
                    !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) && !JustUsed(Ouroboros) &&
                    !JustUsed(JaggedMaw, GCD) && !JustUsed(BloodiedMaw, GCD) && !JustUsed(SerpentsIre, GCD) &&
-                   (RattlingCoilStacks > ufHoldChargesAoE || GetTargetHPPercent() < ufHPThresholdAoE && HasRattlingCoilStacks);
+                   (RattlingCoilStacks > aoeHoldCharges || GetTargetHPPercent() < aoeHpThreshold && HasRattlingCoilStacks);
 
         //ST range uptime
         if (ActionReady(UncoiledFury) && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget())
@@ -488,7 +490,7 @@ internal partial class VPR
                HasBothBuffs && !UsedVicewinder && !UsedHuntersCoil && !UsedSwiftskinsCoil && NoSTComboWeaves &&
                !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) && !JustUsed(Ouroboros) &&
                !IsComboExpiring(2) && !IsVenomExpiring(2) && !IsHoningExpiring(2) && !IsEmpowermentExpiring(3) &&
-               (RattlingCoilStacks > ufHoldChargesST || GetTargetHPPercent() < ufHPThresholdST && HasRattlingCoilStacks);
+               (RattlingCoilStacks > stHoldCharges || GetTargetHPPercent() < stHpThreshold && HasRattlingCoilStacks);
     }
 
     private static bool CanVicewinderCombo(ref uint actionId)
