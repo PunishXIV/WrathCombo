@@ -1230,6 +1230,23 @@ internal class Debug : ConfigWindow, IDisposable
             ImGui.Unindent();
         }
 
+        if (ImGui.CollapsingHeader("Pending HP"))
+        {
+            ImGui.Indent();
+            foreach (var p in SimpleTargetState.TargetStates)
+            {
+                if (p.GameObjectID.GetObject() is IBattleChara t) {
+                    if (ImGui.CollapsingHeader($"{t?.Name}###SimpleTarget{p.GameObjectID}"))
+                    {
+                        CustomStyleText($"ID", $"{p.GameObjectID}");
+                        CustomStyleText($"HP", $"{p.CurrentHP}");
+                        CustomStyleText($"Object HP", $"{t.CurrentHp}");
+                    }
+                }
+            }
+            ImGui.Unindent();
+        }
+
         #endregion
 
         ImGuiEx.Spacing(new Vector2(0, SpacingMedium));

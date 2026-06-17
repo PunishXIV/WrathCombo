@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using System.Linq;
 using WrathCombo.AutoRotation;
@@ -319,6 +320,8 @@ internal partial class SCH : Healer
                 if (IsEnabled(Preset.SCH_ST_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
                     return BanefulImpaction;
 
+
+                Svc.Log.Debug($"{IsEnabled(Preset.SCH_ST_ADV_DPS_ChainStrat)} {ActionWatching.NumberOfGcdsUsed > 3} {CanChainStrategem} {GetTargetHPPercent()} {chainThreshold}");
                 if (IsEnabled(Preset.SCH_ST_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem &&
                     GetTargetHPPercent() > chainThreshold)
                     return ChainStratagem;

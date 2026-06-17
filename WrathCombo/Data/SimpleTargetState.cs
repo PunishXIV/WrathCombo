@@ -29,11 +29,13 @@ namespace WrathCombo.Data
         {
             foreach (var o in Svc.Objects.Where(x => x is IBattleChara).Cast<IBattleChara>())
             {
-                if (!o.Struct()->InCombat)
-                {
-                    TargetStates.RemoveAll(x => x.GameObjectID == o.GameObjectId);
-                    continue;
-                }
+                //if (!o.Struct()->InCombat)
+                //{
+                //    TargetStates.RemoveAll(x => x.GameObjectID == o.GameObjectId);
+                //    continue;
+                //}
+
+                TargetStates.RemoveAll(x => o.IsDead && o.GameObjectId == x.GameObjectID);
 
                 if (TargetStates.Any(x => x.GameObjectID == o.GameObjectId))
                     continue;
@@ -41,7 +43,7 @@ namespace WrathCombo.Data
                 SimpleTargetState target = new(o.CurrentHp, o.MaxHp, o.GameObjectId);
                 TargetStates.Add(target);
             }
-
+            TargetStates.RemoveAll(x => !Svc.Objects.Any(y => y.GameObjectId == x.GameObjectID));
             UpdatePendingHP();
         }
 
@@ -58,12 +60,12 @@ namespace WrathCombo.Data
         {
             foreach (var o in TargetStates)
             {
-                if (o.GameObjectID.GetObject() is { } t)
-                {
-                    var b = (BattleChara*)t.Address;
-                    if (!b->InCombat)
-                        continue;
-                }
+                //if (o.GameObjectID.GetObject() is { } t)
+                //{
+                //    var b = (BattleChara*)t.Address;
+                //    if (!b->InCombat)
+                //        continue;
+                //}
 
                 var copy = ActionWatching.PendingHPChanges;
                 for (int i = 0; i < ActionWatching.PendingHPChanges.Count; i++)
@@ -72,6 +74,7 @@ namespace WrathCombo.Data
                     if (p.gameObjectId != o.GameObjectID)
                         continue;
 
+                    Svc.Log.Verbose($"Processing GS {p.globalSequence}");
                     o.CurrentHP = (uint)Math.Clamp(o.CurrentHP + (p.positiveChange ? p.value : -p.value), 0, o.MaxHP);
                     p.processed = true;
                     ActionWatching.PendingHPChanges[i] = p;
@@ -86,7 +89,7 @@ namespace WrathCombo.Data
             {
                 if (Svc.Objects.Where(x => x.EntityId == entityId).Cast<IBattleChara>().First() is { } t)
                 {
-                    p.CurrentHP = Math.Min(p.CurrentHP - diff, 0);
+                    p.CurrentHP = Math.Max(p.CurrentHP - diff, 0);
                 }
             }
         }

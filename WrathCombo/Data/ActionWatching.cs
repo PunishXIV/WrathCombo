@@ -107,7 +107,7 @@ public static class ActionWatching
 
     private static void ActorControlDetour(uint entityId, uint category, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, uint arg8, GameObjectId targetId, bool isRecorded)
     {
-        Svc.Log.Debug($"[ActorControl] {entityId} {category} {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {targetId.Id} {isRecorded}");
+        Svc.Log.Verbose($"[ActorControl] {entityId} {category} {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {targetId.Id} {isRecorded}");
         ActorControlPacketHook.Original(entityId, category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, targetId, isRecorded);
 
         if (category == 1541)
@@ -243,7 +243,7 @@ public static class ActionWatching
                             Svc.Framework.RunOnTick(() => member.HPUpdatePending = false, TimeSpan.FromSeconds(1.5));
                         }
 
-                        PendingHPChanges.Add(new PendingHPChange(effObjectId, eff.DamageHealValue, effType == ActionEffectType.Heal));
+                        PendingHPChanges.Add(new PendingHPChange(effObjectId, eff.DamageHealValue, effType == ActionEffectType.Heal, false, header->GlobalSequence));
                     }
 
                     // Event: MP Gain or MP Loss
@@ -694,5 +694,5 @@ public static class ActionWatching
         Ability = 4,
     }
 
-    public record struct PendingHPChange(ulong gameObjectId, int value, bool positiveChange, bool processed = false);
+    public record struct PendingHPChange(ulong gameObjectId, int value, bool positiveChange, bool processed = false, uint globalSequence = 0);
 }
