@@ -13,14 +13,15 @@ internal partial class VPR
 {
     #region Basic Combo
 
-    private static bool TrueNorthReady(bool useTrueNorth, int trueNorthCharges = 0) =>
+    private static bool TrueNorthReady(bool useTrueNorth, int trueNorthCharges = 0, bool dynamicHoldCharge = false) =>
         useTrueNorth &&
-        (VPR_ST_TrueNorthDynamicHoldCharge && GetRemainingCharges(Role.TrueNorth) is 2 ||
-         !VPR_ST_TrueNorthDynamicHoldCharge) &&
+        (dynamicHoldCharge && GetRemainingCharges(Role.TrueNorth) is 2 ||
+         !dynamicHoldCharge) &&
         GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
         Role.CanTrueNorth();
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool onAoE = false, int trueNorthCharges = 0)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool onAoE = false, int trueNorthCharges = 0,
+        bool dynamicHoldCharge = false)
     {
         if (onAoE)
         {
@@ -81,7 +82,7 @@ internal partial class VPR
             {
                 if ((HasStatusEffect(Buffs.FlanksbaneVenom) || HasStatusEffect(Buffs.HindsbaneVenom)) &&
                     LevelChecked(HindstingStrike))
-                    return TrueNorthReady(useTrueNorth, trueNorthCharges) &&
+                    return TrueNorthReady(useTrueNorth, trueNorthCharges, dynamicHoldCharge) &&
                            (!OnTargetsRear() && HasStatusEffect(Buffs.HindsbaneVenom) ||
                             !OnTargetsFlank() && HasStatusEffect(Buffs.FlanksbaneVenom))
                         ? Role.TrueNorth
@@ -89,7 +90,7 @@ internal partial class VPR
 
                 if ((HasStatusEffect(Buffs.FlankstungVenom) || HasStatusEffect(Buffs.HindstungVenom)) &&
                     LevelChecked(FlanksbaneFang))
-                    return TrueNorthReady(useTrueNorth, trueNorthCharges) &&
+                    return TrueNorthReady(useTrueNorth, trueNorthCharges, dynamicHoldCharge) &&
                            (!OnTargetsRear() && HasStatusEffect(Buffs.HindstungVenom) ||
                             !OnTargetsFlank() && HasStatusEffect(Buffs.FlankstungVenom))
                         ? Role.TrueNorth
@@ -450,10 +451,11 @@ internal partial class VPR
         bool onAoE,
         bool useReawakenCombo,
         bool useTrueNorth = false,
-        int trueNorthCharges = 0) =>
+        int trueNorthCharges = 0,
+        bool dynamicHoldCharge = false) =>
         useReawakenCombo && HasStatusEffect(Buffs.Reawakened)
             ? ReawakenCombo(actionId)
-            : DoBasicCombo(actionId, useTrueNorth, onAoE, trueNorthCharges);
+            : DoBasicCombo(actionId, useTrueNorth, onAoE, trueNorthCharges, dynamicHoldCharge);
 
     #endregion
 
@@ -498,7 +500,7 @@ internal partial class VPR
                (RattlingCoilStacks > stHoldCharges || GetTargetHPPercent() < stHpThreshold && HasRattlingCoilStacks);
     }
 
-    private static bool CanVicewinderCombo(ref uint actionId)
+    private static bool CanVicewinderCombo(ref uint actionId, bool vicewinderBuffPrio = false)
     {
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
             LevelChecked(Vicewinder) && InActionRange(Vicewinder) &&
@@ -508,7 +510,7 @@ internal partial class VPR
             if (UsedVicewinder &&
                 (!HasStatusEffect(Buffs.Swiftscaled) ||
                  HasBothBuffs && (!OnTargetsFlank() || !TargetNeedsPositionals()) ||
-                 VPR_VicewinderBuffPrio && GetStatusEffectRemainingTime(Buffs.Swiftscaled) < GCD * 6) ||
+                 vicewinderBuffPrio && GetStatusEffectRemainingTime(Buffs.Swiftscaled) < GCD * 6) ||
                 UsedHuntersCoil)
             {
                 actionId = SwiftskinsCoil;
@@ -519,7 +521,7 @@ internal partial class VPR
             if (UsedVicewinder &&
                 (!HasStatusEffect(Buffs.HuntersInstinct) ||
                  HasBothBuffs && (!OnTargetsRear() || !TargetNeedsPositionals()) ||
-                 VPR_VicewinderBuffPrio && GetStatusEffectRemainingTime(Buffs.HuntersInstinct) < GCD * 6) ||
+                 vicewinderBuffPrio && GetStatusEffectRemainingTime(Buffs.HuntersInstinct) < GCD * 6) ||
                 UsedSwiftskinsCoil)
             {
                 actionId = HuntersCoil;

@@ -216,7 +216,8 @@ internal partial class RPR : Melee
                 if (UseEnshroudWeaves(out uint weave, false,
                     IsEnabled(Preset.RPR_ST_Sacrificium),
                     IsEnabled(Preset.RPR_ST_Lemure),
-                    arcaneCircleEnabled: IsEnabled(Preset.RPR_ST_ArcaneCircle)))
+                    arcaneCircleEnabled: IsEnabled(Preset.RPR_ST_ArcaneCircle),
+                    arcaneCircleBossOption: RPR_ST_ArcaneCircleHPBossOption))
                     return weave;
 
                 if (IsEnabled(Preset.RPR_ST_Feint) &&

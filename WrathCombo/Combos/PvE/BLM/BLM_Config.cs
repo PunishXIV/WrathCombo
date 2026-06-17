@@ -325,7 +325,7 @@ internal partial class BLM
         public static UserFloat
             BLM_ST_LeyLinesTimeStill = new("BLM_ST_LeyLinesTimeStill", 2.5f),
             BLM_AoE_LeyLinesTimeStill = new("BLM_AoE_LeyLinesTimeStill", 2.5f),
-            BLM_ST_ThunderRefresh = new("BLM_ST_ThunderUptime_Threshold", 2.5f);
+            BLM_ST_ThunderRefresh = new("BLM_ST_ThunderRefresh", 2.5f);
 
         public static UserBool
             BLM_AM_FieldMouseover = new("BLM_AM_FieldMouseover"),

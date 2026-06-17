@@ -213,16 +213,20 @@ internal partial class RPR
         (!LevelChecked(Gluttony) ||
          LevelChecked(Gluttony) && (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 5));
 
-    private static bool CanSacrificiumWeave(bool onAoE = false, bool useArcaneCircleBoss = true, bool arcaneCircleEnabled = true) =>
+    private static bool CanSacrificiumWeave(
+        bool onAoE = false,
+        bool useArcaneCircleBoss = true,
+        bool arcaneCircleEnabled = true,
+        int arcaneCircleBossOption = 0) =>
         HasStatusEffect(Buffs.Enshrouded) && HasStatusEffect(Buffs.Oblatio) &&
         (onAoE
             ? Lemure is 2 && Void is 1
             : Lemure <= 4) &&
         (!useArcaneCircleBoss || onAoE ||
          GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
-         (RPR_ST_ArcaneCircleHPBossOption == 0 ||
+         (arcaneCircleBossOption == 0 ||
           InBossEncounter() ||
-          RPR_ST_ArcaneCircleHPBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)) ||
+          arcaneCircleBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)) ||
          !arcaneCircleEnabled);
 
     private static bool CanLemureWeave(bool onAoE = false) =>
@@ -231,14 +235,14 @@ internal partial class RPR
         (!onAoE || InActionRange(OriginalHook(GrimSwathe)));
 
     private static bool UseEnshroudWeaves(out uint action, bool onAoE, bool sacrificium = true, bool lemure = true,
-        bool useArcaneCircleBoss = true, bool arcaneCircleEnabled = true)
+        bool useArcaneCircleBoss = true, bool arcaneCircleEnabled = true, int arcaneCircleBossOption = 0)
     {
         action = 0;
 
         if (!HasStatusEffect(Buffs.Enshrouded))
             return false;
 
-        if (sacrificium && CanSacrificiumWeave(onAoE, useArcaneCircleBoss, arcaneCircleEnabled))
+        if (sacrificium && CanSacrificiumWeave(onAoE, useArcaneCircleBoss, arcaneCircleEnabled, arcaneCircleBossOption))
         {
             action = OriginalHook(Gluttony);
             return true;

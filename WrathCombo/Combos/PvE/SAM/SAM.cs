@@ -188,7 +188,7 @@ internal partial class SAM : Melee
                 {
                     //Meikyo feature
                     if (IsEnabled(Preset.SAM_ST_CDs_MeikyoShisui) &&
-                        CanMeikyo())
+                        CanMeikyo(SAM_ST_MeikyoExecuteThreshold))
                         return MeikyoShisui;
 
                     //Ikishoten feature
@@ -228,7 +228,7 @@ internal partial class SAM : Melee
                         return Shoha;
 
                     if (IsEnabled(Preset.SAM_ST_Shinten) &&
-                        CanShinten(SAM_ST_ExecuteThreshold))
+                        CanShinten(SAM_ST_ExecuteThreshold, SAM_ST_KenkiOvercapAmount))
                         return Shinten;
                 }
 

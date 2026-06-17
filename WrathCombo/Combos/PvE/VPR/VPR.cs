@@ -169,7 +169,7 @@ internal partial class VPR : Melee
             }
 
             if (IsEnabled(Preset.VPR_ST_VicewinderCombo) &&
-                CanVicewinderCombo(ref actionID))
+                CanVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio))
                 return actionID;
 
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
@@ -201,7 +201,8 @@ internal partial class VPR : Melee
             return UseCombo(actionID, false,
                 useReawakenCombo: IsEnabled(Preset.VPR_ST_GenerationCombo),
                 useTrueNorth: IsEnabled(Preset.VPR_TrueNorthDynamic),
-                trueNorthCharges: VPR_ManualTN);
+                trueNorthCharges: VPR_ManualTN,
+                dynamicHoldCharge: VPR_ST_TrueNorthDynamicHoldCharge);
         }
     }
 

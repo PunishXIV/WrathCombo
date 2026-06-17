@@ -1,11 +1,13 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.GameHelpers;
+using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.BLM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
@@ -238,6 +240,314 @@ internal partial class BLM
 
     #endregion
 
+    #region ST Weaves
+
+    private static bool CanStAmplifierWeave(bool useAmplifier = true) =>
+        useAmplifier && ActionReady(Amplifier) && !HasMaxPolyglotStacks;
+
+    private static bool CanStLeyLinesWeave(
+        bool useLeyLines = true,
+        int minCharges = 1,
+        bool allowMoving = true,
+        double timeStillSeconds = 2.5,
+        int hpThreshold = 0) =>
+        useLeyLines &&
+        ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
+        !JustUsed(LeyLines) &&
+        GetRemainingCharges(LeyLines) > minCharges &&
+        (allowMoving || !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(timeStillSeconds)) &&
+        GetTargetHPPercent() > hpThreshold;
+
+    private static uint TryEndOfFireWeave(
+        bool useManafont = true,
+        bool useSwiftcast = true,
+        bool useTriplecast = true,
+        bool triplecastIgnoreLeyLines = true,
+        bool triplecastRequireChargeReserve = false,
+        bool useTranspose = true,
+        bool transposeIncludeLowMp = false,
+        uint fallbackWhenNoTranspose = 0)
+    {
+        if (!EndOfFirePhase)
+            return 0;
+
+        if (useManafont && ActionReady(Manafont))
+            return Manafont;
+
+        if (useSwiftcast &&
+            ActionReady(Role.Swiftcast) && JustUsed(Despair) &&
+            GetCooldownRemainingTime(Manafont) > GCD &&
+            !HasStatusEffect(Buffs.Triplecast) &&
+            InActionRange(Fire) && HasBattleTarget())
+            return Role.Swiftcast;
+
+        if (useTriplecast &&
+            ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
+            !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
+            InActionRange(Fire) && HasBattleTarget() &&
+            (triplecastIgnoreLeyLines || !HasStatusEffect(Buffs.LeyLines)) &&
+            (!triplecastRequireChargeReserve || HasTriplecastChargesForMovement()) &&
+            JustUsed(Despair) && !JustUsed(Triplecast) && !JustUsed(Manafont))
+            return Triplecast;
+
+        if (useTranspose &&
+            ActionReady(Transpose) &&
+            (HasStatusEffect(Role.Buffs.Swiftcast) ||
+             HasStatusEffect(Buffs.Triplecast) ||
+             transposeIncludeLowMp && !LevelChecked(Fire3) && MP.Cur < MP.FireI))
+            return Transpose;
+
+        return fallbackWhenNoTranspose != 0 && !ActionReady(Transpose)
+            ? fallbackWhenNoTranspose
+            : 0;
+    }
+
+    private static uint TryIceWeave(
+        bool useTranspose = true,
+        bool useSwiftcast = true,
+        bool useTriplecast = false,
+        bool triplecastIgnoreLeyLines = true,
+        bool triplecastRequireChargeReserve = false)
+    {
+        if (!IcePhase)
+            return 0;
+
+        if (useTranspose && MP.Full && JustUsed(Paradox) && ActionReady(Transpose))
+            return Transpose;
+
+        if (ActionReady(Blizzard3) && UmbralIceStacks < 3)
+        {
+            if (useSwiftcast &&
+                ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
+                HasBattleTarget() && InActionRange(Blizzard))
+                return Role.Swiftcast;
+
+            if (useTriplecast &&
+                ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
+                HasBattleTarget() && InActionRange(Blizzard) && !JustUsed(Triplecast) &&
+                !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
+                (triplecastIgnoreLeyLines || !HasStatusEffect(Buffs.LeyLines)) &&
+                (!triplecastRequireChargeReserve || HasTriplecastChargesForMovement()) &&
+                JustUsed(Despair) && !JustUsed(Manafont))
+                return Triplecast;
+        }
+
+        return 0;
+    }
+
+    private static bool CanStManaward(
+        bool useManaward = false,
+        int hpThreshold = 60,
+        bool simpleLogic = true,
+        int triggerMode = 0,
+        bool soloOption = false) =>
+        useManaward && ActionReady(Manaward) && !LocalPlayer!.HasShield() &&
+        (simpleLogic
+            ? PlayerHealthPercentageHp() < hpThreshold && !IsInParty() || GroupDamageIncoming()
+            : (triggerMode == 0 && PlayerHealthPercentageHp() <= hpThreshold && GroupDamageIncoming()) ||
+              ((triggerMode == 1 || triggerMode == 0 && soloOption && !IsInParty()) &&
+               PlayerHealthPercentageHp() <= hpThreshold) ||
+              triggerMode == 2 && GroupDamageIncoming());
+
+    private static bool CanStAddleWeave(bool useAddle = true) =>
+        useAddle && Role.CanAddle() && GroupDamageIncoming();
+
+    #endregion
+
+    #region ST GCD Utilities
+
+    private static bool CanStScatheFiller(bool useScathe = true) =>
+        useScathe && IsMoving() && !LevelChecked(Triplecast) && ActionReady(Scathe);
+
+    private static uint TryStPolyglotOvercap(bool usePolyglot = true) =>
+        usePolyglot && PolyglotOvercapProtection()
+            ? PolyglotSpell
+            : 0;
+
+    private static uint TryStThunder(bool useThunder = true, int hpThreshold = 0, float dotRefresh = 5f) =>
+        useThunder && CanThunder(hpThreshold, dotRefresh)
+            ? OriginalHook(Thunder)
+            : 0;
+
+    private static uint TryStAmplifierXeno(bool useAmplifier = true, bool usePolyglot = true) =>
+        useAmplifier && usePolyglot &&
+        LevelChecked(Amplifier) &&
+        GetCooldownRemainingTime(Amplifier) < 5 &&
+        HasMaxPolyglotStacks
+            ? Xenoglossy
+            : 0;
+
+    private static uint TryStMovementGcd(bool useConfiguredPriority = false)
+    {
+        if (!IsMoving() || !InCombat() || !HasBattleTarget() || !InActionRange(Fire))
+            return 0;
+
+        if (useConfiguredPriority)
+        {
+            foreach (int priority in BLM_ST_MovementPriority.OrderBy(x => x))
+            {
+                int index = BLM_ST_MovementPriority.IndexOf(priority);
+                if (TryMovementAction(index, out uint action))
+                    return action;
+            }
+
+            return 0;
+        }
+
+        if (ActionReady(Triplecast) &&
+            !HasStatusEffect(Buffs.Triplecast) &&
+            !HasStatusEffect(Role.Buffs.Swiftcast) &&
+            !HasStatusEffect(Buffs.LeyLines) &&
+            !JustUsed(Triplecast))
+            return Triplecast;
+
+        if (LevelChecked(Paradox) &&
+            FirePhase && ActiveParadox &&
+            MP.Cur >= MP.FireParadox &&
+            !HasStatusEffect(Buffs.Firestarter) &&
+            !HasStatusEffect(Buffs.Triplecast) &&
+            !HasStatusEffect(Role.Buffs.Swiftcast))
+            return OriginalHook(Fire);
+
+        if (ActionReady(Role.Swiftcast) &&
+            !HasStatusEffect(Buffs.Triplecast))
+            return Role.Swiftcast;
+
+        if (HasPolyglot &&
+            !HasStatusEffect(Buffs.Triplecast) &&
+            !HasStatusEffect(Role.Buffs.Swiftcast))
+            return PolyglotSpell;
+
+        return 0;
+    }
+
+    #endregion
+
+    #region AoE Weaves
+
+    private static uint TryAoEMovementTriplecast(bool useTriplecast = true) =>
+        useTriplecast &&
+        IsMoving() && InCombat() &&
+        InActionRange(Fire2) && HasBattleTarget() &&
+        ActionReady(Triplecast) &&
+        !HasStatusEffect(Buffs.Triplecast) &&
+        !JustUsed(Triplecast)
+            ? Triplecast
+            : 0;
+
+    private static bool CanAoEManafontWeave(bool useManafont = true) =>
+        useManafont && ActionReady(Manafont) && EndOfFirePhase;
+
+    private static bool CanAoETransposeWeave(bool useTranspose = true) =>
+        useTranspose && ActionReady(Transpose) && (EndOfFirePhase || EndOfIcePhaseAoE);
+
+    private static bool CanAoEAmplifierWeave(bool useAmplifier = true, int polyglotTimerThreshold = 20) =>
+        useAmplifier && ActionReady(Amplifier) && PolyglotTimer >= polyglotTimerThreshold;
+
+    private static bool CanAoELeyLinesWeave(
+        bool useLeyLines = true,
+        int minCharges = 0,
+        bool allowMoving = true,
+        double timeStillSeconds = 2.5,
+        int hpThreshold = 0) =>
+        useLeyLines &&
+        ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
+        !JustUsed(LeyLines) &&
+        GetRemainingCharges(LeyLines) > minCharges &&
+        (allowMoving || !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(timeStillSeconds)) &&
+        GetTargetHPPercent() > hpThreshold;
+
+    #endregion
+
+    #region AoE GCDs
+
+    private static uint TryAoEPolyglot(bool usePolyglot = true) =>
+        usePolyglot &&
+        (EndOfFirePhase || EndOfIcePhaseAoE || IcePhase && JustUsedFreezeOrBlizzard) &&
+        HasPolyglot && ActionReady(Foul)
+            ? Foul
+            : 0;
+
+    private static uint TryAoEThunder(bool useThunder = true, int hpThreshold = 0, float dotRefresh = 3f) =>
+        useThunder && CanAoEThunder(hpThreshold, dotRefresh)
+            ? OriginalHook(Thunder2)
+            : 0;
+
+    private static uint TryAoEParadoxFiller(bool useParadox = true) =>
+        useParadox &&
+        ActiveParadox && (EndOfIcePhaseAoE || IcePhase && JustUsedFreezeOrBlizzard)
+            ? OriginalHook(Blizzard)
+            : 0;
+
+    private static uint UseAoEFirePhaseGcd(
+        bool useTriplecast = true,
+        int triplecastHoldCharges = 0,
+        bool useTranspose = true,
+        bool useBlizzard2Fallback = false)
+    {
+        if (CanFlareStar())
+            return FlareStar;
+
+        if (ActionReady(Fire2) && !TraitLevelChecked(Traits.UmbralHeart))
+            return OriginalHook(Fire2);
+
+        if (useTriplecast &&
+            !HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
+            HasBattleTarget() && InActionRange(Fire2) && !JustUsed(Triplecast) &&
+            GetRemainingCharges(Triplecast) > triplecastHoldCharges &&
+            HasMaxUmbralHeartStacks && GetCooldownRemainingTime(Manafont) > GCD * 3)
+            return Triplecast;
+
+        if (ActionReady(Flare))
+            return Flare;
+
+        if (useBlizzard2Fallback &&
+            LevelChecked(Blizzard2) &&
+            TraitLevelChecked(Traits.AspectMasteryIII) &&
+            !TraitLevelChecked(Traits.UmbralHeart))
+            return OriginalHook(Blizzard2);
+
+        if (useTranspose && ActionReady(Transpose) && MP.Cur < MP.FireAoE)
+            return Transpose;
+
+        return 0;
+    }
+
+    private static uint UseAoEIcePhaseGcd(
+        bool useTranspose = true,
+        bool useFire2WithoutTranspose = false,
+        bool useBlizzard4Sub = true,
+        bool flareTransposeRequiresNoUmbralHeart = false)
+    {
+        if (HasMaxUmbralHeartStacks ||
+            MP.Cur >= 5000 && LevelChecked(Flare) &&
+            (!flareTransposeRequiresNoUmbralHeart || !TraitLevelChecked(Traits.UmbralHeart)) ||
+            MP.Full && !LevelChecked(Flare))
+        {
+            if (useTranspose && ActionReady(Transpose))
+                return Transpose;
+
+            if (useFire2WithoutTranspose &&
+                LevelChecked(Fire2) &&
+                TraitLevelChecked(Traits.AspectMasteryIII))
+                return OriginalHook(Fire2);
+        }
+
+        if (ActionReady(Freeze))
+            return useBlizzard4Sub &&
+                   ActionReady(Blizzard4) && HasBattleTarget() &&
+                   NumberOfEnemiesInRange(Freeze, CurrentTarget) == 2
+                ? Blizzard4
+                : Freeze;
+
+        if (!ActionReady(Freeze) && LevelChecked(Blizzard2))
+            return OriginalHook(Blizzard2);
+
+        return 0;
+    }
+
+    #endregion
+
     #region Movement Prio
 
     private const int MovementDespair = 0;
@@ -318,8 +628,7 @@ internal partial class BLM
     {
         action = PrioritizedMovement[index].Action;
         return ActionReady(action) && LevelChecked(action) &&
-               PrioritizedMovement[index].Logic() &&
-               IsEnabled(PrioritizedMovement[index].Preset);
+               PrioritizedMovement[index].Logic();
     }
 
     #endregion

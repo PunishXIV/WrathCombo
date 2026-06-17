@@ -167,7 +167,7 @@ internal partial class SAM
          EnhancedSenei && JustUsed(Senei, 30f) ||
          !EnhancedSenei && JustUsed(KaeshiSetsugekka, 20f));
 
-    private static bool CanShinten(int executeThreshold = 1)
+    private static bool CanShinten(int executeThreshold = 1, int kenkiOvercapAmount = 65)
     {
         float gcd = GetCooldown(OriginalHook(Hakaze)).CooldownTotal;
 
@@ -202,13 +202,13 @@ internal partial class SAM
                     return true;
 
                 if (GetCooldownRemainingTime(Senei) >= 25 &&
-                    Kenki >= SAM_ST_KenkiOvercapAmount)
+                    Kenki >= kenkiOvercapAmount)
                     return true;
             }
 
             if (!EnhancedSenei)
             {
-                if (GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= SAM_ST_KenkiOvercapAmount)
+                if (GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= kenkiOvercapAmount)
                     return true;
 
                 if (GetCooldownRemainingTime(Ikishoten) <= 10 && Kenki > 50)
@@ -332,13 +332,13 @@ internal partial class SAM
 
     #region Meikyo
 
-    private static bool CanMeikyo()
+    private static bool CanMeikyo(int meikyoExecuteThreshold = 5)
     {
         if (!ActionReady(MeikyoShisui) || HasStatusEffect(Buffs.Tendo) ||
             HasStatusEffect(Buffs.MeikyoShisui) || JustUsed(MeikyoShisui))
             return false;
 
-        if (TargetIsBoss() && GetTargetHPPercent() < SAM_ST_MeikyoExecuteThreshold &&
+        if (TargetIsBoss() && GetTargetHPPercent() < meikyoExecuteThreshold &&
             (JustUsed(Yukikaze, 2f) || JustUsed(Gekko, 2f) || JustUsed(Kasha, 2f)))
             return true;
 

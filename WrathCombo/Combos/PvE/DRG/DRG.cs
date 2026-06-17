@@ -62,7 +62,7 @@ internal partial class DRG : Melee
 
                 if (CanDRGWeave(0.8f))
                 {
-                    if (CanHighJump())
+                    if (CanHighJump(allowDoubleMirageHold: false))
                         return OriginalHook(Jump);
 
                     if (CanDragonfireDive())

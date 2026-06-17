@@ -223,7 +223,7 @@ internal partial class SAM
             SAM_ST_HiganbanaBossHPOption = new("SAM_ST_HiganbanaBossHPOption"),
             SAM_ST_HiganbanaBossAddsHPOption = new("SAM_ST_HiganbanaBossAddsHPOption", 25),
             SAM_ST_HiganbanaTrashHPOption = new("SAM_ST_HiganbanaTrashHPOption", 100),
-            SAM_ST_HiganbanaRefresh = new("SAM_ST_Higanbana_Refresh", 15),
+            SAM_ST_HiganbanaRefresh = new("SAM_ST_HiganbanaRefresh", 15),
             SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
             SAM_ST_YukikazeCombo_Prio = new("SAM_ST_YukikazeCombo_Prio", 1),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 5),

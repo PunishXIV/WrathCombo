@@ -193,8 +193,12 @@ internal partial class MNK : Melee
             // OGCDs
             if (CanWeave() && (InCombat() || ComboAction > 0))
             {
+                bool burstHolding = IsEnabled(Preset.MNK_STUsePerfectBalance) &&
+                    !IsEnabled(Preset.MNK_STUseBrotherhood) &&
+                    !IsEnabled(Preset.MNK_STUseROF);
+
                 if (IsEnabled(Preset.MNK_STUsePerfectBalance) &&
-                    UsePBAfterBurstHolding(false, checkBurstHold: true))
+                    UsePBAfterBurstHolding(false))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_STUseBuffs))
@@ -211,7 +215,8 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(Preset.MNK_STUsePerfectBalance) &&
-                    CanPerfectBalance(false, IsEnabled(Preset.MNK_STUseOpener), checkBurstHold: true))
+                    CanPerfectBalance(false, IsEnabled(Preset.MNK_STUseOpener), burstHolding,
+                        useFiresReply: IsEnabled(Preset.MNK_STUseFiresReply)))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_STUseBuffs) &&
@@ -230,7 +235,7 @@ internal partial class MNK : Melee
 
                 if (IsEnabled(Preset.MNK_ST_UseRoE) &&
                     (CanRoE() ||
-                     MNK_ST_EarthsReply && CanEarthsReply()))
+                     MNK_ST_EarthsReply && CanEarthsReply(MNK_ST_EarthsReplyHPThreshold)))
                     return OriginalHook(RiddleOfEarth);
 
                 if (IsEnabled(Preset.MNK_ST_Feint) &&
@@ -253,7 +258,7 @@ internal partial class MNK : Melee
 
             // GCDs
             if (HasStatusEffect(Buffs.FormlessFist) ||
-                ForceSecondOpo(false))
+                ForceSecondOpo(false, IsEnabled(Preset.MNK_STUseFiresReply)))
                 return ForcedOpoGCD(false);
 
             // Masterful Blitz
@@ -272,7 +277,7 @@ internal partial class MNK : Melee
             // Perfect Balance or Standard Beast Chakra's
             return DoPerfectBalanceCombo(ref actionID)
                 ? actionID
-                : DoBasicCombo(actionID, IsEnabled(Preset.MNK_STUseTrueNorth));
+                : DoBasicCombo(actionID, IsEnabled(Preset.MNK_STUseTrueNorth), MNK_ManualTN);
         }
     }
 
@@ -299,8 +304,12 @@ internal partial class MNK : Melee
             // OGCD's
             if (CanWeave() && (InCombat() || ComboAction > 0))
             {
+                bool burstHolding = IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
+                    !IsEnabled(Preset.MNK_AoEUseBrotherhood) &&
+                    !IsEnabled(Preset.MNK_AoEUseROF);
+
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
-                    UsePBAfterBurstHolding(true, checkBurstHold: true, perfectBalanceHpThreshold: MNK_AoE_PerfectBalanceHPThreshold))
+                    UsePBAfterBurstHolding(true, MNK_AoE_PerfectBalanceHPThreshold))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_AoEUseBuffs) &&
@@ -316,7 +325,9 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
-                    CanPerfectBalance(true, checkBurstHold: true, perfectBalanceHpThreshold: MNK_AoE_PerfectBalanceHPThreshold))
+                    CanPerfectBalance(true, isBurstHolding: burstHolding,
+                        perfectBalanceHpThreshold: MNK_AoE_PerfectBalanceHPThreshold,
+                        useFiresReply: IsEnabled(Preset.MNK_AoEUseFiresReply)))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_AoEUseBuffs) &&
@@ -345,7 +356,7 @@ internal partial class MNK : Melee
 
             // GCDs
             if (HasStatusEffect(Buffs.FormlessFist) ||
-                ForceSecondOpo(true))
+                ForceSecondOpo(true, IsEnabled(Preset.MNK_AoEUseFiresReply)))
                 return ForcedOpoGCD(true);
 
             // Masterful Blitz

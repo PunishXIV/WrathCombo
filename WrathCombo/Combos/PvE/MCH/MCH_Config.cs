@@ -341,13 +341,13 @@ internal partial class MCH
             MCH_ST_QueenHPBossOption = new("MCH_ST_QueenHPBossOption"),
             MCH_ST_TurretUsage = new("MCH_ST_TurretUsage", 100),
             MCH_ST_ReassemblePool = new("MCH_ST_ReassemblePool"),
-            MCH_ST_GaussRicoManualUse = new("MCH_ST_GaussRicoPool"),
-            MCH_ST_GaussOnlyOrBoth = new("MCH_ST_GaussRicoUseBoth"),
+            MCH_ST_GaussRicoManualUse = new("MCH_ST_GaussRicoManualUse"),
+            MCH_ST_GaussOnlyOrBoth = new("MCH_ST_GaussOnlyOrBoth"),
             MCH_ST_SecondWindHPThreshold = new("MCH_ST_SecondWindHPThreshold", 40),
 
             //AoE
             MCH_AoE_ReassemblePool = new("MCH_AoE_ReassemblePool"),
-            MCH_AoE_TurretBatteryUsage = new("MCH_AoE_TurretUsage", 100),
+            MCH_AoE_TurretBatteryUsage = new("MCH_AoE_TurretBatteryUsage", 100),
             MCH_AoE_FlamethrowerMovement = new("MCH_AoE_FlamethrowerMovement"),
             MCH_AoE_FlamethrowerHPOption = new("MCH_AoE_FlamethrowerHPOption", 25),
             MCH_AoE_HyperchargeHPThreshold = new("MCH_AoE_HyperchargeHPThreshold", 25),

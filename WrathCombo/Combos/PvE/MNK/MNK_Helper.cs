@@ -104,10 +104,8 @@ internal partial class MNK
             ? Demolish
             : OriginalHook(SnapPunch);
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = true)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = true, int trueNorthCharges = 0)
     {
-        int tnCharges = IsNotEnabled(Preset.MNK_ST_SimpleMode) ? MNK_ManualTN : 0;
-
         if (!LevelChecked(TrueStrike))
             return Bootshine;
 
@@ -122,7 +120,7 @@ internal partial class MNK
             if (CoeurlStacks is 0 && LevelChecked(Demolish))
                 return !OnTargetsRear() &&
                        Role.CanTrueNorth() &&
-                       GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                       GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                        useTrueNorth
                     ? Role.TrueNorth
                     : Demolish;
@@ -130,7 +128,7 @@ internal partial class MNK
             if (LevelChecked(SnapPunch))
                 return !OnTargetsFlank() &&
                        Role.CanTrueNorth() &&
-                       GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                       GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                        useTrueNorth
                     ? Role.TrueNorth
                     : OriginalHook(SnapPunch);
@@ -199,11 +197,6 @@ internal partial class MNK
         JustUsed(FlintStrike, window) || JustUsed(TornadoKick, window) ||
         JustUsed(CelestialRevolution, window);
 
-    private static bool UsesFiresReply(bool onAoE) =>
-        onAoE
-            ? IsEnabled(Preset.MNK_AOE_SimpleMode) || IsEnabled(Preset.MNK_AoEUseFiresReply)
-            : IsEnabled(Preset.MNK_ST_SimpleMode) || IsEnabled(Preset.MNK_STUseFiresReply);
-
     private static bool HasElapsedSinceBlitz(float minGcds) =>
         HasUsedBlitzRecently(GCD * 12) && !HasUsedBlitzRecently(GCD * minGcds);
 
@@ -217,9 +210,9 @@ internal partial class MNK
         return OpoFormGCD();
     }
 
-    private static bool ForceSecondOpo(bool onAoE)
+    private static bool ForceSecondOpo(bool onAoE, bool useFiresReply = true)
     {
-        if (UsesFiresReply(onAoE))
+        if (!useFiresReply)
             return false;
 
         if (!HasStatusEffect(Buffs.Brotherhood) || !HasStatusEffect(Buffs.RiddleOfFire))
@@ -266,19 +259,9 @@ internal partial class MNK
         return HasElapsedSinceBlitz(2.5f);
     }
 
-    private static bool IsBurstHolding(bool onAoE, bool checkBurstHold = false) =>
-        checkBurstHold &&
-        (onAoE
-            ? IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
-              !IsEnabled(Preset.MNK_AoEUseBrotherhood) &&
-              !IsEnabled(Preset.MNK_AoEUseROF)
-            : IsEnabled(Preset.MNK_STUsePerfectBalance) &&
-              !IsEnabled(Preset.MNK_STUseBrotherhood) &&
-              !IsEnabled(Preset.MNK_STUseROF));
-
-    private static bool UsePBAfterBurstHolding(bool onAoE, bool checkBurstHold = false, int perfectBalanceHpThreshold = 0)
+    private static bool UsePBAfterBurstHolding(bool onAoE, int perfectBalanceHpThreshold = 0)
     {
-        if ((checkBurstHold && IsBurstHolding(onAoE, true)) || !IsBurstHoldReleaseReady())
+        if (!IsBurstHoldReleaseReady())
             return false;
 
         if (!HasBattleTarget() || !JustUsedOpoGCD(GCD, onAoE))
@@ -313,9 +296,14 @@ internal partial class MNK
         return true;
     }
 
-    private static bool CanPerfectBalance(bool onAoE, bool useOpenerBalance = false, bool checkBurstHold = false, int perfectBalanceHpThreshold = 0)
+    private static bool CanPerfectBalance(
+        bool onAoE,
+        bool useOpenerBalance = false,
+        bool isBurstHolding = false,
+        int perfectBalanceHpThreshold = 0,
+        bool useFiresReply = true)
     {
-        if (checkBurstHold && IsBurstHolding(onAoE, true))
+        if (isBurstHolding && !IsBurstHoldReleaseReady())
             return false;
 
         if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
@@ -343,7 +331,7 @@ internal partial class MNK
             }
         }
 
-        if (UseSecondPerfectBalance(UsesFiresReply(onAoE)))
+        if (UseSecondPerfectBalance(useFiresReply))
             return true;
 
         if (!LevelChecked(RiddleOfFire) ||
@@ -398,10 +386,10 @@ internal partial class MNK
         !HasStatusEffect(Buffs.RiddleOfEarth) &&
         !HasStatusEffect(Buffs.EarthsRumination);
 
-    private static bool CanEarthsReply() =>
+    private static bool CanEarthsReply(int earthsReplyHpThreshold = 25) =>
         HasStatusEffect(Buffs.EarthsRumination) &&
         NumberOfAlliesInRange(EarthsReply) >= GetPartyMembers().Count * .75 &&
-        GetPartyAvgHPPercent() <= MNK_ST_EarthsReplyHPThreshold;
+        GetPartyAvgHPPercent() <= earthsReplyHpThreshold;
 
     #endregion
 
