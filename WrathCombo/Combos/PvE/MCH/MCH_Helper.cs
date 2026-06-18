@@ -157,7 +157,7 @@ internal partial class MCH
         if (!onAoE)
             return OriginalHook(Heatblast);
 
-        if (alwaysAutoCrossbow || 
+        if (alwaysAutoCrossbow ||
             !LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
             LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
             NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
@@ -178,7 +178,7 @@ internal partial class MCH
             : (requireBoss
                   ? TargetIsBoss()
                   : bossOnlyOption == 0 &&
-                    GetTargetHPPercent() > hpThreshold || TargetIsBoss()) &&
+                  GetTargetHPPercent() > hpThreshold || TargetIsBoss()) &&
               GetCooldownRemainingTime(Wildfire) <= 20);
 
     private static bool CanWildfireWeave(
@@ -193,7 +193,7 @@ internal partial class MCH
         (requireBoss
             ? TargetIsBoss()
             : bossOnlyOption == 0 &&
-              GetTargetHPPercent() > hpThreshold || TargetIsBoss());
+            GetTargetHPPercent() > hpThreshold || TargetIsBoss());
 
     #endregion
 
@@ -442,7 +442,7 @@ internal partial class MCH
     #endregion
 
     #region HP Threshold
-    
+
     private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
         hpBossOption == 1 || !isBoss ? hpOption : 0;
 
@@ -486,6 +486,11 @@ internal partial class MCH
         !LevelChecked(Chainsaw) ||
         GetCooldownRemainingTime(Chainsaw) >= time;
 
+    private static bool ToolReady(uint actionId) =>
+        HasCharges(actionId)
+            ? ActionReady(actionId)
+            : ActionReady(actionId) && IsOffCooldown(actionId);
+
     private static bool JustUsedTool(float window) =>
         JustUsed(OriginalHook(AirAnchor), window) ||
         JustUsed(Chainsaw, window) ||
@@ -494,27 +499,27 @@ internal partial class MCH
 
     private static bool CanUseTools(ref uint actionID, bool onAoE, bool useAirAnchor = true, bool holdExcavatorForWildfire = false)
     {
-        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ToolReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
         {
             actionID = Chainsaw;
             return true;
         }
 
-        if (ActionReady(Excavator) &&
+        if (ToolReady(Excavator) &&
             (onAoE || !holdExcavatorForWildfire))
         {
             actionID = Excavator;
             return true;
         }
 
-        if ((!onAoE || useAirAnchor) && ActionReady(OriginalHook(AirAnchor)))
+        if ((!onAoE || useAirAnchor) && ToolReady(OriginalHook(AirAnchor)))
         {
             actionID = OriginalHook(AirAnchor);
             return true;
         }
 
         if (onAoE &&
-            ActionReady(BioBlaster) &&
+            ToolReady(BioBlaster) &&
             !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
             CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
         {
@@ -522,7 +527,7 @@ internal partial class MCH
             return true;
         }
 
-        if (ActionReady(Drill))
+        if (ToolReady(Drill))
         {
             actionID = Drill;
             return true;
@@ -530,14 +535,14 @@ internal partial class MCH
 
         if (onAoE &&
             HasStatusEffect(Buffs.Reassembled) &&
-            ActionReady(OriginalHook(SpreadShot)))
+            ToolReady(OriginalHook(SpreadShot)))
         {
             actionID = OriginalHook(SpreadShot);
             return true;
         }
 
         if (!onAoE &&
-            ActionReady(HotShot) &&
+            ToolReady(HotShot) &&
             (!HasStatusEffect(Buffs.Reassembled) || !LevelChecked(CleanShot)))
         {
             actionID = HotShot;

@@ -122,7 +122,7 @@ internal partial class MCH : PhysicalRanged
                     if (CanBarrelStabilizer(onAoE: true))
                         return BarrelStabilizer;
 
-                    if (CanQueen(onAoE: true, batteryOnly: true))
+                    if (CanQueen(true, batteryOnly: true))
                         return OriginalHook(RookAutoturret);
 
                     if (GaussRicochetWeaves(out gaussRico, true, false))
@@ -203,18 +203,14 @@ internal partial class MCH : PhysicalRanged
                 if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge))
                 {
                     bool wildfireAboutToBeUsed = IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
-                        IsWildfireAboutToBeUsed(WildfireHPThreshold, MCH_ST_WildfireBossOnlyOption);
+                                                 IsWildfireAboutToBeUsed(WildfireHPThreshold, MCH_ST_WildfireBossOnlyOption);
 
                     if (CanHypercharge(false,
-                            hpThreshold: HyperchargeHPThreshold,
-                            skipExcavatorHold: IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) &&
-                                               wildfireAboutToBeUsed,
-                            skipHyperchargeHold: IsEnabled(Preset.MCH_ST_Adv_Tools_AllowClainsawPostWildfire) &&
-                                                 wildfireAboutToBeUsed,
-                            wildfireHyperchargeCutoff: wildfireAboutToBeUsed
-                                ? MCH_ST_WildfireHyperchargeCutoffThreshold
-                                : 9f,
-                            wildfireBossOnlyOption: MCH_ST_WildfireBossOnlyOption))
+                        hpThreshold: HyperchargeHPThreshold,
+                        skipExcavatorHold: IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) && wildfireAboutToBeUsed,
+                        skipHyperchargeHold: IsEnabled(Preset.MCH_ST_Adv_Tools_AllowClainsawPostWildfire) && wildfireAboutToBeUsed,
+                        wildfireHyperchargeCutoff: wildfireAboutToBeUsed ? MCH_ST_WildfireHyperchargeCutoffThreshold : 9f,
+                        wildfireBossOnlyOption: MCH_ST_WildfireBossOnlyOption))
                         return Hypercharge;
                 }
 
@@ -287,9 +283,8 @@ internal partial class MCH : PhysicalRanged
                 GetTargetHPPercent() > ToolsHPThreshold)
             {
                 bool wildfireAboutToBeUsed = IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
-                    IsWildfireAboutToBeUsed(WildfireHPThreshold, MCH_ST_WildfireBossOnlyOption);
-                bool holdExcavatorForWildfire =
-                    IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) && wildfireAboutToBeUsed;
+                                             IsWildfireAboutToBeUsed(WildfireHPThreshold, MCH_ST_WildfireBossOnlyOption);
+                bool holdExcavatorForWildfire = IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) && wildfireAboutToBeUsed;
 
                 if (CanUseTools(ref actionID, false, holdExcavatorForWildfire: holdExcavatorForWildfire) &&
                     !IsOverheated)
@@ -348,12 +343,12 @@ internal partial class MCH : PhysicalRanged
                         return Reassemble;
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_Stabilizer) &&
-                        CanBarrelStabilizer(onAoE: true, hpThreshold: MCH_AoE_BarrelStabilizerHPThreshold))
+                        CanBarrelStabilizer(true, MCH_AoE_BarrelStabilizerHPThreshold))
                         return BarrelStabilizer;
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_Queen) &&
-                        CanQueen(onAoE: true, batteryThreshold: MCH_AoE_TurretBatteryUsage,
-                            hpThreshold: MCH_AoE_QueenHpThreshold))
+                        CanQueen(true, MCH_AoE_TurretBatteryUsage,
+                            MCH_AoE_QueenHpThreshold))
                         return OriginalHook(RookAutoturret);
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet) &&
