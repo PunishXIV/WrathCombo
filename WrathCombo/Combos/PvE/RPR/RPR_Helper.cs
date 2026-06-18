@@ -427,6 +427,83 @@ internal partial class RPR
         return 0;
     }
 
+    private static uint BloodStalkGrimSwatheEnshroudGCD(uint actionId)
+    {
+        if (actionId is GrimSwathe)
+        {
+            if (HasStatusEffect(Buffs.PerfectioParata))
+                return OriginalHook(Communio);
+
+            if (!HasStatusEffect(Buffs.Enshrouded))
+                return 0;
+
+            switch (Lemure)
+            {
+                case 1 when Void == 0 && LevelChecked(Communio):
+                    return Communio;
+
+                case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
+                    return OriginalHook(Gluttony);
+            }
+
+            if (Void >= 2 && LevelChecked(LemuresScythe))
+                return OriginalHook(GrimSwathe);
+
+            if (Lemure > 1)
+                return OriginalHook(Guillotine);
+        }
+        else if (actionId is BloodStalk)
+        {
+            if (HasStatusEffect(Buffs.PerfectioParata))
+                return OriginalHook(Communio);
+
+            if (!HasStatusEffect(Buffs.Enshrouded))
+                return 0;
+
+            switch (Lemure)
+            {
+                case 1 when Void == 0 && LevelChecked(Communio):
+                    return Communio;
+
+                case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
+                    return OriginalHook(Gluttony);
+            }
+
+            if (Void >= 2 && LevelChecked(LemuresSlice))
+                return OriginalHook(BloodStalk);
+
+            if (HasStatusEffect(Buffs.EnhancedVoidReaping))
+                return OriginalHook(Gibbet);
+
+            if (HasStatusEffect(Buffs.EnhancedCrossReaping) ||
+                !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping))
+                return OriginalHook(Gallows);
+        }
+
+        return 0;
+    }
+
+    private static uint BloodStalkGrimSwatheSoulReaverGCD(uint actionId)
+    {
+        if (actionId is GrimSwathe &&
+            (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)) &&
+            LevelChecked(Guillotine))
+            return Guillotine;
+
+        if (actionId is BloodStalk &&
+            (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)))
+        {
+            if (HasStatusEffect(Buffs.EnhancedGibbet))
+                return OriginalHook(Gibbet);
+
+            if (HasStatusEffect(Buffs.EnhancedGallows) ||
+                !HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows))
+                return OriginalHook(Gallows);
+        }
+
+        return 0;
+    }
+
     private static bool CanSoulSliceScythe(bool onAoE) =>
         !InPostPerfectioSequence &&
         Soul <= 50 && InNormalRotation && !IsComboExpiring(3) &&

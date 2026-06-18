@@ -21848,6 +21848,61 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blood Stalk/Grim Swathe Combos (No Gluttony).
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Gibbet/Gallows and Enshroud combo on Blood Stalk and Grim Swathe without replacing them with Gluttony. Conflicts with Gluttony on Blood Stalk/Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature.
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds (Executioner&apos;s) Gibbet and Gallows on Blood Stalk.
+        ///Adds (Executioner&apos;s) Guillotine on Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enshroud Combo Option.
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Enshroud_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Enshroud_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure&apos;s Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Enshroud_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Enshroud_Desc", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Adds Lemure&apos;s Slice to Gibbet/Gallows and Lemure&apos;s Scythe to Guillotine..
         /// </summary>
         internal static string RPR_LemureOnGGG_Desc {

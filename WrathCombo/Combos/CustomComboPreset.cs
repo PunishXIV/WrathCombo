@@ -5158,6 +5158,7 @@ public enum Preset
     #region Blood Stalk/Grim Swathe Combo Section
 
     [ReplaceSkill(RPR.BloodStalk, RPR.GrimSwathe)]
+    [ConflictingCombos(RPR_BloodStalkEnshroudCombo)]
     [JobInfo(Job.RPR)]
     RPR_GluttonyBloodSwathe = 12200,
 
@@ -5181,7 +5182,20 @@ public enum Preset
     [JobInfo(Job.RPR)]
     RPR_TrueNorthGluttony = 12310,
 
-    // Last value = 12314
+    [ReplaceSkill(RPR.BloodStalk, RPR.GrimSwathe)]
+    [ConflictingCombos(RPR_GluttonyBloodSwathe)]
+    [JobInfo(Job.RPR)]
+    RPR_BloodStalkEnshroudCombo = 12311,
+
+    [ParentCombo(RPR_BloodStalkEnshroudCombo)]
+    [JobInfo(Job.RPR)]
+    RPR_BloodStalkEnshroudCombo_BloodSwatheCombo = 12312,
+
+    [ParentCombo(RPR_BloodStalkEnshroudCombo)]
+    [JobInfo(Job.RPR)]
+    RPR_BloodStalkEnshroudCombo_Enshroud = 12315,
+
+    // Last value = 12315
 
     #endregion
 

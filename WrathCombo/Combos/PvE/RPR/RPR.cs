@@ -88,7 +88,7 @@ internal partial class RPR : Melee
 
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
-                ? RangedAttack(actionID, useHarvestMoon: true, useRangedFiller: true)
+                ? RangedAttack(actionID, true, true)
                 : DoBasicCombo(actionID);
         }
     }
@@ -257,10 +257,10 @@ internal partial class RPR : Melee
                 CanGibbetGallowsGCD())
             {
                 uint gg = GibbetGallowsAction(positionalChoice,
-                    useSimpleTrueNorth: false,
-                    useDynamicTrueNorth: IsEnabled(Preset.RPR_ST_TrueNorthDynamic),
-                    tnChargePool: RPR_ManualTN,
-                    holdTnCharge: RPR_ST_TrueNorthDynamicHoldCharge);
+                    false,
+                    IsEnabled(Preset.RPR_ST_TrueNorthDynamic),
+                    RPR_ManualTN,
+                    RPR_ST_TrueNorthDynamicHoldCharge);
                 if (gg != 0)
                     return gg;
             }
@@ -281,10 +281,10 @@ internal partial class RPR : Melee
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
                 ? RangedAttack(actionID,
-                    useHarvestMoon: IsEnabled(Preset.RPR_ST_RangedFillerHarvestMoon),
-                    useRangedFiller: IsEnabled(Preset.RPR_ST_RangedFiller),
-                    enhancedHarpeOnly: RPR_ST_EnhancedHarpe,
-                    allowHarpeWhileMoving: !RPR_ST_EnhancedHarpe)
+                    IsEnabled(Preset.RPR_ST_RangedFillerHarvestMoon),
+                    IsEnabled(Preset.RPR_ST_RangedFiller),
+                    RPR_ST_EnhancedHarpe,
+                    !RPR_ST_EnhancedHarpe)
                 : DoBasicCombo(actionID);
         }
     }
@@ -457,26 +457,8 @@ internal partial class RPR : Melee
 
                     if (IsEnabled(Preset.RPR_GluttonyBloodSwathe_Enshroud))
                     {
-                        if (HasStatusEffect(Buffs.PerfectioParata))
-                            return OriginalHook(Communio);
-
-                        if (HasStatusEffect(Buffs.Enshrouded))
-                        {
-                            switch (Lemure)
-                            {
-                                case 1 when Void == 0 && LevelChecked(Communio):
-                                    return Communio;
-
-                                case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
-                                    return OriginalHook(Gluttony);
-                            }
-
-                            if (Void >= 2 && LevelChecked(LemuresScythe))
-                                return OriginalHook(GrimSwathe);
-
-                            if (Lemure > 1)
-                                return OriginalHook(Guillotine);
-                        }
+                        if (BloodStalkGrimSwatheEnshroudGCD(actionID) is var enshroudGcd and not 0)
+                            return enshroudGcd;
                     }
 
                     if (ActionReady(Gluttony) && !HasStatusEffect(Buffs.Enshrouded) && !HasStatusEffect(Buffs.SoulReaver))
@@ -487,8 +469,8 @@ internal partial class RPR : Melee
                         return OriginalHook(Gluttony);
 
                     if (IsEnabled(Preset.RPR_GluttonyBloodSwathe_BloodSwatheCombo) &&
-                        (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)) && LevelChecked(Guillotine))
-                        return Guillotine;
+                        BloodStalkGrimSwatheSoulReaverGCD(actionID) is var soulReaverGcd and not 0)
+                        return soulReaverGcd;
 
                     break;
                 }
@@ -518,30 +500,8 @@ internal partial class RPR : Melee
 
                     if (IsEnabled(Preset.RPR_GluttonyBloodSwathe_Enshroud))
                     {
-                        if (HasStatusEffect(Buffs.PerfectioParata))
-                            return OriginalHook(Communio);
-
-                        if (HasStatusEffect(Buffs.Enshrouded))
-                        {
-                            switch (Lemure)
-                            {
-                                case 1 when Void == 0 && LevelChecked(Communio):
-                                    return Communio;
-
-                                case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
-                                    return OriginalHook(Gluttony);
-                            }
-
-                            if (Void >= 2 && LevelChecked(LemuresSlice))
-                                return OriginalHook(BloodStalk);
-
-                            if (HasStatusEffect(Buffs.EnhancedVoidReaping))
-                                return OriginalHook(Gibbet);
-
-                            if (HasStatusEffect(Buffs.EnhancedCrossReaping) ||
-                                !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping))
-                                return OriginalHook(Gallows);
-                        }
+                        if (BloodStalkGrimSwatheEnshroudGCD(actionID) is var enshroudGcd and not 0)
+                            return enshroudGcd;
                     }
 
                     if (ActionReady(Gluttony) && !HasStatusEffect(Buffs.Enshrouded) && !HasStatusEffect(Buffs.SoulReaver))
@@ -552,19 +512,33 @@ internal partial class RPR : Melee
                         return OriginalHook(Gluttony);
 
                     if (IsEnabled(Preset.RPR_GluttonyBloodSwathe_BloodSwatheCombo) &&
-                        (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)))
-                    {
-                        if (HasStatusEffect(Buffs.EnhancedGibbet))
-                            return OriginalHook(Gibbet);
-
-                        if (HasStatusEffect(Buffs.EnhancedGallows) ||
-                            !HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows))
-                            return OriginalHook(Gallows);
-                    }
+                        BloodStalkGrimSwatheSoulReaverGCD(actionID) is var soulReaverGcd and not 0)
+                        return soulReaverGcd;
 
                     break;
                 }
             }
+
+            return actionID;
+        }
+    }
+
+    internal class RPR_BloodStalkEnshroudCombo : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.RPR_BloodStalkEnshroudCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (BloodStalk or GrimSwathe))
+                return actionID;
+
+            if (IsEnabled(Preset.RPR_BloodStalkEnshroudCombo_Enshroud) &&
+                BloodStalkGrimSwatheEnshroudGCD(actionID) is var enshroudGcd and not 0)
+                return enshroudGcd;
+
+            if (IsEnabled(Preset.RPR_BloodStalkEnshroudCombo_BloodSwatheCombo) &&
+                BloodStalkGrimSwatheSoulReaverGCD(actionID) is var soulReaverGcd and not 0)
+                return soulReaverGcd;
 
             return actionID;
         }

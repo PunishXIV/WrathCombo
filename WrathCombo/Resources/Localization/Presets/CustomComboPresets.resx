@@ -7631,6 +7631,25 @@ Adds (Executioner's) Guillotine on Grim Swathe.</value>
   <data name="RPR_GluttonyBloodSwathe_Sacrificium_Name" xml:space="preserve">
     <value>Sacrificium only Option</value>
   </data>
+  <data name="RPR_BloodStalkEnshroudCombo_Name" xml:space="preserve">
+    <value>Blood Stalk/Grim Swathe Combos (No Gluttony)</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_Desc" xml:space="preserve">
+    <value>Adds Gibbet/Gallows and Enshroud combo on Blood Stalk and Grim Swathe without replacing them with Gluttony. Conflicts with Gluttony on Blood Stalk/Grim Swathe.</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name" xml:space="preserve">
+    <value>Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc" xml:space="preserve">
+    <value>Adds (Executioner's) Gibbet and Gallows on Blood Stalk.
+Adds (Executioner's) Guillotine on Grim Swathe.</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_Enshroud_Name" xml:space="preserve">
+    <value>Enshroud Combo Option</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_Enshroud_Desc" xml:space="preserve">
+    <value>Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure's Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe.</value>
+  </data>
   <data name="RPR_LemureOnGGG_Desc" xml:space="preserve">
     <value>Adds Lemure's Slice to Gibbet/Gallows and Lemure's Scythe to Guillotine.</value>
   </data>
