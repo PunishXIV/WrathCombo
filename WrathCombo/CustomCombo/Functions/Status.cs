@@ -257,7 +257,7 @@ internal abstract partial class CustomComboFunctions
         if (hasActionPenalty)
         {
             Svc.Targets.Target = null;
-            OverrideTarget = null;
+            //OverrideTarget = null;
             UIState.Instance()->Hotbar.CancelCast();
         }
 

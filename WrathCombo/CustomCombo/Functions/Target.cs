@@ -25,7 +25,15 @@ internal abstract partial class CustomComboFunctions
     /// <br />Main use will be for Autorotation so we don't have to enforce actual targeting. </summary>
     public static IGameObject? OverrideTarget
     {
-        get => OverrideTargetID.GetObject();
+        get
+        {
+            var ret = OverrideTargetID.GetObject();
+            if (ret == null || ret.IsDead)
+                OverrideTargetID = null;
+
+            return ret;
+        }
+
         set => OverrideTargetID = value?.GameObjectId;
     }
 
