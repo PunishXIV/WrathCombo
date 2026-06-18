@@ -25,7 +25,15 @@ internal abstract partial class CustomComboFunctions
     /// <br />Main use will be for Autorotation so we don't have to enforce actual targeting. </summary>
     public static IGameObject? OverrideTarget
     {
-        get => OverrideTargetID.GetObject();
+        get
+        {
+            var ret = OverrideTargetID.GetObject();
+            if (ret == null || ret.IsDead)
+                OverrideTargetID = null;
+
+            return ret;
+        }
+
         set => OverrideTargetID = value?.GameObjectId;
     }
 
@@ -91,7 +99,7 @@ internal abstract partial class CustomComboFunctions
     }
 
     /// <summary> Checks if the player's current target is hostile. </summary>
-    public static bool HasBattleTarget() => HasTarget() && CurrentTarget.IsHostile();
+    public static bool HasBattleTarget() => HasTarget() && CurrentTarget?.IsHostile() == true;
 
     /// <summary> Checks if an object requires positionals. Defaults to CurrentTarget unless specified. </summary>
     public static bool TargetNeedsPositionals(IGameObject? optionalTarget = null)
