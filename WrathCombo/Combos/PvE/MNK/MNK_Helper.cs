@@ -473,7 +473,7 @@ internal partial class MNK
          JustUsed(Brotherhood, GCD * 5) ||
          HasStatusEffect(Buffs.Brotherhood) ||
          GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 ||
-         !ActionReady(Brotherhood));
+         !LevelChecked(Brotherhood));
 
     private static bool CanFiresReply(bool onAoE = false) =>
         HasStatusEffect(Buffs.FiresRumination) &&
@@ -543,7 +543,7 @@ internal partial class MNK
     internal static MNKLvl90SLOpener Lvl90SLOpener = new();
     internal static MNKLvl100SLOpener Lvl100SLOpener = new();
     internal static MNKLvl100BHFirstOpener Lvl100BHFirstOpener = new();
-    
+
     internal class MNKLvl90LLOpener : WrathOpener
     {
         public override int MinOpenerLevel => 90;
@@ -590,7 +590,7 @@ internal partial class MNK
             RaptorStacks is 0 &&
             CoeurlStacks is 0;
     }
-    
+
     internal class MNKLvl90SLOpener : WrathOpener
     {
         public override int MinOpenerLevel => 90;

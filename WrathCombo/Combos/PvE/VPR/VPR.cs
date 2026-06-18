@@ -183,9 +183,9 @@ internal partial class VPR : Melee
             if (IsEnabled(Preset.VPR_ST_Vicewinder) &&
                 CanUseVicewinder)
                 return UseVicewinder(
-                    useSimpleTrueNorth: false,
-                    useDynamicTrueNorth: IsEnabled(Preset.VPR_TrueNorthDynamic),
-                    trueNorthCharges: VPR_ManualTN);
+                    false,
+                    IsEnabled(Preset.VPR_TrueNorthDynamic),
+                    VPR_ManualTN);
 
             if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&
                 CanUseUncoiledFury(stHoldCharges: VPR_ST_UncoiledFuryHoldCharges, stHpThreshold: VPR_ST_UncoiledFuryAlwaysUse))
@@ -199,10 +199,10 @@ internal partial class VPR : Melee
                 return WrithingSnap;
 
             return UseCombo(actionID, false,
-                useReawakenCombo: IsEnabled(Preset.VPR_ST_GenerationCombo),
-                useTrueNorth: IsEnabled(Preset.VPR_TrueNorthDynamic),
-                trueNorthCharges: VPR_ManualTN,
-                dynamicHoldCharge: VPR_ST_TrueNorthDynamicHoldCharge);
+                IsEnabled(Preset.VPR_ST_GenerationCombo),
+                IsEnabled(Preset.VPR_TrueNorthDynamic),
+                VPR_ManualTN,
+                VPR_ST_TrueNorthDynamicHoldCharge);
         }
     }
 

@@ -194,8 +194,8 @@ internal partial class MNK : Melee
             if (CanWeave() && (InCombat() || ComboAction > 0))
             {
                 bool burstHolding = IsEnabled(Preset.MNK_STUsePerfectBalance) &&
-                    !IsEnabled(Preset.MNK_STUseBrotherhood) &&
-                    !IsEnabled(Preset.MNK_STUseROF);
+                                    !IsEnabled(Preset.MNK_STUseBrotherhood) &&
+                                    !IsEnabled(Preset.MNK_STUseROF);
 
                 if (IsEnabled(Preset.MNK_STUsePerfectBalance) &&
                     UsePBAfterBurstHolding(false))
@@ -305,8 +305,8 @@ internal partial class MNK : Melee
             if (CanWeave() && (InCombat() || ComboAction > 0))
             {
                 bool burstHolding = IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
-                    !IsEnabled(Preset.MNK_AoEUseBrotherhood) &&
-                    !IsEnabled(Preset.MNK_AoEUseROF);
+                                    !IsEnabled(Preset.MNK_AoEUseBrotherhood) &&
+                                    !IsEnabled(Preset.MNK_AoEUseROF);
 
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
                     UsePBAfterBurstHolding(true, MNK_AoE_PerfectBalanceHPThreshold))

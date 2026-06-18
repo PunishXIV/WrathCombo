@@ -310,6 +310,9 @@ internal partial class VPR
         return Instance()->Combo.Timer != 0 && Instance()->Combo.Timer < gcd;
     }
 
+    private static bool WithinGcd(uint actionId) =>
+        LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
+
     #endregion
 
     #region Weaves
@@ -425,7 +428,7 @@ internal partial class VPR
     }
 
     private static bool CanVicepit(bool ignoreRange = false) =>
-        ActionReady(Vicepit) && !HasStatusEffect(Buffs.Reawakened) && !JustUsed(Vicepit) &&
+        WithinGcd(Vicepit) && !HasStatusEffect(Buffs.Reawakened) && !JustUsed(Vicepit) &&
         !ShouldDeferNewTwinblade &&
         (ignoreRange || InActionRange(Vicepit)) &&
         (!HasBothBuffs || IreCD >= GCD * 4 || !LevelChecked(SerpentsIre));
@@ -462,7 +465,7 @@ internal partial class VPR
     #region Vicewinder & Uncoiled Fury Combo
 
     private static bool CanUseVicewinder =>
-        ActionReady(Vicewinder) && InActionRange(Vicewinder) && InCombat() &&
+        WithinGcd(Vicewinder) && InActionRange(Vicewinder) && InCombat() &&
         !ShouldDeferNewTwinblade &&
         !IsComboExpiring(6) && !IsVenomExpiring(4) && !IsHoningExpiring(4) &&
         !UsedVicewinder && !UsedHuntersCoil && !UsedSwiftskinsCoil &&

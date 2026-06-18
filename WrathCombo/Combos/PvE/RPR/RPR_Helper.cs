@@ -190,8 +190,7 @@ internal partial class RPR
     private static bool CanGluttonyWeave(bool onAoE = false) =>
         CanPostPerfectioGluttonyWeave(onAoE) ||
         ActionReady(Gluttony) && InNormalRotation && !IsComboExpiring(3) &&
-        !(InPostPerfectioSequence && Soul < 50) &&
-        GetCooldownRemainingTime(Gluttony) <= (onAoE ? GCD : GCD / 2);
+        !(InPostPerfectioSequence && Soul < 50);
 
     private static bool CanTrueNorthForGluttony(bool advanced = false, int tnChargePool = 0) =>
         !InPostPerfectioSequence &&
@@ -265,6 +264,9 @@ internal partial class RPR
 
     private const float PerfectioFlexAfterArcaneCircle = 88f;
 
+    private static bool WithinGcd(uint actionId) =>
+        LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
+
     private static bool HasPerfectioReady =>
         HasStatusEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio);
 
@@ -272,7 +274,7 @@ internal partial class RPR
         GetStatusEffectRemainingTime(Buffs.PerfectioParata);
 
     private static uint PerfectioAction =>
-        ActionReady(Perfectio) ? Perfectio : OriginalHook(Communio);
+        WithinGcd(Perfectio) ? Perfectio : OriginalHook(Communio);
 
     private static bool InPerfectioFlexWindow =>
         HasPerfectioReady && PerfectioRemaining > GCD * 2 &&
@@ -307,8 +309,7 @@ internal partial class RPR
 
     private static bool CanPostPerfectioGluttonyWeave(bool onAoE = false) =>
         InPostPerfectioSequence && Soul >= 50 && ActionReady(Gluttony) &&
-        !ShouldContinueComboAfterPerfectio() &&
-        GetCooldownRemainingTime(Gluttony) <= (onAoE ? GCD : GCD / 2);
+        !ShouldContinueComboAfterPerfectio();
 
     private static bool CanPostPerfectioSoulSlice(bool onAoE = false) =>
         InPostPerfectioSequence && Soul < 50 &&
