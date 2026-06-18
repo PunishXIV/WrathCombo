@@ -487,9 +487,7 @@ internal partial class MCH
         GetCooldownRemainingTime(Chainsaw) >= time;
 
     private static bool ToolReady(uint actionId) =>
-        HasCharges(actionId)
-            ? ActionReady(actionId)
-            : ActionReady(actionId) && IsOffCooldown(actionId);
+        LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCD);
 
     private static bool JustUsedTool(float window) =>
         JustUsed(OriginalHook(AirAnchor), window) ||
