@@ -153,6 +153,9 @@ internal unsafe class AutoRotationController
     {
         cfg ??= new AutoRotationConfigIPCWrapper(Service.Configuration.RotationConfig);
 
+        if (!cfg.Enabled)
+            OverrideTarget = null;
+
         // Early exit for all conditions that should prevent autorotation
         if (ShouldSkipAutorotation())
             return;
