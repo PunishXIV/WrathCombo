@@ -93,6 +93,7 @@ public static class ActionWatching
 
     private static unsafe void OnReceivePacketDetour(PacketDispatcher* thisPtr, uint targetId, nint packet)
     {
+        OnRecievePacketHook.Original(thisPtr, targetId, packet);
         var opCode = *(ushort*)(packet + 2);
         if (opCode == 916)
         {
@@ -101,8 +102,6 @@ public static class ActionWatching
             Svc.Log.Verbose($"[OpCode] Natty Regen on {tar?.Name} with new health {newHealth}");
             SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
         }
-
-        OnRecievePacketHook.Original(thisPtr, targetId, packet);
     }
 
     private static void ActorControlDetour(uint entityId, uint category, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, uint arg8, GameObjectId targetId, bool isRecorded)

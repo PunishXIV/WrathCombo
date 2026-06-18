@@ -37,7 +37,7 @@ namespace WrathCombo.Data
 
                 TargetStates.RemoveAll(x => o.IsDead && o.GameObjectId == x.GameObjectID);
 
-                if (TargetStates.Any(x => x.GameObjectID == o.GameObjectId))
+                if (TargetStates.Any(x => x.GameObjectID == o.GameObjectId) || !o.IsTargetable)
                     continue;
 
                 SimpleTargetState target = new(o.CurrentHp, o.MaxHp, o.GameObjectId);

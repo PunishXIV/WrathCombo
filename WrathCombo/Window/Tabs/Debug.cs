@@ -1239,8 +1239,8 @@ internal class Debug : ConfigWindow, IDisposable
                     if (ImGui.CollapsingHeader($"{t?.Name}###SimpleTarget{p.GameObjectID}"))
                     {
                         CustomStyleText($"ID", $"{p.GameObjectID}");
-                        CustomStyleText($"HP", $"{p.CurrentHP}");
-                        CustomStyleText($"Object HP", $"{t.CurrentHp}");
+                        CustomStyleText($"HP", $"{p.CurrentHP} ({GetTargetHPPercent(t):N0}%)");
+                        CustomStyleText($"Object HP", $"{t.CurrentHp} ({GetTargetHPPercent(t, usePendingHp: false):N0}%)");
                     }
                 }
             }
