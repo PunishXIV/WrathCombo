@@ -1,8 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,12 +58,10 @@ namespace WrathCombo.Data
         {
             foreach (var o in TargetStates)
             {
-                //if (o.GameObjectID.GetObject() is { } t)
-                //{
-                //    var b = (BattleChara*)t.Address;
-                //    if (!b->InCombat)
-                //        continue;
-                //}
+                if (o.GameObjectID.GetObject() is { } t && o.CurrentHP == 0 && t.GetNameId() == 541)
+                {
+                    o.CurrentHP = o.MaxHP;
+                }
 
                 var copy = ActionWatching.PendingHPChanges;
                 for (int i = 0; i < ActionWatching.PendingHPChanges.Count; i++)
@@ -89,7 +85,10 @@ namespace WrathCombo.Data
             {
                 if (Svc.Objects.Where(x => x.EntityId == entityId).Cast<IBattleChara>().First() is { } t)
                 {
-                    p.CurrentHP = Math.Max(p.CurrentHP - diff, 0);
+                    if (diff > p.CurrentHP)
+                        p.CurrentHP = 0;
+                    else
+                        p.CurrentHP = p.CurrentHP - diff;
                 }
             }
         }

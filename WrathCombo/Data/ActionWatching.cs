@@ -224,7 +224,7 @@ public static class ActionWatching
                         $"Params: [{eff.Param0}, {eff.Param1}, {eff.Param2}, {eff.Param3}, {eff.Param4}] | " +
                         $"Damage HealValue: {eff.DamageHealValue} | " +
                         $"Action: {debugActionName} (ID: {actionId}) → " +
-                        $"Target: {debugTargetName} | " +
+                        $"Target: {debugTargetName} ({targetId}) | " +
                         $"Flags: [AtSource: {eff.AtSource}, FromTarget: {eff.FromTarget}]"
                     );
 #endif
