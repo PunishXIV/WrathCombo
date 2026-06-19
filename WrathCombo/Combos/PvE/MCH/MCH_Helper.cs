@@ -539,12 +539,19 @@ internal partial class MCH
             return true;
         }
 
-        if (!onAoE &&
-            ToolsReady(HotShot) &&
-            (!HasStatusEffect(Buffs.Reassembled) || !LevelChecked(CleanShot)))
+        if (!onAoE && !LevelChecked(AirAnchor))
         {
-            actionID = HotShot;
-            return true;
+            if (!LevelChecked(CleanShot) && ToolsReady(HotShot))
+            {
+                actionID = HotShot;
+                return true;
+            }
+            
+            if (LevelChecked(CleanShot) && !HasStatusEffect(Buffs.Reassembled) && ActionReady(HotShot))
+            {
+                actionID = HotShot;
+                return true;
+            }
         }
 
         return false;
