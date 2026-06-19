@@ -309,8 +309,6 @@ internal partial class SAM : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            float kenkiOvercapAoE = SAM_AoE_KenkiOvercapAmount;
-
             if (actionID is not (Fuga or Fuko))
                 return actionID;
 
@@ -355,7 +353,7 @@ internal partial class SAM : Melee
                 }
 
                 if (IsEnabled(Preset.SAM_AoE_Kyuten) &&
-                    CanAoEKyuten(kenkiOvercapAoE))
+                    CanAoEKyuten(SAM_AoE_KenkiOvercapAmount))
                     return Kyuten;
 
                 if (IsEnabled(Preset.SAM_AoE_ComboHeals))

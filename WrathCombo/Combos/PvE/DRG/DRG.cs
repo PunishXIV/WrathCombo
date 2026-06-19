@@ -137,11 +137,11 @@ internal partial class DRG : Melee
                     if (CanHighJump(true))
                         return OriginalHook(Jump);
 
-                    if (CanDragonfireDive(true))
+                    if (CanDragonfireDive())
                         return DragonfireDive;
                 }
 
-                if (CanStardiver(true) && CanDRGWeave(1.5f, true))
+                if (CanStardiver() && CanDRGWeave(1.5f, true))
                     return Stardiver;
             }
 
@@ -355,12 +355,12 @@ internal partial class DRG : Melee
                             return OriginalHook(Jump);
 
                         if (IsEnabled(Preset.DRG_AoE_DragonfireDive) &&
-                            CanDragonfireDive(true, DRG_AoE_DragonfireDiveMovingOrInRanged, DRG_AoE_DragonfireDiveHPThreshold))
+                            CanDragonfireDive(DRG_AoE_DragonfireDiveMovingOrInRanged, DRG_AoE_DragonfireDiveHPThreshold))
                             return DragonfireDive;
                     }
 
                     if (IsEnabled(Preset.DRG_AoE_Stardiver) &&
-                        CanStardiver(true, DRG_AoE_StardiverMovingOrInRanged) &&
+                        CanStardiver(DRG_AoE_StardiverMovingOrInRanged) &&
                         CanDRGWeave(1.5f, true))
                         return Stardiver;
                 }

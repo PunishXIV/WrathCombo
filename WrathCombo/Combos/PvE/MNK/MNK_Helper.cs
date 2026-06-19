@@ -37,7 +37,8 @@ internal partial class MNK
                     return true;
                 }
 
-                if (Gauge.BeastChakra[1] is BeastChakra.None)
+                if (Gauge.BeastChakra[1] is BeastChakra.None &&
+                    LevelChecked(FourPointFury))
                 {
                     actionID = FourPointFury;
                     return true;
@@ -104,8 +105,28 @@ internal partial class MNK
             ? Demolish
             : OriginalHook(SnapPunch);
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = true, int trueNorthCharges = 0)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = true, bool onAoE = false, int trueNorthCharges = 0)
     {
+        if (onAoE)
+        {
+            if (HasStatusEffect(Buffs.OpoOpoForm))
+                return OriginalHook(ArmOfTheDestroyer);
+
+            if (HasStatusEffect(Buffs.RaptorForm))
+            {
+                if (LevelChecked(FourPointFury))
+                    return FourPointFury;
+
+                if (LevelChecked(TwinSnakes))
+                    return TwinSnakes;
+            }
+
+            if (HasStatusEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker))
+                return Rockbreaker;
+
+            return actionId;
+        }
+
         if (!LevelChecked(TrueStrike))
             return Bootshine;
 

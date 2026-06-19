@@ -245,7 +245,7 @@ internal partial class RPR : Melee
 
             if (IsEnabled(Preset.RPR_ST_Perfectio) &&
                 CanPerfectioGCD())
-                return OriginalHook(Communio);
+                return PerfectioAction;
 
             if (IsEnabled(Preset.RPR_ST_SoD) &&
                 CanUseShadowOfDeath(RPR_SoDRefreshRange, RPR_ST_ArcaneCircleHPBossOption == 1,
@@ -347,7 +347,7 @@ internal partial class RPR : Melee
 
             if (IsEnabled(Preset.RPR_AoE_Perfectio) &&
                 CanPerfectioGCD())
-                return OriginalHook(Communio);
+                return PerfectioAction;
 
             if (IsEnabled(Preset.RPR_AoE_WoD) &&
                 CanWhorlOfDeath(hpThreshold: RPR_WoDHPThreshold))

@@ -142,22 +142,7 @@ internal partial class MNK : Melee
                 return actionID;
 
             // Monk Rotation
-            if (HasStatusEffect(Buffs.OpoOpoForm))
-                return OriginalHook(ArmOfTheDestroyer);
-
-            if (HasStatusEffect(Buffs.RaptorForm))
-            {
-                if (LevelChecked(FourPointFury))
-                    return FourPointFury;
-
-                if (LevelChecked(TwinSnakes))
-                    return TwinSnakes;
-            }
-
-            if (HasStatusEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker))
-                return Rockbreaker;
-
-            return actionID;
+            return DoBasicCombo(actionID, onAoE: true);
         }
     }
 
@@ -274,7 +259,7 @@ internal partial class MNK : Melee
             // Perfect Balance or Standard Beast Chakra's
             return DoPerfectBalanceCombo(ref actionID)
                 ? actionID
-                : DoBasicCombo(actionID, IsEnabled(Preset.MNK_STUseTrueNorth), MNK_ManualTN);
+                : DoBasicCombo(actionID, IsEnabled(Preset.MNK_STUseTrueNorth), trueNorthCharges: MNK_ManualTN);
         }
     }
 
@@ -373,22 +358,7 @@ internal partial class MNK : Melee
                 return actionID;
 
             // Monk Rotation
-            if (HasStatusEffect(Buffs.OpoOpoForm))
-                return OriginalHook(ArmOfTheDestroyer);
-
-            if (HasStatusEffect(Buffs.RaptorForm))
-            {
-                if (LevelChecked(FourPointFury))
-                    return FourPointFury;
-
-                if (LevelChecked(TwinSnakes))
-                    return TwinSnakes;
-            }
-
-            if (HasStatusEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker))
-                return Rockbreaker;
-
-            return actionID;
+            return DoBasicCombo(actionID, onAoE: true);
         }
     }
 

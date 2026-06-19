@@ -245,7 +245,6 @@ internal partial class DRG
                DRG_ST_DoubleMirage && (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDTimerActive)));
 
     private static bool CanDragonfireDive(
-        bool onAoE = false,
         UserBoolArray? holdOptions = null,
         int hpThreshold = 0) =>
         ActionReady(DragonfireDive) && !HasStatusEffect(Buffs.DragonsFlight) &&
@@ -253,7 +252,7 @@ internal partial class DRG
         CanUseWithHoldOptions(holdOptions) &&
         (LoTDTimerActive || !LevelChecked(Geirskogul));
 
-    private static bool CanStardiver(bool onAoE = false, UserBoolArray? holdOptions = null) =>
+    private static bool CanStardiver(UserBoolArray? holdOptions = null) =>
         ActionReady(Stardiver) && LoTDActive && !HasStatusEffect(Buffs.StarcrossReady) &&
         CanUseWithHoldOptions(holdOptions);
 

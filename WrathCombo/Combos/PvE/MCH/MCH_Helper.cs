@@ -181,7 +181,7 @@ internal partial class MCH
             !LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
             LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
             NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
-            !gaussRicoEnabled)
+            !gaussRicoEnabled && ActionReady(AutoCrossbow))
             return AutoCrossbow;
 
         return OriginalHook(Heatblast);
