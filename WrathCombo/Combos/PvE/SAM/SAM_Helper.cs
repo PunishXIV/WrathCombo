@@ -173,55 +173,48 @@ internal partial class SAM
          EnhancedSenei && JustUsed(Senei, 30f) ||
          !EnhancedSenei && JustUsed(KaeshiSetsugekka, 20f));
 
-    private static bool CanShinten(int executeThreshold = 1, int kenkiOvercapAmount = 65)
+    private static bool CanUseShinten() =>
+        ActionReady(Shinten) && InActionRange(Shinten);
+
+    // Execute, hard overcap, or post-iai dump windows.
+    private static bool ShouldSpendKenkiUrgent() =>
+        Kenki is 100 && ComboAction == OriginalHook(Gyofu) ||
+        Kenki >= 95 && (ComboAction is Jinpu or Shifu || SenCount is 3) ||
+        Kenki >= 80 && !HasSetsu && (JustUsed(MidareSetsugekka, 5f) || JustUsed(Higanbana, 5f));
+
+    private static bool ShouldUseSenei(int kenkiOvercapAmount)
     {
+        if (!EnhancedSenei || HasStatusEffect(Buffs.ZanshinReady))
+            return false;
+
         float gcd = GetCooldown(OriginalHook(Hakaze)).CooldownTotal;
 
-        if (ActionReady(Shinten) && InActionRange(Shinten))
-        {
-            if (GetTargetHPPercent() < executeThreshold)
-                return true;
+        return GetCooldownRemainingTime(Senei) < gcd * 2 && Kenki >= 90 ||
+               JustUsed(Senei, 20f) && !JustUsed(Ikishoten) ||
+               Kenki >= 95 && JustUsed(MeikyoShisui) ||
+               Kenki >= 90 && JustUsed(MeikyoShisui) && ComboAction is Yukikaze ||
+               Kenki >= 65 && SenCount >= 2 &&
+               (HasStatusEffect(Buffs.Tendo) || JustUsed(TendoKaeshiSetsugekka, 5f)) ||
+               GetCooldownRemainingTime(Senei) >= 25 && Kenki >= kenkiOvercapAmount;
+    }
 
-            if (Kenki is 100 && ComboAction == OriginalHook(Gyofu) ||
-                Kenki >= 95 && (ComboAction is Jinpu or Shifu || SenCount is 3) ||
-                Kenki >= 80 && !HasSetsu && (JustUsed(MidareSetsugekka, 5f) || JustUsed(Higanbana, 5f)))
-                return true;
+    // Pre-Enhanced Senei (Ikishoten-era pooling).
+    private static bool ShouldSpendKenkiPreEnhanced(int kenkiOvercapAmount) =>
+        !EnhancedSenei &&
+        (GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= kenkiOvercapAmount ||
+         GetCooldownRemainingTime(Ikishoten) <= 10 && Kenki > 50);
 
-            if (EnhancedSenei &&
-                !HasStatusEffect(Buffs.ZanshinReady))
-            {
-                if (GetCooldownRemainingTime(Senei) < gcd * 2 &&
-                    Kenki >= 90)
-                    return true;
+    private static bool CanShinten(int executeThreshold = 1, int kenkiOvercapAmount = 65)
+    {
+        if (!CanUseShinten())
+            return false;
 
-                if (JustUsed(Senei, 20f) &&
-                    !JustUsed(Ikishoten))
-                    return true;
+        if (GetTargetHPPercent() < executeThreshold)
+            return true;
 
-                if (Kenki >= 95 && JustUsed(MeikyoShisui))
-                    return true;
-
-                if (Kenki >= 90 && JustUsed(MeikyoShisui) && ComboAction is Yukikaze)
-                    return true;
-
-                if (Kenki >= 65 && SenCount >= 2 && (HasStatusEffect(Buffs.Tendo) || JustUsed(TendoKaeshiSetsugekka, 5f)))
-                    return true;
-
-                if (GetCooldownRemainingTime(Senei) >= 25 &&
-                    Kenki >= kenkiOvercapAmount)
-                    return true;
-            }
-
-            if (!EnhancedSenei)
-            {
-                if (GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= kenkiOvercapAmount)
-                    return true;
-
-                if (GetCooldownRemainingTime(Ikishoten) <= 10 && Kenki > 50)
-                    return true;
-            }
-        }
-        return false;
+        return ShouldSpendKenkiUrgent() ||
+               ShouldUseSenei(kenkiOvercapAmount) ||
+               ShouldSpendKenkiPreEnhanced(kenkiOvercapAmount);
     }
 
     #endregion
