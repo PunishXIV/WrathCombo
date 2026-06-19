@@ -75,7 +75,7 @@ internal partial class DRG : Melee
 
             return !InMeleeRange() && HasBattleTarget()
                 ? OutsideOfMelee(actionID, OutsideOfMeleeOptions.SimpleSt)
-                : DoBasicCombo(actionID, useTrueNorth: true);
+                : DoBasicCombo(actionID, true);
         }
     }
 
@@ -104,7 +104,7 @@ internal partial class DRG : Melee
                     if (CanLifeSurge(true))
                         return LifeSurge;
 
-                    if (CanMirageDive(true, ignoreDoubleMirageHold: true))
+                    if (CanMirageDive(true, true))
                         return MirageDive;
 
                     if (CanUseGeirskogul(true))

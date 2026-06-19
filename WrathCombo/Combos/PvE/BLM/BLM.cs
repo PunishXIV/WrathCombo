@@ -31,7 +31,7 @@ internal partial class BLM : Caster
                 if (TryIceWeave() is var iceWeave and not 0)
                     return iceWeave;
 
-                if (CanStManaward(useManaward: true, simpleLogic: true))
+                if (CanStManaward(true, simpleLogic: true))
                     return Manaward;
 
                 if (CanStAddleWeave())
@@ -101,9 +101,9 @@ internal partial class BLM : Caster
                     return Amplifier;
 
                 if (CanAoELeyLinesWeave(
-                        allowMoving: false,
-                        timeStillSeconds: 2.5,
-                        hpThreshold: 40))
+                    allowMoving: false,
+                    timeStillSeconds: 2.5,
+                    hpThreshold: 40))
                     return LeyLines;
             }
 
@@ -147,11 +147,11 @@ internal partial class BLM : Caster
                 return contentAction;
 
             if (CanStManaward(
-                    useManaward: IsEnabled(Preset.BLM_ST_Manaward),
-                    hpThreshold: BLM_ST_ManawardHPThreshold,
-                    simpleLogic: false,
-                    triggerMode: BLM_ST_ManawardTrigger,
-                    soloOption: BLM_ST_ManawardSolo))
+                IsEnabled(Preset.BLM_ST_Manaward),
+                BLM_ST_ManawardHPThreshold,
+                false,
+                BLM_ST_ManawardTrigger,
+                BLM_ST_ManawardSolo))
                 return Manaward;
 
             if (CanWeave())
@@ -160,30 +160,30 @@ internal partial class BLM : Caster
                     return Amplifier;
 
                 if (CanStLeyLinesWeave(
-                        IsEnabled(Preset.BLM_ST_LeyLines),
-                        BLM_ST_LeyLinesCharges,
-                        BLM_ST_LeyLinesMovement == 1,
-                        BLM_ST_LeyLinesTimeStill,
-                        LeyLinesHPThreshold))
+                    IsEnabled(Preset.BLM_ST_LeyLines),
+                    BLM_ST_LeyLinesCharges,
+                    BLM_ST_LeyLinesMovement == 1,
+                    BLM_ST_LeyLinesTimeStill,
+                    LeyLinesHPThreshold))
                     return LeyLines;
 
                 if (TryEndOfFireWeave(
-                        IsEnabled(Preset.BLM_ST_Manafont),
-                        IsEnabled(Preset.BLM_ST_Swiftcast),
-                        IsEnabled(Preset.BLM_ST_Triplecast),
-                        BLM_ST_Triplecast_WhenToUse == 0,
-                        triplecastRequireChargeReserve: true,
-                        IsEnabled(Preset.BLM_ST_Transpose),
-                        transposeIncludeLowMp: true,
-                        Blizzard) is var endOfFireWeave and not 0)
+                    IsEnabled(Preset.BLM_ST_Manafont),
+                    IsEnabled(Preset.BLM_ST_Swiftcast),
+                    IsEnabled(Preset.BLM_ST_Triplecast),
+                    BLM_ST_Triplecast_WhenToUse == 0,
+                    true,
+                    IsEnabled(Preset.BLM_ST_Transpose),
+                    true,
+                    Blizzard) is var endOfFireWeave and not 0)
                     return endOfFireWeave;
 
                 if (TryIceWeave(
-                        IsEnabled(Preset.BLM_ST_Transpose),
-                        IsEnabled(Preset.BLM_ST_Swiftcast),
-                        IsEnabled(Preset.BLM_ST_Triplecast),
-                        BLM_ST_Triplecast_WhenToUse == 0,
-                        triplecastRequireChargeReserve: true) is var iceWeave and not 0)
+                    IsEnabled(Preset.BLM_ST_Transpose),
+                    IsEnabled(Preset.BLM_ST_Swiftcast),
+                    IsEnabled(Preset.BLM_ST_Triplecast),
+                    BLM_ST_Triplecast_WhenToUse == 0,
+                    true) is var iceWeave and not 0)
                     return iceWeave;
 
                 if (CanStAddleWeave(IsEnabled(Preset.BLM_ST_Addle)))
@@ -194,14 +194,14 @@ internal partial class BLM : Caster
                 return polyglotOvercap;
 
             if (TryStThunder(
-                    IsEnabled(Preset.BLM_ST_Thunder),
-                    ComputeHpThreshold(),
-                    BLM_ST_ThunderRefresh) is var thunder and not 0)
+                IsEnabled(Preset.BLM_ST_Thunder),
+                ComputeHpThreshold(),
+                BLM_ST_ThunderRefresh) is var thunder and not 0)
                 return thunder;
 
             if (TryStAmplifierXeno(
-                    IsEnabled(Preset.BLM_ST_Amplifier),
-                    IsEnabled(Preset.BLM_ST_UsePolyglot)) is var amplifierXeno and not 0)
+                IsEnabled(Preset.BLM_ST_Amplifier),
+                IsEnabled(Preset.BLM_ST_UsePolyglot)) is var amplifierXeno and not 0)
                 return amplifierXeno;
 
             if (IsEnabled(Preset.BLM_ST_Movement) &&
@@ -215,7 +215,7 @@ internal partial class BLM : Caster
                     IsEnabled(Preset.BLM_ST_Despair),
                     IsEnabled(Preset.BLM_ST_Transpose),
                     IsEnabled(Preset.BLM_ST_UsePolyglot),
-                    alwaysSpendPolyglot: false,
+                    false,
                     BLM_ST_MovementOption[MovementSwiftcast],
                     BLM_ST_PolyglotMovement,
                     BLM_ST_PolyglotSaveUsage);
@@ -264,11 +264,11 @@ internal partial class BLM : Caster
                     return Amplifier;
 
                 if (CanAoELeyLinesWeave(
-                        IsEnabled(Preset.BLM_AoE_LeyLines),
-                        BLM_AoE_LeyLinesCharges,
-                        BLM_AoE_LeyLinesMovement == 1,
-                        BLM_AoE_LeyLinesTimeStill,
-                        BLM_AoE_LeyLinesOption))
+                    IsEnabled(Preset.BLM_AoE_LeyLines),
+                    BLM_AoE_LeyLinesCharges,
+                    BLM_AoE_LeyLinesMovement == 1,
+                    BLM_AoE_LeyLinesTimeStill,
+                    BLM_AoE_LeyLinesOption))
                     return LeyLines;
             }
 
@@ -297,7 +297,7 @@ internal partial class BLM : Caster
                     IsEnabled(Preset.BLM_AoE_Transpose),
                     IsNotEnabled(Preset.BLM_AoE_Transpose),
                     IsEnabled(Preset.BLM_AoE_Blizzard4Sub),
-                    flareTransposeRequiresNoUmbralHeart: true) is var iceGcd and not 0)
+                    true) is var iceGcd and not 0)
                 return iceGcd;
 
             return actionID;

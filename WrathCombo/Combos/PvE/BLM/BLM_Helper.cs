@@ -384,7 +384,7 @@ internal partial class BLM
 
         if (useConfiguredPriority)
         {
-            foreach (int priority in BLM_ST_MovementPriority.OrderBy(x => x))
+            foreach(int priority in BLM_ST_MovementPriority.OrderBy(x => x))
             {
                 int index = BLM_ST_MovementPriority.IndexOf(priority);
                 if (TryMovementAction(index, out uint action))

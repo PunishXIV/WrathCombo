@@ -493,7 +493,7 @@ internal partial class MCH
 
     private static bool ToolsReady(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
-    
+
     private static bool IsDrillCD(float time = 9f) =>
         !LevelChecked(Drill) ||
         !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= time ||

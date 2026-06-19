@@ -212,7 +212,7 @@ internal partial class MNK
 
     private static bool ForceSecondOpo(bool onAoE, bool useFiresReply = true)
     {
-        if (!useFiresReply)
+        if (useFiresReply)
             return false;
 
         if (!HasStatusEffect(Buffs.Brotherhood) || !HasStatusEffect(Buffs.RiddleOfFire))
@@ -225,6 +225,10 @@ internal partial class MNK
             return false;
 
         if (!HasUsedBlitzRecently(GCDTotal * 12))
+            return false;
+
+        if (HasStatusEffect(Buffs.FiresRumination) ||
+            JustUsed(FiresReply, GCDTotal * 12))
             return false;
 
         // First post-blitz Opo (Formless) done — insert a second Opo before 2nd PB
@@ -252,10 +256,14 @@ internal partial class MNK
         if (!HasUsedBlitzRecently(GCDTotal * 12))
             return false;
 
-        if (useFiresReply)
-            return !HasStatusEffect(Buffs.FiresRumination) && JustUsed(FiresReply, GCDTotal * 6);
+        // FR spent this burst (combo or manual) — weave 2nd PB after the post-FR Formless Opo.
+        if (JustUsed(FiresReply, GCDTotal * 6) && !HasStatusEffect(Buffs.FiresRumination))
+            return true;
 
-        // FR disabled: Blitz -> Opo -> Opo -> PB (skip the FR + Formless GCDs)
+        if (useFiresReply)
+            return false;
+
+        // FR intentionally skipped in combo — Blitz → Opo → Opo → PB
         return HasElapsedSinceBlitz(2.5f);
     }
 

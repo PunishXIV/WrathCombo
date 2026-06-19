@@ -4,11 +4,9 @@ using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static FFXIVClientStructs.FFXIV.Client.Game.ActionManager;
 using static WrathCombo.Combos.PvE.SAM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Data.ActionWatching;
-using ActionType = FFXIVClientStructs.FFXIV.Client.Game.ActionType;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM
