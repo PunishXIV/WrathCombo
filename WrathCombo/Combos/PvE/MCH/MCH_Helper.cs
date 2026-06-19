@@ -322,7 +322,10 @@ internal partial class MCH
             !InReassembleRange() || JustUsed(Reassemble, 2f))
             return false;
 
-        if (remainingCharges == 0 || remainingCharges <= chargePool || !ShouldReassemble())
+        if (remainingCharges == 0 || remainingCharges <= chargePool)
+            return false;
+
+        if (reassembleChoice == 0 && !ShouldReassemble())
             return false;
 
         switch (reassembleChoice)
@@ -470,7 +473,7 @@ internal partial class MCH
 
     private static bool ToolsReady(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
-    
+
     private static bool IsDrillCD(float time = 9f) =>
         !LevelChecked(Drill) ||
         !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= time ||
@@ -539,19 +542,11 @@ internal partial class MCH
             return true;
         }
 
-        if (!onAoE && !LevelChecked(AirAnchor))
+        if (!onAoE && !LevelChecked(AirAnchor) && ToolsReady(HotShot) &&
+            (!LevelChecked(CleanShot) || !HasStatusEffect(Buffs.Reassembled) && ActionReady(HotShot)))
         {
-            if (!LevelChecked(CleanShot) && ToolsReady(HotShot))
-            {
-                actionID = HotShot;
-                return true;
-            }
-            
-            if (LevelChecked(CleanShot) && !HasStatusEffect(Buffs.Reassembled) && ActionReady(HotShot))
-            {
-                actionID = HotShot;
-                return true;
-            }
+            actionID = HotShot;
+            return true;
         }
 
         return false;
