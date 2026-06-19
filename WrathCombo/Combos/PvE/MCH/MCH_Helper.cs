@@ -503,16 +503,16 @@ internal partial class MCH
             return true;
         }
 
-        if (ToolsReady(Excavator) &&
+        if (ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
             (onAoE || !holdExcavatorForWildfire))
         {
             actionID = Excavator;
             return true;
         }
 
-        if ((!onAoE || useAirAnchor) && ToolsReady(OriginalHook(AirAnchor)))
+        if ((!onAoE || useAirAnchor) && ToolsReady(AirAnchor))
         {
-            actionID = OriginalHook(AirAnchor);
+            actionID = AirAnchor;
             return true;
         }
 
