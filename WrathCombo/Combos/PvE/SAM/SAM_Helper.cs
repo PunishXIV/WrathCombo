@@ -95,6 +95,12 @@ internal partial class SAM
                 !LevelChecked(MidareSetsugekka))
                 return true;
 
+            // Spend as soon as iaijutsu is replaced on the hotbar (Meikyo/Tendo).
+            if (useMidare &&
+                OriginalHook(Iaijutsu) is MidareSetsugekka or TendoSetsugekka &&
+                LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
+                return true;
+
             //Midare Setsugekka
             if (useMidare &&
                 SenCount is 3 &&
@@ -436,16 +442,16 @@ internal partial class SAM
         ActionReady(OriginalHook(TsubameGaeshi)) &&
         (HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) ||
          HasStatusEffect(Buffs.TsubameReady)) &&
-        (SenCount is 3 ||
-         EnhancedSenei && GetCooldownRemainingTime(Senei) > 33 ||
-         GetStatusEffectRemainingTime(Buffs.TsubameReady) < 5);
+        (GetStatusEffectRemainingTime(Buffs.TsubameReady) < 5 ||
+         SenCount is 3 ||
+         EnhancedSenei && GetCooldownRemainingTime(Senei) > 33);
 
     private static bool CanZanshin() =>
         ActionReady(Zanshin) &&
         InActionRange(Zanshin) &&
         HasStatusEffect(Buffs.ZanshinReady) &&
-        (JustUsed(Senei, 20f) ||
-         GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8);
+        (GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8 ||
+         JustUsed(Senei, 20f));
 
     private static bool CanOgiNamikiri(
         bool onlyWhenStationary = false,

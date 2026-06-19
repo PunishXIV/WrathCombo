@@ -183,7 +183,7 @@ internal partial class VPR
         UsedVicepit || UsedHuntersDen || UsedSwiftskinsDen;
 
     private static bool ShouldDeferNewTwinblade =>
-        ShouldHoldTwinbladeForIre && !InTwinbladeCombo;
+        ShouldHoldTwinbladeForIre && !InTwinbladeCombo && !IsEmpowermentExpiring(4);
 
     private static bool ShouldSaveOfferingForBurst =>
         UsesBurstAlignment &&
@@ -470,6 +470,7 @@ internal partial class VPR
         !JustUsed(SerpentsIre, GCDTotal * 4) && !JustUsed(Vicewinder) &&
         !JustUsed(Ouroboros) && !HasStatusEffect(Buffs.Reawakened) &&
         (!HasBothBuffs ||
+         IsEmpowermentExpiring(4) ||
          IreCD >= GCDTotal * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
 
     private static bool CanUseUncoiledFury(

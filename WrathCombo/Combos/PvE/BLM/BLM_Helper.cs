@@ -461,6 +461,11 @@ internal partial class BLM
 
     #region AoE GCDs
 
+    private static uint TryAoEPolyglotOvercap(bool usePolyglot = true) =>
+        usePolyglot && PolyglotOvercapProtection() && ActionReady(Foul)
+            ? Foul
+            : 0;
+
     private static uint TryAoEPolyglot(bool usePolyglot = true) =>
         usePolyglot &&
         (EndOfFirePhase || EndOfIcePhaseAoE || IcePhase && JustUsedFreezeOrBlizzard) &&

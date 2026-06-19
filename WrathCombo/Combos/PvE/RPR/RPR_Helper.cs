@@ -291,10 +291,17 @@ internal partial class RPR
         HasPerfectioReady && !InMeleeRange() && HasBattleTarget() &&
         InPerfectioFlexWindow && PerfectioRemaining > GCDTotal * 3 && AcCD > 10f;
 
-    private static bool ShouldSpendPerfectioNow() =>
-        HasPerfectioReady &&
-        (!ShouldHoldPerfectioInMelee && !ShouldHoldPerfectioForUptime ||
-         PerfectioRemaining <= GCDTotal * 4 || AcCD <= 10f);
+    private static bool ShouldSpendPerfectioNow()
+    {
+        if (!HasPerfectioReady)
+            return false;
+
+        // Failsafe: use before falloff regardless of burst alignment.
+        if (PerfectioRemaining <= GCDTotal * 4 || AcCD <= 10f)
+            return true;
+
+        return !ShouldHoldPerfectioInMelee && !ShouldHoldPerfectioForUptime;
+    }
 
     private static bool CanPerfectioGCD() =>
         HasPerfectioReady && ShouldSpendPerfectioNow() && InActionRange(PerfectioAction);

@@ -55,15 +55,14 @@ internal partial class MNK : Melee
             }
 
             // GCDs
+            if (CanMasterfulBlitz(false))
+                return OriginalHook(MasterfulBlitz);
+
             if (HasStatusEffect(Buffs.FormlessFist))
                 return ForcedOpoGCD(false);
 
             if (ForceSecondOpo(false))
                 return ForcedOpoGCD(false);
-
-            // Masterful Blitz
-            if (CanMasterfulBlitz(false))
-                return OriginalHook(MasterfulBlitz);
 
             if (CanFiresReply())
                 return FiresReply;
@@ -125,13 +124,12 @@ internal partial class MNK : Melee
             }
 
             // GCDs
+            if (CanMasterfulBlitz(true))
+                return OriginalHook(MasterfulBlitz);
+
             if (HasStatusEffect(Buffs.FormlessFist) ||
                 ForceSecondOpo(true))
                 return ForcedOpoGCD(true);
-
-            // Masterful Blitz
-            if (CanMasterfulBlitz(true))
-                return OriginalHook(MasterfulBlitz);
 
             if (CanFiresReply(true))
                 return FiresReply;
@@ -257,14 +255,13 @@ internal partial class MNK : Melee
             }
 
             // GCDs
-            if (HasStatusEffect(Buffs.FormlessFist) ||
-                ForceSecondOpo(false, IsEnabled(Preset.MNK_STUseFiresReply)))
-                return ForcedOpoGCD(false);
-
-            // Masterful Blitz
             if (IsEnabled(Preset.MNK_STUseMasterfulBlitz) &&
                 CanMasterfulBlitz(false))
                 return OriginalHook(MasterfulBlitz);
+
+            if (HasStatusEffect(Buffs.FormlessFist) ||
+                ForceSecondOpo(false, IsEnabled(Preset.MNK_STUseFiresReply)))
+                return ForcedOpoGCD(false);
 
             if (IsEnabled(Preset.MNK_STUseFiresReply) &&
                 CanFiresReply())
@@ -355,14 +352,13 @@ internal partial class MNK : Melee
             }
 
             // GCDs
-            if (HasStatusEffect(Buffs.FormlessFist) ||
-                ForceSecondOpo(true, IsEnabled(Preset.MNK_AoEUseFiresReply)))
-                return ForcedOpoGCD(true);
-
-            // Masterful Blitz
             if (IsEnabled(Preset.MNK_AoEUseMasterfulBlitz) &&
                 CanMasterfulBlitz(true))
                 return OriginalHook(MasterfulBlitz);
+
+            if (HasStatusEffect(Buffs.FormlessFist) ||
+                ForceSecondOpo(true, IsEnabled(Preset.MNK_AoEUseFiresReply)))
+                return ForcedOpoGCD(true);
 
             if (IsEnabled(Preset.MNK_AoEUseFiresReply) &&
                 CanFiresReply(true))

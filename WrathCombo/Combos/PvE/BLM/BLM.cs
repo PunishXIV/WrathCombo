@@ -107,6 +107,9 @@ internal partial class BLM : Caster
                     return LeyLines;
             }
 
+            if (TryAoEPolyglotOvercap() is var polyglotOvercap and not 0)
+                return polyglotOvercap;
+
             if (TryAoEPolyglot() is var polyglot and not 0)
                 return polyglot;
 
@@ -268,6 +271,9 @@ internal partial class BLM : Caster
                         BLM_AoE_LeyLinesOption))
                     return LeyLines;
             }
+
+            if (TryAoEPolyglotOvercap(IsEnabled(Preset.BLM_AoE_UsePolyglot)) is var polyglotOvercap and not 0)
+                return polyglotOvercap;
 
             if (TryAoEPolyglot(IsEnabled(Preset.BLM_AoE_UsePolyglot)) is var polyglot and not 0)
                 return polyglot;

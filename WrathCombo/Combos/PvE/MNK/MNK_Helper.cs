@@ -394,20 +394,27 @@ internal partial class MNK
 
     private static bool CanMasterfulBlitz(bool onAoE)
     {
-        if (IsBurstHoldReleaseReady())
+        if (!LevelChecked(MasterfulBlitz) || !InMasterfulRange() || IsOriginal(MasterfulBlitz))
             return false;
 
-        if (!LevelChecked(MasterfulBlitz) || HasStatusEffect(Buffs.PerfectBalance) ||
-            !InMasterfulRange() || !IsOriginal(MasterfulBlitz))
+        // Spend immediately once PB unlocks blitz on the hotbar.
+        if (HasStatusEffect(Buffs.PerfectBalance))
+            return true;
+
+        // Failsafe: use before falloff even during burst-hold ordering.
+        if (BlitzTimer <= GCDTotal * 3)
+            return true;
+
+        if (IsBurstHoldReleaseReady())
             return false;
 
         if (onAoE)
             return true;
 
-        if (BlitzTimer <= GCDTotal * 3)
+        if (HasStatusEffect(Buffs.RiddleOfFire) || HasStatusEffect(Buffs.Brotherhood))
             return true;
 
-        return HasStatusEffect(Buffs.RiddleOfFire);
+        return !LevelChecked(RiddleOfFire);
     }
 
     internal static bool InMasterfulRange() =>

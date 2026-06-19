@@ -507,7 +507,8 @@ internal partial class MCH
         }
 
         if (ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
-            (onAoE || !holdExcavatorForWildfire))
+            (onAoE || !holdExcavatorForWildfire ||
+             GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCDTotal * 3))
         {
             actionID = Excavator;
             return true;
