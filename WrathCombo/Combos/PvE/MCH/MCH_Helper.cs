@@ -139,8 +139,13 @@ internal partial class MCH
         if (!(ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) || IsOverheated)
             return false;
 
-        // At least one of Drill / Bio Blaster must be spent (Bio Blaster counts if DoT is already up).
-        if (!UsedDrill(toolHoldThreshold) && !UsedBioBlaster(toolHoldThreshold))
+        // Pre-Bio Blaster: spend Drill. After: spend Bio Blaster (DoT counts as spent).
+        if (LevelChecked(BioBlaster))
+        {
+            if (!UsedBioBlaster(toolHoldThreshold))
+                return false;
+        }
+        else if (!UsedDrill(toolHoldThreshold))
             return false;
 
         if (!IsChainSawCD(toolHoldThreshold) || HasStatusEffect(Buffs.ExcavatorReady))
@@ -307,12 +312,11 @@ internal partial class MCH
         if (ToolsReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
-        if (ToolsReady(OriginalHook(AirAnchor)) &&
+        if (ToolsReady(AirAnchor) &&
             (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2))
             return true;
 
-        if (ToolsReady(Drill) &&
-            (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2))
+        if (CanUseDrill(true) && ToolsReady(Drill))
             return true;
 
         if (LevelChecked(Scattergun) && ActionReady(Scattergun))
@@ -494,6 +498,9 @@ internal partial class MCH
     private static bool ToolsReady(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
 
+    private static bool CanUseDrill(bool onAoE) =>
+        !onAoE || !LevelChecked(BioBlaster);
+
     private static bool IsDrillCD(float time = 9f) =>
         !LevelChecked(Drill) ||
         !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= time ||
@@ -549,7 +556,7 @@ internal partial class MCH
             return true;
         }
 
-        if (ToolsReady(Drill))
+        if (CanUseDrill(onAoE) && ToolsReady(Drill))
         {
             actionID = Drill;
             return true;
