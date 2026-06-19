@@ -392,16 +392,8 @@ internal partial class MNK
 
     #region Masterful Blitz
 
-    private static bool CanMasterfulBlitz(bool onAoE)
+    private static bool ShouldSpendMasterfulBlitz(bool onAoE)
     {
-        if (!LevelChecked(MasterfulBlitz) || !InMasterfulRange() || IsOriginal(MasterfulBlitz))
-            return false;
-
-        // Spend immediately once PB unlocks blitz on the hotbar.
-        if (HasStatusEffect(Buffs.PerfectBalance))
-            return true;
-
-        // Failsafe: use before falloff even during burst-hold ordering.
         if (BlitzTimer <= GCDTotal * 3)
             return true;
 
@@ -415,6 +407,17 @@ internal partial class MNK
             return true;
 
         return !LevelChecked(RiddleOfFire);
+    }
+
+    private static bool CanMasterfulBlitz(bool onAoE)
+    {
+        if (!LevelChecked(MasterfulBlitz) || !InMasterfulRange() || IsOriginal(MasterfulBlitz))
+            return false;
+
+        if (HasStatusEffect(Buffs.PerfectBalance))
+            return true;
+
+        return ShouldSpendMasterfulBlitz(onAoE);
     }
 
     internal static bool InMasterfulRange() =>

@@ -12,6 +12,20 @@ internal partial class MCH
 {
     #region Queen
 
+    private static bool ShouldUseQueenST()
+    {
+        if (Battery is 100)
+            return true;
+
+        if (Battery > 80 &&
+            (HasStatusEffect(Buffs.ExcavatorReady) ||
+             ActionReady(Chainsaw) ||
+             ActionReady(OriginalHook(AirAnchor))))
+            return true;
+
+        return Battery > 90 && ComboAction == OriginalHook(SlugShot);
+    }
+
     private static bool CanQueen(
         bool onAoE = false,
         int batteryThreshold = 100,
@@ -40,13 +54,7 @@ internal partial class MCH
             {
                 if (wildfireBossOnlyOption == 0 || TargetIsBoss())
                 {
-                    //Always use at 100, as a failsafe above 80 with a tool ready, or above 90 mid-combo
-                    if (Battery is 100 ||
-                        Battery > 80 &&
-                        (HasStatusEffect(Buffs.ExcavatorReady) ||
-                         ActionReady(Chainsaw) ||
-                         ActionReady(OriginalHook(AirAnchor))) ||
-                        Battery > 90 && ComboAction == OriginalHook(SlugShot))
+                    if (ShouldUseQueenST())
                         return true;
                 }
 
@@ -79,6 +87,25 @@ internal partial class MCH
             : CanHyperchargeST(hpThreshold, skipExcavatorHold, skipHyperchargeHold, wildfireHyperchargeCutoff,
                 wildfireBossOnlyOption);
 
+    private static bool HyperchargeReady() =>
+        (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) && !IsOverheated;
+
+    private static bool ToolsReadyForHyperchargeST(
+        float toolCutoff,
+        bool skipHyperchargeHold,
+        bool skipExcavatorHold) =>
+        IsDrillCD(toolCutoff) && IsAirAnchorCD(toolCutoff) &&
+        (IsChainSawCD(toolCutoff) || skipHyperchargeHold) &&
+        (!HasStatusEffect(Buffs.ExcavatorReady) || skipExcavatorHold);
+
+    private static bool UseHyperchargeST(int wildfireBossOnlyOption) =>
+        ActionReady(Wildfire) ||
+        JustUsed(FullMetalField, GCDTotal / 2) ||
+        wildfireBossOnlyOption == 1 && !TargetIsBoss() ||
+        GetCooldownRemainingTime(Wildfire) > GCDTotal * 15 ||
+        Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10 ||
+        !LevelChecked(Wildfire);
+
     private static bool CanHyperchargeST(
         int hpThreshold = 25,
         bool skipExcavatorHold = false,
@@ -89,18 +116,11 @@ internal partial class MCH
         if (GetTargetHPPercent() <= hpThreshold)
             return false;
 
-        return (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-               (!IsComboExpiring(6) || skipHyperchargeHold) && !IsOverheated &&
-               IsDrillCD(wildfireHyperchargeCutoff) && IsAirAnchorCD(wildfireHyperchargeCutoff) &&
-               (IsChainSawCD(wildfireHyperchargeCutoff) || skipHyperchargeHold) &&
-               (!HasStatusEffect(Buffs.ExcavatorReady) || skipExcavatorHold) &&
+        return HyperchargeReady() &&
+               (!IsComboExpiring(6) || skipHyperchargeHold) &&
+               ToolsReadyForHyperchargeST(wildfireHyperchargeCutoff, skipHyperchargeHold, skipExcavatorHold) &&
                !HasStatusEffect(Buffs.FullMetalMachinist) &&
-               (ActionReady(Wildfire) ||
-                JustUsed(FullMetalField, GCDTotal / 2) ||
-                wildfireBossOnlyOption == 1 && !TargetIsBoss() ||
-                GetCooldownRemainingTime(Wildfire) > GCDTotal * 15 ||
-                Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10 ||
-                !LevelChecked(Wildfire));
+               UseHyperchargeST(wildfireBossOnlyOption);
     }
 
     private static bool UsedBioBlaster(float time = 9f) =>

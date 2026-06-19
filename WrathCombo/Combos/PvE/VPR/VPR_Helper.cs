@@ -395,13 +395,48 @@ internal partial class VPR
         HasBothBuffs &&
         GetTargetHPPercent() > hpThreshold;
 
+    private static bool ShouldSpendCoilStacks(int holdCharges, int hpThreshold) =>
+        RattlingCoilStacks > holdCharges ||
+        GetTargetHPPercent() < hpThreshold && HasRattlingCoilStacks;
+
+    private static bool CanUseUncoiledFuryInRotation(bool onAoE) =>
+        !ShouldDeferNewTwinblade &&
+        HasBothBuffs &&
+        !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) &&
+        !JustUsed(Ouroboros) &&
+        (onAoE
+            ? !UsedVicepit && !UsedHuntersDen && !UsedSwiftskinsDen && NoAoEComboWeaves &&
+              !JustUsed(JaggedMaw, GCDTotal) && !JustUsed(BloodiedMaw, GCDTotal) && !JustUsed(SerpentsIre, GCDTotal)
+            : !UsedVicewinder && !UsedHuntersCoil && !UsedSwiftskinsCoil && NoSTComboWeaves &&
+              !IsComboExpiring(2) && !IsVenomExpiring(2) && !IsHoningExpiring(2) && !IsEmpowermentExpiring(3));
+
     private static bool UncoiledFuryOvercapProtection(bool onAoE) =>
         onAoE
-            ? (HasCharges(Vicepit) && NoAoEComboWeaves || IreCD <= GCDTotal * 2) &&
-              !HasStatusEffect(Buffs.Reawakened) && MaxCoils
-            : MaxCoils &&
-              (HasCharges(Vicewinder) && NoSTComboWeaves && !HasStatusEffect(Buffs.Reawakened) ||
-               IreCD <= GCDTotal * 3);
+            ? MaxCoils && !HasStatusEffect(Buffs.Reawakened) &&
+              (HasCharges(Vicepit) && NoAoEComboWeaves || IreCD <= GCDTotal * 2)
+            : MaxCoils && !HasStatusEffect(Buffs.Reawakened) &&
+              (HasCharges(Vicewinder) && NoSTComboWeaves || IreCD <= GCDTotal * 3);
+
+    private static bool CanUseUncoiledFury(
+        bool onAoE = false,
+        int stHoldCharges = 1,
+        int stHpThreshold = 1,
+        int aoeHoldCharges = 1,
+        int aoeHpThreshold = 1)
+    {
+        if (!ActionReady(UncoiledFury) || !InActionRange(UncoiledFury))
+            return false;
+
+        // ST range uptime
+        if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget())
+            return true;
+
+        if (!CanUseUncoiledFuryInRotation(onAoE))
+            return false;
+
+        return ShouldSpendCoilStacks(onAoE ? aoeHoldCharges : stHoldCharges,
+            onAoE ? aoeHpThreshold : stHpThreshold);
+    }
 
     private static bool UseVicepitCombo(ref uint actionId, bool ignoreRange = false)
     {
@@ -472,35 +507,6 @@ internal partial class VPR
         (!HasBothBuffs ||
          IsEmpowermentExpiring(4) ||
          IreCD >= GCDTotal * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
-
-    private static bool CanUseUncoiledFury(
-        bool onAoE = false,
-        int stHoldCharges = 1,
-        int stHpThreshold = 1,
-        int aoeHoldCharges = 1,
-        int aoeHpThreshold = 1)
-    {
-        //AoE rotation
-        if (onAoE)
-            return ActionReady(UncoiledFury) && InActionRange(UncoiledFury) &&
-                   !ShouldDeferNewTwinblade &&
-                   HasBothBuffs && !UsedVicepit && !UsedHuntersDen && !UsedSwiftskinsDen && NoAoEComboWeaves &&
-                   !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) && !JustUsed(Ouroboros) &&
-                   !JustUsed(JaggedMaw, GCDTotal) && !JustUsed(BloodiedMaw, GCDTotal) && !JustUsed(SerpentsIre, GCDTotal) &&
-                   (RattlingCoilStacks > aoeHoldCharges || GetTargetHPPercent() < aoeHpThreshold && HasRattlingCoilStacks);
-
-        //ST range uptime
-        if (ActionReady(UncoiledFury) && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget())
-            return true;
-
-        //ST normal rotation
-        return ActionReady(UncoiledFury) && InActionRange(UncoiledFury) &&
-               !ShouldDeferNewTwinblade &&
-               HasBothBuffs && !UsedVicewinder && !UsedHuntersCoil && !UsedSwiftskinsCoil && NoSTComboWeaves &&
-               !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) && !JustUsed(Ouroboros) &&
-               !IsComboExpiring(2) && !IsVenomExpiring(2) && !IsHoningExpiring(2) && !IsEmpowermentExpiring(3) &&
-               (RattlingCoilStacks > stHoldCharges || GetTargetHPPercent() < stHpThreshold && HasRattlingCoilStacks);
-    }
 
     private static bool CanVicewinderCombo(ref uint actionId, bool vicewinderBuffPrio = false)
     {
