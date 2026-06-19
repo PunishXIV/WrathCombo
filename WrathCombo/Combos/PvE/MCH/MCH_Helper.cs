@@ -96,9 +96,9 @@ internal partial class MCH
                (!HasStatusEffect(Buffs.ExcavatorReady) || skipExcavatorHold) &&
                !HasStatusEffect(Buffs.FullMetalMachinist) &&
                (ActionReady(Wildfire) ||
-                JustUsed(FullMetalField, GCD / 2) ||
+                JustUsed(FullMetalField, GCDTotal / 2) ||
                 wildfireBossOnlyOption == 1 && !TargetIsBoss() ||
-                GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
+                GetCooldownRemainingTime(Wildfire) > GCDTotal * 15 ||
                 Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10 ||
                 !LevelChecked(Wildfire));
     }
@@ -143,7 +143,7 @@ internal partial class MCH
         !IsOverheated &&
         (ActionReady(Wildfire) ||
          GetCooldownRemainingTime(Wildfire) > 90 ||
-         GetCooldownRemainingTime(Wildfire) <= GCD ||
+         GetCooldownRemainingTime(Wildfire) <= GCDTotal ||
          GetStatusEffectRemainingTime(Buffs.FullMetalMachinist) <= 6);
 
     private static bool JustUsedOverheatGCD(float window, bool onAoE) =>
@@ -188,7 +188,7 @@ internal partial class MCH
         float? hyperchargeWindow = null) =>
         CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
         ActionReady(Wildfire) &&
-        JustUsed(Hypercharge, hyperchargeWindow ?? GCD + 0.9f) &&
+        JustUsed(Hypercharge, hyperchargeWindow ?? GCDTotal + 0.9f) &&
         !HasStatusEffect(Buffs.Wildfire) &&
         (requireBoss
             ? TargetIsBoss()
@@ -288,11 +288,11 @@ internal partial class MCH
             return true;
 
         if (ToolsReady(OriginalHook(AirAnchor)) &&
-            (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2))
+            (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2))
             return true;
 
         if (ToolsReady(Drill) &&
-            (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2))
+            (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2))
             return true;
 
         if (LevelChecked(Scattergun) && ActionReady(Scattergun))
@@ -338,8 +338,8 @@ internal partial class MCH
 
             case 1 when ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady):
             case 1 when ToolsReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolsReady(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2):
-            case 1 when ToolsReady(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2):
+            case 1 when ToolsReady(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2):
+            case 1 when ToolsReady(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2):
             case 1 when !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot):
             case 1 when !LevelChecked(CleanShot) && ToolsReady(HotShot):
                 return true;
@@ -473,7 +473,7 @@ internal partial class MCH
 
     private static bool ToolsReady(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
-
+    
     private static bool IsDrillCD(float time = 9f) =>
         !LevelChecked(Drill) ||
         !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= time ||
@@ -556,11 +556,9 @@ internal partial class MCH
 
     #region Combos
 
-    private static float GCD => GetCooldown(OriginalHook(SplitShot)).CooldownTotal;
-
     private static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GCD * times;
+        float gcd = GCDTotal * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }

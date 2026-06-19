@@ -206,7 +206,7 @@ internal partial class VPR
                 HasStatusEffect(Buffs.Reawakened) || !NoAoEComboWeaves)
                 return false;
 
-            if (UsesBurstAlignment && JustUsed(Ouroboros, GCD * 12) && SerpentOffering >= 50)
+            if (UsesBurstAlignment && JustUsed(Ouroboros, GCDTotal * 12) && SerpentOffering >= 50)
                 return true;
 
             return HasStatusEffect(Buffs.ReadyToReawaken) || SerpentOffering >= 50;
@@ -223,11 +223,11 @@ internal partial class VPR
             return true;
 
         // Standard double burst: one GCD after Ire, then first Reawaken
-        if (!JustUsed(SerpentsIre, GCD) && HasStatusEffect(Buffs.ReadyToReawaken))
+        if (!JustUsed(SerpentsIre, GCDTotal) && HasStatusEffect(Buffs.ReadyToReawaken))
             return true;
 
         // Second Reawaken back-to-back after Ouroboros when gauge is ready
-        if (UsesBurstAlignment && JustUsed(Ouroboros, GCD * 12) && SerpentOffering >= 50)
+        if (UsesBurstAlignment && JustUsed(Ouroboros, GCDTotal * 12) && SerpentOffering >= 50)
             return true;
 
         if (SerpentOffering >= 100)
@@ -276,11 +276,9 @@ internal partial class VPR
 
     #region Combos
 
-    private static float GCD => GetCooldown(OriginalHook(ReavingFangs)).CooldownTotal;
-
     private static bool IsHoningExpiring(float times)
     {
-        float gcd = GCD * times;
+        float gcd = GCDTotal * times;
 
         return HasStatusEffect(Buffs.HonedSteel) && GetStatusEffectRemainingTime(Buffs.HonedSteel) < gcd ||
                HasStatusEffect(Buffs.HonedReavers) && GetStatusEffectRemainingTime(Buffs.HonedReavers) < gcd;
@@ -288,7 +286,7 @@ internal partial class VPR
 
     private static bool IsVenomExpiring(float times)
     {
-        float gcd = GCD * times;
+        float gcd = GCDTotal * times;
 
         return HasStatusEffect(Buffs.FlankstungVenom) && GetStatusEffectRemainingTime(Buffs.FlankstungVenom) < gcd ||
                HasStatusEffect(Buffs.FlanksbaneVenom) && GetStatusEffectRemainingTime(Buffs.FlanksbaneVenom) < gcd ||
@@ -298,14 +296,14 @@ internal partial class VPR
 
     private static bool IsEmpowermentExpiring(float times)
     {
-        float gcd = GCD * times;
+        float gcd = GCDTotal * times;
 
         return GetStatusEffectRemainingTime(Buffs.Swiftscaled) < gcd || GetStatusEffectRemainingTime(Buffs.HuntersInstinct) < gcd;
     }
 
     private static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GCD * times;
+        float gcd = GCDTotal * times;
 
         return Instance()->Combo.Timer != 0 && Instance()->Combo.Timer < gcd;
     }
@@ -399,11 +397,11 @@ internal partial class VPR
 
     private static bool UncoiledFuryOvercapProtection(bool onAoE) =>
         onAoE
-            ? (HasCharges(Vicepit) && NoAoEComboWeaves || IreCD <= GCD * 2) &&
+            ? (HasCharges(Vicepit) && NoAoEComboWeaves || IreCD <= GCDTotal * 2) &&
               !HasStatusEffect(Buffs.Reawakened) && MaxCoils
             : MaxCoils &&
               (HasCharges(Vicewinder) && NoSTComboWeaves && !HasStatusEffect(Buffs.Reawakened) ||
-               IreCD <= GCD * 3);
+               IreCD <= GCDTotal * 3);
 
     private static bool UseVicepitCombo(ref uint actionId, bool ignoreRange = false)
     {
@@ -431,7 +429,7 @@ internal partial class VPR
         WithinGcd(Vicepit) && !HasStatusEffect(Buffs.Reawakened) && !JustUsed(Vicepit) &&
         !ShouldDeferNewTwinblade &&
         (ignoreRange || InActionRange(Vicepit)) &&
-        (!HasBothBuffs || IreCD >= GCD * 4 || !LevelChecked(SerpentsIre));
+        (!HasBothBuffs || IreCD >= GCDTotal * 4 || !LevelChecked(SerpentsIre));
 
     private static uint UseVicewinder(
         bool useSimpleTrueNorth = true,
@@ -469,10 +467,10 @@ internal partial class VPR
         !ShouldDeferNewTwinblade &&
         !IsComboExpiring(6) && !IsVenomExpiring(4) && !IsHoningExpiring(4) &&
         !UsedVicewinder && !UsedHuntersCoil && !UsedSwiftskinsCoil &&
-        !JustUsed(SerpentsIre, GCD * 4) && !JustUsed(Vicewinder) &&
+        !JustUsed(SerpentsIre, GCDTotal * 4) && !JustUsed(Vicewinder) &&
         !JustUsed(Ouroboros) && !HasStatusEffect(Buffs.Reawakened) &&
         (!HasBothBuffs ||
-         IreCD >= GCD * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
+         IreCD >= GCDTotal * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
 
     private static bool CanUseUncoiledFury(
         bool onAoE = false,
@@ -487,7 +485,7 @@ internal partial class VPR
                    !ShouldDeferNewTwinblade &&
                    HasBothBuffs && !UsedVicepit && !UsedHuntersDen && !UsedSwiftskinsDen && NoAoEComboWeaves &&
                    !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) && !JustUsed(Ouroboros) &&
-                   !JustUsed(JaggedMaw, GCD) && !JustUsed(BloodiedMaw, GCD) && !JustUsed(SerpentsIre, GCD) &&
+                   !JustUsed(JaggedMaw, GCDTotal) && !JustUsed(BloodiedMaw, GCDTotal) && !JustUsed(SerpentsIre, GCDTotal) &&
                    (RattlingCoilStacks > aoeHoldCharges || GetTargetHPPercent() < aoeHpThreshold && HasRattlingCoilStacks);
 
         //ST range uptime
@@ -513,7 +511,7 @@ internal partial class VPR
             if (UsedVicewinder &&
                 (!HasStatusEffect(Buffs.Swiftscaled) ||
                  HasBothBuffs && (!OnTargetsFlank() || !TargetNeedsPositionals()) ||
-                 vicewinderBuffPrio && GetStatusEffectRemainingTime(Buffs.Swiftscaled) < GCD * 6) ||
+                 vicewinderBuffPrio && GetStatusEffectRemainingTime(Buffs.Swiftscaled) < GCDTotal * 6) ||
                 UsedHuntersCoil)
             {
                 actionId = SwiftskinsCoil;
@@ -524,7 +522,7 @@ internal partial class VPR
             if (UsedVicewinder &&
                 (!HasStatusEffect(Buffs.HuntersInstinct) ||
                  HasBothBuffs && (!OnTargetsRear() || !TargetNeedsPositionals()) ||
-                 vicewinderBuffPrio && GetStatusEffectRemainingTime(Buffs.HuntersInstinct) < GCD * 6) ||
+                 vicewinderBuffPrio && GetStatusEffectRemainingTime(Buffs.HuntersInstinct) < GCDTotal * 6) ||
                 UsedSwiftskinsCoil)
             {
                 actionId = HuntersCoil;

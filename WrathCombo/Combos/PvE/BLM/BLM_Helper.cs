@@ -80,12 +80,12 @@ internal partial class BLM
 
     private static bool CanFire3 =>
         LevelChecked(Fire3) && HasStatusEffect(Buffs.Firestarter) &&
-        (AstralFireStacks < 3 || !LevelChecked(Fire4) && TimeSinceFirestarterBuff >= GCD * 3);
+        (AstralFireStacks < 3 || !LevelChecked(Fire4) && TimeSinceFirestarterBuff >= GCDTotal * 3);
 
     private static bool CanFireParadox =>
         ActiveParadox && MP.Cur >= MP.FireParadox &&
         (!HasStatusEffect(Buffs.Firestarter) && AstralFireStacks < 3 ||
-         JustUsed(FlareStar, GCD * 4) ||
+         JustUsed(FlareStar, GCDTotal * 4) ||
          !LevelChecked(FlareStar) && ActionReady(Despair));
 
     private static bool EndOfFirePhase =>
@@ -107,7 +107,7 @@ internal partial class BLM
         IcePhase && HasMaxUmbralHeartStacks && TraitLevelChecked(Traits.EnhancedAstralFire);
 
     private static bool JustUsedFreezeOrBlizzard =>
-        JustUsed(Freeze, GCD) || JustUsed(Blizzard4, GCD);
+        JustUsed(Freeze, GCDTotal) || JustUsed(Blizzard4, GCDTotal);
 
     #endregion
 
@@ -276,7 +276,7 @@ internal partial class BLM
 
         if (useSwiftcast &&
             ActionReady(Role.Swiftcast) && JustUsed(Despair) &&
-            GetCooldownRemainingTime(Manafont) > GCD &&
+            GetCooldownRemainingTime(Manafont) > GCDTotal &&
             !HasStatusEffect(Buffs.Triplecast) &&
             InActionRange(Fire) && HasBattleTarget())
             return Role.Swiftcast;
@@ -495,7 +495,7 @@ internal partial class BLM
             !HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
             HasBattleTarget() && InActionRange(Fire2) && !JustUsed(Triplecast) &&
             GetRemainingCharges(Triplecast) > triplecastHoldCharges &&
-            HasMaxUmbralHeartStacks && GetCooldownRemainingTime(Manafont) > GCD * 3)
+            HasMaxUmbralHeartStacks && GetCooldownRemainingTime(Manafont) > GCDTotal * 3)
             return Triplecast;
 
         if (ActionReady(Flare))
@@ -810,8 +810,6 @@ internal partial class BLM
         { HighThunder, Debuffs.HighThunder },
         { HighThunder2, Debuffs.HighThunder2 }
     }.ToFrozenDictionary();
-
-    private static float GCD = GetCooldown(OriginalHook(Fire)).CooldownTotal;
 
     #endregion
 

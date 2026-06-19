@@ -218,9 +218,6 @@ internal partial class SAM
         return false;
     }
 
-    private static float GCD =>
-        GetAdjustedRecastTime(ActionType.Action, Hakaze) / 100f;
-
     #endregion
 
     #region Combo Resolution
@@ -364,7 +361,7 @@ internal partial class SAM
                     SenCount is 3 && GetCooldownRemainingTime(Senei) <= 5)
                     return true;
             }
-            else if (GetCooldownRemainingTime(Senei) <= GCD ||
+            else if (GetCooldownRemainingTime(Senei) <= GCDTotal ||
                      GetCooldownRemainingTime(Senei) is > 50 and < 65)
                 return true;
         }
@@ -495,7 +492,7 @@ internal partial class SAM
 
         if (useShinten &&
             ActionReady(Shinten) && InActionRange(Shinten) &&
-            GetCooldownRemainingTime(Senei) >= GCD * 5 &&
+            GetCooldownRemainingTime(Senei) >= GCDTotal * 5 &&
             !JustUsed(Ikishoten))
             return Shinten;
 

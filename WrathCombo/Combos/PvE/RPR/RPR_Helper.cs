@@ -37,14 +37,14 @@ internal partial class RPR
 
                 //Double enshroud
                 if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                    AcCD <= GCD && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32 &&
+                    AcCD <= GCDTotal && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32 &&
                     (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
                 //lvl 88+ general use
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
                     GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh &&
-                    (AcCD > GCD * 8 || IsOffCooldown(ArcaneCircle)))
+                    (AcCD > GCDTotal * 8 || IsOffCooldown(ArcaneCircle)))
                     return true;
 
                 //below lvl 88 use
@@ -157,7 +157,7 @@ internal partial class RPR
 
             // Prep for double Enshroud (~9s AC: two filler GCDs, then Enshroud)
             if (LevelChecked(PlentifulHarvest) &&
-                AcCD <= GCD + 1.5f)
+                AcCD <= GCDTotal + 1.5f)
                 return true;
 
             //2nd part of Double Enshroud
@@ -194,7 +194,7 @@ internal partial class RPR
 
     private static bool CanTrueNorthForGluttony(bool advanced = false, int tnChargePool = 0) =>
         !InPostPerfectioSequence &&
-        LevelChecked(Gluttony) && GetCooldownRemainingTime(Gluttony) <= GCD && Role.CanTrueNorth() &&
+        LevelChecked(Gluttony) && GetCooldownRemainingTime(Gluttony) <= GCDTotal && Role.CanTrueNorth() &&
         (!advanced || GetRemainingCharges(Role.TrueNorth) > tnChargePool);
 
     private static bool CanBloodstalkOverflow(bool gluttonyEnabled = true) =>
@@ -203,14 +203,14 @@ internal partial class RPR
         (!LevelChecked(Gluttony) ||
          !gluttonyEnabled && Soul is 100 ||
          gluttonyEnabled && LevelChecked(Gluttony) && IsOnCooldown(Gluttony) &&
-         (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 4));
+         (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCDTotal * 4));
 
     private static bool CanGrimSwatheOverflow(bool onAoE = false) =>
         !ShouldDeferSpendersForPostPerfectio &&
         ActionReady(GrimSwathe) && InActionRange(onAoE ? OriginalHook(GrimSwathe) : GrimSwathe) &&
         InNormalRotation &&
         (!LevelChecked(Gluttony) ||
-         LevelChecked(Gluttony) && (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 5));
+         LevelChecked(Gluttony) && (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCDTotal * 5));
 
     private static bool CanSacrificiumWeave(
         bool onAoE = false,
@@ -222,7 +222,7 @@ internal partial class RPR
             ? Lemure is 2 && Void is 1
             : Lemure <= 4) &&
         (!useArcaneCircleBoss || onAoE ||
-         GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
+         GetCooldownRemainingTime(ArcaneCircle) > GCDTotal * 3 && !JustUsed(ArcaneCircle, 2) &&
          (arcaneCircleBossOption == 0 ||
           InBossEncounter() ||
           arcaneCircleBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)) ||
@@ -277,7 +277,7 @@ internal partial class RPR
         WithinGcd(Perfectio) ? Perfectio : OriginalHook(Communio);
 
     private static bool InPerfectioFlexWindow =>
-        HasPerfectioReady && PerfectioRemaining > GCD * 2 &&
+        HasPerfectioReady && PerfectioRemaining > GCDTotal * 2 &&
         (JustUsed(PlentifulHarvest, PerfectioFlexAfterHarvest) ||
          IsOnCooldown(ArcaneCircle) && GetCooldownElapsed(ArcaneCircle) < PerfectioFlexAfterArcaneCircle ||
          JustUsed(Communio, 30f));
@@ -285,26 +285,26 @@ internal partial class RPR
     private static bool ShouldHoldPerfectioInMelee =>
         HasPerfectioReady && InMeleeRange() && UsesBurstAlignment &&
         JustUsed(Communio, 30f) && InPerfectioFlexWindow &&
-        PerfectioRemaining > GCD * 5 && AcCD > 15f;
+        PerfectioRemaining > GCDTotal * 5 && AcCD > 15f;
 
     private static bool ShouldHoldPerfectioForUptime =>
         HasPerfectioReady && !InMeleeRange() && HasBattleTarget() &&
-        InPerfectioFlexWindow && PerfectioRemaining > GCD * 3 && AcCD > 10f;
+        InPerfectioFlexWindow && PerfectioRemaining > GCDTotal * 3 && AcCD > 10f;
 
     private static bool ShouldSpendPerfectioNow() =>
         HasPerfectioReady &&
         (!ShouldHoldPerfectioInMelee && !ShouldHoldPerfectioForUptime ||
-         PerfectioRemaining <= GCD * 4 || AcCD <= 10f);
+         PerfectioRemaining <= GCDTotal * 4 || AcCD <= 10f);
 
     private static bool CanPerfectioGCD() =>
         HasPerfectioReady && ShouldSpendPerfectioNow() && InActionRange(PerfectioAction);
 
     private static bool InPostPerfectioSequence =>
-        JustUsed(Perfectio, GCD * 8) ||
-        JustUsed(OriginalHook(Communio), GCD * 2) && !HasPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
+        JustUsed(Perfectio, GCDTotal * 8) ||
+        JustUsed(OriginalHook(Communio), GCDTotal * 2) && !HasPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
 
     private static bool ShouldContinueComboAfterPerfectio() =>
-        InPostPerfectioSequence && JustUsed(Perfectio, GCD * 2.5f) &&
+        InPostPerfectioSequence && JustUsed(Perfectio, GCDTotal * 2.5f) &&
         ComboTimer > 0 && !IsComboExpiring(2);
 
     private static bool CanPostPerfectioGluttonyWeave(bool onAoE = false) =>
@@ -314,13 +314,13 @@ internal partial class RPR
     private static bool CanPostPerfectioSoulSlice(bool onAoE = false) =>
         InPostPerfectioSequence && Soul < 50 &&
         !ShouldContinueComboAfterPerfectio() &&
-        !JustUsed(onAoE ? SoulScythe : SoulSlice, GCD) &&
+        !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice) && !IsComboExpiring(2));
 
     private static bool ShouldDeferSpendersForPostPerfectio =>
-        InPostPerfectioSequence && !JustUsed(Gluttony, GCD * 8);
+        InPostPerfectioSequence && !JustUsed(Gluttony, GCDTotal * 8);
 
     private static uint UsePostPerfectioGCD(uint actionId, bool onAoE)
     {
@@ -559,18 +559,16 @@ internal partial class RPR
 
     #region Combos
 
-    private static float GCD => GetCooldown(Slice).CooldownTotal;
-
     private static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GCD * times;
+        float gcd = GCDTotal * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
     private static bool IsDebuffExpiring(float times)
     {
-        float gcd = GCD * times;
+        float gcd = GCDTotal * times;
 
         return HasStatusEffect(Debuffs.DeathsDesign, CurrentTarget) && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < gcd;
     }

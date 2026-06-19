@@ -96,7 +96,7 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (SpreadShot or Scattergun))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
+            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCDTotal))
                 return All.SavageBlade;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -310,7 +310,7 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (SpreadShot or Scattergun))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
+            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCDTotal))
                 return All.SavageBlade;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
