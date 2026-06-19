@@ -188,7 +188,7 @@ internal partial class RPR
         (onAoE || LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) || !LevelChecked(Enshroud));
 
     private static bool CanGluttonyWeave(bool onAoE = false) =>
-        CanPostPerfectioGluttonyWeave(onAoE) ||
+        CanPostPerfectioGluttonyWeave() ||
         ActionReady(Gluttony) && InNormalRotation && !IsComboExpiring(3) &&
         !(InPostPerfectioSequence && Soul < 50);
 
@@ -197,20 +197,42 @@ internal partial class RPR
         LevelChecked(Gluttony) && GetCooldownRemainingTime(Gluttony) <= GCDTotal && Role.CanTrueNorth() &&
         (!advanced || GetRemainingCharges(Role.TrueNorth) > tnChargePool);
 
-    private static bool CanBloodstalkOverflow(bool gluttonyEnabled = true) =>
+    private static bool CanUseSoulOverflowWeave() =>
         !ShouldDeferSpendersForPostPerfectio &&
-        ActionReady(OriginalHook(BloodStalk)) && InNormalRotation && !IsComboExpiring(3) &&
-        (!LevelChecked(Gluttony) ||
-         !gluttonyEnabled && Soul is 100 ||
-         gluttonyEnabled && LevelChecked(Gluttony) && IsOnCooldown(Gluttony) &&
-         (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCDTotal * 4));
+        InNormalRotation &&
+        !IsComboExpiring(3);
+
+    // ST: pool for Gluttony unless at cap, Gluttony is disabled, or its CD is too far out.
+    private static bool ShouldSpendSoulOvercapST(bool gluttonyEnabled)
+    {
+        if (!LevelChecked(Gluttony))
+            return true;
+
+        if (Soul is 100)
+            return true;
+
+        if (!gluttonyEnabled)
+            return false;
+
+        return IsOnCooldown(Gluttony) && GetCooldownRemainingTime(Gluttony) > GCDTotal * 4;
+    }
+
+    // AoE: pool for Gluttony unless at cap or its CD is too far out.
+    private static bool ShouldSpendSoulOvercapAoE() =>
+        !LevelChecked(Gluttony) ||
+        Soul is 100 ||
+        GetCooldownRemainingTime(Gluttony) > GCDTotal * 5;
+
+    private static bool CanBloodstalkOverflow(bool gluttonyEnabled = true) =>
+        CanUseSoulOverflowWeave() &&
+        ActionReady(OriginalHook(BloodStalk)) &&
+        ShouldSpendSoulOvercapST(gluttonyEnabled);
 
     private static bool CanGrimSwatheOverflow(bool onAoE = false) =>
-        !ShouldDeferSpendersForPostPerfectio &&
-        ActionReady(GrimSwathe) && InActionRange(onAoE ? OriginalHook(GrimSwathe) : GrimSwathe) &&
-        InNormalRotation &&
-        (!LevelChecked(Gluttony) ||
-         LevelChecked(Gluttony) && (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCDTotal * 5));
+        CanUseSoulOverflowWeave() &&
+        ActionReady(GrimSwathe) &&
+        InActionRange(onAoE ? OriginalHook(GrimSwathe) : GrimSwathe) &&
+        ShouldSpendSoulOvercapAoE();
 
     private static bool CanSacrificiumWeave(
         bool onAoE = false,
@@ -314,7 +336,7 @@ internal partial class RPR
         InPostPerfectioSequence && JustUsed(Perfectio, GCDTotal * 2.5f) &&
         ComboTimer > 0 && !IsComboExpiring(2);
 
-    private static bool CanPostPerfectioGluttonyWeave(bool onAoE = false) =>
+    private static bool CanPostPerfectioGluttonyWeave() =>
         InPostPerfectioSequence && Soul >= 50 && ActionReady(Gluttony) &&
         !ShouldContinueComboAfterPerfectio();
 

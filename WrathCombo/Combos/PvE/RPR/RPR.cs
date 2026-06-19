@@ -118,7 +118,7 @@ internal partial class RPR : Melee
                 if (CanEnshroud(true))
                     return Enshroud;
 
-                if (CanPostPerfectioGluttonyWeave(true))
+                if (CanPostPerfectioGluttonyWeave())
                     return Gluttony;
 
                 if (CanGluttonyWeave(true))
