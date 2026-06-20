@@ -64,7 +64,7 @@ internal partial class RPR : Melee
             if (CanPerfectioGCD())
                 return PerfectioAction;
 
-            if (PostBurstGCD(actionID, false) is var postBurstGcd and not 0)
+            if (PostBurstGCD(false) is var postBurstGcd and not 0)
                 return postBurstGcd;
 
             if (CanUseShadowOfDeath())
@@ -121,7 +121,7 @@ internal partial class RPR : Melee
                 if (CanBurstGluttonyWeave())
                     return Gluttony;
 
-                if (CanGluttonyWeave(true))
+                if (CanGluttonyWeave())
                     return Gluttony;
 
                 if (CanGrimSwatheOverflow(true))
@@ -143,7 +143,7 @@ internal partial class RPR : Melee
             if (CanPerfectioGCD())
                 return PerfectioAction;
 
-            if (PostBurstGCD(actionID, true) is var postBurstGcd and not 0)
+            if (PostBurstGCD(true) is var postBurstGcd and not 0)
                 return postBurstGcd;
 
             if (CanPlentifulHarvest())
@@ -247,7 +247,7 @@ internal partial class RPR : Melee
                 CanPerfectioGCD())
                 return PerfectioAction;
 
-            if (PostBurstGCD(actionID, false,
+            if (PostBurstGCD(false,
                 IsEnabled(Preset.RPR_ST_SoulSlice)) is var postBurstGcd and not 0)
                 return postBurstGcd;
 
@@ -322,7 +322,7 @@ internal partial class RPR : Melee
                     return Enshroud;
 
                 if (IsEnabled(Preset.RPR_AoE_Gluttony) &&
-                    CanGluttonyWeave(true))
+                    CanGluttonyWeave())
                     return Gluttony;
 
                 if (IsEnabled(Preset.RPR_AoE_GrimSwathe) &&
@@ -353,7 +353,7 @@ internal partial class RPR : Melee
                 CanPerfectioGCD())
                 return PerfectioAction;
 
-            if (PostBurstGCD(actionID, true,
+            if (PostBurstGCD(true,
                 IsEnabled(Preset.RPR_AoE_SoulScythe)) is var postBurstGcd and not 0)
                 return postBurstGcd;
 

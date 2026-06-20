@@ -192,7 +192,7 @@ internal partial class RPR
         ActionReady(ArcaneCircle) && GetTargetHPPercent() > hpThreshold &&
         (onAoE || LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) || !LevelChecked(Enshroud));
 
-    private static bool CanGluttonyWeave(bool onAoE = false) =>
+    private static bool CanGluttonyWeave() =>
         CanBurstGluttonyWeave() ||
         ActionReady(Gluttony) && InNormalRotation && !IsComboExpiring(3) &&
         !(InPostBurstSequence && Soul < 50);
@@ -206,8 +206,7 @@ internal partial class RPR
         !ShouldDeferSoulOverflowWeave &&
         InNormalRotation &&
         !IsComboExpiring(3);
-
-    // ST: pool for Gluttony unless at cap, Gluttony is disabled, or its CD is too far out.
+    
     private static bool ShouldSpendSoulOvercapST(bool gluttonyEnabled)
     {
         if (!LevelChecked(Gluttony))
@@ -358,13 +357,12 @@ internal partial class RPR
     private static bool ShouldDeferSoulOverflowWeave =>
         InPostBurstSequence && !JustUsed(Gluttony, GCDTotal * 8);
 
-    private static uint PostBurstGCD(uint actionId, bool onAoE, bool soulSliceEnabled = true)
+    private static uint PostBurstGCD(bool onAoE, bool soulSliceEnabled = true)
     {
         if (!InPostBurstSequence)
             return 0;
 
-        if (HasBurstComboContinue(onAoE) &&
-            ContinueBasicCombo(onAoE) is var combo and not 0)
+        if (ContinueBasicCombo(onAoE) is var combo and not 0)
             return combo;
 
         if (soulSliceEnabled && CanBurstSoulSliceScythe(onAoE))

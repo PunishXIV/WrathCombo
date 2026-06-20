@@ -136,7 +136,7 @@ internal partial class MCH
         if (GetTargetHPPercent() <= hpThreshold)
             return false;
 
-        if (!(ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) || IsOverheated)
+        if (!IsHyperchargeReady())
             return false;
 
         // Pre-Bio Blaster: spend Drill. After: spend Bio Blaster (DoT counts as spent).
