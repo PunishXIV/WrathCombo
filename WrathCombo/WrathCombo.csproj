@@ -30,6 +30,11 @@
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
+    <ItemGroup>
+      <Compile Remove="Native\Icons\**" />
+      <EmbeddedResource Remove="Native\Icons\**" />
+      <None Remove="Native\Icons\**" />
+    </ItemGroup>
     <!-- Styling Rules -->
     <ItemGroup>
         <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -430,15 +435,18 @@
         <None Update="Resources\AoEDPS.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Resources\AoEHeals.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Resources\SingleTargetDPS.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\SingleTargetHeals.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="WrathCombo.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Native\Icons\" />
     </ItemGroup>
 
 </Project>

@@ -372,8 +372,8 @@ public sealed unsafe class CustomActionSetup : IDisposable
         Manager = new(Svc.SigScanner, Svc.Hook, Svc.Texture, Svc.Framework);
         _singleTargetDPS = new(All.SingleTargetDPS, "Single Target DPS", "This is for the Single Target DPS combos.", 1504, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/SingleTargetDPS.png"));
         _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos.", 1505, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/AoEDPS.png"));
-        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos.", 1508);
-        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE Heal combos.", 1510);
+        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos.", 1508, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/SingleTargetHeals.png"));
+        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE Heal combos.", 1510, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/AoEHeals.png"));
 
         Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals);
     }
@@ -433,7 +433,7 @@ public class CustomActionHelper()
             CustomActionType.SingleTargetDPS => All.SingleTargetDPS,
             CustomActionType.AoEDPS => All.AoEDPS,
             CustomActionType.SingleTargetHeals => All.SingleTargetHeals,
-            CustomActionType.AoEHeals => All.AoEDPS,
+            CustomActionType.AoEHeals => All.AoeHeals,
             _ => throw new NotImplementedException(),
         };
     }

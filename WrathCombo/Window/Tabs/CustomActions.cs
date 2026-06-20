@@ -56,7 +56,7 @@ namespace WrathCombo.Window.Tabs
                     ImGuiWindowFlags.NoDecoration |
                     ImGuiWindowFlags.AlwaysAutoResize);
 
-                ImGui.Image(texture.Handle, new(50));
+                ImGui.Image(texture.Handle, new(50f.Scale()));
                 ImGui.End();
 
                 if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) || (ImGui.IsMouseReleased(ImGuiMouseButton.Left) && DragDropMode))
@@ -104,7 +104,7 @@ namespace WrathCombo.Window.Tabs
                 if (changed)
                     Service.Configuration.Save();
 
-                var btnSize = ImGui.GetFrameHeight() * 1.4f.Scale();
+                var btnSize = ImGui.GetFrameHeight() * 2.5f.Scale();
                 ImGui.TableNextColumn();
                 ImGui.ImageButton(texture.Handle, new(btnSize));
 

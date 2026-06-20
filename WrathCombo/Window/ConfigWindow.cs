@@ -10,6 +10,7 @@ using ECommons.Logging;
 using ECommons.Throttlers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -20,6 +21,7 @@ using WrathCombo.Services;
 using WrathCombo.Window.Tabs;
 using static WrathCombo.Core.PresetStorage;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
+using Debug = WrathCombo.Window.Tabs.Debug;
 using PunishGui = PunishLib.ImGuiMethods;
 namespace WrathCombo.Window;
 
@@ -287,6 +289,17 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
                 break;
             case OpenWindow.About:
                 PunishGui.AboutTab.Draw(P.Name);
+                ImGuiEx.LineCentered(() =>
+                {
+                    if (ImGuiEx.Button($"Additional custom action icons by alexisoffline"))
+                    {
+                        Process.Start(new ProcessStartInfo()
+                        {
+                            FileName = "https://ko-fi.com/alexisoffline/",
+                            UseShellExecute = true
+                        });
+                    }
+                });
                 break;
             case OpenWindow.Debug:
                 Debug.Draw();
