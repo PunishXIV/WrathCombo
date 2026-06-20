@@ -313,7 +313,7 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Un-Target and Stop Actions for Pyretics.
+        ///   Looks up a localized string similar to Pause for Action Penalty Mechanics.
         /// </summary>
         internal static string Checkbox_UnTargetAndDisableForPenalty {
             get {
@@ -605,11 +605,29 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This will un-set any current target and disable Auto-Rotation actions if there is a current detected Pyretic (or similar, like Acceleration Bomb) mechanic affecting the player, that would harm them if they took any action..
+        ///   Looks up a localized string similar to This will un-set any current target and disable Auto-Rotation actions if there is a current detected action penalty, such as Pyretics (or similar, like Acceleration Bomb) affecting the player, that would harm them if they took any action..
         /// </summary>
         internal static string HelpText_UnTargetAndDisableForPenalty {
             get {
                 return ResourceManager.GetString("HelpText_UnTargetAndDisableForPenalty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Shields.
+        /// </summary>
+        internal static string Include_Shields {
+            get {
+                return ResourceManager.GetString("Include_Shields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Includes shield% in all HP checks..
+        /// </summary>
+        internal static string Include_Shields_Helptext {
+            get {
+                return ResourceManager.GetString("Include_Shields_Helptext", resourceCulture);
             }
         }
         

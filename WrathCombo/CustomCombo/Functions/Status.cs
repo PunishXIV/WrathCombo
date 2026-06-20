@@ -176,32 +176,18 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     public static unsafe bool PlayerHasActionPenalty()
     {
-        bool hasActionPenalty =
-            //Player.IsInDuty &&  <-?
-            Player.Status.Any(s =>
-                // Acceleration Bomb within Timeframe
-                (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
-                    GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
+        bool hasActionPenalty = false;
 
-                // Pyretic
-                StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
-
-                // Others
-                StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
-
-            ) == true;
-
-        if (!hasActionPenalty)
+        // Quick Content Check First
+        switch (Content.TerritoryID)
         {
-            // The Clyteum
-            if (Content.TerritoryID is 1345)
-            {
+            case 1345: // The Clyteum
                 // The Eye of the Scorpion
                 // This finds the helper
                 var MotionScannerHelper = Svc.Objects.FirstOrDefault(x =>
-                  x.BaseId == 0x4C2D &&
-                  x.Address != 0 &&
-                  (int)(x.Struct()->RenderFlags) == 0 // There can be two of these objects, only one appears to be active.
+                    x.BaseId == 0x4C2D &&
+                    x.Address != 0 &&
+                    (int)(x.Struct()->RenderFlags) == 0 // There can be two of these objects, only one appears to be active.
                 );
                 if (MotionScannerHelper is IGameObject scanner)
                 {
@@ -223,29 +209,55 @@ internal abstract partial class CustomComboFunctions
                     // then negative as it moves away, with the status dropping off at around -8y,
                     // but added a buffer just in case.
 
-                    // Too far away
-                    if (signedDistance > 12f)
-                        hasActionPenalty = false;
-
-                    // 12y to -8y (about to be overtaken by the field to almost about to clear)
-                    else if (signedDistance > -8f)
-                        hasActionPenalty = true;
-
-                    // -8y to -12y, waiting for status to clear, should happen close to -8y but added a buffer just in case
-                    else if (signedDistance > -12f)
-                        hasActionPenalty = HasStatusEffect(5191, anyOwner: true);
-
-                    // -12y and beyond should be decently away from the player
-                    else
-                        hasActionPenalty = false;
+                    hasActionPenalty = signedDistance switch
+                    {
+                        // Too far away
+                        > 12f => false,
+                        // 12y to -8y (about to be overtaken by the field to almost about to clear)
+                        > -8f => true,
+                        // -8y to -12y, waiting for status to clear, should happen close to -8y but added a buffer just in case
+                        > -12f => HasStatusEffect(5191, anyOwner: true),
+                        _ => false,
+                    };
                 }
-            }
+                break;
+
+            case 1368: // Windurst
+                if (Svc.Objects.Any(x => x.BaseId == 0x4D92 || x.BaseId == 0x4D96)) // Shinryu Paradox / Hollow King
+                {
+                    // Find VFX
+                    var effects = VfxManager.TrackedEffects
+                        .FilterToTarget(Player.Object.GameObjectId)
+                        .Where(x =>
+                            x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_mv_7s_c0k2.avfx" ||  // Don't Move
+                            x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_lk_7s_c0k2.avfx")    // Don't Look
+                        .ToList();
+
+                    if (effects.Count == 1) hasActionPenalty = MathHelper.InRange(effects[0].AgeSeconds, 4, 8);
+                }
+                break;
+
+            default:
+                hasActionPenalty =
+                    Player.Status.Any(s =>
+                        // Acceleration Bomb within Timeframe
+                        (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
+                            GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
+
+                        // Pyretic
+                        StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
+
+                        // Others
+                        StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
+
+                    ) == true;
+                break;
         }
 
         if (hasActionPenalty)
         {
             Svc.Targets.Target = null;
-            OverrideTarget = null;
+            //OverrideTarget = null;
             UIState.Instance()->Hotbar.CancelCast();
         }
 
@@ -351,6 +363,14 @@ internal abstract partial class CustomComboFunctions
                     return true; //Unfooled means you can attack the Lyre
                 return false;
 
+            case 887: // The Epic of Alexander (Ultimate)
+                // Jagd Doll = NameId 3759
+                // Technically not invincible, but killing one wipes the raid;
+                // ignore them once below the 25% HP feed threshold
+                if (tar.BaseId is 11338)
+                    return GetTargetHPPercent(tar) < 25;
+                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
+
             case 917: //Puppet's Bunker, Flight Mechs
                 // 724P Alpha = 11792 (A)
                 // 767P Beta  = 11793 (B)
@@ -411,7 +431,7 @@ internal abstract partial class CustomComboFunctions
                 return false;
 
             case 1248: // Jeuno 1 Ark Angels
-                // ArkAngel HM = 1804
+                // ArkAngel HM = 18049
                 // ArkAngel MR = 18051 (A)
                 // ArkAngel GK = 18053 (B)
                 // ArkAngel TT = 18052 (C)
@@ -422,6 +442,16 @@ internal abstract partial class CustomComboFunctions
                     if (HasStatusEffect(4192)) return targetID != 18051; // Alliance A Red Epic
                     if (HasStatusEffect(4194)) return targetID != 18053; // Alliance B Yellow Fated
                     if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
+                }
+                return false;
+
+            case 1363: // Dancing Mad (Ultimate)
+                // Chaos = 19508
+                // Exdeath = 19509
+                if (targetID is 19508 or 19509)
+                {
+                    if (HasStatusEffect(4192)) return targetID != 19508; // Epic Hero (α) — Chaos
+                    if (HasStatusEffect(4194)) return targetID != 19509; // Fated Hero (β) — Exdeath
                 }
                 return false;
 

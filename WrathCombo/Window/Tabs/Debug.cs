@@ -357,6 +357,8 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Movement Time:", TimeMoving.ToString("mm\\:ss\\:ff"));
             CustomStyleText($"Dashing:", IsDashing());
             CustomStyleText("In Boss Encounter:", InBossEncounter());
+            CustomStyleText("Shield Percentage:", player.ShieldPercentage);
+            CustomStyleText("Shield Actual Value:", player.RawShieldValue());
 
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 

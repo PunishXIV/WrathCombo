@@ -12,7 +12,7 @@ description: >-
 
   Update from:
 
-  https://github.com/PunishXIV/WrathCombo/blob/docs/docs/IPCExample.lua
+  https://github.com/PunishXIV/WrathCombo/blob/main/docs/IPCExample.lua
 plugin_dependencies:
 - WrathCombo
 
