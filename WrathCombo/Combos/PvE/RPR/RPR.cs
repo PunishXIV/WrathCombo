@@ -33,7 +33,7 @@ internal partial class RPR : Melee
                 if (CanEnshroud())
                     return Enshroud;
 
-                if (CanPostPerfectioGluttonyWeave())
+                if (CanBurstGluttonyWeave())
                     return Gluttony;
 
                 if (CanTrueNorthForGluttony())
@@ -64,8 +64,8 @@ internal partial class RPR : Melee
             if (CanPerfectioGCD())
                 return PerfectioAction;
 
-            if (UsePostPerfectioGCD(actionID, false) is var postPerfectioGcd and not 0)
-                return postPerfectioGcd;
+            if (PostBurstGCD(actionID, false) is var postBurstGcd and not 0)
+                return postBurstGcd;
 
             if (CanUseShadowOfDeath())
                 return ShadowOfDeath;
@@ -89,7 +89,7 @@ internal partial class RPR : Melee
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
                 ? RangedAttack(actionID, true, true)
-                : ResolveRotationFiller(actionID);
+                : DoBasicCombo(actionID);
         }
     }
 
@@ -118,7 +118,7 @@ internal partial class RPR : Melee
                 if (CanEnshroud(true))
                     return Enshroud;
 
-                if (CanPostPerfectioGluttonyWeave())
+                if (CanBurstGluttonyWeave())
                     return Gluttony;
 
                 if (CanGluttonyWeave(true))
@@ -143,8 +143,8 @@ internal partial class RPR : Melee
             if (CanPerfectioGCD())
                 return PerfectioAction;
 
-            if (UsePostPerfectioGCD(actionID, true) is var postPerfectioGcd and not 0)
-                return postPerfectioGcd;
+            if (PostBurstGCD(actionID, true) is var postBurstGcd and not 0)
+                return postBurstGcd;
 
             if (CanPlentifulHarvest())
                 return PlentifulHarvest;
@@ -158,7 +158,7 @@ internal partial class RPR : Melee
             if (CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return ResolveRotationFiller(actionID, true);
+            return DoBasicCombo(actionID, true);
         }
     }
 
@@ -247,9 +247,9 @@ internal partial class RPR : Melee
                 CanPerfectioGCD())
                 return PerfectioAction;
 
-            if (UsePostPerfectioGCD(actionID, false,
-                IsEnabled(Preset.RPR_ST_SoulSlice)) is var postPerfectioGcd and not 0)
-                return postPerfectioGcd;
+            if (PostBurstGCD(actionID, false,
+                IsEnabled(Preset.RPR_ST_SoulSlice)) is var postBurstGcd and not 0)
+                return postBurstGcd;
 
             if (IsEnabled(Preset.RPR_ST_SoD) &&
                 CanUseShadowOfDeath(RPR_SoDRefreshRange, RPR_ST_ArcaneCircleHPBossOption == 1,
@@ -289,7 +289,7 @@ internal partial class RPR : Melee
                     IsEnabled(Preset.RPR_ST_RangedFiller),
                     RPR_ST_EnhancedHarpe,
                     !RPR_ST_EnhancedHarpe)
-                : ResolveRotationFiller(actionID);
+                : DoBasicCombo(actionID);
         }
     }
 
@@ -353,9 +353,9 @@ internal partial class RPR : Melee
                 CanPerfectioGCD())
                 return PerfectioAction;
 
-            if (UsePostPerfectioGCD(actionID, true,
-                IsEnabled(Preset.RPR_AoE_SoulScythe)) is var postPerfectioGcd and not 0)
-                return postPerfectioGcd;
+            if (PostBurstGCD(actionID, true,
+                IsEnabled(Preset.RPR_AoE_SoulScythe)) is var postBurstGcd and not 0)
+                return postBurstGcd;
 
             if (IsEnabled(Preset.RPR_AoE_WoD) &&
                 CanWhorlOfDeath(hpThreshold: RPR_WoDHPThreshold))
@@ -378,7 +378,7 @@ internal partial class RPR : Melee
                 CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return ResolveRotationFiller(actionID, true);
+            return DoBasicCombo(actionID, true);
         }
     }
 
