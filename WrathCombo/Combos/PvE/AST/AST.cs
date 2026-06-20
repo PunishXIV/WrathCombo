@@ -90,7 +90,7 @@ internal partial class AST : Healer
             CombustList.TryGetValue(dotAction, out var dotDebuffID);
             var target = IsMoving() && !HasStatusEffect(Buffs.Lightspeed)
                 ? SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 30, 99)
-                : SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 2);
+                : SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 99);
             
             if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && PartyInCombat())
                 return dotAction.Retarget(replacedActions, target);

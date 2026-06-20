@@ -63,7 +63,7 @@ internal partial class SGE : Healer
 
             uint dotAction = OriginalHook(Dosis);
             DosisList.TryGetValue(dotAction, out (ushort Debuff, uint Eukrasian) debuff);
-            IGameObject? target = SimpleTarget.DottableEnemy(debuff.Eukrasian, debuff.Debuff, 0, 3, 2);
+            IGameObject? target = SimpleTarget.DottableEnemy(debuff.Eukrasian, debuff.Debuff, 0, 3, 99);
 
             if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(debuff.Eukrasian, target) && LevelChecked(Eukrasia))
                 return HasStatusEffect(Buffs.Eukrasia)
