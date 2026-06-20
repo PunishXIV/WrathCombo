@@ -89,7 +89,7 @@ internal partial class RPR : Melee
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
                 ? RangedAttack(actionID, true, true)
-                : DoBasicCombo(actionID);
+                : ResolveRotationFiller(actionID);
         }
     }
 
@@ -158,7 +158,7 @@ internal partial class RPR : Melee
             if (CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return DoBasicCombo(actionID, true);
+            return ResolveRotationFiller(actionID, true);
         }
     }
 
@@ -247,6 +247,10 @@ internal partial class RPR : Melee
                 CanPerfectioGCD())
                 return PerfectioAction;
 
+            if (UsePostPerfectioGCD(actionID, false,
+                IsEnabled(Preset.RPR_ST_SoulSlice)) is var postPerfectioGcd and not 0)
+                return postPerfectioGcd;
+
             if (IsEnabled(Preset.RPR_ST_SoD) &&
                 CanUseShadowOfDeath(RPR_SoDRefreshRange, RPR_ST_ArcaneCircleHPBossOption == 1,
                     IsEnabled(Preset.RPR_ST_ArcaneCircle)) &&
@@ -285,7 +289,7 @@ internal partial class RPR : Melee
                     IsEnabled(Preset.RPR_ST_RangedFiller),
                     RPR_ST_EnhancedHarpe,
                     !RPR_ST_EnhancedHarpe)
-                : DoBasicCombo(actionID);
+                : ResolveRotationFiller(actionID);
         }
     }
 
@@ -349,6 +353,10 @@ internal partial class RPR : Melee
                 CanPerfectioGCD())
                 return PerfectioAction;
 
+            if (UsePostPerfectioGCD(actionID, true,
+                IsEnabled(Preset.RPR_AoE_SoulScythe)) is var postPerfectioGcd and not 0)
+                return postPerfectioGcd;
+
             if (IsEnabled(Preset.RPR_AoE_WoD) &&
                 CanWhorlOfDeath(hpThreshold: RPR_WoDHPThreshold))
                 return WhorlOfDeath;
@@ -370,7 +378,7 @@ internal partial class RPR : Melee
                 CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return DoBasicCombo(actionID, true);
+            return ResolveRotationFiller(actionID, true);
         }
     }
 

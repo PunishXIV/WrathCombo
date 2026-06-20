@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.RPR.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
@@ -100,7 +101,11 @@ internal partial class RPR
 
     #region Basic Combo
 
-    private static uint DoBasicCombo(uint actionId, bool onAoE = false)
+    /// <summary>
+    ///     Continues an in-progress 1-2-3 combo (Waxing / Infernal only).
+    ///     Returns 0 if a fresh Slice would be started.
+    /// </summary>
+    private static uint TryBasicComboContinue(uint actionId, bool onAoE = false)
     {
         if (onAoE)
         {
@@ -108,7 +113,7 @@ internal partial class RPR
                 ComboAction == OriginalHook(SpinningScythe) && LevelChecked(NightmareScythe))
                 return OriginalHook(NightmareScythe);
 
-            return actionId;
+            return 0;
         }
 
         if (ComboTimer > 0)
@@ -120,7 +125,30 @@ internal partial class RPR
                 return OriginalHook(InfernalSlice);
         }
 
-        return actionId;
+        return 0;
+    }
+
+    private static uint DoBasicCombo(uint actionId, bool onAoE = false)
+    {
+        if (TryBasicComboContinue(actionId, onAoE) is var continued and not 0)
+            return continued;
+
+        return onAoE ? actionId : actionId;
+    }
+
+    /// <summary>
+    ///     Filler GCD resolution — avoids fresh Slice when burst spenders should take priority.
+    /// </summary>
+    private static uint ResolveRotationFiller(uint actionId, bool onAoE = false)
+    {
+        if (TryBasicComboContinue(actionId, onAoE) is var continued and not 0)
+            return continued;
+
+        if (!onAoE && InPostPerfectioSequence && !ShouldContinueComboAfterPerfectio() &&
+            Soul >= 50 && ActionReady(Gluttony) && ActionReady(Harpe) && InMeleeRange())
+            return Harpe;
+
+        return DoBasicCombo(actionId, onAoE);
     }
 
     #endregion
@@ -332,18 +360,81 @@ internal partial class RPR
         JustUsed(Perfectio, GCDTotal * 8) ||
         JustUsed(OriginalHook(Communio), GCDTotal * 2) && !HasPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
 
+    private static bool IsBurstFillerGcd(uint actionId) =>
+        ActionWatching.GetAttackType(actionId) is
+            ActionWatching.ActionAttackType.Weaponskill or ActionWatching.ActionAttackType.Spell;
+
+    /// <summary>
+    ///     Index of the first Enshroud in the most recent double (or single) burst window.
+    /// </summary>
+    private static int FindFirstEnshroudIndexOfRecentBurst()
+    {
+        int count = 0;
+        for (int i = ActionWatching.CombatActions.Count - 1; i >= 0; i--)
+        {
+            if (ActionWatching.CombatActions[i] != Enshroud)
+                continue;
+
+            count++;
+            if (count == 2)
+                return i;
+        }
+
+        if (count == 1)
+        {
+            for (int i = ActionWatching.CombatActions.Count - 1; i >= 0; i--)
+            {
+                if (ActionWatching.CombatActions[i] == Enshroud)
+                    return i;
+            }
+        }
+
+        return -1;
+    }
+
+    /// <summary>
+    ///     Balance double burst: continue combo after Perfectio only if Slice or Waxing Slice
+    ///     was one of the two filler GCDs before the first Enshroud.
+    /// </summary>
+    private static bool LastTwoGcdsBeforeBurstEnshroudHadComboStarter()
+    {
+        int enshroudIdx = FindFirstEnshroudIndexOfRecentBurst();
+        if (enshroudIdx <= 0)
+            return false;
+
+        int counted = 0;
+        for (int i = enshroudIdx - 1; i >= 0 && counted < 2; i--)
+        {
+            if (!IsBurstFillerGcd(ActionWatching.CombatActions[i]))
+                continue;
+
+            counted++;
+            uint action = ActionWatching.CombatActions[i];
+            if (action == OriginalHook(Slice) || action == OriginalHook(WaxingSlice))
+                return true;
+        }
+
+        return false;
+    }
+
+    private static bool ShouldContinueComboFromActiveTimer() =>
+        ComboTimer > 0 &&
+        (ComboAction == OriginalHook(Slice) || ComboAction == OriginalHook(WaxingSlice));
+
     private static bool ShouldContinueComboAfterPerfectio() =>
-        InPostPerfectioSequence && JustUsed(Perfectio, GCDTotal * 2.5f) &&
-        ComboTimer > 0 && !IsComboExpiring(2);
+        InPostPerfectioSequence &&
+        !IsComboExpiring(2) &&
+        (ShouldContinueComboFromActiveTimer() || LastTwoGcdsBeforeBurstEnshroudHadComboStarter());
 
     private static bool CanPostPerfectioGluttonyWeave() =>
         InPostPerfectioSequence && Soul >= 50 && ActionReady(Gluttony) &&
         !ShouldContinueComboAfterPerfectio();
 
     private static bool CanPostPerfectioSoulSlice(bool onAoE = false) =>
-        InPostPerfectioSequence && Soul < 50 &&
+        InPostPerfectioSequence &&
         !ShouldContinueComboAfterPerfectio() &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
+        (Soul < 50 || !ActionReady(Gluttony)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice) && !IsComboExpiring(2));
@@ -351,12 +442,19 @@ internal partial class RPR
     private static bool ShouldDeferSpendersForPostPerfectio =>
         InPostPerfectioSequence && !JustUsed(Gluttony, GCDTotal * 8);
 
-    private static uint UsePostPerfectioGCD(uint actionId, bool onAoE)
+    private static uint UsePostPerfectioGCD(uint actionId, bool onAoE, bool soulSliceEnabled = true)
     {
-        if (ShouldContinueComboAfterPerfectio())
-            return DoBasicCombo(actionId, onAoE);
+        if (!InPostPerfectioSequence)
+            return 0;
 
-        if (CanPostPerfectioSoulSlice(onAoE))
+        // Balance post-Perfectio: 1) Continue combo (Waxing / Infernal only)
+        if (ShouldContinueComboAfterPerfectio() &&
+            TryBasicComboContinue(actionId, onAoE) is var combo and not 0)
+            return combo;
+
+        // 2) Gluttony at 50 soul — weave (handled in CanGluttonyWeave)
+        // 3) Soul Slice, then Gluttony on the following weave
+        if (soulSliceEnabled && CanPostPerfectioSoulSlice(onAoE))
             return onAoE ? SoulScythe : SoulSlice;
 
         return 0;
