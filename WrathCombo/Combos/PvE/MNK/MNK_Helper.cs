@@ -263,7 +263,7 @@ internal partial class MNK
         return true;
     }
 
-    private static bool UseSecondPerfectBalance(bool useFiresReply)
+    private static bool ShouldUseSecondPerfectBalance(bool useFiresReply)
     {
         if (!HasStatusEffect(Buffs.Brotherhood) || !HasStatusEffect(Buffs.RiddleOfFire))
             return false;
@@ -288,7 +288,7 @@ internal partial class MNK
         return HasElapsedSinceBlitz(2.5f);
     }
 
-    private static bool UsePBAfterBurstHolding(bool onAoE, int perfectBalanceHpThreshold = 0)
+    private static bool ShouldUsePBAfterBurstHolding(bool onAoE, int perfectBalanceHpThreshold = 0)
     {
         if (!IsBurstHoldReleaseReady())
             return false;
@@ -360,7 +360,7 @@ internal partial class MNK
             }
         }
 
-        if (UseSecondPerfectBalance(useFiresReply))
+        if (ShouldUseSecondPerfectBalance(useFiresReply))
             return true;
 
         if (!LevelChecked(RiddleOfFire) ||

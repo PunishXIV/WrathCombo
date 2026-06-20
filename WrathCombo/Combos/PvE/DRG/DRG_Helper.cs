@@ -215,13 +215,11 @@ internal partial class DRG
         !LoTDTimerActive &&
         GetTargetHPPercent() > hpThreshold;
 
-    private static int ComputeHpThresholdGeirskogul()
-    {
-        if (InBossEncounter())
-            return TargetIsBoss() ? DRG_ST_GeirskogulBossHPOption : DRG_ST_GeirskogulBossAddsHPOption;
-
-        return DRG_ST_GeirskogulTrashHPOption;
-    }
+    private static int GeirskogulHPThreshold() =>
+        InBossEncounter() ? TargetIsBoss() 
+                ? DRG_ST_GeirskogulBossHPOption
+                : DRG_ST_GeirskogulBossAddsHPOption 
+            : DRG_ST_GeirskogulTrashHPOption;
 
     private static bool CanStarcross() =>
         ActionReady(Starcross) && HasStatusEffect(Buffs.StarcrossReady) && InActionRange(Starcross);

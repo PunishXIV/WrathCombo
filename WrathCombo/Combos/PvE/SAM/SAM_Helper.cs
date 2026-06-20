@@ -126,7 +126,7 @@ internal partial class SAM
                 !EnhancedSenei);
     }
 
-    private static int ComputeHpThresholdHiganbana()
+    private static int HiganbanaHPThreshold()
     {
         if (InBossEncounter())
             return TargetIsBoss() ? SAM_ST_HiganbanaBossHPOption : SAM_ST_HiganbanaBossAddsHPOption;
@@ -219,7 +219,7 @@ internal partial class SAM
 
     #region Combo Resolution
 
-    private static uint ResolveStCombo(
+    private static uint DoStCombo(
         uint actionId,
         bool useTrueNorth,
         bool useYukikaze = true,

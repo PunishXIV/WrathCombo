@@ -193,7 +193,7 @@ internal partial class DRG : Melee
                             return MirageDive;
 
                         if (IsEnabled(Preset.DRG_ST_Geirskogul) &&
-                            CanUseGeirskogul(hpThreshold: ComputeHpThresholdGeirskogul()))
+                            CanUseGeirskogul(hpThreshold: GeirskogulHPThreshold()))
                             return Geirskogul;
 
                         if (IsEnabled(Preset.DRG_ST_Wyrmwind) &&
@@ -241,8 +241,8 @@ internal partial class DRG : Melee
                             return OriginalHook(Jump);
 
                         if (IsEnabled(Preset.DRG_ST_DragonfireDive) &&
-                            CanDragonfireDive(holdOptions: DRG_ST_DragonfireDiveMovingOrInRanged,
-                                hpThreshold: DragonfireDiveHPThreshold))
+                            CanDragonfireDive(DRG_ST_DragonfireDiveMovingOrInRanged,
+                                DragonfireDiveHPThreshold))
                             return DragonfireDive;
                     }
 
@@ -255,7 +255,7 @@ internal partial class DRG : Melee
 
             OutsideOfMeleeOptions stRanged = new()
             {
-                GeirskogulHpThreshold = ComputeHpThresholdGeirskogul(),
+                GeirskogulHpThreshold = GeirskogulHPThreshold(),
                 UseDamage = IsEnabled(Preset.DRG_ST_Damage),
                 UseMirage = IsEnabled(Preset.DRG_ST_Mirage),
                 UseWyrmwind = IsEnabled(Preset.DRG_ST_Wyrmwind),

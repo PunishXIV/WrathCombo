@@ -133,7 +133,7 @@ internal partial class BLM
                dotRemaining <= dotRefresh;
     }
 
-    internal static int ComputeHpThreshold()
+    internal static int ThunderHPThreshold()
     {
         if (InBossEncounter())
             return TargetIsBoss() ? BLM_ST_ThunderBossHPOption : BLM_ST_ThunderBossAddsHPOption;

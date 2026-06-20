@@ -91,7 +91,7 @@ internal partial class SAM : Melee
             if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
                 return Enpi;
 
-            return ResolveStCombo(actionID, true);
+            return DoStCombo(actionID, true);
         }
     }
 
@@ -284,7 +284,7 @@ internal partial class SAM : Melee
                         IsEnabled(Preset.SAM_ST_CDs_UseTenkaGoken),
                         IsEnabled(Preset.SAM_ST_CDs_UseMidare),
                         IsEnabled(Preset.SAM_ST_CDs_Iaijutsu_Movement),
-                        ComputeHpThresholdHiganbana(),
+                        HiganbanaHPThreshold(),
                         SAM_ST_HiganbanaRefresh))
                     return OriginalHook(Iaijutsu);
 
@@ -294,7 +294,7 @@ internal partial class SAM : Melee
                     return Enpi;
             }
 
-            return ResolveStCombo(actionID,
+            return DoStCombo(actionID,
                 IsEnabled(Preset.SAM_ST_TrueNorth),
                 IsEnabled(Preset.SAM_ST_Yukikaze),
                 IsEnabled(Preset.SAM_ST_Kasha),

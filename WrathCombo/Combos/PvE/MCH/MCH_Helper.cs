@@ -87,10 +87,10 @@ internal partial class MCH
             : CanHyperchargeST(hpThreshold, skipExcavatorHold, skipHyperchargeHold, wildfireHyperchargeCutoff,
                 wildfireBossOnlyOption);
 
-    private static bool HyperchargeReady() =>
+    private static bool IsHyperchargeReady() =>
         (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) && !IsOverheated;
 
-    private static bool ToolsReadyForHyperchargeST(
+    private static bool AreHyperchargeToolsReady(
         float toolCutoff,
         bool skipHyperchargeHold,
         bool skipExcavatorHold) =>
@@ -98,7 +98,7 @@ internal partial class MCH
         (IsChainSawCD(toolCutoff) || skipHyperchargeHold) &&
         (!HasStatusEffect(Buffs.ExcavatorReady) || skipExcavatorHold);
 
-    private static bool UseHyperchargeST(int wildfireBossOnlyOption) =>
+    private static bool ShouldUseHyperchargeST(int wildfireBossOnlyOption) =>
         ActionReady(Wildfire) ||
         JustUsed(FullMetalField, GCDTotal / 2) ||
         wildfireBossOnlyOption == 1 && !TargetIsBoss() ||
@@ -116,11 +116,11 @@ internal partial class MCH
         if (GetTargetHPPercent() <= hpThreshold)
             return false;
 
-        return HyperchargeReady() &&
+        return IsHyperchargeReady() &&
                (!IsComboExpiring(6) || skipHyperchargeHold) &&
-               ToolsReadyForHyperchargeST(wildfireHyperchargeCutoff, skipHyperchargeHold, skipExcavatorHold) &&
+               AreHyperchargeToolsReady(wildfireHyperchargeCutoff, skipHyperchargeHold, skipExcavatorHold) &&
                !HasStatusEffect(Buffs.FullMetalMachinist) &&
-               UseHyperchargeST(wildfireBossOnlyOption);
+               ShouldUseHyperchargeST(wildfireBossOnlyOption);
     }
 
     private static bool UsedBioBlaster(float time = 9f) =>

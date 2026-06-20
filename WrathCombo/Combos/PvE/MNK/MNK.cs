@@ -26,7 +26,7 @@ internal partial class MNK : Melee
             // OGCDs
             if (CanWeave() && (InCombat() || ComboAction > 0))
             {
-                if (UsePBAfterBurstHolding(false))
+                if (ShouldUsePBAfterBurstHolding(false))
                     return PerfectBalance;
 
                 if (CanBrotherhood())
@@ -98,7 +98,7 @@ internal partial class MNK : Melee
             // OGCD's
             if (CanWeave() && (InCombat() || ComboAction > 0))
             {
-                if (UsePBAfterBurstHolding(true))
+                if (ShouldUsePBAfterBurstHolding(true))
                     return PerfectBalance;
 
                 if (CanBrotherhood())
@@ -181,7 +181,7 @@ internal partial class MNK : Melee
                                     !IsEnabled(Preset.MNK_STUseROF);
 
                 if (IsEnabled(Preset.MNK_STUsePerfectBalance) &&
-                    UsePBAfterBurstHolding(false))
+                    ShouldUsePBAfterBurstHolding(false))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_STUseBuffs))
@@ -291,7 +291,7 @@ internal partial class MNK : Melee
                                     !IsEnabled(Preset.MNK_AoEUseROF);
 
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
-                    UsePBAfterBurstHolding(true, MNK_AoE_PerfectBalanceHPThreshold))
+                    ShouldUsePBAfterBurstHolding(true, MNK_AoE_PerfectBalanceHPThreshold))
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_AoEUseBuffs) &&

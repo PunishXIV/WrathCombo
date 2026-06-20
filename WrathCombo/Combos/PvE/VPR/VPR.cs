@@ -173,7 +173,7 @@ internal partial class VPR : Melee
                 return actionID;
 
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
-                CanReawaken(hpThresholdUsage: ComputeHpThresholdReawaken(), hpThresholdDontSave: VPR_ST_ReAwakenAlwaysUse))
+                CanReawaken(hpThresholdUsage: ReawakenHPThreshold(), hpThresholdDontSave: VPR_ST_ReAwakenAlwaysUse))
                 return Reawaken;
 
             if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&

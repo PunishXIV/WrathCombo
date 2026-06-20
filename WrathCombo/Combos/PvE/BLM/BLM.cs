@@ -195,7 +195,7 @@ internal partial class BLM : Caster
 
             if (TryStThunder(
                 IsEnabled(Preset.BLM_ST_Thunder),
-                ComputeHpThreshold(),
+                ThunderHPThreshold(),
                 BLM_ST_ThunderRefresh) is var thunder and not 0)
                 return thunder;
 

@@ -264,7 +264,7 @@ internal partial class VPR
             var _ => actionId
         };
 
-    private static int ComputeHpThresholdReawaken()
+    private static int ReawakenHPThreshold()
     {
         if (InBossEncounter())
             return TargetIsBoss() ? VPR_ST_ReawakenBossHPOption : VPR_ST_ReawakenBossAddsHPOption;
