@@ -57,7 +57,8 @@ internal partial class DRG
                     if (ComboAction is WheelingThrust or FangAndClaw && LevelChecked(Drakesbane))
                         return Drakesbane;
                 }
-                break;
+
+                    return OriginalHook(TrueThrust);
             }
 
             case true:
@@ -87,11 +88,10 @@ internal partial class DRG
                 if ((simpleAoE || IsEnabled(Preset.DRG_AoE_Disembowel)) &&
                     !HasStatusEffect(Buffs.PowerSurge) && !LevelChecked(SonicThrust))
                     return OriginalHook(TrueThrust);
-                break;
+
+                    return OriginalHook(DoomSpike);
             }
         }
-
-        return actionId;
     }
 
     #endregion
