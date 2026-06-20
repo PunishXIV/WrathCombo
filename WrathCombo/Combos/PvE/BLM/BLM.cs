@@ -2,6 +2,7 @@ using System;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.BLM.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -13,7 +14,7 @@ internal partial class BLM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Blizzard)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Blizzard))
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -203,7 +204,7 @@ internal partial class BLM : Caster
                 MP.Cur > MP.FireI)
                 return Fire;
 
-            return actionID;
+            return OriginalHook(Blizzard);
         }
     }
 
@@ -213,7 +214,7 @@ internal partial class BLM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Blizzard2 or HighBlizzard2))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Blizzard2, HighBlizzard2))
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -299,7 +300,7 @@ internal partial class BLM : Caster
                     return OriginalHook(Blizzard2);
             }
 
-            return actionID;
+            return OriginalHook(Blizzard2);
         }
     }
 
@@ -309,7 +310,7 @@ internal partial class BLM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Blizzard)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Blizzard))
                 return actionID;
 
             // Opener
@@ -522,7 +523,7 @@ internal partial class BLM : Caster
                 MP.Cur > MP.FireI)
                 return Fire;
 
-            return actionID;
+            return OriginalHook(Blizzard);
         }
     }
 
@@ -532,7 +533,7 @@ internal partial class BLM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Blizzard2 or HighBlizzard2))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Blizzard2, HighBlizzard2))
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -647,7 +648,7 @@ internal partial class BLM : Caster
                     return OriginalHook(Blizzard2);
             }
 
-            return actionID;
+            return OriginalHook(Blizzard2);
         }
     }
 
