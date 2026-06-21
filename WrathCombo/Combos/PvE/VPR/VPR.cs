@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.VPR.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -12,8 +13,7 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not SteelFangs)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs)) return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -109,8 +109,7 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not SteelMaw)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw)) return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -203,8 +202,7 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not SteelFangs)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs)) return actionID;
 
             // Opener for VPR
             if (IsEnabled(Preset.VPR_ST_Opener) &&
@@ -325,8 +323,7 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not SteelMaw)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw)) return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;

@@ -74,7 +74,7 @@ internal partial class VPR
                      !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
                     return OriginalHook(ReavingFangs);
 
-                return actionId;
+                return OriginalHook(SteelFangs);
             }
 
             case true:
@@ -115,7 +115,7 @@ internal partial class VPR
                      !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
                     return OriginalHook(ReavingMaw);
 
-                return actionId;
+                return OriginalHook(SteelMaw);
             }
         }
     }
