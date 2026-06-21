@@ -75,6 +75,7 @@ internal partial class NIN
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 4th GCD {KunaisBane.ActionName()}", "", 0);
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {Dokumori.ActionName()}", "", 1);
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {KunaisBane.ActionName()}", "", 2);
+                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Buff Rush", "", 3);
 
                     DrawBossOnlyChoice(NIN_Balance_Content);
                     break;

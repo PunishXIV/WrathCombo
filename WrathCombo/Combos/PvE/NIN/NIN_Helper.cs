@@ -593,22 +593,52 @@ internal partial class NIN
     internal static NINOpenerMaxLevel4thGCDKunai Opener1 = new();
     internal static NINOpenerMaxLevel3rdGCDDokumori Opener2 = new();
     internal static NINOpenerMaxLevel3rdGCDKunai Opener3 = new();
+    internal static NINOpenerMaxLevelBuffRush Opener4 = new();
 
     internal static WrathOpener Opener()
     {
         if (IsEnabled(Preset.NIN_ST_AdvancedMode))
         {
-            if (NIN_Adv_Opener_Selection == 0 && Opener1.LevelChecked)
-                return Opener1;
-            if (NIN_Adv_Opener_Selection == 1 && Opener2.LevelChecked)
-                return Opener2;
-            if (NIN_Adv_Opener_Selection == 2 && Opener3.LevelChecked)
-                return Opener3;
+            int selection = NIN_Adv_Opener_Selection;
+            switch (selection)
+            {
+                case 0 when Opener1.LevelChecked:
+                    return Opener1;
+                case 1 when Opener2.LevelChecked:
+                    return Opener2;
+                case 2 when Opener3.LevelChecked:
+                    return Opener3;
+                case 3 when Opener4.LevelChecked:
+                    return Opener4;
+            }
         }
 
         return Opener1.LevelChecked ? Opener1 : WrathOpener.Dummy;
     }
-    internal class NINOpenerMaxLevel4thGCDKunai : WrathOpener
+
+    internal abstract class NINOpenerBase : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+        public override int MaxOpenerLevel => 109;
+        internal override UserData ContentCheckConfig => NIN_Balance_Content;
+        public override bool HasCooldowns()
+        {
+            if (GetRemainingCharges(Ten) < 1) return false;
+            if (IsOnCooldown(Mug)) return false;
+            if (IsOnCooldown(TenChiJin)) return false;
+            if (IsOnCooldown(PhantomKamaitachi)) return false;
+            if (IsOnCooldown(Bunshin)) return false;
+            if (IsOnCooldown(DreamWithinADream)) return false;
+            if (IsOnCooldown(Kassatsu)) return false;
+            if (IsOnCooldown(TrickAttack)) return false;
+
+            return true;
+        }
+
+        public override Preset Preset => Preset.NIN_ST_AdvancedMode_BalanceOpener;
+    }
+
+    internal class NINOpenerMaxLevel4thGCDKunai : NINOpenerBase
     {
         //4th GCD Kunai
         public override List<uint> OpenerActions { get; set; } =
@@ -655,27 +685,9 @@ internal partial class NIN
         [
             12
         ];
-
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-        internal override UserData? ContentCheckConfig => NIN_Balance_Content;
-        public override Preset Preset => Preset.NIN_ST_AdvancedMode_BalanceOpener;
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(Ten) < 1) return false;
-            if (IsOnCooldown(Mug)) return false;
-            if (IsOnCooldown(TenChiJin)) return false;
-            if (IsOnCooldown(PhantomKamaitachi)) return false;
-            if (IsOnCooldown(Bunshin)) return false;
-            if (IsOnCooldown(DreamWithinADream)) return false;
-            if (IsOnCooldown(Kassatsu)) return false;
-            if (IsOnCooldown(TrickAttack)) return false;
-
-            return true;
-        }
     }
 
-    internal class NINOpenerMaxLevel3rdGCDDokumori : WrathOpener
+    internal class NINOpenerMaxLevel3rdGCDDokumori : NINOpenerBase
     {
         //3rd GCD Dokumori
         public override List<uint> OpenerActions { get; set; } =
@@ -723,27 +735,9 @@ internal partial class NIN
         [
             12
         ];
-
-        public override Preset Preset => Preset.NIN_ST_AdvancedMode_BalanceOpener;
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-        internal override UserData? ContentCheckConfig => NIN_Balance_Content;
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(Ten) < 1) return false;
-            if (IsOnCooldown(Mug)) return false;
-            if (IsOnCooldown(TenChiJin)) return false;
-            if (IsOnCooldown(PhantomKamaitachi)) return false;
-            if (IsOnCooldown(Bunshin)) return false;
-            if (IsOnCooldown(DreamWithinADream)) return false;
-            if (IsOnCooldown(Kassatsu)) return false;
-            if (IsOnCooldown(TrickAttack)) return false;
-
-            return true;
-        }
     }
 
-    internal class NINOpenerMaxLevel3rdGCDKunai : WrathOpener
+    internal class NINOpenerMaxLevel3rdGCDKunai : NINOpenerBase
     {
         //3rd GCD Kunai
         public override List<uint> OpenerActions { get; set; } =
@@ -791,23 +785,51 @@ internal partial class NIN
             11
         ];
 
-        public override Preset Preset => Preset.NIN_ST_AdvancedMode_BalanceOpener;
-        internal override UserData? ContentCheckConfig => NIN_Balance_Content;
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(Ten) < 1) return false;
-            if (IsOnCooldown(Mug)) return false;
-            if (IsOnCooldown(TenChiJin)) return false;
-            if (IsOnCooldown(PhantomKamaitachi)) return false;
-            if (IsOnCooldown(Bunshin)) return false;
-            if (IsOnCooldown(DreamWithinADream)) return false;
-            if (IsOnCooldown(Kassatsu)) return false;
-            if (IsOnCooldown(TrickAttack)) return false;
+    }
 
-            return true;
-        }
+    internal class NINOpenerMaxLevelBuffRush : NINOpenerBase
+    {
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Ten, //1
+            ChiCombo, //2
+            JinCombo, //3
+            Suiton, //4
+            Kassatsu, //5
+            SpinningEdge, //6
+            Dokumori, //7
+            GustSlash, //8
+            Bunshin, //9
+            KunaisBane, //10
+            ChiCombo, //11
+            JinCombo, //12
+            HyoshoRanryu, //13
+            DreamWithinADream, //14
+            Ten, //15
+            ChiCombo, //16
+            Raiton, //17
+            TenChiJin, //18
+            TCJFumaShurikenTen, //19
+            TCJRaiton, //20
+            TCJSuiton, //21
+            Meisui, //22
+            FleetingRaiju, //23
+            ZeshoMeppo, //24
+            TenriJendo, //25
+            FleetingRaiju, //26
+            Ten, //27
+            ChiCombo, //28
+            Raiton, //29
+            FleetingRaiju, //30
+            PhantomKamaitachi, //31
+            ArmorCrush, //32
+            Bhavacakra, //33
+        ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            7
+        ];
     }
     #endregion
 
