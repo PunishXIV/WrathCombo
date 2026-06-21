@@ -4,6 +4,7 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.PLD.Config;
 
 namespace WrathCombo.Combos.PvE;
@@ -18,9 +19,8 @@ internal partial class PLD : Tank
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not FastBlade)
-                return actionID;
-            
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, FastBlade)) return actionID;
+
             const Combo comboFlags = Combo.ST | Combo.Simple;
 
             if (IsEnabled(Preset.PLD_BlockForWings) &&
@@ -52,9 +52,8 @@ internal partial class PLD : Tank
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not TotalEclipse)
-                return actionID;
-            
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, TotalEclipse)) return actionID;
+
             const Combo comboFlags = Combo.AoE | Combo.Simple;
 
             if (IsEnabled(Preset.PLD_BlockForWings) &&
@@ -90,9 +89,8 @@ internal partial class PLD : Tank
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not FastBlade)
-                return actionID;
-            
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, FastBlade)) return actionID;
+
             const Combo comboFlags = Combo.ST | Combo.Adv;
 
             if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
@@ -128,9 +126,8 @@ internal partial class PLD : Tank
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not TotalEclipse)
-                return actionID;
-            
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, TotalEclipse)) return actionID;
+
             const Combo comboFlags = Combo.AoE | Combo.Adv;
 
             if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
