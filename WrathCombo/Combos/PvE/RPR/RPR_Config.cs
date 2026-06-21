@@ -23,11 +23,7 @@ internal partial class RPR
 
                     DrawHorizontalRadioButton(RPR_SelectedOpener,
                         RPR_Config.FirstGcdBuffsOpener,
-                        FormatAndCache(RPR_Config.UseFirstGcdBuffsOpener,
-                            ShadowOfDeath.ActionName(),
-                            ArcaneCircle.ActionName(),
-                            Gluttony.ActionName(),
-                            SoulSlice.ActionName()), 1);
+                        FormatAndCache(RPR_Config.UseFirstGcdBuffsOpener), 1);
 
                     ImGui.NewLine();
                     DrawBossOnlyChoice(RPR_Balance_Content);

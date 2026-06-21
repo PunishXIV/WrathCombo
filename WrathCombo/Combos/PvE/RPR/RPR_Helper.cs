@@ -702,14 +702,12 @@ internal partial class RPR
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            ShadowOfDeath,
+            SoulSlice,
             ArcaneCircle,
+            ShadowOfDeath,
             Gluttony,
-            Gibbet,
-            SoulSlice,
-            Gallows,
-            ExecutionersGibbet,
-            SoulSlice,
+            ExecutionersGibbet, //5
+            ExecutionersGallows, //6
             PlentifulHarvest,
             Enshroud,
             VoidReaping,
@@ -721,21 +719,19 @@ internal partial class RPR
             LemuresSlice,
             Communio,
             Perfectio,
-            UnveiledGibbet,
-            Gibbet,
+            SoulSlice,
+            UnveiledGibbet, //19
+            Gibbet, //20
             ShadowOfDeath,
             Slice
         ];
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [2, 3];
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([4], Gallows, OnTargetsRear),
-            ([6], Gibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
-            ([7], ExecutionersGallows, OnTargetsRear),
-            ([20], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
-            ([21], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
+            ([5], ExecutionersGallows, OnTargetsRear),
+            ([6], ExecutionersGibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
+            ([19], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
+            ([20], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
 
         public override Preset Preset => Preset.RPR_ST_Opener;
