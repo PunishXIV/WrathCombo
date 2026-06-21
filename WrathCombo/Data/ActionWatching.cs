@@ -441,7 +441,7 @@ public static class ActionWatching
             }
             if (actionType is ActionType.Action)
             {
-                var disablingReplacingTemp = mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding;
+                var disablingReplacingTemp = (mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding) && actionId < 1_000_000;
                 if (disablingReplacingTemp) // This is so we can remove queue suppression
                     Service.ActionReplacer.DisableActionReplacingIfRequired(); // It gets re-enabled at the end of sending. 
 
@@ -549,6 +549,7 @@ public static class ActionWatching
         catch (Exception ex)
         {
             Svc.Log.Error(ex, "UseActionDetour");
+            Service.ActionReplacer.EnableActionReplacingIfRequired();
             return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
         }
     }
