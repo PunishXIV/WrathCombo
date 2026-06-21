@@ -133,30 +133,30 @@ internal partial class RPR
         switch (isAoE)
         {
             case false:
-            {
-                if (ComboTimer > 0)
                 {
-                    if (ComboAction == OriginalHook(Slice) && LevelChecked(WaxingSlice))
-                        return OriginalHook(WaxingSlice);
+                    if (ComboTimer > 0)
+                    {
+                        if (ComboAction == OriginalHook(Slice) && LevelChecked(WaxingSlice))
+                            return OriginalHook(WaxingSlice);
 
-                    if (ComboAction == OriginalHook(WaxingSlice) && LevelChecked(InfernalSlice))
-                        return OriginalHook(InfernalSlice);
+                        if (ComboAction == OriginalHook(WaxingSlice) && LevelChecked(InfernalSlice))
+                            return OriginalHook(InfernalSlice);
+                    }
+
+
+                    return OriginalHook(Slice);
                 }
-                break;
-            }
 
             case true:
-            {
-                if (ComboTimer > 0)
                 {
-                    if (ComboAction == OriginalHook(SpinningScythe) && LevelChecked(NightmareScythe))
-                        return OriginalHook(NightmareScythe);
+                    if (ComboTimer > 0)
+                    {
+                        if (ComboAction == OriginalHook(SpinningScythe) && LevelChecked(NightmareScythe))
+                            return OriginalHook(NightmareScythe);
+                    }
+                    return OriginalHook(SpinningScythe);
                 }
-                break;
-            }
         }
-
-        return actionId;
     }
 
     #endregion

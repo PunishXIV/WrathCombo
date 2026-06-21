@@ -1,4 +1,6 @@
+using Dalamud.Bindings.ImPlot;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.RPR.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -10,8 +12,7 @@ internal partial class RPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Slice)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Slice)) return actionID;
 
             //Soulsow
             if (LevelChecked(Soulsow) &&
@@ -159,8 +160,7 @@ internal partial class RPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not SpinningScythe)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpinningScythe)) return actionID;
 
             //Soulsow
             if (LevelChecked(Soulsow) &&
@@ -256,8 +256,7 @@ internal partial class RPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Slice)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Slice)) return actionID;
 
             int positionalChoice = RPR_Positional;
 
@@ -466,8 +465,7 @@ internal partial class RPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not SpinningScythe)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpinningScythe)) return actionID;
 
             //Soulsow
             if (IsEnabled(Preset.RPR_AoE_SoulSow) &&
