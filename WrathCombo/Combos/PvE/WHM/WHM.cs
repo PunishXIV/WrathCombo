@@ -527,7 +527,7 @@ internal partial class WHM : Healer
             if (RaidwideAsylum())
                 return Asylum.Retarget(actionID, SimpleTarget.Self);
             if (RaidwideLiturgyOfTheBell())
-                return LiturgyOfTheBell.Retarget(actionID  SimpleTarget.Self);
+                return LiturgyOfTheBell.Retarget(actionID, SimpleTarget.Self);
 
             #endregion
 
