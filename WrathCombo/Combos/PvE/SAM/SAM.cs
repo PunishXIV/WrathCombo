@@ -1,4 +1,6 @@
+using Dalamud.Bindings.ImPlot;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.SAM.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -10,8 +12,7 @@ internal partial class SAM : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Hakaze or Gyofu))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Hakaze, Gyofu)) return actionID;
 
             //Meikyo to start before combat
             if (ActionReady(MeikyoShisui) &&
@@ -104,8 +105,7 @@ internal partial class SAM : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Fuga or Fuko))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Fuga, Fuko)) return actionID;
 
             //Meikyo to start before combat
             if (ActionReady(MeikyoShisui) &&
@@ -194,7 +194,7 @@ internal partial class SAM : Melee
                     return Mangetsu;
             }
 
-            return actionID;
+            return OriginalHook(Fuga);
         }
     }
 
@@ -204,8 +204,7 @@ internal partial class SAM : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Hakaze or Gyofu))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Hakaze, Gyofu)) return actionID;
 
             // Opener for SAM
             if (IsEnabled(Preset.SAM_ST_Opener) &&
@@ -341,8 +340,7 @@ internal partial class SAM : Melee
         {
             float kenkiOvercapAoE = SAM_AoE_KenkiOvercapAmount;
 
-            if (actionID is not (Fuga or Fuko))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Fuga, Fuko)) return actionID;
 
             //Meikyo to start before combat
             if (IsEnabled(Preset.SAM_AoE_CDs) &&
@@ -460,7 +458,7 @@ internal partial class SAM : Melee
                     return Mangetsu;
             }
 
-            return actionID;
+            return OriginalHook(Fuga);
         }
     }
 

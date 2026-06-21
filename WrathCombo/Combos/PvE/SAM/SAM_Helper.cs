@@ -63,7 +63,8 @@ internal partial class SAM
                     ? Role.TrueNorth
                     : Kasha;
         }
-        return actionId;
+
+        return OriginalHook(Hakaze);
     }
 
     #endregion
