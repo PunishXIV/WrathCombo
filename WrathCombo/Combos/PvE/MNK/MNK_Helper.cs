@@ -50,7 +50,7 @@ internal partial class MNK
                     : OriginalHook(SnapPunch);
         }
 
-        return actionId;
+        return OriginalHook(Bootshine);
     }
 
     #endregion
