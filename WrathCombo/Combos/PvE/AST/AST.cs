@@ -365,7 +365,7 @@ internal partial class AST : Healer
         protected internal override Preset Preset => Preset.AST_AOE_DPS;
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, GravityList.ToArray()))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, GravityList.ToArray()))
                 return actionID;
 
             #region Variables
