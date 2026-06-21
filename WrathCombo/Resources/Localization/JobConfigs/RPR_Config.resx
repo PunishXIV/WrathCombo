@@ -143,4 +143,10 @@ Recommended is 6.</value>
     <value>Will hold the last charge of {0} for use with {1}, even when out of position for {2}/{3}.
 If above slider is set to 1, it will NOT use the remaining charge for {1}, but for manual use.</value>
   </data>
+  <data name="FirstGcdBuffsOpener" xml:space="preserve">
+    <value>1st GCD Buffs</value>
+  </data>
+  <data name="UseFirstGcdBuffsOpener" xml:space="preserve">
+    <value>Uses the 1st GCD buffs opener: {0} → {1} / {2} weaves, then Gibbet/Gallows → {3} → Gibbet/Gallows → Executioner, then the standard opener from the second {3} onward.</value>
+  </data>
 </root>

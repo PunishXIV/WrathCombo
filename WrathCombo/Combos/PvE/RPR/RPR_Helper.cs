@@ -617,8 +617,13 @@ internal partial class RPR
 
     internal static WrathOpener Opener()
     {
-        if (StandardOpenerLvl100.LevelChecked)
+        if (StandardOpenerLvl100.LevelChecked &&
+            RPR_SelectedOpener == 0)
             return StandardOpenerLvl100;
+
+        if (FirstGcdBuffsOpenerLvl100.LevelChecked &&
+            RPR_SelectedOpener == 1)
+            return FirstGcdBuffsOpenerLvl100;
 
         if (StandardOpenerLvl90.LevelChecked)
             return StandardOpenerLvl90;
@@ -627,6 +632,8 @@ internal partial class RPR
     }
 
     internal static RPRStandardOpenerLvl100 StandardOpenerLvl100 = new();
+
+    internal static RPRFirstGcdBuffsOpenerLvl100 FirstGcdBuffsOpenerLvl100 = new();
 
     internal static RPRStandardOpenerLvl90 StandardOpenerLvl90 = new();
 
@@ -675,6 +682,62 @@ internal partial class RPR
             ([20], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
             ([21], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
+
+        public override Preset Preset => Preset.RPR_ST_Opener;
+        internal override UserData ContentCheckConfig => RPR_Balance_Content;
+
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(SoulSlice) is 2 &&
+            IsOffCooldown(ArcaneCircle) &&
+            IsOffCooldown(Gluttony) &&
+            Void is 0 &&
+            Soul is 0;
+    }
+
+    internal class RPRFirstGcdBuffsOpenerLvl100 : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            ShadowOfDeath,
+            ArcaneCircle,
+            Gluttony,
+            Gibbet,
+            SoulSlice,
+            Gallows,
+            ExecutionersGibbet,
+            SoulSlice,
+            PlentifulHarvest,
+            Enshroud,
+            VoidReaping,
+            Sacrificium,
+            CrossReaping,
+            LemuresSlice,
+            VoidReaping,
+            CrossReaping,
+            LemuresSlice,
+            Communio,
+            Perfectio,
+            UnveiledGibbet,
+            Gibbet,
+            ShadowOfDeath,
+            Slice
+        ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } = [2, 3];
+
+        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
+        [
+            ([4], Gallows, OnTargetsRear),
+            ([6], Gibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
+            ([7], ExecutionersGallows, OnTargetsRear),
+            ([20], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
+            ([21], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
+        ];
+
         public override Preset Preset => Preset.RPR_ST_Opener;
         internal override UserData ContentCheckConfig => RPR_Balance_Content;
 

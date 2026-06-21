@@ -123,5 +123,23 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
                 return ResourceManager.GetString("WillHoldTNforGluttony", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1st GCD Buffs.
+        /// </summary>
+        internal static string FirstGcdBuffsOpener {
+            get {
+                return ResourceManager.GetString("FirstGcdBuffsOpener", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses the 1st GCD buffs opener: {0} → {1} / {2} weaves, then Gibbet/Gallows → {3} → Gibbet/Gallows → Executioner, then the standard opener from the second {3} onward..
+        /// </summary>
+        internal static string UseFirstGcdBuffsOpener {
+            get {
+                return ResourceManager.GetString("UseFirstGcdBuffsOpener", resourceCulture);
+            }
+        }
     }
 }

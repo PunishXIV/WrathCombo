@@ -17,6 +17,19 @@ internal partial class RPR
                 #region ST
 
                 case Preset.RPR_ST_Opener:
+                    DrawHorizontalRadioButton(RPR_SelectedOpener,
+                        Generics.StandardOpener,
+                        Generics.UsesStandardOpener, 0);
+
+                    DrawHorizontalRadioButton(RPR_SelectedOpener,
+                        RPR_Config.FirstGcdBuffsOpener,
+                        FormatAndCache(RPR_Config.UseFirstGcdBuffsOpener,
+                            ShadowOfDeath.ActionName(),
+                            ArcaneCircle.ActionName(),
+                            Gluttony.ActionName(),
+                            SoulSlice.ActionName()), 1);
+
+                    ImGui.NewLine();
                     DrawBossOnlyChoice(RPR_Balance_Content);
                     break;
 
@@ -148,6 +161,7 @@ internal partial class RPR
             //ST
             RPR_Positional = new("RPR_Positional"),
             RPR_Balance_Content = new("RPR_Balance_Content", 1),
+            RPR_SelectedOpener = new("RPR_SelectedOpener"),
             RPR_ST_ArcaneCircleHPOption = new("RPR_ST_ArcaneCircleHPOption", 25),
             RPR_ST_ArcaneCircleHPBossOption = new("RPR_ST_ArcaneCircleHPBossOption"),
             RPR_SoDRefreshRange = new("RPR_SoDRefreshRange", 6),
