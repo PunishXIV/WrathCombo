@@ -110,11 +110,15 @@ namespace WrathCombo.Window.Tabs
 
                 if (ImGui.IsItemHovered())
                 {
-                    if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+                    if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
                     {
                         Svc.GameConfig.TryGet(HotbarSetting, out HiddenSlots);
-                        Svc.GameConfig.Set(HotbarSetting, 1);
+                        Svc.Log.Debug($"User has slots {(HiddenSlots == 0 ? "hidden" : "shown")}");
+                    }
+                    if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+                    {
                         SelectedAction = act;
+                        Svc.GameConfig.Set(HotbarSetting, 1);
                     }
 
                     ImGui.BeginTooltip();
