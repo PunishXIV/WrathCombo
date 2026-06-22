@@ -11,7 +11,6 @@ using ECommons.Automation.LegacyTaskManager;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
-using KamiToolKit;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json.Linq;
 using PunishLib;
@@ -181,7 +180,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
         pluginInterface.Create<Service>();
         ECommonsMain.Init(pluginInterface, this, Module.All);
         PunishLibMain.Init(pluginInterface, "Wrath Combo");
-        KamiToolKitLibrary.Initialize(pluginInterface);
         ActionRequestIPCProvider.Initialize();
 
         TM = new();
@@ -506,7 +504,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
         AllStaticIPCSubscriptions.Dispose();
         Svc.ClientState.Login -= PrintLoginMessage;
         ECommonsMain.Dispose();
-        KamiToolKitLibrary.Dispose();
         P = null;
     }
 

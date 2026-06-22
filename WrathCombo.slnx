@@ -22,9 +22,6 @@
   <Project Path="ECommons/ECommons/ECommons.csproj">
     <Platform Project="x64" />
   </Project>
-  <Project Path="KamiToolKit/KamiToolKit.csproj">
-    <Platform Project="x64" />
-  </Project>
   <Project Path="PunishLib/PunishLib/PunishLib.csproj">
     <Platform Project="x64" />
   </Project>
