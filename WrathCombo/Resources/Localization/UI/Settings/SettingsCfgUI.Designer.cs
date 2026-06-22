@@ -1654,6 +1654,55 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         /// <summary>
         ///   Looks up a localized string similar to Off.
         /// </summary>
+        internal static string UseExperimentalHP_defaultValue {
+            get {
+                return ResourceManager.GetString("UseExperimentalHP_defaultValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a new way of evaluating current HP values, using pre-emptively obtained values to update health values internally before it is reflected in-game properly.
+        ///
+        ///As such, you may see things happen earlier than what may be expected, as values for damage and healing are generated much earlier than shown in game. For example, as soon as you hit the slidecast window the value of the spell is already known.
+        ///
+        ///Used currently when evaluating HP% checks in features and auto-rotation..
+        /// </summary>
+        internal static string UseExperimentalHP_helpMark {
+            get {
+                return ResourceManager.GetString("UseExperimentalHP_helpMark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Experimental HP Check Feature.
+        /// </summary>
+        internal static string UseExperimentalHP_Name {
+            get {
+                return ResourceManager.GetString("UseExperimentalHP_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preference.
+        /// </summary>
+        internal static string UseExperimentalHP_recommendedValue {
+            get {
+                return ResourceManager.GetString("UseExperimentalHP_recommendedValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is highly experimental, and may have undesired behaviours. Please be vigilant and report this..
+        /// </summary>
+        internal static string UseExperimentalHP_warningMark {
+            get {
+                return ResourceManager.GetString("UseExperimentalHP_warningMark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Off.
+        /// </summary>
         internal static string UseFieldMouseoverOverridesInDefaultHealStack_defaultValue {
             get {
                 return ResourceManager.GetString("UseFieldMouseoverOverridesInDefaultHealStack_defaultValue", resourceCulture);

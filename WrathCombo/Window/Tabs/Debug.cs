@@ -1060,8 +1060,8 @@ internal class Debug : ConfigWindow, IDisposable
                     if (ImGui.CollapsingHeader($"{t?.Name}###SimpleTarget{p.GameObjectID}"))
                     {
                         CustomStyleText($"ID", $"{p.GameObjectID}");
-                        CustomStyleText($"HP", $"{p.CurrentHP} ({GetTargetHPPercent(t):N0}%)");
-                        CustomStyleText($"Object HP", $"{t.CurrentHp} ({GetTargetHPPercent(t, usePendingHp: false):N0}%)");
+                        CustomStyleText($"HP", $"{p.CurrentHP} ({GetTargetHPPercent(t, forceUsePending: true):N0}%)");
+                        CustomStyleText($"Object HP", $"{t.CurrentHp} ({GetTargetHPPercent(t, forceUsePending: false):N0}%)");
 
                         if (ImGui.CollapsingHeader($"Action Efftcts###af{t.GameObjectId}"))
                         {
@@ -1322,8 +1322,8 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Name:", target?.Name);
             CustomStyleText("Nameplate:", target?.GetNameplateKind().ToString());
             CustomStyleText("Rank:", $"{battleNPCRow?.Rank.ToString() ?? "null"} (found sheet: {(foundSheet is true ? "yes" : "no")})");
-            CustomStyleText("Health:", $"{GetTargetCurrentHP(usePendingHP: false):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(usePendingHp: false), 2)}%)");
-            CustomStyleText("Health (with pending):", $"{GetTargetCurrentHP(usePendingHP: true):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(usePendingHp: true), 2)}%)");
+            CustomStyleText("Health:", $"{GetTargetCurrentHP(forceUsePending: false):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(forceUsePending: false), 2)}%)");
+            CustomStyleText("Health (with pending):", $"{GetTargetCurrentHP(forceUsePending: true):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(forceUsePending: true), 2)}%)");
             CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(), 2)}y");
             CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
             CustomStyleText("In Melee Range:", InMeleeRange());

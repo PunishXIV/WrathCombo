@@ -1171,7 +1171,7 @@ internal unsafe class AutoRotationController
                             GetTargetDistance(x.BattleChara) <= QueryRange &&
                             !TargetHasImmortality(x.BattleChara) &&
                             !x.BattleChara.StatusList.Any(x => StatusCache.DoNotHealStatuses.Contains(x.StatusId)) &&
-                            GetTargetHPPercent(x.BattleChara, cfg.HealerSettings.IncludeShields, true) <=
+                            GetTargetHPPercent(x.BattleChara, cfg.HealerSettings.IncludeShields) <=
                             (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP :
                                 TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP :
                                 cfg.HealerSettings.SingleTargetHPP) &&
@@ -1194,7 +1194,7 @@ internal unsafe class AutoRotationController
                                 (outAct == 0
                                     ? GetTargetDistance(x.BattleChara) <= 20f
                                     : InActionRange(outAct, x.BattleChara)) &&
-                                GetTargetHPPercent(x.BattleChara, cfg.HealerSettings.IncludeShields, true) <= cfg.HealerSettings.AoETargetHPP);
+                                GetTargetHPPercent(x.BattleChara, cfg.HealerSettings.IncludeShields) <= cfg.HealerSettings.AoETargetHPP);
                 memberCount = members.Count();
             }
             catch { memberCount = 0; }

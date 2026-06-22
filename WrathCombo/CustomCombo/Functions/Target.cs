@@ -241,13 +241,13 @@ internal abstract partial class CustomComboFunctions
     public static float PlayerHealthPercentageHp() => LocalPlayer is { } player ? player.CurrentHp * 100f / player.MaxHp : 0f;
 
     /// <summary> Gets an object's current HP as a percentage. Defaults to CurrentTarget unless specified. </summary>
-    public static float GetTargetHPPercent(IGameObject? optionalTarget = null, bool includeShield = false, bool usePendingHp = true)
+    public static float GetTargetHPPercent(IGameObject? optionalTarget = null, bool includeShield = false, bool forceUsePending = false)
     {
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara)
             return 0f;
 
         uint currentHp = chara.CurrentHp;
-        if (usePendingHp && SimpleTargetState.TargetStates.TryGetFirst(x => x.GameObjectID == chara.GameObjectId, out var p))
+        if ((Service.Configuration.UseExperimentalHP || forceUsePending) && SimpleTargetState.TargetStates.TryGetFirst(x => x.GameObjectID == chara.GameObjectId, out var p))
             currentHp = p.CurrentHP;
 
         float charaHPPercent = currentHp * 100f / chara.MaxHp;
@@ -261,12 +261,12 @@ internal abstract partial class CustomComboFunctions
     public static uint GetTargetMaxHP(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara ? chara.MaxHp : 0;
 
     /// <summary> Gets an object's current HP. Defaults to CurrentTarget unless specified. </summary>
-    public static uint GetTargetCurrentHP(IGameObject? optionalTarget = null, bool usePendingHP = true)
+    public static uint GetTargetCurrentHP(IGameObject? optionalTarget = null, bool forceUsePending = true)
     {
         optionalTarget ??= CurrentTarget;
         if (optionalTarget is IBattleChara chara) 
         {
-            if (usePendingHP && SimpleTargetState.TargetStates.TryGetFirst(x => x.GameObjectID == chara.GameObjectId, out var p))
+            if ((Service.Configuration.UseExperimentalHP || forceUsePending) && SimpleTargetState.TargetStates.TryGetFirst(x => x.GameObjectID == chara.GameObjectId, out var p))
                 return p.CurrentHP;
             else
                 return chara.CurrentHp;

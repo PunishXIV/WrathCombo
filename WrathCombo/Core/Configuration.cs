@@ -282,6 +282,10 @@ public partial class Configuration : IPluginConfiguration
         maxInt: 3)]
     public int MaximumWeavesPerWindow = 2;
 
+    [SettingCategory(Rotation_Behavior_Options)]
+    [Setting(type: Setting.Type.Toggle)]
+    public bool UseExperimentalHP = false;
+
     #endregion
 
     #region Target Settings
