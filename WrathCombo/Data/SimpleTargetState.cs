@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +28,6 @@ namespace WrathCombo.Data
         {
             foreach (var o in Svc.Objects.Where(x => x is IBattleChara).Cast<IBattleChara>())
             {
-                //if (!o.Struct()->InCombat)
-                //{
-                //    TargetStates.RemoveAll(x => x.GameObjectID == o.GameObjectId);
-                //    continue;
-                //}
-
                 TargetStates.RemoveAll(x => o.IsDead && o.GameObjectId == x.GameObjectID);
 
                 if (TargetStates.Any(x => x.GameObjectID == o.GameObjectId) || !o.IsTargetable)
@@ -58,37 +53,10 @@ namespace WrathCombo.Data
         {
             foreach (var o in TargetStates)
             {
-                if (o.GameObjectID.GetObject() is { } t && o.CurrentHP == 0 && t.GetNameId() == 541)
+                if (o.GameObjectID.GetObject() is IBattleChara t)
                 {
-                    o.CurrentHP = o.MaxHP;
-                }
-
-                var copy = ActionWatching.PendingHPChanges;
-                for (int i = 0; i < ActionWatching.PendingHPChanges.Count; i++)
-                {
-                    var p = ActionWatching.PendingHPChanges[i];
-                    if (p.gameObjectId != o.GameObjectID)
-                        continue;
-
-                    Svc.Log.Verbose($"Processing GS {p.globalSequence}");
-                    o.CurrentHP = (uint)Math.Clamp(o.CurrentHP + (p.positiveChange ? p.value : -p.value), 0, o.MaxHP);
-                    p.processed = true;
-                    ActionWatching.PendingHPChanges[i] = p;
-                }
-            }
-            ActionWatching.PendingHPChanges.RemoveAll(x => x.processed);
-        }
-
-        internal static void UpdateDotDamage(uint entityId, uint diff)
-        {
-            if (TargetStates.TryGetFirst(x => x.GameObjectID == entityId, out var p))
-            {
-                if (Svc.Objects.Where(x => x.EntityId == entityId).Cast<IBattleChara>().First() is { } t)
-                {
-                    if (diff > p.CurrentHP)
-                        p.CurrentHP = 0;
-                    else
-                        p.CurrentHP = p.CurrentHP - diff;
+                    var totalDiff = ActionWatching.PendingHPChanges.Where(x => x.gameObjectId == o.GameObjectID).Sum(x => x.positiveChange ? x.value : -x.value);
+                    o.CurrentHP = Math.Clamp((uint)(t.CurrentHp + totalDiff), 0, t.MaxHp);
                 }
             }
         }
@@ -102,13 +70,13 @@ namespace WrathCombo.Data
             }, TimeSpan.FromTicks(100));
         }
 
-        internal static void UpdateHotHeal(uint entityId, uint diff)
+        internal static void UpdatePeriodicHealthChange(uint entityId, uint diff, bool damage)
         {
             if (TargetStates.TryGetFirst(x => x.GameObjectID == entityId, out var p))
             {
                 if (Svc.Objects.Where(x => x.EntityId == entityId).Cast<IBattleChara>().First() is { } t)
                 {
-                    p.CurrentHP = Math.Min(p.CurrentHP + diff, p.MaxHP);
+                    p.CurrentHP = (uint)Math.Clamp(p.CurrentHP + (damage ? -diff : diff), 0, p.MaxHP);
                 }
             }
         }

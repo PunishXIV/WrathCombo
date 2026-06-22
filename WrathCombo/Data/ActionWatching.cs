@@ -95,11 +95,34 @@ public static class ActionWatching
     {
         OnRecievePacketHook.Original(thisPtr, targetId, packet);
         var opCode = *(ushort*)(packet + 2);
+        var tar = ((ulong)targetId).GetObject();
+
+        for (int i = 16; i <= 256; i++)
+        {
+            var val = *(uint*)(packet + i);
+            if (PendingHPChanges.Any(x => x.globalSequence == val))
+            {
+                Svc.Log.Verbose($"Found GS packet {val} {i} and {opCode} {tar?.Name}");
+                PendingHPChanges.RemoveAll(x => x.globalSequence <= val && x.gameObjectId == targetId);
+            }
+        }
+
         if (opCode == 916)
         {
             var newHealth = *(uint*)(packet + 16);
-            var tar = ((ulong)targetId).GetObject();
+            var globalSequence = *(uint*)(packet + 20);
+            PendingHPChanges.RemoveAll(x => x.globalSequence <= globalSequence && targetId == x.gameObjectId);
             Svc.Log.Verbose($"[OpCode] Natty Regen on {tar?.Name} with new health {newHealth}");
+            SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
+        }
+
+        if (opCode == 120)
+        {
+            var newHealth = *(uint*)(packet + 28);
+            var globalSequence = *(uint*)(packet + 20);
+            var val = *(uint*)(packet + 16);
+            Svc.Log.Verbose($"[OpCode]] Global Seq: {globalSequence}.");
+            PendingHPChanges.RemoveAll(x => x.globalSequence <= globalSequence);
             SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
         }
     }
@@ -109,11 +132,11 @@ public static class ActionWatching
         Svc.Log.Verbose($"[ActorControl] {entityId} {category} {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {targetId.Id} {isRecorded}");
         ActorControlPacketHook.Original(entityId, category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, targetId, isRecorded);
 
-        if (category == 1541)
-            SimpleTargetState.UpdateDotDamage(entityId, arg2);
+        if (category == 1541) // Dots
+            SimpleTargetState.UpdatePeriodicHealthChange(entityId, arg2, true);
 
-        if (category == 1540)
-            SimpleTargetState.UpdateHotHeal(entityId, arg2);
+        if (category == 1540) // Hots
+            SimpleTargetState.UpdatePeriodicHealthChange(entityId, arg2, false);
 
         if (category == 4 && arg1 == 0)
             SimpleTargetState.RemoveDueToDroppedCombat(entityId);
@@ -225,7 +248,8 @@ public static class ActionWatching
                         $"Damage HealValue: {eff.DamageHealValue} | " +
                         $"Action: {debugActionName} (ID: {actionId}) → " +
                         $"Target: {debugTargetName} ({targetId}) | " +
-                        $"Flags: [AtSource: {eff.AtSource}, FromTarget: {eff.FromTarget}]"
+                        $"[AtSource: {eff.AtSource}, FromTarget: {eff.FromTarget}] | " +
+                        $"Flags: {header->Flags}"
                     );
 #endif
 
@@ -242,7 +266,7 @@ public static class ActionWatching
                             Svc.Framework.RunOnTick(() => member.HPUpdatePending = false, TimeSpan.FromSeconds(1.5));
                         }
 
-                        PendingHPChanges.Add(new PendingHPChange(effObjectId, eff.DamageHealValue, effType == ActionEffectType.Heal, false, header->GlobalSequence));
+                        PendingHPChanges.Add(new PendingHPChange(effObjectId, eff.DamageHealValue, effType == ActionEffectType.Heal, header->GlobalSequence));
                     }
 
                     // Event: MP Gain or MP Loss
@@ -693,5 +717,5 @@ public static class ActionWatching
         Ability = 4,
     }
 
-    public record struct PendingHPChange(ulong gameObjectId, int value, bool positiveChange, bool processed = false, uint globalSequence = 0);
+    public record struct PendingHPChange(ulong gameObjectId, int value, bool positiveChange, uint globalSequence = 0);
 }
