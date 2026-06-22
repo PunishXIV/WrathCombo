@@ -1050,6 +1050,49 @@ internal class Debug : ConfigWindow, IDisposable
             ImGui.Unindent();
         }
 
+        if (ImGui.CollapsingHeader("Pending HP"))
+        {
+            ImGui.Indent();
+            foreach (var p in SimpleTargetState.TargetStates)
+            {
+                if (p.GameObjectID.GetObject() is IBattleChara t)
+                {
+                    if (ImGui.CollapsingHeader($"{t?.Name}###SimpleTarget{p.GameObjectID}"))
+                    {
+                        CustomStyleText($"ID", $"{p.GameObjectID}");
+                        CustomStyleText($"HP", $"{p.CurrentHP} ({GetTargetHPPercent(t):N0}%)");
+                        CustomStyleText($"Object HP", $"{t.CurrentHp} ({GetTargetHPPercent(t, usePendingHp: false):N0}%)");
+
+                        if (ImGui.CollapsingHeader($"Action Efftcts###af{t.GameObjectId}"))
+                        {
+                            foreach (var eff in t.Struct()->ActionEffectHandler.IncomingEffects)
+                            {
+                                ImGui.Separator();
+                                CustomStyleText($"GS:", $"{eff.GlobalSequence}");
+                                CustomStyleText($"Action:", $"{eff.ActionId.ActionName()}");
+                                CustomStyleText($"Target Confirmed:", $"{eff.TargetConfirmed}");
+                                CustomStyleText($"Source Confirmed:", $"{eff.SourceConfirmed}");
+                                foreach (var ef in eff.Effects.Effects)
+                                {
+                                    if (ef.Type == 0)
+                                        continue;
+
+                                    CustomStyleText($"{(Data.ActionEffectType)ef.Type}", $"{ef.Value + ((ef.Param4 & 0x40) != 0 ? ef.Param3 * 0x10000 : 0)}");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var pending in ActionWatching.PendingHPChanges)
+            {
+                ImGui.Text($"{pending.gameObjectId.GetObject()?.Name} {pending.gameObjectId} {pending.globalSequence}");
+            }
+            ImGui.Unindent();
+        }
+
+
         #endregion
 
         ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
@@ -1231,47 +1274,6 @@ internal class Debug : ConfigWindow, IDisposable
         {
             ImGui.Indent();
             ActionRequestDebugUI.Draw();
-            ImGui.Unindent();
-        }
-
-        if (ImGui.CollapsingHeader("Pending HP"))
-        {
-            ImGui.Indent();
-            foreach (var p in SimpleTargetState.TargetStates)
-            {
-                if (p.GameObjectID.GetObject() is IBattleChara t) {
-                    if (ImGui.CollapsingHeader($"{t?.Name}###SimpleTarget{p.GameObjectID}"))
-                    {
-                        CustomStyleText($"ID", $"{p.GameObjectID}");
-                        CustomStyleText($"HP", $"{p.CurrentHP} ({GetTargetHPPercent(t):N0}%)");
-                        CustomStyleText($"Object HP", $"{t.CurrentHp} ({GetTargetHPPercent(t, usePendingHp: false):N0}%)");
-
-                        if (ImGui.CollapsingHeader($"Action Efftcts###af{t.GameObjectId}"))
-                        {
-                            foreach (var eff in t.Struct()->ActionEffectHandler.IncomingEffects)
-                            {
-                                ImGui.Separator();
-                                CustomStyleText($"GS:", $"{eff.GlobalSequence}");
-                                CustomStyleText($"Action:", $"{eff.ActionId.ActionName()}");
-                                CustomStyleText($"Target Confirmed:", $"{eff.TargetConfirmed}");
-                                CustomStyleText($"Source Confirmed:", $"{eff.SourceConfirmed}");
-                                foreach (var ef in eff.Effects.Effects)
-                                {
-                                    if (ef.Type == 0)
-                                        continue;
-
-                                    CustomStyleText($"{(Data.ActionEffectType)ef.Type}", $"{ef.Value + ((ef.Param4 & 0x40) != 0 ? ef.Param3 * 0x10000 : 0)}");
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach (var pending in ActionWatching.PendingHPChanges)
-            {
-                ImGui.Text($"{pending.gameObjectId.GetObject()?.Name} {pending.gameObjectId} {pending.globalSequence}");
-            }
             ImGui.Unindent();
         }
 

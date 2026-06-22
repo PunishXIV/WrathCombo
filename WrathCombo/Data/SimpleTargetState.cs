@@ -1,7 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
-using ECommons.GameFunctions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,7 +75,11 @@ namespace WrathCombo.Data
             {
                 if (Svc.Objects.Where(x => x.EntityId == entityId).Cast<IBattleChara>().First() is { } t)
                 {
-                    p.CurrentHP = (uint)Math.Clamp(p.CurrentHP + (damage ? -diff : diff), 0, p.MaxHP);
+                    var val = damage ? -diff : diff;
+                    if (p.CurrentHP + val < 0)
+                        p.CurrentHP = 0;
+                    else
+                        p.CurrentHP = (uint)Math.Clamp(p.CurrentHP + val, 0, p.MaxHP);
                 }
             }
         }
