@@ -261,7 +261,7 @@ internal abstract partial class CustomComboFunctions
     public static uint GetTargetMaxHP(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara ? chara.MaxHp : 0;
 
     /// <summary> Gets an object's current HP. Defaults to CurrentTarget unless specified. </summary>
-    public static uint GetTargetCurrentHP(IGameObject? optionalTarget = null, bool forceUsePending = true)
+    public static uint GetTargetCurrentHP(IGameObject? optionalTarget = null, bool forceUsePending = false)
     {
         optionalTarget ??= CurrentTarget;
         if (optionalTarget is IBattleChara chara) 
