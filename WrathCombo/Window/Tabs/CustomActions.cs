@@ -66,7 +66,7 @@ namespace WrathCombo.Window.Tabs
                         var val = P.CustomActions.HoveredSlot.Value;
                         RaptureHotbarModule.Instance()->Hotbars[val.Hotbar].Slots[val.Slot].Set(RaptureHotbarModule.HotbarSlotType.Action, SelectedAction.Id);
                         var actualSlot = RaptureHotbarModule.Instance()->Hotbars[val.Hotbar].Slots[val.Slot];
-                        RaptureHotbarModule.Instance()->WriteSavedSlot(Player.ClassJob.RowId, (uint)val.Hotbar, (uint)val.Slot, &actualSlot, true, false);
+                        RaptureHotbarModule.Instance()->WriteSavedSlot(Player.ClassJob.RowId, (uint)val.Hotbar, (uint)val.Slot, &actualSlot, false, false);
                     }
                     SelectedAction = null;
                     DragDropMode = false;
