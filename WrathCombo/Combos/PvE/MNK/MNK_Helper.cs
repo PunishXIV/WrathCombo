@@ -568,7 +568,8 @@ internal partial class MNK
                 return Lvl90SLOpener;
         }
 
-        if (MNK_SelectedOpener == 2 && Lvl100BHFirstOpener.LevelChecked)
+        if (MNK_SelectedOpener == 2 &&
+            Lvl100BHFirstOpener.LevelChecked)
             return Lvl100BHFirstOpener;
 
         return WrathOpener.Dummy;
@@ -788,26 +789,25 @@ internal partial class MNK
         [
             ForbiddenMeditation,
             FormShift,
+            RiddleOfWind,
             DragonKick,
             Brotherhood,
             RiddleOfFire,
-            LeapingOpo,
-            DragonKick,
-            PerfectBalance,
-            LeapingOpo,
-            TheForbiddenChakra,
-            RiddleOfWind,
-            ElixirBurst,
-            DragonKick,
-            WindsReply,
             FiresReply,
-            LeapingOpo,
             PerfectBalance,
-            DragonKick,
+            TheForbiddenChakra,
+            WindsReply,
             LeapingOpo,
             DragonKick,
+            LeapingOpo,
             ElixirBurst,
-            LeapingOpo
+            DragonKick,
+            PerfectBalance,
+            LeapingOpo,
+            DragonKick,
+            LeapingOpo,
+            ElixirBurst,
+            DragonKick
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
