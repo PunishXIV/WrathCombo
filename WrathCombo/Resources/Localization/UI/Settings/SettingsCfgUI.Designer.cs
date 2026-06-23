@@ -1665,7 +1665,7 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         ///
         ///As such, you may see things happen earlier than what may be expected, as values for damage and healing are generated much earlier than shown in game. For example, as soon as you hit the slidecast window the value of the spell is already known.
         ///
-        ///Used currently when evaluating HP% checks in features and auto-rotation..
+        ///This is actually best recommended for healers using auto-rotation to mitigate the amount of double  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UseExperimentalHP_helpMark {
             get {
