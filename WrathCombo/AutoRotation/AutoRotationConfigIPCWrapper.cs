@@ -101,6 +101,8 @@ public class AutoRotationConfigIPCWrapper(AutoRotationConfig? config)
 
     public float QueueWindow => config.QueueWindow;
 
+    public bool PauseWhenNoTarget => config.PauseWhenNoTarget;
+
     #endregion
 }
 
