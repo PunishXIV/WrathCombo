@@ -13,7 +13,7 @@ internal partial class RPR
 {
     #region SoD
 
-    private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool sodTrashOnly = true, bool arcaneCircleEnabled = true)
+    private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool trashOnly = true, bool arcaneCircleEnabled = true)
     {
         if (LevelChecked(ShadowOfDeath) && !HasStatusEffect(Buffs.SoulReaver) &&
             !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.PerfectioParata) &&
@@ -21,13 +21,12 @@ internal partial class RPR
             CanApplyStatus(CurrentTarget, Debuffs.DeathsDesign) &&
             !JustUsed(ShadowOfDeath) && InActionRange(ShadowOfDeath))
         {
-            if (sodTrashOnly && !InBossEncounter() &&
+            if (trashOnly && !InBossEncounter() &&
                 !HasStatusEffect(Buffs.Enshrouded) &&
                 GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
                 return true;
 
-            if (!sodTrashOnly || InBossEncounter() ||
-                !arcaneCircleEnabled)
+            if (!trashOnly || InBossEncounter() || !arcaneCircleEnabled)
             {
                 //Balance burst prep: SoD near 60s / 30s on Arcane Circle
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
