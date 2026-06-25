@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
-using System.Threading.Tasks;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
@@ -99,19 +98,19 @@ public static class ActionWatching
         var opCode = *(ushort*)(packet + 2);
         var tar = ((ulong)targetId).GetObject();
 
-        for (int i = 16; i <= 256; i++)
+        if (Service.Configuration.OpCodes is { } codes && codes.GameVersion == Framework.Instance()->GameVersionString)
         {
-            var val = *(uint*)(packet + i);
-            if (PendingHPChanges.Any(x => x.globalSequence == val))
+            var opCodeName = "";
+            try
             {
-                Svc.Log.Verbose($"Found GS packet {val} {i} and {opCode} {tar?.Name}");
-                PendingHPChanges.RemoveAll(x => x.globalSequence <= val && x.gameObjectId == targetId);
+                opCodeName = Service.Configuration.OpCodesBackup.First(x => x.Version == codes.RetailVersion).Lists.ServerZoneIpcType.First(x => x.Opcode == opCode).Name;
             }
-        }
+            catch { }
 
-        if (Service.Configuration.OpCodes is { } codes && codes.Version == Framework.Instance()->GameVersionString)
-        {
-            if (opCode == codes.UpdateHpMpTp)
+            if (!string.IsNullOrEmpty(opCodeName))
+                Svc.Log.Verbose($"[OpCodeVerboseAf] Found {opCodeName} on {tar?.Name}");
+
+            if (opCodeName == "UpdateHpMpTp")
             {
                 var newHealth = *(uint*)(packet + 16);
                 var newMp = *(ushort*)(packet + 20);
@@ -119,14 +118,22 @@ public static class ActionWatching
                 SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
             }
 
-            if (opCode == codes.EffectResultBasic)
+            if (opCodeName is "EffectResult" or "EffectResultBasic")
             {
                 var newHealth = *(uint*)(packet + 28);
                 var globalSequence = *(uint*)(packet + 20);
                 var val = *(uint*)(packet + 16);
                 Svc.Log.Verbose($"[OpCode] Effect Resolved on {tar?.Name} with GS {globalSequence}.");
-                PendingHPChanges.RemoveAll(x => x.globalSequence <= globalSequence);
+                PendingHPChanges.RemoveAll(x => x.globalSequence == globalSequence);
                 SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
+            }
+
+            if (opCodeName is "Effect")
+            {
+                //This is an interesting one, for heals you get this right away but if the heal does not actually change HP it
+                //doesn't get resolved above so maybe worth just timing these out after 1.5s if not resolved
+                var globalSequence = *(uint*)(packet + 28);
+                Svc.Framework.RunOnTick(() => PendingHPChanges.RemoveAll(x => x.globalSequence == globalSequence), TimeSpan.FromSeconds(1.5f));
             }
         }
     }

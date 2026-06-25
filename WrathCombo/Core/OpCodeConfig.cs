@@ -82,9 +82,8 @@ namespace WrathCombo.Core
 
     public class OpCodeConfig
     {
-        public string Version;
-        public int UpdateHpMpTp;
-        public int EffectResultBasic;
+        public string GameVersion;
+        public string RetailVersion;
     }
 
     public class VersionToRetail
@@ -105,7 +104,7 @@ namespace WrathCombo.Core
             try
             {
                 var gameVer = Framework.Instance()->GameVersionString;
-                if (Service.Configuration.OpCodes.Version == gameVer)
+                if (Service.Configuration.OpCodes.GameVersion == gameVer)
                     return;
 
                 var file = P.HTTPClient.GetStringAsync("https://cdn.jsdelivr.net/gh/karashiiro/FFXIVOpcodes@latest/opcodes.json").Result;
@@ -114,17 +113,17 @@ namespace WrathCombo.Core
                 if (config == null)
                     return;
 
+                Service.Configuration.OpCodesBackup = config;
+
                 var versionEndpoint = P.HTTPClient.GetStringAsync("https://raw.githubusercontent.com/xivdev/opcodediff/refs/heads/main/automation/ffxiv_versions_global.json").Result;
                 var versions = JsonConvert.DeserializeObject<List<VersionToRetail>>(versionEndpoint);
 
                 if (versions?.TryGetFirst(x => x.VersionString == gameVer, out var ver) == true)
                 {
                     var codes = config.First(x => x.Version == ver.RetailVersion);
-                    Service.Configuration.OpCodes.Version = gameVer;
-                    Service.Configuration.OpCodes.UpdateHpMpTp = codes.Lists.ServerZoneIpcType.First(x => x.Name == "UpdateHpMpTp").Opcode;
-                    Service.Configuration.OpCodes.EffectResultBasic = codes.Lists.ServerZoneIpcType.First(x => x.Name == "EffectResultBasic").Opcode;
+                    Service.Configuration.OpCodes.GameVersion = gameVer;
+                    Service.Configuration.OpCodes.RetailVersion = ver.RetailVersion;
 
-                    Svc.Log.Debug($"[OpCodeConfig] {Service.Configuration.OpCodes.EffectResultBasic} {Service.Configuration.OpCodes.UpdateHpMpTp}");
                     Service.Configuration.Save();
                 }
             }

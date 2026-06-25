@@ -486,5 +486,7 @@ public partial class Configuration : IPluginConfiguration
 
     public OpCodeConfig OpCodes = new();
 
+    public List<FFXIVOPCodes> OpCodesBackup = [];
+
     #endregion
 }
