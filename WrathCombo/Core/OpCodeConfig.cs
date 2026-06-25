@@ -2,6 +2,7 @@
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -9,6 +10,7 @@ using WrathCombo.Services;
 
 namespace WrathCombo.Core
 {
+#nullable disable
     public class ClientLobbyIpcType
     {
         [JsonProperty("name")]
@@ -94,29 +96,41 @@ namespace WrathCombo.Core
         public string VersionString;
     }
 
+#nullable enable
+
     public static class OpCodeConfigHelper
     {
         public unsafe static void UpdateOpCodes()
         {
-            var file = P.HTTPClient.GetStringAsync("https://cdn.jsdelivr.net/gh/karashiiro/FFXIVOpcodes@latest/opcodes.json").Result;
-            var config = JsonConvert.DeserializeObject<List<FFXIVOPCodes>>(file);
-
-            if (config == null)
-                return;
-
-            var versionEndpoint = P.HTTPClient.GetStringAsync("https://raw.githubusercontent.com/xivdev/opcodediff/refs/heads/main/automation/ffxiv_versions_global.json").Result;
-            var versions = JsonConvert.DeserializeObject<List<VersionToRetail>>(versionEndpoint);
-            var gameVer = Framework.Instance()->GameVersionString;
-
-            if (versions?.TryGetFirst(x => x.VersionString == gameVer, out var ver) == true)
+            try
             {
-                var codes = config.First(x => x.Version == ver.RetailVersion);
-                Service.Configuration.OpCodes.Version = gameVer;
-                Service.Configuration.OpCodes.UpdateHpMpTp = codes.Lists.ServerZoneIpcType.First(x => x.Name == "UpdateHpMpTp").Opcode;
-                Service.Configuration.OpCodes.EffectResultBasic = codes.Lists.ServerZoneIpcType.First(x => x.Name == "EffectResultBasic").Opcode;
+                var gameVer = Framework.Instance()->GameVersionString;
+                if (Service.Configuration.OpCodes.Version == gameVer)
+                    return;
 
-                Svc.Log.Debug($"[OpCodeConfig] {Service.Configuration.OpCodes.EffectResultBasic} {Service.Configuration.OpCodes.UpdateHpMpTp}");
-                Service.Configuration.Save();
+                var file = P.HTTPClient.GetStringAsync("https://cdn.jsdelivr.net/gh/karashiiro/FFXIVOpcodes@latest/opcodes.json").Result;
+                var config = JsonConvert.DeserializeObject<List<FFXIVOPCodes>>(file);
+
+                if (config == null)
+                    return;
+
+                var versionEndpoint = P.HTTPClient.GetStringAsync("https://raw.githubusercontent.com/xivdev/opcodediff/refs/heads/main/automation/ffxiv_versions_global.json").Result;
+                var versions = JsonConvert.DeserializeObject<List<VersionToRetail>>(versionEndpoint);
+
+                if (versions?.TryGetFirst(x => x.VersionString == gameVer, out var ver) == true)
+                {
+                    var codes = config.First(x => x.Version == ver.RetailVersion);
+                    Service.Configuration.OpCodes.Version = gameVer;
+                    Service.Configuration.OpCodes.UpdateHpMpTp = codes.Lists.ServerZoneIpcType.First(x => x.Name == "UpdateHpMpTp").Opcode;
+                    Service.Configuration.OpCodes.EffectResultBasic = codes.Lists.ServerZoneIpcType.First(x => x.Name == "EffectResultBasic").Opcode;
+
+                    Svc.Log.Debug($"[OpCodeConfig] {Service.Configuration.OpCodes.EffectResultBasic} {Service.Configuration.OpCodes.UpdateHpMpTp}");
+                    Service.Configuration.Save();
+                }
+            }
+            catch(Exception ex)
+            {
+                ex.Log("Issue updating OP Codes");
             }
         }
     }
