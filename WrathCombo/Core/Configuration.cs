@@ -19,6 +19,8 @@ using Setting = WrathCombo.Attributes.Setting;
 using Space = WrathCombo.Attributes.SettingUI_Space;
 using Or = WrathCombo.Attributes.SettingUI_Or;
 using Retarget = WrathCombo.Attributes.SettingUI_RetargetIcon;
+using System.Reflection.Emit;
+using static WrathCombo.Data.ActionWatching;
 
 #endregion
 
@@ -481,6 +483,8 @@ public partial class Configuration : IPluginConfiguration
     #endregion
 
     public HashSet<(ushort Status, uint BaseId)> StatusBlacklist = [];
+
+    public OpCodeConfig OpCodes = new();
 
     #endregion
 }

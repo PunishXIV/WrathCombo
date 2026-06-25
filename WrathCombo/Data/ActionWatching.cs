@@ -10,6 +10,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Network;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Frozen;
@@ -27,6 +28,7 @@ using WrathCombo.Services;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
+using Task = System.Threading.Tasks.Task;
 namespace WrathCombo.Data;
 
 public static class ActionWatching
@@ -107,23 +109,25 @@ public static class ActionWatching
             }
         }
 
-        if (opCode == 916)
+        if (Service.Configuration.OpCodes is { } codes && codes.Version == Framework.Instance()->GameVersionString)
         {
-            var newHealth = *(uint*)(packet + 16);
-            var globalSequence = *(uint*)(packet + 20);
-            PendingHPChanges.RemoveAll(x => x.globalSequence <= globalSequence && targetId == x.gameObjectId);
-            Svc.Log.Verbose($"[OpCode] Natty Regen on {tar?.Name} with new health {newHealth}");
-            SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
-        }
+            if (opCode == codes.UpdateHpMpTp)
+            {
+                var newHealth = *(uint*)(packet + 16);
+                var newMp = *(ushort*)(packet + 20);
+                Svc.Log.Verbose($"[OpCode] Natty Regen on {tar?.Name} with new health {newHealth} and MP {newMp}");
+                SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
+            }
 
-        if (opCode == 120)
-        {
-            var newHealth = *(uint*)(packet + 28);
-            var globalSequence = *(uint*)(packet + 20);
-            var val = *(uint*)(packet + 16);
-            Svc.Log.Verbose($"[OpCode]] Global Seq: {globalSequence}.");
-            PendingHPChanges.RemoveAll(x => x.globalSequence <= globalSequence);
-            SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
+            if (opCode == codes.EffectResultBasic)
+            {
+                var newHealth = *(uint*)(packet + 28);
+                var globalSequence = *(uint*)(packet + 20);
+                var val = *(uint*)(packet + 16);
+                Svc.Log.Verbose($"[OpCode] Effect Resolved on {tar?.Name} with GS {globalSequence}.");
+                PendingHPChanges.RemoveAll(x => x.globalSequence <= globalSequence);
+                SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
+            }
         }
     }
 
