@@ -378,20 +378,14 @@ internal partial class SMN : Caster
                 actionID is not (SummonPhoenix or SummonSolarBahamut))
                 return actionID;
 
-            if (IsOffCooldown(EnkindleBahamut) && OriginalHook(Ruin) is AstralImpulse)
+            if (ActionReady(OriginalHook(EnkindleBahamut)))
                 return OriginalHook(EnkindleBahamut);
 
-            if (IsOffCooldown(EnkindlePhoenix) && OriginalHook(Ruin) is FountainOfFire)
-                return OriginalHook(EnkindlePhoenix);
-
-            if (IsOffCooldown(EnkindleSolarBahamut) && OriginalHook(Ruin) is UmbralImpulse)
-                return OriginalHook(EnkindleBahamut);
-
-            if ((OriginalHook(AstralFlow) is Deathflare && IsOffCooldown(Deathflare)) || (OriginalHook(AstralFlow) is Rekindle && IsOffCooldown(Rekindle)))
+            if (ActionReady(OriginalHook(AstralFlow)))
                 return OriginalHook(AstralFlow);
-
-            if (OriginalHook(AstralFlow) is Sunflare && IsOffCooldown(Sunflare))
-                return OriginalHook(Sunflare);
+            
+            if (ActionReady(OriginalHook(LuxSolaris)))
+                return OriginalHook(LuxSolaris); 
 
             return actionID;
         }
