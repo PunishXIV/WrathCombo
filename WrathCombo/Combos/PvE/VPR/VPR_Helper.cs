@@ -61,7 +61,7 @@ internal partial class VPR
                  !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
                 return OriginalHook(ReavingMaw);
 
-            return actionId;
+            return OriginalHook(SteelMaw);
         }
 
         //1-2-3 (4-5-6) Combo
@@ -109,7 +109,7 @@ internal partial class VPR
              !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
             return OriginalHook(ReavingFangs);
 
-        return actionId;
+        return OriginalHook(SteelFangs);
     }
 
     #endregion
