@@ -428,7 +428,8 @@ internal partial class SMN
             
             if (demiSummonsAttacksEnabled && DemiExists && !JustUsed(SearingLight, 1.5f) &&
                 (HasStatusEffect(Buffs.SearingLight, anyOwner: true) || //Searing is active
-                 SearingCD > Gauge.SummonTimerRemaining / 1000f + GCDTotal))  //There is not enough time left in demi phase for searing to happen
+                 SearingCD > Gauge.SummonTimerRemaining / 1000f + GCDTotal || //There is not enough time left in demi phase for searing to happen
+                 !LevelChecked(SearingLight)))  // Full send if searing light isnt of level
             {
                 if (ActionReady(OriginalHook(EnkindleBahamut)))
                 {

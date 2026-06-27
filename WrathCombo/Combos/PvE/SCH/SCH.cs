@@ -57,7 +57,7 @@ internal partial class SCH : Healer
             //Bio/Biolysis
             var dotAction = OriginalHook(Bio);
             BioList.TryGetValue(dotAction, out var dotDebuffID);
-            var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 2);
+            var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 99);
             
             if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && PartyInCombat())
                 return dotAction.Retarget(BroilList.ToArray(), target);

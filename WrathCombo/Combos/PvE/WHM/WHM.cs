@@ -66,7 +66,7 @@ internal partial class WHM : Healer
             AeroList.TryGetValue(dotAction, out var dotDebuffID);
             var target = IsMoving() && !BloodLilyReady && !HasStatusEffect(Buffs.SacredSight) && !FullLily
                 ? SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 30, 99) //if moving and dont have other mobile gcds
-                : SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 2); 
+                : SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 99); 
             
             if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && LevelChecked(Aero))
                 return dotAction.Retarget(StoneGlareList.ToArray(), target);

@@ -1,5 +1,4 @@
-﻿#region Dependencies
-using Dalamud.Game.ClientState.JobGauge.Enums;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
@@ -13,246 +12,10 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.BRD.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 internal partial class BRD
 {
-    #region Variables
-    internal static readonly FrozenDictionary<uint, ushort> PurpleList = new Dictionary<uint, ushort>
-    {
-        { VenomousBite, Debuffs.VenomousBite },
-        { CausticBite, Debuffs.CausticBite }
-    }.ToFrozenDictionary();
-    
-    internal static readonly FrozenDictionary<uint, ushort> BlueList = new Dictionary<uint, ushort>
-    {
-        { Windbite, Debuffs.Windbite },
-        { Stormbite, Debuffs.Stormbite }
-    }.ToFrozenDictionary();
-    
-    
-    
-    // Gauge Stuff
-    internal static BRDGauge? gauge = GetJobGauge<BRDGauge>();
-    internal static int SongTimerInSeconds => gauge.SongTimer / 1000;
-    internal static bool SongNone => gauge.Song == Song.None;
-    internal static bool SongWanderer => gauge.Song == Song.WanderersMinuet;
-    internal static bool SongMage => gauge.Song == Song.MagesBallad;
-    internal static bool SongArmy => gauge.Song == Song.ArmysPaeon;
-    //Dot Management
-    internal static IStatus? Purple => GetStatusEffect(Debuffs.CausticBite, CurrentTarget) ?? GetStatusEffect(Debuffs.VenomousBite, CurrentTarget);
-    internal static IStatus? Blue => GetStatusEffect(Debuffs.Stormbite, CurrentTarget) ?? GetStatusEffect(Debuffs.Windbite, CurrentTarget);
-    internal static float PurpleRemaining => Purple?.RemainingTime ?? 0;
-    internal static float BlueRemaining => Blue?.RemainingTime ?? 0;
-    internal static bool DebuffCapCanPurple => CanApplyStatus(CurrentTarget, Debuffs.CausticBite) || CanApplyStatus(CurrentTarget, Debuffs.VenomousBite);
-    internal static bool DebuffCapCanBlue => CanApplyStatus(CurrentTarget, Debuffs.Stormbite) || CanApplyStatus(CurrentTarget, Debuffs.Windbite);
-
-    //Useful Bools
-    internal static bool BardHasTarget => HasBattleTarget();
-    internal static bool JustSangSong => JustUsed(WanderersMinuet) || JustUsed(MagesBallad) || JustUsed(ArmysPaeon);
-    internal static bool CanBardWeave => CanWeave();
-    internal static bool CanWeaveDelayed => CanDelayedWeave();
-    internal static bool CanIronJaws => LevelChecked(IronJaws);
-    internal static bool BuffTime => GetCooldownRemainingTime(RagingStrikes) < 2.7;
-    internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) && 
-                                       (HasStatusEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)) &&
-                                       (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
-    
-    //Buff Tracking
-    internal static float RagingCD => GetCooldownRemainingTime(RagingStrikes);
-    internal static float BattleVoiceCD => GetCooldownRemainingTime(BattleVoice);
-    internal static float EmpyrealCD => GetCooldownRemainingTime(EmpyrealArrow);
-    internal static float RadiantCD => GetCooldownRemainingTime(RadiantFinale);
-    internal static float RagingStrikesDuration => GetStatusEffectRemainingTime(Buffs.RagingStrikes);
-    internal static float RadiantFinaleDuration => GetStatusEffectRemainingTime(Buffs.RadiantFinale);
-
-    // Charge Tracking
-    internal static uint RainOfDeathCharges => LevelChecked(RainOfDeath) ? GetRemainingCharges(RainOfDeath) : 0;
-    internal static uint BloodletterCharges => GetRemainingCharges(OriginalHook(Bloodletter));
-    #endregion
-
-    #region Functions
-
-        #region Pooling
-        // Pooled Apex Logic
-        internal static bool UsePooledApex()
-        {
-            if (gauge.SoulVoice >= 80)
-            {
-                if (BuffWindow && RagingStrikesDuration < 18 || RagingCD >= 50 && RagingCD <= 62)
-                    return true;
-            }
-            return false;
-        }
-    
-
-        // Pitch Perfect Logic
-        internal static bool PitchPerfected()
-        {
-           if (LevelChecked(PitchPerfect) && SongWanderer &&
-                (gauge.Repertoire == 3 || LevelChecked(EmpyrealArrow) && gauge.Repertoire == 2 && EmpyrealCD < 2))
-                return true;
-        
-           return false;
-        }
-
-        //Sidewinder Logic
-        internal static bool UsePooledSidewinder()
-        {
-            if (BuffWindow && RagingStrikesDuration < 18 || RagingCD > 30)
-                    return true;
-            
-            return false;
-        }
-
-        //Bloodletter & Rain of Death Logic
-        internal static bool UsePooledBloodRain()
-        {
-            if ((!WasLastAbility(Bloodletter) || !WasLastAbility(RainOfDeath) || !WasLastAbility(HeartbreakShot)) && 
-               (EmpyrealCD > 2 || !LevelChecked(EmpyrealArrow)))
-            {
-                if (BloodletterCharges == 3 && TraitLevelChecked(Traits.EnhancedBloodletter) || 
-                    BloodletterCharges == 2 && !TraitLevelChecked(Traits.EnhancedBloodletter) ||
-                    BloodletterCharges > 0 && (BuffWindow || RagingCD > 30))
-                    return true; 
-            }
-            return false;
-        }
-        #endregion
-
-        #region Dot Management
-        //Iron Jaws dot refreshing
-        internal static bool UseIronJaws()
-        {
-            return ActionReady(IronJaws) && Purple is not null && Blue is not null &&
-                   (PurpleRemaining < computeRefresh() || BlueRemaining < computeRefresh());
-        }
-        //Blue dot application and low level refresh
-        internal static bool ApplyBlueDot()
-        {
-            return ActionReady(OriginalHook(Windbite)) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < computeRefresh());
-        }
-        //Purple dot application and low level refresh
-        internal static bool ApplyPurpleDot()
-        {
-            return ActionReady(OriginalHook(VenomousBite)) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < computeRefresh());
-        }
-        //Raging jaws option dot refresh for snapshot
-        internal static bool RagingJawsRefresh()
-        {
-            return ActionReady(IronJaws) && HasStatusEffect(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35;
-        }
-        internal static int ComputeHpThreshold(IGameObject? x)
-        {
-            if (x is null)
-                return 0;
-            
-            if (InBossEncounter())
-            {
-                return x.IsBoss() ? BRD_ST_DPS_DotBossOption : BRD_ST_DPS_DotBossAddsOption;
-            }
-            return BRD_ST_DPS_DotTrashOption;
-        }
-        internal static int ComputeAoEDoTHpThreshold(IGameObject? x)
-        {
-            if (InBossEncounter())
-            {
-                return x.IsBoss() ? BRD_AoE_Adv_MultidotBossOption : BRD_AoE_Adv_MultidotBossAddsOption;
-            }
-            return BRD_AoE_Adv_MultidotTrashOption;
-        }
-
-        internal static int computeAoERefresh() => IsEnabled(Preset.BRD_AoE_SimpleMode) ? 5 : BRD_AoE_Adv_Multidot_Refresh;
-
-        internal static int computeRefresh() => IsEnabled(Preset.BRD_ST_SimpleMode) ? 4 : BRD_Adv_DoT_Refresh;
-        
-        #endregion
-
-        #region Buff Timing
-        //RadiantFinale Buff
-        internal static bool UseRadiantBuff()
-        {
-            return ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !HasStatusEffect(Buffs.RadiantEncoreReady);
-        } 
-        //BattleVoice Buff
-        internal static bool UseBattleVoiceBuff()
-        {
-            return ActionReady(BattleVoice) && (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
-        }
-        //RagingStrikes Buff
-        internal static bool UseRagingStrikesBuff()
-        {
-            return ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !LevelChecked(BattleVoice) || HasStatusEffect(Buffs.BattleVoice));
-        } 
-        //Barrage Buff
-        internal static bool UseBarrageBuff()
-        {
-            return ActionReady(Barrage) && HasStatusEffect(Buffs.RagingStrikes) && !HasStatusEffect(Buffs.ResonantArrowReady);
-        }
-        #endregion
-    
-        #region Songs
-        internal static bool WandererSong()
-        {
-            if (ActionReady(WanderersMinuet) && !JustSangSong)
-            {
-                if (SongNone) // No song, use wanderer first
-                   return true;
-                
-                var canTransition =  IsEnabled(Preset.BRD_Hidden_Song_Extension) 
-                    ? SongTimerInSeconds <= 3 
-                    : SongTimerInSeconds <= 12 || gauge.Repertoire == 4;
-                
-                if (SongArmy && (CanWeaveDelayed || !BardHasTarget) && canTransition) //Transition to wanderer as soon as it is ready
-                    return true;
-            }
-            return false;
-        }
-        internal static bool MagesSong()
-        {
-            if (ActionReady(MagesBallad) && !JustSangSong && (CanBardWeave || !BardHasTarget))
-            {
-                if (SongNone && !ActionReady(WanderersMinuet)) //No song, Use Mages if wanderer is on cd or not aquaired yet
-                    return true;
-
-                if (SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire == 0) //Swap to mages after wanderer and no pitch perfect to spend
-                    return true;
-            }
-            return false;
-        }
-        internal static bool ArmySong()
-        {
-            if (ActionReady(ArmysPaeon) && !JustSangSong && (CanBardWeave || !BardHasTarget))
-            {
-                if (SongNone && !ActionReady(MagesBallad) && !ActionReady(WanderersMinuet)) //No song, Use army as last resort
-                    return true;
-
-                if (SongMage && SongTimerInSeconds <= 3) //Transition to army after mages
-                    return true;
-            }
-            return false;
-        }
-        internal static bool SongChangeEmpyreal()
-        {
-            return SongMage && SongTimerInSeconds <= 3 && ActionReady(ArmysPaeon) && ActionReady(EmpyrealArrow) && BardHasTarget && CanBardWeave; // Uses Empyreal before transiitoning to Army if possible
-        }
-        internal static bool SongChangePitchPerfect()
-        {
-            return SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire > 0 && BardHasTarget && CanBardWeave; // Dumps the Pitch perfect stacks before transition to mages
-        }
-        #endregion
-
-        #region Warden Resolver
-        [ActionRetargeting.TargetResolver]
-        private static IGameObject? WardenResolver() =>
-            GetPartyMembers()
-                .Select(member => member.BattleChara)          
-                .FirstOrDefault(member => member.IsNotThePlayer() && !member.IsDead && member.IsCleansable() && InActionRange(TheWardensPaeon, member));
-        #endregion
-        
-    #endregion
-
     #region ID's
 
     public const uint
@@ -324,6 +87,735 @@ internal partial class BRD
             EnhancedBloodletter = 445;
     }
 
+    #endregion
+    
+    #region Variables
+    internal static readonly FrozenDictionary<uint, ushort> PurpleList = new Dictionary<uint, ushort>
+    {
+        { VenomousBite, Debuffs.VenomousBite },
+        { CausticBite, Debuffs.CausticBite }
+    }.ToFrozenDictionary();
+    
+    internal static readonly FrozenDictionary<uint, ushort> BlueList = new Dictionary<uint, ushort>
+    {
+        { Windbite, Debuffs.Windbite },
+        { Stormbite, Debuffs.Stormbite }
+    }.ToFrozenDictionary();
+    
+    // Gauge Stuff
+    internal static BRDGauge? gauge = GetJobGauge<BRDGauge>();
+    internal static int SongTimerInSeconds => gauge.SongTimer / 1000;
+    internal static bool SongNone => gauge.Song == Song.None;
+    internal static bool SongWanderer => gauge.Song == Song.WanderersMinuet;
+    internal static bool SongMage => gauge.Song == Song.MagesBallad;
+    internal static bool SongArmy => gauge.Song == Song.ArmysPaeon;
+    //Dot Management
+    internal static IStatus? Purple => GetStatusEffect(Debuffs.CausticBite, CurrentTarget) ?? GetStatusEffect(Debuffs.VenomousBite, CurrentTarget);
+    internal static IStatus? Blue => GetStatusEffect(Debuffs.Stormbite, CurrentTarget) ?? GetStatusEffect(Debuffs.Windbite, CurrentTarget);
+    internal static float PurpleRemaining => Purple?.RemainingTime ?? 0;
+    internal static float BlueRemaining => Blue?.RemainingTime ?? 0;
+    internal static bool DebuffCapCanPurple => CanApplyStatus(CurrentTarget, Debuffs.CausticBite) || CanApplyStatus(CurrentTarget, Debuffs.VenomousBite);
+    internal static bool DebuffCapCanBlue => CanApplyStatus(CurrentTarget, Debuffs.Stormbite) || CanApplyStatus(CurrentTarget, Debuffs.Windbite);
+
+    //Useful Bools
+    internal static bool BardHasTarget => HasBattleTarget();
+    internal static bool JustSangSong => JustUsed(WanderersMinuet) || JustUsed(MagesBallad) || JustUsed(ArmysPaeon);
+    internal static bool CanBardWeave => CanWeave();
+    internal static bool CanWeaveDelayed => CanDelayedWeave();
+    internal static bool CanIronJaws => LevelChecked(IronJaws);
+    internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) && 
+                                       (HasStatusEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)) &&
+                                       (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
+    
+    //Buff Tracking
+    internal static float RagingCD => GetCooldownRemainingTime(RagingStrikes);
+    internal static float BattleVoiceCD => GetCooldownRemainingTime(BattleVoice);
+    internal static float EmpyrealCD => GetCooldownRemainingTime(EmpyrealArrow);
+    internal static float RagingStrikesDuration => GetStatusEffectRemainingTime(Buffs.RagingStrikes);
+
+    // Charge Tracking
+    internal static uint BloodletterCharges => GetRemainingCharges(OriginalHook(Bloodletter));
+
+    // Pitch Perfect Logic
+    internal static bool PitchPerfected()
+    {
+       if (LevelChecked(PitchPerfect) && SongWanderer &&
+            (gauge.Repertoire == 3 || LevelChecked(EmpyrealArrow) && gauge.Repertoire == 2 && EmpyrealCD < 2))
+            return true;
+    
+       return false;
+       
+    }
+
+    #region Warden Resolver
+    [ActionRetargeting.TargetResolver]
+    private static IGameObject? WardenResolver() =>
+        GetPartyMembers()
+            .Select(member => member.BattleChara)          
+            .FirstOrDefault(member => member.IsNotThePlayer() && !member.IsDead && member.IsCleansable() && InActionRange(TheWardensPaeon, member));
+    #endregion
+        
+    #endregion
+    
+    #region Rotation
+    
+    #region Flag Stuff
+    [Flags]
+    private enum Combo
+    {
+        // Target-type for combo
+        ST = 1 << 0, // 1
+        AoE = 1 << 1, // 2
+
+        // Complexity of combo
+        Adv = 1 << 2, // 4
+        Simple = 1 << 3, // 8
+        Basic = 1 << 4, // 16
+    }
+    
+    /// <summary>
+    ///     Checks whether a given preset is enabled, and the flags match it.
+    /// </summary>
+    private static bool IsSTEnabled(Combo flags, Preset preset) =>
+        flags.HasFlag(Combo.ST) && IsEnabled(preset);
+
+    /// <summary>
+    ///     Checks whether a given preset is enabled, and the flags match it.
+    /// </summary>
+    private static bool IsAoEEnabled(Combo flags, Preset preset) =>
+        flags.HasFlag(Combo.AoE) && IsEnabled(preset);
+    #endregion
+    
+    #region OGCD Attacks
+    private static bool TryOGCDAttacks(Combo flags, ref uint actionID)
+    {
+        #region Enables
+        bool songsEnabled =
+             flags.HasFlag(Combo.Simple) ||
+             IsSTEnabled(flags, Preset.BRD_Adv_Song) ||
+             IsAoEEnabled(flags, Preset.BRD_AoE_Adv_Songs);
+        
+        bool buffsEnabled = 
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_Adv_Buffs) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_Adv_Buffs);
+        
+        bool oGCDEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_ST_Adv_oGCD) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_Adv_oGCD);
+        
+        bool poolingEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_Adv_Pooling) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_Pooling);
+        
+        bool headGrazeEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_Adv_Interrupt) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_Adv_Interrupt);
+        
+        bool troubadourEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_Adv_Troubadour);
+        
+        bool naturesMinneEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_Adv_NaturesMinne);
+        
+        bool secondWindEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_ST_SecondWind) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_SecondWind);
+        
+        bool wardensEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_ST_Wardens) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_Wardens);
+        #endregion
+        
+        #region Configs
+        
+        int buffsThresholdST = BRD_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_Adv_Buffs_Threshold : 0; //Boss Check
+        int buffsThresholdAoE = BRD_AoE_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_AoE_Adv_Buffs_Threshold : 0; //Boss Check
+        int buffsThreshold = 
+            flags.HasFlag(Combo.Simple) ? 0 : 
+            flags.HasFlag(Combo.ST) ? buffsThresholdST : buffsThresholdAoE;
+        
+        
+        
+        bool ragingEnabled = flags.HasFlag(Combo.Simple) || 
+                             flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[0] ||
+                             flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[0];
+        
+        bool battleVoiceEnabled = flags.HasFlag(Combo.Simple) || 
+                                  flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[1] ||
+                                  flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[1];
+        
+        bool barrageEnabled = flags.HasFlag(Combo.Simple) || 
+                              flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[2] ||
+                              flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[2];
+
+        bool radiantEnabled = flags.HasFlag(Combo.Simple) ||
+                              flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[3] ||
+                              flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[3];
+        
+        bool allBuffsEnabled = flags.HasFlag(Combo.Simple) || 
+                               radiantEnabled && battleVoiceEnabled && ragingEnabled && barrageEnabled;
+        
+        int seconWindThreshold = 
+            flags.HasFlag(Combo.Simple) ? 40 : 
+            flags.HasFlag(Combo.ST) ? BRD_STSecondWindThreshold : BRD_AoESecondWindThreshold;
+        
+        bool autoWardenST = flags.HasFlag(Combo.Simple) || 
+                            flags.HasFlag(Combo.ST) && BRD_ST_Wardens_Auto ||
+                            flags.HasFlag(Combo.AoE) && BRD_AoE_Wardens_Auto;
+        #endregion
+        
+        #region Functions
+       
+        bool WandererSong()
+        {
+            if (ActionReady(WanderersMinuet) && !JustSangSong)
+            {
+                if (SongNone) // No song, use wanderer first
+                   return true;
+                
+                var canTransition =  IsEnabled(Preset.BRD_Hidden_Song_Extension) 
+                    ? SongTimerInSeconds <= 3 
+                    : SongTimerInSeconds <= 12 || gauge.Repertoire == 4;
+                
+                if (SongArmy && (CanWeaveDelayed || !BardHasTarget) && canTransition) //Transition to wanderer as soon as it is ready
+                    return true;
+            }
+            return false;
+        }
+        
+        bool MagesSong()
+        {
+            if (ActionReady(MagesBallad) && !JustSangSong && (CanBardWeave || !BardHasTarget))
+            {
+                if (SongNone && !ActionReady(WanderersMinuet)) //No song, Use Mages if wanderer is on cd or not aquaired yet
+                    return true;
+
+                if (SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire == 0) //Swap to mages after wanderer and no pitch perfect to spend
+                    return true;
+            }
+            return false;
+        }
+        
+        bool ArmySong()
+        {
+            if (ActionReady(ArmysPaeon) && !JustSangSong && (CanBardWeave || !BardHasTarget))
+            {
+                if (SongNone && !ActionReady(MagesBallad) && !ActionReady(WanderersMinuet)) //No song, Use army as last resort
+                    return true;
+
+                if (SongMage && SongTimerInSeconds <= 3) //Transition to army after mages
+                    return true;
+            }
+            return false;
+        }
+        
+        bool SongChangeEmpyreal()
+        {
+            return SongMage && SongTimerInSeconds <= 3 && ActionReady(ArmysPaeon) && ActionReady(EmpyrealArrow) && BardHasTarget && CanBardWeave; // Uses Empyreal before transiitoning to Army if possible
+        }
+        
+        bool SongChangePitchPerfect()
+        {
+            return SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire > 0 && BardHasTarget && CanBardWeave; // Dumps the Pitch perfect stacks before transition to mages
+        }
+        
+        //Bloodletter & Rain of Death Logic
+        bool UsePooledBloodRain()
+        {
+            if ((!WasLastAbility(Bloodletter) || !WasLastAbility(RainOfDeath) || !WasLastAbility(HeartbreakShot)) && 
+                (EmpyrealCD > 2 || !LevelChecked(EmpyrealArrow)))
+            {
+                if (BloodletterCharges == 3 && TraitLevelChecked(Traits.EnhancedBloodletter) || 
+                    BloodletterCharges == 2 && !TraitLevelChecked(Traits.EnhancedBloodletter) ||
+                    BloodletterCharges > 0 && (BuffWindow || RagingCD > 30))
+                    return true; 
+            }
+            return false;
+        }
+        
+        //Sidewinder Logic
+        bool UsePooledSidewinder()
+        {
+            if (BuffWindow && RagingStrikesDuration < 18 || RagingCD > 30)
+                return true;
+            
+            return false;
+        }
+        
+        #endregion
+        
+        #region Songs
+        if (songsEnabled && InCombat() && (CanWeave() || !BardHasTarget))
+        {
+            if (SongChangePitchPerfect())
+            {
+                actionID = PitchPerfect;
+                return true;
+            }
+            if (SongChangeEmpyreal())
+            {
+                actionID = EmpyrealArrow;
+                return true;
+            }
+            if (WandererSong())
+            {
+                actionID = WanderersMinuet;
+                return true;
+            }
+            if (MagesSong())
+            {
+                actionID = MagesBallad;
+                return true;
+            }
+            if (ArmySong())
+            {
+                actionID = ArmysPaeon;
+                return true;
+            }
+        }
+        #endregion
+        
+        #region Buffs
+        if (buffsEnabled && CanWeave() && GetTargetHPPercent() > buffsThreshold)
+        {
+            if (allBuffsEnabled && !SongNone && LevelChecked(MagesBallad))
+            {
+                if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !HasStatusEffect(Buffs.RadiantEncoreReady))
+                {
+                    actionID = RadiantFinale;
+                    return true;
+                }
+                if (ActionReady(BattleVoice) && (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale)))
+                {
+                    actionID = BattleVoice;
+                    return true;
+                }
+                if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !LevelChecked(BattleVoice) || HasStatusEffect(Buffs.BattleVoice)))
+                {
+                    actionID = RagingStrikes;
+                    return true;
+                }
+                if (ActionReady(Barrage) && HasStatusEffect(Buffs.RagingStrikes) && !HasStatusEffect(Buffs.ResonantArrowReady))
+                {
+                    actionID = Barrage;
+                    return true;
+                }
+            }
+
+            if (!allBuffsEnabled || !LevelChecked(MagesBallad))
+            {
+                if (ActionReady(RadiantFinale) && radiantEnabled)
+                {
+                    actionID = RadiantFinale;
+                    return true;
+                }
+                if (ActionReady(BattleVoice) && battleVoiceEnabled)
+                {
+                    actionID = BattleVoice;
+                    return true;
+                }
+                if (ActionReady(RagingStrikes) && ragingEnabled)
+                {
+                    actionID = RagingStrikes;
+                    return true;
+                }
+                if (ActionReady(Barrage) && barrageEnabled)
+                {
+                    actionID = Barrage;
+                    return true;
+                }
+            }
+        }
+        #endregion
+        
+        #region OGCD Attacks
+        if (Role.CanHeadGraze(headGrazeEnabled, WeaveTypes.DelayWeave))
+        {
+            actionID = Role.HeadGraze;
+            return true;
+        }
+        
+        if (CanWeave() && oGCDEnabled && (GetCooldownRemainingTime(RagingStrikes) > 2.7 || !buffsEnabled))
+        {
+            if (ActionReady(EmpyrealArrow))
+            {
+                actionID = EmpyrealArrow;
+                return true;
+            }
+
+            if (PitchPerfected())
+            {
+                actionID = OriginalHook(PitchPerfect);
+                return true;
+            }
+
+            if (ActionReady(Sidewinder) && (UsePooledSidewinder() || !poolingEnabled))
+            {
+                actionID = Sidewinder;
+                return true;
+            }
+
+            if (flags.HasFlag(Combo.ST) && ActionReady(OriginalHook(Bloodletter)) && (UsePooledBloodRain() || !poolingEnabled))
+            {
+                actionID = OriginalHook(Bloodletter);
+                return true;
+            }
+
+            if (flags.HasFlag(Combo.AoE) && ActionReady(RainOfDeath) && (UsePooledBloodRain() || !poolingEnabled))
+            {
+                if (NumberOfEnemiesInRange(RainOfDeath) >= 2)
+                {
+                    actionID = OriginalHook(RainOfDeath);
+                    return true;
+                }
+                {
+                    actionID = OriginalHook(Bloodletter);
+                    return true;
+                }
+            }
+
+            if (!LevelChecked(RainOfDeath) && !WasLastAction(Bloodletter) && BloodletterCharges > 0) //Low Level Just send it
+            {
+                actionID = OriginalHook(Bloodletter);
+                return true;
+            }
+        }
+        #endregion
+        
+        #region Mitigation and Healing
+        
+        if (flags.HasFlag(Combo.ST) && troubadourEnabled && ActionReady(Troubadour) && GroupDamageIncoming() && CanWeave() &&
+            NumberOfAlliesInRange(Troubadour) >= GetPartyMembers().Count * .75 &&
+            !JustUsed(NaturesMinne) && !HasAnyStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne, DNC.Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
+        {
+            actionID = Troubadour;
+            return true;
+        }
+
+        if (flags.HasFlag(Combo.ST) && naturesMinneEnabled && ActionReady(NaturesMinne) && GroupDamageIncoming() && CanWeave() &&
+            NumberOfAlliesInRange(NaturesMinne) >= GetPartyMembers().Count * .75 &&
+            !JustUsed(Troubadour) && !HasAnyStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne], anyOwner: true))
+        {
+            actionID = NaturesMinne;
+            return true;
+        }
+       
+        if (secondWindEnabled && Role.CanSecondWind(seconWindThreshold) && CanWeave())
+        {
+            actionID = Role.SecondWind;
+            return true;
+        }
+
+        if (wardensEnabled && ActionReady(TheWardensPaeon) && CanWeave())
+        {
+            if (HasCleansableDebuff(LocalPlayer))
+            {
+                actionID = TheWardensPaeon;
+                return true;
+            }
+            
+            if (flags.HasFlag(Combo.ST) && autoWardenST && WardenResolver() is not null)
+            {
+                actionID = TheWardensPaeon.Retarget([HeavyShot, BurstShot], WardenResolver);
+                return true;
+            }
+
+            if (flags.HasFlag(Combo.AoE) && autoWardenST && WardenResolver() is not null)
+            {
+                actionID = TheWardensPaeon.Retarget([Ladonsbite, QuickNock], WardenResolver);
+                return true;
+            }
+        }
+        
+        #endregion
+        
+        return false;
+    }
+    #endregion
+    
+    #region GCD Attacks
+    private static bool TryGCDAttacks(Combo flags, ref uint actionID)
+    {
+        #region Enables
+        bool stDotEnabled =
+            flags.HasFlag(Combo.Simple) || IsSTEnabled(flags, Preset.BRD_Adv_DoT);
+        
+        bool ironjawsEnabled =
+            flags.HasFlag(Combo.Simple) || BRD_Adv_DoT_Options[0];
+        
+        bool dotApplicationEnabled =
+            flags.HasFlag(Combo.Simple) || BRD_Adv_DoT_Options[1];
+        
+        bool ragingjawsEnabled =
+            flags.HasFlag(Combo.Simple) || BRD_Adv_DoT_Options[2];
+        
+        bool multidotEnabled =
+            flags.HasFlag(Combo.Simple) || IsSTEnabled(flags, Preset.BRD_Adv_DoT) && BRD_Adv_DoT_Options[3] || IsAoEEnabled(flags, Preset.BRD_AoE_Adv_Multidot);
+        
+        bool ragingEnabled = flags.HasFlag(Combo.Simple) || 
+                             flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[0] ||
+                             flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[0];
+        
+        bool radiantEncoreEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_Adv_BuffsEncore) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_BuffsEncore);
+        
+        bool apexComboEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_ST_ApexArrow) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_ApexArrow);
+        
+        bool apexPoolingEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_Adv_ApexPooling) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_ApexPooling);
+        
+        bool resonantArrowEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.BRD_Adv_BuffsResonant) ||
+            IsAoEEnabled(flags, Preset.BRD_AoE_BuffsResonant);
+        
+        #endregion
+        
+        #region Configs
+        int ComputeMultidotHpThreshold(IGameObject? x)
+        {
+            if (x is null)
+                return 0;
+
+            if (flags.HasFlag(Combo.Simple))
+                return 50;
+
+            if (flags.HasFlag(Combo.ST))
+            {
+                if (InBossEncounter())
+                {
+                    return x.IsBoss() ? BRD_ST_DPS_DotBossOption : BRD_ST_DPS_DotBossAddsOption;
+                }
+                return BRD_ST_DPS_DotTrashOption;
+            }
+            
+            if (flags.HasFlag(Combo.AoE))
+            {
+                if (InBossEncounter())
+                {
+                    return x.IsBoss() ? BRD_AoE_Adv_MultidotBossOption : BRD_AoE_Adv_MultidotBossAddsOption;
+                }
+                return BRD_AoE_Adv_MultidotTrashOption;
+            }
+
+            return 0;
+        }
+        
+        int computeMultidotRefresh = flags.HasFlag(Combo.Simple) ? 5 : flags.HasFlag(Combo.ST) ? BRD_Adv_DoT_Refresh : BRD_AoE_Adv_Multidot_Refresh; 
+
+        int ragingJawsRenewTime =
+            flags.HasFlag(Combo.Simple) ? 5 : BRD_RagingJawsRenewTime;
+        
+        #endregion
+
+        #region Functions
+        int computeRefresh() => IsEnabled(Preset.BRD_ST_SimpleMode) ? 4 : BRD_Adv_DoT_Refresh;
+        
+        //Iron Jaws dot refreshing
+        bool UseIronJaws()
+        {
+            return ActionReady(IronJaws) && Purple is not null && Blue is not null &&
+                   (PurpleRemaining < computeRefresh() || BlueRemaining < computeRefresh());
+        }
+        //Blue dot application and low level refresh
+        bool ApplyBlueDot()
+        {
+            return ActionReady(OriginalHook(Windbite)) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < computeRefresh());
+        }
+        //Purple dot application and low level refresh
+        bool ApplyPurpleDot()
+        {
+            return ActionReady(OriginalHook(VenomousBite)) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < computeRefresh());
+        }
+        //Raging jaws option dot refresh for snapshot
+        bool RagingJawsRefresh()
+        {
+            return ActionReady(IronJaws) && HasStatusEffect(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35;
+        }
+        int ComputeHpThreshold(IGameObject? x)
+        {
+            if (x is null)
+                return 0;
+            
+            if (InBossEncounter())
+            {
+                return x.IsBoss() ? BRD_ST_DPS_DotBossOption : BRD_ST_DPS_DotBossAddsOption;
+            }
+            return BRD_ST_DPS_DotTrashOption;
+        }
+        
+        // Pooled Apex Logic
+        bool UsePooledApex()
+        {
+            if (gauge.SoulVoice >= 80)
+            {
+                if (BuffWindow && RagingStrikesDuration < 18 || RagingCD >= 50 && RagingCD <= 62)
+                    return true;
+            }
+            return false;
+        }
+        #endregion
+        
+        #region ST Dot Management
+        if (flags.HasFlag(Combo.ST) && stDotEnabled && GetTargetHPPercent() > ComputeHpThreshold(CurrentTarget))
+        {
+            if (ironjawsEnabled && UseIronJaws())
+            {
+                actionID = OriginalHook(IronJaws);
+                return true;
+            }
+            
+            if (dotApplicationEnabled && ApplyBlueDot())
+            {
+                actionID = OriginalHook(Stormbite);
+                return true;
+            }
+
+            if (dotApplicationEnabled && ApplyPurpleDot())
+            {
+                actionID = OriginalHook(VenomousBite);
+                return true;
+            }
+            
+            if (ragingjawsEnabled && RagingJawsRefresh() && RagingStrikesDuration < ragingJawsRenewTime)
+            {
+                actionID = OriginalHook(IronJaws);
+                return true;
+            }
+        }
+        #endregion
+        
+        #region GCDS
+
+        var widevolleyEnemyCount = NumberOfEnemiesInRange(OriginalHook(WideVolley));
+        
+        if (flags.HasFlag(Combo.AoE) && HasStatusEffect(Buffs.Barrage) && widevolleyEnemyCount >= 3)
+        {
+            actionID = OriginalHook(WideVolley); //Uses on 3 or more. 
+            return true;
+        }
+        if (HasStatusEffect(Buffs.Barrage))
+        {
+            actionID = OriginalHook(StraightShot); // Use on two or less
+            return true;
+        }
+        if (radiantEncoreEnabled && HasStatusEffect(Buffs.RadiantEncoreReady) && GetStatusEffectRemainingTime(Buffs.RadiantFinale) < 16 &&
+            (HasStatusEffect(Buffs.RagingStrikes) || !ragingEnabled))
+        {
+            actionID = OriginalHook(RadiantEncore);
+            return true;
+        }
+        if (apexComboEnabled)
+        {
+            if (HasStatusEffect(Buffs.BlastArrowReady))
+            {
+                actionID = BlastArrow;
+                return true;
+            }
+
+            if (UsePooledApex() || !apexPoolingEnabled && gauge.SoulVoice == 100)
+            {
+                actionID = ApexArrow;
+                return true;
+            }
+        }
+
+        if (resonantArrowEnabled && HasStatusEffect(Buffs.ResonantArrowReady))
+        {
+            actionID = ResonantArrow;
+            return true;
+        }
+        
+        if (flags.HasFlag(Combo.AoE) && HasStatusEffect(Buffs.HawksEye) && widevolleyEnemyCount >= 2)
+        {
+            actionID = OriginalHook(WideVolley); //Uses on 2 or more. 
+            return true;
+        }
+        if (HasStatusEffect(Buffs.HawksEye))
+        {
+            actionID = OriginalHook(StraightShot);
+            return true;
+        }
+            
+        #endregion
+
+        #region Multidot Management
+        if (multidotEnabled)
+        {
+            #region Dottable Variables
+            var blueDotAction = OriginalHook(Windbite);
+            var purpleDotAction = OriginalHook(VenomousBite);
+            BlueList.TryGetValue(blueDotAction, out var blueDotDebuffID);
+            PurpleList.TryGetValue(purpleDotAction, out var purpleDotDebuffID);
+            var ironTarget = SimpleTarget.BardRefreshableEnemy(IronJaws, blueDotDebuffID, purpleDotDebuffID, ComputeMultidotHpThreshold, computeMultidotRefresh);
+            var blueTarget = SimpleTarget.DottableEnemy(blueDotAction, blueDotDebuffID, ComputeMultidotHpThreshold, computeMultidotRefresh);
+            var purpleTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, ComputeMultidotHpThreshold, computeMultidotRefresh);
+            #endregion
+            
+            if (flags.HasFlag(Combo.ST))
+            {
+                if (ironTarget is not null && LevelChecked(IronJaws))
+                {
+                    actionID = IronJaws.Retarget([HeavyShot, BurstShot], ironTarget);
+                    return true;
+                }
+
+                if (blueTarget is not null && LevelChecked(Windbite))
+                {
+                    actionID = blueDotAction.Retarget([HeavyShot, BurstShot], blueTarget);
+                    return true;
+                }
+
+                if (purpleTarget is not null && LevelChecked(VenomousBite))
+                {
+                    actionID = purpleDotAction.Retarget([HeavyShot, BurstShot], purpleTarget);
+                    return true;
+                }
+            }
+            if (flags.HasFlag(Combo.AoE))
+            {
+                if (ironTarget is not null && LevelChecked(IronJaws))
+                {
+                    actionID = IronJaws.Retarget([QuickNock, Ladonsbite], ironTarget);
+                    return true;
+                }
+
+                if (blueTarget is not null && LevelChecked(Windbite))
+                {
+                    actionID = blueDotAction.Retarget([QuickNock, Ladonsbite], blueTarget);
+                    return true;
+                }
+
+                if (purpleTarget is not null && LevelChecked(VenomousBite))
+                {
+                    actionID = purpleDotAction.Retarget([QuickNock, Ladonsbite], purpleTarget);
+                    return true;
+                }
+            }
+            
+        }
+        
+        #endregion
+
+        return false;
+    }
+    #endregion
+    
     #endregion
 
     #region Openers

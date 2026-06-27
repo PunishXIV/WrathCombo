@@ -9580,10 +9580,10 @@ This is the ideal option for newcomers to the job.</value>
     <value>Carbuncle Reminder Feature</value>
   </data>
   <data name="SMN_DemiAbilities_Desc" xml:space="preserve">
-    <value>Adds Enkindle Bahamut, Enkindle Phoenix and Astral Flow to their relevant summons.</value>
+    <value>Adds Enkindle Bahamut, Enkindle Phoenix, Lux Solaris, and Astral Flow to their relevant summons.</value>
   </data>
   <data name="SMN_DemiAbilities_Name" xml:space="preserve">
-    <value>Astral Flow/Enkindle on Demis Feature</value>
+    <value>Astral Flow/Enkindle/Lux Solaris on Demis Feature</value>
   </data>
   <data name="SMN_EDFester_Desc" xml:space="preserve">
     <value>Change Fester into Energy Drain when out of Aetherflow stacks.</value>
