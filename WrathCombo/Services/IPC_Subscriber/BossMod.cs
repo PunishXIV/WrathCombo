@@ -98,14 +98,16 @@ internal sealed class BossModIPC(
         if (isReborn)
         {
             var preset = rotationManager.GetFoP("Preset");
-
-            var modules = preset.GetFoP("Modules");
-            var c = (int)modules.GetType().GetProperty("Count")!.GetValue(modules)!;
-            for (int i = 0; i < c; i++)
+            if (preset != null)
             {
-                var item = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { i });
-                var moduleType = item.GetType().GetProperty("Type").GetValue(item);
-                yield return moduleType;
+                var modules = preset.GetFoP("Modules");
+                var c = (int)modules.GetType().GetProperty("Count")!.GetValue(modules)!;
+                for (int i = 0; i < c; i++)
+                {
+                    var item = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { i });
+                    var moduleType = item.GetType().GetProperty("Type").GetValue(item);
+                    yield return moduleType;
+                }
             }
         }
 
