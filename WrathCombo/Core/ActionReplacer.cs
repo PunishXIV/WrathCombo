@@ -19,7 +19,6 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
-using WrathCombo.Services.ActionRequestIPC;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
 
 #endregion
@@ -153,7 +152,7 @@ internal sealed class ActionReplacer : IDisposable
             {
                 if (combo.TryInvoke(actionID, out uint newActionID))
                 {
-                    if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, newActionID) > 0)
+                    if (!CustomComboFunctions.ActionReady(newActionID))
                         continue;
 
                     if (Service.Configuration.BlockSpellOnMove &&
@@ -168,7 +167,7 @@ internal sealed class ActionReplacer : IDisposable
             }
 
             var original = OriginalHook(actionID);
-            if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, original) > 0)
+            if (!CustomComboFunctions.ActionReady(original))
                 return actionID;
             return original;
         }

@@ -22,7 +22,6 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
-using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -662,8 +661,6 @@ internal unsafe class AutoRotationController
     {
         if (HasStatusEffect(418) || LocalPlayer is not { } || !EzThrottler.Throttle("CleanseThrottle", 50)) return;
 
-        if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, Healer.Role.Esuna) > 0) return;
-
         if (SimpleTarget.Stack.AllyToEsuna is IBattleChara memberBC)
         {
             var res = ActionManager.GetActionInRangeOrLoS(Healer.Role.Esuna, LocalPlayer.GameObject(), memberBC.GameObject());
@@ -681,7 +678,6 @@ internal unsafe class AutoRotationController
     {
         if (HasStatusEffect(418)) return;
         if (!LevelChecked(SGE.Kardia)) return;
-        if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, SGE.Kardia) > 0) return;
         if (CombatEngageDuration().TotalSeconds < 3) return;
 
         foreach (var member in GetPartyMembers().Where(x => !x.BattleChara.IsDead).OrderByDescending(x => x.BattleChara?.GetRole() is CombatRole.Tank))
@@ -1028,7 +1024,7 @@ internal unsafe class AutoRotationController
                 }
             }
 
-            if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, outAct) > 0)
+            if (!CustomComboFunctions.ActionReady(outAct)) 
                 return All.SavageBlade;
 
             return outAct;

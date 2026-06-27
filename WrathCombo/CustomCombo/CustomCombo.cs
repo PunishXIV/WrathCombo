@@ -7,7 +7,6 @@ using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Services.ActionRequestIPC;
-using ActionType = FFXIVClientStructs.FFXIV.Client.Game.ActionType;
 using ECommonsJob = ECommons.ExcelServices.Job;
 
 namespace WrathCombo.CustomComboNS;
@@ -85,7 +84,7 @@ internal abstract partial class CustomCombo : CustomComboFunctions
 
         uint resultingActionID = Invoke(actionID);
 
-        if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, resultingActionID) > 0)
+        if (!ActionReady(resultingActionID))
             return false;
 
         var presetException = _presetsAllowedToReturnUnchanged
