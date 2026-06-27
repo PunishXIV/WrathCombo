@@ -88,7 +88,7 @@ public static class ConflictingPluginsChecks
         // ReSharper disable once RedundantAssignment
         var ts = TS.FromMinutes(1); // 1m initial delay after plugin launch
 #if DEBUG
-        ts = TS.FromSeconds(1); // 10s for debug mode
+        ts = TS.FromSeconds(10); // 10s for debug mode
 #endif
 
         Svc.Framework.RunOnTick(RunChecks, ts);
@@ -121,6 +121,7 @@ public static class ConflictingPluginsChecks
         public bool QueueSettingConflicted;
         public bool AutorotationConflicted;
         public bool RetargetingConflicted;
+        public bool AiTargetingConflicted;
 
         protected override BossModIPC IPC => (BossModIPC)_ipc;
 
@@ -167,6 +168,8 @@ public static class ConflictingPluginsChecks
             QueueSettingConflicted = isReborn ? IPC.IsUsingCustomQueuingReborn() : IPC.IsUsingCustomQueuing();
 
             AutorotationConflicted = IPC.IsUsingAutorotation(isReborn);
+
+            AiTargetingConflicted = IPC.IsAITargetingEnabled(isReborn);
 
             // Check for a combo conflict
             if (isReborn ? IPC.HasAutomaticActionsQueuedReborn() : IPC.HasAutomaticActionsQueued())

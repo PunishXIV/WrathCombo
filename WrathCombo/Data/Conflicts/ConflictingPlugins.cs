@@ -467,6 +467,14 @@ public static class ConflictingPlugins
                 .ToArray();
         }
 
+        if (ConflictingPluginsChecks.BossMod.AiTargetingConflicted)
+        {
+            conflicts = conflicts.Append(new Conflict(
+                    "BossMod", ConflictType.Settings,
+                    "AI is enabled without disabling auto-target [check 'Disable auto-target']"))
+                .ToArray();
+        }
+
         if (ConflictingPluginsChecks.BossMod.QueueSettingConflicted)
         {
             conflicts = conflicts.Append(new Conflict(
@@ -492,6 +500,14 @@ public static class ConflictingPlugins
             conflicts = conflicts.Append(new Conflict(
                     "BossModReborn", ConflictType.Settings,
                     "AI is enabled WITH targeting [check 'Manual targeting']"))
+                .ToArray();
+        }
+
+        if (ConflictingPluginsChecks.BossModReborn.AiTargetingConflicted)
+        {
+            conflicts = conflicts.Append(new Conflict(
+                    "BossMod", ConflictType.Settings,
+                    "AI is enabled without disabling auto-target [check 'Manual Targeting']"))
                 .ToArray();
         }
 

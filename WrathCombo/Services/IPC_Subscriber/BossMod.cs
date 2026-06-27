@@ -82,8 +82,7 @@ internal sealed class BossModIPC(
         return tickServiceValue;
     }
 
-
-    private IEnumerable<object?> GetModuleTypes(bool isReborn)
+    private IEnumerable<object?> GetModules(bool isReborn)
     {
         var entryPoint = isReborn ? Plugin : GetTickService();
 
@@ -105,8 +104,7 @@ internal sealed class BossModIPC(
                 for (int i = 0; i < c; i++)
                 {
                     var item = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { i });
-                    var moduleType = item.GetType().GetProperty("Type").GetValue(item);
-                    yield return moduleType;
+                    yield return item;
                 }
             }
         }
@@ -134,7 +132,7 @@ internal sealed class BossModIPC(
             }
             if (isReborn)
             {
-                yield return modules.GetType();
+                yield return modules;
             }
             else
             {
@@ -143,10 +141,53 @@ internal sealed class BossModIPC(
                 for (int p = 0; p < modCount; p++)
                 {
                     var module = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { p });
-                    var moduleType = module.GetType().GetProperty("Type").GetValue(module);
-                    yield return moduleType;
+                    yield return module;
                 }
             }
+        }
+    }
+
+    private IEnumerable<object?> GetModuleTypes(bool isReborn)
+    {
+        foreach (var module in GetModules(isReborn))
+        {
+            var moduleType = module.GetType().GetProperty("Type").GetValue(module);
+            yield return moduleType;
+        }
+    }
+
+    private IEnumerable<object?> GetPresets(bool isReborn)
+    {
+        var entryPoint = isReborn ? Plugin : GetTickService();
+
+        var rotationManager = entryPoint.GetFoP("_rotation");
+        if (rotationManager is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access RotationManager");
+            yield return null;
+        }
+
+        if (isReborn)
+        {
+            var preset = rotationManager.GetFoP("Preset");
+            yield return preset;
+        }
+
+        var presets = isReborn ? rotationManager.GetFoP("ActiveModules") : rotationManager.GetFoP("Presets");
+        if (presets is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access Presets");
+            yield return null;
+        }
+
+
+        var count = (int)presets.GetType().GetProperty("Count")!.GetValue(presets)!;
+        for (int i = 0; i < count; i++)
+        {
+            var item = presets.GetType().GetProperty("Item")!.GetValue(presets, new object[] { i });
+            yield return item;
         }
     }
 
@@ -159,11 +200,35 @@ internal sealed class BossModIPC(
             return false;
         }
 
-        var modules = GetModuleTypes(isReborn);
-        foreach (var module in modules)
+        var presets = GetPresets(isReborn);
+        foreach (var preset in presets)
         {
-            if (module is Type mt && mt.Name.Contains("AutoTarget"))
-                return true;
+            if (preset.GetFoP<string>("Name") == "VBM Multibox")
+                continue;
+
+            var modules = isReborn ? preset?.GetFoP("Module") : preset?.GetFoP("Modules");
+            if (modules is null)
+            {
+                continue;
+            }
+            if (isReborn)
+            {
+                var moduleType = modules.GetType().GetProperty("Type").GetValue(modules);
+                if (moduleType is Type t && t.FullName.Contains("AutoTarget"))
+                    return true;
+            }
+            else
+            {
+                var modCount = (int)modules.GetType().GetProperty("Count").GetValue(modules)!;
+
+                for (int p = 0; p < modCount; p++)
+                {
+                    var module = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { p });
+                    var moduleType = module.GetType().GetProperty("Type").GetValue(module);
+                    if (moduleType is Type t && t.FullName.Contains("AutoTarget"))
+                        return true;
+                }
+            }
         }
 
         return false;
@@ -296,6 +361,51 @@ internal sealed class BossModIPC(
             $"[ConflictingPlugins] [{PluginName}] `ManualQueue.Enabled`: {customQueuingEnabled}");
 
         return customQueuingEnabled;
+    }
+
+    public bool IsAITargetingEnabled(bool isReborn)
+    {
+        if (!PluginIsLoaded)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"Plugin is not loaded.");
+            return false;
+        }
+
+        var entryPoint = isReborn ? Plugin : GetTickService();
+        if (isReborn)
+        {
+            var ai = Plugin.GetFoP("_ai");
+            var beh = ai.GetType().GetField("Beh").GetValue(ai);
+            var enabled = beh is not null;
+
+            if (!enabled)
+                return false;
+
+            var config = beh.GetFoP("_config");
+            var target = config.GetFoP<bool>("ManualTarget");
+
+            return !target;
+        }
+        else
+        {
+            var rotationManager = entryPoint.GetFoP("_rotation");
+            if (rotationManager is null)
+            {
+                PluginLog.Debug(
+                        $"[ConflictingPlugins] [{PluginName}] Could not access RotationManager");
+                return false;
+            }
+
+            var ai = isReborn ? Plugin.GetFoP("_aiConfig") : rotationManager.GetFoP("_aiConfig");
+
+            Svc.Log.Debug($"{ai is not null}");
+
+            var enabled = ai.GetFoP<bool>("Enabled");
+            var target = ai.GetFoP<bool>("ForbidActions");
+
+            return enabled && !target;
+        }
     }
 
     public DateTime LastModified()
