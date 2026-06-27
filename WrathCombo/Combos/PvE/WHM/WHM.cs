@@ -173,16 +173,15 @@ internal partial class WHM : Healer
 
             #region Opener
 
-            if (IsEnabled(Preset.WHM_ST_MainCombo_Opener))
-                if (Opener().FullOpener(ref actionID))
-                    return actionID;
+            if (IsEnabled(Preset.WHM_ST_MainCombo_Opener) && Opener().FullOpener(ref actionID))
+                return actionID;
 
             #endregion
 
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
 
-            if (!PartyInCombat()) return actionID;
+            if (!PartyInCombat()) return OriginalHook(Stone1);
 
             #region Special Feature Raidwide
 
