@@ -84,15 +84,9 @@ internal sealed class BossModIPC(
         return tickServiceValue;
     }
 
-    public bool IsAutoTargetingEnabled()
-    {
-        if (!PluginIsLoaded)
-        {
-            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
-                            $"Plugin is not loaded.");
-            return false;
-        }
 
+    private IEnumerable<object?> GetModuleTypes()
+    {
         var tickServiceValue = GetTickService();
 
         var rotationManager = tickServiceValue.GetFoP("_rotation");
@@ -100,7 +94,7 @@ internal sealed class BossModIPC(
         {
             PluginLog.Debug(
                     $"[ConflictingPlugins] [{PluginName}] Could not access RotationManager");
-            return false;
+            yield return null;
         }
 
         var presets = rotationManager.GetFoP("Presets");
@@ -108,7 +102,7 @@ internal sealed class BossModIPC(
         {
             PluginLog.Debug(
                     $"[ConflictingPlugins] [{PluginName}] Could not access Presets");
-            return false;
+            yield return null;
         }
 
         var presetType = Plugin.GetType().Assembly.GetType("BossMod.Autorotation.Preset");
@@ -116,15 +110,7 @@ internal sealed class BossModIPC(
         {
             PluginLog.Debug(
                     $"[ConflictingPlugins] [{PluginName}] Could not access PresetType");
-            return false;
-        }
-
-        var autoTargetType = Plugin.GetType().Assembly.GetType("BossMod.Autorotation.MiscAI.AutoTarget");
-        if (autoTargetType is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access AutoTargetType");
-            return false;
+            yield return null;
         }
 
         var count = (int)presets.GetType().GetProperty("Count")!.GetValue(presets)!;
@@ -142,16 +128,25 @@ internal sealed class BossModIPC(
             {
                 var module = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { p });
                 var moduleType = module.GetType().GetProperty("Type").GetValue(module);
-                if (moduleType is not Type mt)
-                {
-                    PluginLog.Debug(
-                            $"[ConflictingPlugins] [{PluginName}] Could not access ModuleType");
-                    continue;
-                }
-
-                if (mt == autoTargetType)
-                    return true;
+                yield return moduleType;
             }
+        }
+    }
+
+    public bool IsAutoTargetingEnabled()
+    {
+        if (!PluginIsLoaded)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"Plugin is not loaded.");
+            return false;
+        }
+
+        var modules = GetModuleTypes();
+        foreach (var module in modules)
+        {
+            if (module is Type mt && mt.Name.Contains("AutoTarget"))
+                return true;
         }
 
         return false;
@@ -198,6 +193,25 @@ internal sealed class BossModIPC(
             $"[ConflictingPlugins] [{PluginName}] `ManualQueue.Enabled`: {customQueuingEnabled}");
         
         return customQueuingEnabled;
+    }
+
+    public bool IsUsingAutorotation()
+    {
+        if (!PluginIsLoaded)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"Plugin is not loaded.");
+            return false;
+        }
+
+        var modules = GetModuleTypes();
+        foreach (var module in modules)
+        {
+            if (module is Type mt && !mt.FullName.Contains("MiscAI"))
+                return true;
+        }
+
+        return false;
     }
 
     public DateTime LastModified()
