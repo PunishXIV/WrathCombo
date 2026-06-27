@@ -1,10 +1,12 @@
 ﻿#region
 
 using ECommons;
+using ECommons.DalamudServices;
 using ECommons.EzIpcManager;
 using ECommons.Logging;
 using ECommons.Reflection;
 using System;
+using System.Linq;
 
 // ReSharper disable InlineTemporaryVariable
 
@@ -90,7 +92,39 @@ internal sealed class BossModIPC(
             return false;
         }
 
-        var amex = Plugin.GetFoP("_amex");
+        var tickServiceType = Plugin.GetType().Assembly.GetType("BossMod.Services.TickService");
+        if (tickServiceType is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access TickServiceType");
+            return false;
+        }
+
+        var host = Plugin.GetType().BaseType.GetProperty("Host").GetValue(Plugin);
+        if (host is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access Host");
+            return false;
+        }
+
+        var services = host.GetType().GetProperty("Services").GetValue(host);
+        if (services is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access Services");
+            return false;
+        }
+
+        var tickServiceValue = services.GetType().GetMethod("GetService").Invoke(services, [tickServiceType]);
+        if (tickServiceValue is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access TickServiceValue");
+            return false;
+        }
+
+        var amex = tickServiceValue.GetFoP("_amex");
         if (amex == null)
         {
             PluginLog.Debug(
