@@ -1,14 +1,15 @@
-using Dalamud.Game.ClientState.Statuses;
-using System.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
+using ECommons;
+using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.AST.Config;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
-using WrathCombo.AutoRotation;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class AST : Healer
@@ -24,8 +25,11 @@ internal partial class AST : Healer
             var replacedActions = MaleficList.ToArray();
             #endregion
 
-            if (!actionFound)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, MaleficList.ToArray()))
                 return actionID;
+
+            if (CustomActionHelper.CustomActionEnabled(CustomActionType.SingleTargetDPS))
+                replacedActions = [All.SingleTargetDPS];
 
             #region Out of combat
             // Out-of-combat Card Draw
@@ -42,11 +46,11 @@ internal partial class AST : Healer
             #endregion
 
             #region OGCDs
-            
-            if (ActionReady(Lightspeed) && InCombat() && IsMoving() && 
+
+            if (ActionReady(Lightspeed) && InCombat() && IsMoving() &&
                 !HasStatusEffect(Buffs.Lightspeed))
                 return Lightspeed;
-            
+
             if (CanWeave() && InCombat())
             {
                 //Lucid Dreaming
@@ -66,7 +70,7 @@ internal partial class AST : Healer
                     return OriginalHook(AstralDraw);
 
                 //Divination
-                if (ActionReady(Divination) && HasBattleTarget() && 
+                if (ActionReady(Divination) && HasBattleTarget() &&
                     !HasDivination && !HasStatusEffect(Buffs.Divining) &&
                     (GetTargetHPPercent() >= 10 || InBossEncounter()) &&
                     StandStill)
@@ -95,18 +99,22 @@ internal partial class AST : Healer
             if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && PartyInCombat())
                 return dotAction.Retarget(replacedActions, target);
 
-            return actionID;
+            return OriginalHook(Malefic);
             #endregion
         }
     }
-    
+
     internal class AST_AOE_Simple_DPS : CustomCombo
     {
         protected internal override Preset Preset => Preset.AST_AOE_Simple_DPS;
         protected override uint Invoke(uint actionID)
         {
-            if (!GravityList.Contains(actionID))
+            var actions = GravityList.ToArray();
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, actions))
                 return actionID;
+
+            if (CustomActionHelper.CustomActionEnabled(CustomActionType.AoEDPS))
+                actions = [All.AoEDPS];
 
             #region Special Content
 
@@ -116,10 +124,10 @@ internal partial class AST : Healer
             #endregion
 
             #region OGCDs
-            if (ActionReady(Lightspeed) && IsMoving() && 
+            if (ActionReady(Lightspeed) && IsMoving() &&
                 !HasStatusEffect(Buffs.Lightspeed))
                 return Lightspeed;
-            
+
             if (InCombat() && CanWeave())
             {
                 //Lucid Dreaming
@@ -128,7 +136,7 @@ internal partial class AST : Healer
 
                 //Play Card
                 if (HasDPSCard && LevelChecked(Play1))
-                    return OriginalHook(Play1).Retarget(GravityList.ToArray(), CardResolver);
+                    return OriginalHook(Play1).Retarget(actions, CardResolver);
 
                 //Minor Arcana / Lord of Crowns
                 if (HasLord && HasBattleTarget() && LevelChecked(MinorArcana))
@@ -148,7 +156,7 @@ internal partial class AST : Healer
                 if (LevelChecked(EarthlyStar) && IsOffCooldown(EarthlyStar) &&
                     !HasStatusEffect(Buffs.EarthlyDominance) && StandStill &&
                     (GetTargetHPPercent() >= 10 || InBossEncounter()))
-                    return EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.Self);
+                    return EarthlyStar.Retarget(actions, SimpleTarget.Self);
 
                 //Oracle
                 if (HasStatusEffect(Buffs.Divining))
@@ -157,20 +165,20 @@ internal partial class AST : Healer
             #endregion
 
             #region GCDs
-           
+
             if (ActionReady(Macrocosmos) && StandStill && !InBossEncounter() &&
                 !HasStatusEffect(Buffs.Macrocosmos))
                 return Macrocosmos;
-            
+
             var dotAction = OriginalHook(Combust);
             CombustList.TryGetValue(dotAction, out var dotDebuffID);
             var target =
                 SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 30, 3, 4);
 
             if (ActionReady(dotAction) && target != null)
-                return OriginalHook(Combust).Retarget([Gravity, Gravity2], target);
+                return OriginalHook(Combust).Retarget(actions, target);
 
-            return actionID;
+            return OriginalHook(Gravity);
             #endregion
         }
     }
@@ -192,11 +200,14 @@ internal partial class AST : Healer
                 _ => MaleficList.ToArray(),
             };
 
-            if (!replacedActions.Contains(actionID))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, replacedActions.ToArray()))
                 return actionID;
 
+            if (CustomActionHelper.CustomActionEnabled(CustomActionType.SingleTargetDPS))
+                replacedActions = [All.SingleTargetDPS];
+
             #endregion
-            
+
             #region Variables
             bool cardPooling = IsEnabled(Preset.AST_DPS_CardPool);
             bool lordPooling = IsEnabled(Preset.AST_DPS_LordPool);
@@ -241,9 +252,9 @@ internal partial class AST : Healer
                 return OriginalHook(AspectedHelios);
 
             #endregion
-            
+
             #region OGCDs
-            if (IsEnabled(Preset.AST_DPS_LightSpeed) && ActionReady(Lightspeed) && 
+            if (IsEnabled(Preset.AST_DPS_LightSpeed) && ActionReady(Lightspeed) &&
                 InCombat() && IsMoving() && !HasStatusEffect(Buffs.Lightspeed) &&
                 GetTargetHPPercent() > AST_ST_DPS_LightSpeedOption && //Hp Check
                 (IsNotEnabled(Preset.AST_DPS_LightSpeedHold) || GetRemainingCharges(Lightspeed) >= 2)) //Hold for 2 charges
@@ -287,11 +298,11 @@ internal partial class AST : Healer
                     return Divination;
 
                 //Earthly Star
-                if (IsEnabled(Preset.AST_ST_DPS_EarthlyStar) && IsOffCooldown(EarthlyStar) && 
+                if (IsEnabled(Preset.AST_ST_DPS_EarthlyStar) && IsOffCooldown(EarthlyStar) &&
                     LevelChecked(EarthlyStar) && !HasStatusEffect(Buffs.EarthlyDominance) &&
                     (WaitGCDs || StandStill))
-                    return AST_ST_DPS_EarthlyStarSubOption == 1 
-                        ? EarthlyStar.Retarget(replacedActions, SimpleTarget.Self) 
+                    return AST_ST_DPS_EarthlyStarSubOption == 1
+                        ? EarthlyStar.Retarget(replacedActions, SimpleTarget.Self)
                         : EarthlyStar.Retarget(replacedActions, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.Stack.Allies);
 
                 //Stellar Detonation
@@ -308,7 +319,7 @@ internal partial class AST : Healer
                     return Oracle;
             }
             #endregion
-            
+
             #region GCDs
 
             #region Movement Options
@@ -331,11 +342,11 @@ internal partial class AST : Healer
                 var dotAction = OriginalHook(Combust);
                 CombustList.TryGetValue(dotAction, out var dotDebuffID);
                 var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, ComputeHpThreshold, AST_ST_DPS_CombustUptime_Threshold, 2);
-                
+
                 //Single Target Dotting, needed because dottableenemy will not maintain single dot on main target of more than one target exists. 
-                if (NeedsDoT()) 
+                if (NeedsDoT())
                     return OriginalHook(Combust);
-                
+
                 //2 target Dotting System to maintain dots on 2 enemies. Works with the same sliders and one target
                 if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && AST_ST_DPS_CombustUptime_TwoTarget)
                     return dotAction.Retarget(replacedActions, target);
@@ -345,8 +356,8 @@ internal partial class AST : Healer
             if (alternateMode)
                 return OriginalHook(Malefic);
             #endregion
-            
-            return actionID;
+
+            return OriginalHook(replacedActions.First());
         }
     }
     internal class AST_AOE_DPS : CustomCombo
@@ -354,7 +365,7 @@ internal partial class AST : Healer
         protected internal override Preset Preset => Preset.AST_AOE_DPS;
         protected override uint Invoke(uint actionID)
         {
-            if (!GravityList.Contains(actionID))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, GravityList.ToArray()))
                 return actionID;
 
             #region Variables
@@ -380,12 +391,12 @@ internal partial class AST : Healer
             #endregion
 
             #region OGCDs
-            if (IsEnabled(Preset.AST_AOE_LightSpeed) && ActionReady(Lightspeed) && 
+            if (IsEnabled(Preset.AST_AOE_LightSpeed) && ActionReady(Lightspeed) &&
                 IsMoving() && InCombat() && !HasStatusEffect(Buffs.Lightspeed) &&
-                GetTargetHPPercent() > AST_AOE_LightSpeedOption && 
+                GetTargetHPPercent() > AST_AOE_LightSpeedOption &&
                 (IsNotEnabled(Preset.AST_AOE_LightSpeedHold) || GetRemainingCharges(Lightspeed) >= 2))
                 return Lightspeed;
-            
+
             if (InCombat() && CanWeave())
             {
                 //Lucid Dreaming
@@ -411,13 +422,13 @@ internal partial class AST : Healer
                     return OriginalHook(AstralDraw);
 
                 //Lightspeed Burst
-                if (IsEnabled(Preset.AST_AOE_LightspeedBurst) && IsEnabled(Preset.AST_AOE_Divination) && ActionReady(Lightspeed) && 
+                if (IsEnabled(Preset.AST_AOE_LightspeedBurst) && IsEnabled(Preset.AST_AOE_Divination) && ActionReady(Lightspeed) &&
                     !HasStatusEffect(Buffs.Lightspeed) &&
                     DivinationCD < 5 && WaitGCDs)
                     return Lightspeed;
 
                 //Divination
-                if (IsEnabled(Preset.AST_AOE_Divination) && ActionReady(Divination) && 
+                if (IsEnabled(Preset.AST_AOE_Divination) && ActionReady(Divination) &&
                     !HasDivination && HasBattleTarget() &&
                     !HasStatusEffect(Buffs.Divining) &&
                     GetTargetHPPercent() > divHPThreshold &&
@@ -425,12 +436,12 @@ internal partial class AST : Healer
                     return Divination;
 
                 //Earthly Star
-                if (IsEnabled(Preset.AST_AOE_DPS_EarthlyStar) && 
+                if (IsEnabled(Preset.AST_AOE_DPS_EarthlyStar) &&
                     LevelChecked(EarthlyStar) && IsOffCooldown(EarthlyStar) &&
-                    !HasStatusEffect(Buffs.EarthlyDominance) && 
+                    !HasStatusEffect(Buffs.EarthlyDominance) &&
                     (WaitGCDs || StandStill))
-                    return AST_AOE_DPS_EarthlyStarSubOption == 1 
-                        ? EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.Self) 
+                    return AST_AOE_DPS_EarthlyStarSubOption == 1
+                        ? EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.Self)
                         : EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.Stack.Allies);
 
                 //Stellar Detonation
@@ -448,10 +459,10 @@ internal partial class AST : Healer
             #endregion
 
             #region GCDS
-            
+
             //MacroCosmos
-            if (IsEnabled(Preset.AST_AOE_DPS_MacroCosmos) && ActionReady(Macrocosmos) && 
-                InCombat() && StandStill && !HasStatusEffect(Buffs.Macrocosmos) && 
+            if (IsEnabled(Preset.AST_AOE_DPS_MacroCosmos) && ActionReady(Macrocosmos) &&
+                InCombat() && StandStill && !HasStatusEffect(Buffs.Macrocosmos) &&
                 (AST_AOE_DPS_MacroCosmos_SubOption == 1 || !InBossEncounter()))
                 return Macrocosmos;
 
@@ -466,19 +477,19 @@ internal partial class AST : Healer
                 ActionReady(dotAction) && target != null)
                 return OriginalHook(Combust).Retarget([Gravity, Gravity2], target);
 
-            return actionID;
+            return OriginalHook(Gravity);
             #endregion
         }
     }
     #endregion
-    
+
     #region Simple Healing Combos
     internal class AST_Simple_ST_Heals : CustomCombo
     {
         protected internal override Preset Preset => Preset.AST_Simple_ST_Heals;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Benefic)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetHeals, Benefic))
                 return actionID;
 
             if (ActionReady(OriginalHook(AstralDraw)) && HasNoDPSCard)
@@ -488,18 +499,18 @@ internal partial class AST : Healer
             bool cleansableTarget =
                 HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
                 HasCleansableDebuff(healTarget);
-            
+
             if (ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget) >= 40 &&
                 cleansableTarget)
                 return Role.Esuna.RetargetIfEnabled(Benefic);
-            
+
             if (CanWeave() && Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
-            
+
             if (ActionReady(EssentialDignity) && GetTargetHPPercent(healTarget) <= 30)
                 return EssentialDignity.RetargetIfEnabled(Benefic);
-            
+
             if (ActionReady(Exaltation) && (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty()))
                 return Exaltation.RetargetIfEnabled(Benefic);
 
@@ -522,38 +533,38 @@ internal partial class AST : Healer
                 (!HasStatusEffect(Buffs.AspectedBenefic, healTarget) ||
                  !HasStatusEffect(Buffs.NeutralSectShield, healTarget) && HasStatusEffect(Buffs.NeutralSect)))
                 return OriginalHook(AspectedBenefic).RetargetIfEnabled(Benefic);
-            
-            if ((HasArrow || HasBole) && 
-                (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty())) 
+
+            if ((HasArrow || HasBole) &&
+                (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty()))
                 return OriginalHook(Play2).RetargetIfEnabled(Benefic);
-            
-            if (HasEwer || HasSpire) 
+
+            if (HasEwer || HasSpire)
                 return OriginalHook(Play3).RetargetIfEnabled(Benefic);
-            
+
             if (ActionReady(CelestialIntersection) && !HasStatusEffect(Buffs.Intersection) && GetRemainingCharges(EssentialDignity) <= GetRemainingCharges(CelestialIntersection))
                 return CelestialIntersection.RetargetIfEnabled(Benefic);
-            
+
             if (ActionReady(EssentialDignity))
                 return EssentialDignity.RetargetIfEnabled(Benefic);
 
             return !LevelChecked(Benefic2)
-                ? actionID.RetargetIfEnabled()
+                ? Benefic.RetargetIfEnabled()
                 : Benefic2.RetargetIfEnabled(Benefic);
         }
     }
-    
+
     internal class AST_Simple_AoE_Heals : CustomCombo
     {
         protected internal override Preset Preset => Preset.AST_Simple_AoE_Heals;
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Helios)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEHeals, Helios))
                 return actionID;
-            
+
             if (ActionReady(OriginalHook(AstralDraw)) && HasNoDPSCard)
                 return OriginalHook(AstralDraw);
-            
+
             if (OriginalHook(Macrocosmos) == MicroCosmos && GetPartyAvgHPPercent() < 50)
                 return MicroCosmos;
 
@@ -562,43 +573,43 @@ internal partial class AST : Healer
 
             if (HasStatusEffect(Buffs.HoroscopeHelios))
                 return HoroscopeHeal;
-            
+
             if (ActionReady(OriginalHook(CelestialOpposition)))
                 return OriginalHook(CelestialOpposition);
-            
+
             if (HasLady && LevelChecked(MinorArcana))
                 return OriginalHook(LadyOfCrown);
-            
+
             if (ActionReady(OriginalHook(CollectiveUnconscious)))
                 return OriginalHook(CollectiveUnconscious);
 
             if (ActionReady(OriginalHook(NeutralSect)))
                 return OriginalHook(NeutralSect);
-            
+
             if (LevelChecked(Macrocosmos) && IsOffCooldown(Macrocosmos))
                 return Macrocosmos;
 
             if (ActionReady(OriginalHook(AspectedHelios)) &&
-                GetPartyBuffPercent(Buffs.AspectedHelios) <= 50 && 
+                GetPartyBuffPercent(Buffs.AspectedHelios) <= 50 &&
                 GetPartyBuffPercent(Buffs.HeliosConjunction) <= 50)
                 return LevelChecked(Horoscope) && IsOffCooldown(Horoscope)
                     ? Horoscope
                     : OriginalHook(AspectedHelios);
-            
+
             return LevelChecked(Horoscope) && IsOffCooldown(Horoscope)
                 ? Horoscope
-                : actionID;
+                : Helios;
         }
     }
     #endregion
-    
+
     #region Advanced Healing Combos
     internal class AST_ST_Heals : CustomCombo
     {
         protected internal override Preset Preset => Preset.AST_ST_Heals;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Benefic)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetHeals, Benefic))
                 return actionID;
 
             #region Healing Helper
@@ -611,19 +622,19 @@ internal partial class AST : Healer
                 return OriginalHook(AspectedHelios);
 
             #endregion
-            
+
             IGameObject? healTarget = SimpleTarget.Stack.OneButtonHealLogic;
-            
+
             bool cleansableTarget =
                 HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
                 HasCleansableDebuff(healTarget);
-            
-            if (IsEnabled(Preset.AST_ST_Heals_Esuna) && 
+
+            if (IsEnabled(Preset.AST_ST_Heals_Esuna) &&
                 ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields) >= AST_ST_SimpleHeals_Esuna &&
                 cleansableTarget)
                 return Role.Esuna.RetargetIfEnabled(Benefic);
-            
+
             //Priority List
             for (int i = 0; i < AST_ST_SimpleHeals_Priority.Count; i++)
             {
@@ -638,11 +649,11 @@ internal partial class AST : Healer
                 }
             }
             return !LevelChecked(Benefic2) ?
-                actionID.RetargetIfEnabled(Benefic) :
+                Benefic.RetargetIfEnabled(Benefic) :
                 Benefic2.RetargetIfEnabled(Benefic);
         }
     }
-    
+
     internal class AST_AoE_Heals : CustomCombo
     {
         protected internal override Preset Preset => Preset.AST_AoE_Heals;
@@ -651,8 +662,7 @@ internal partial class AST : Healer
         {
             bool nonAspectedMode = AST_AoE_SimpleHeals_AltMode > 0; //(0 or 1 radio values)
 
-            if ((!nonAspectedMode || actionID is not Helios) &&
-                (nonAspectedMode || actionID is not (AspectedHelios or HeliosConjuction)))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEHeals, nonAspectedMode ? Helios : AspectedHelios, HeliosConjuction))
                 return actionID;
 
             //Level check to return helios immediately below 40
@@ -692,7 +702,7 @@ internal partial class AST : Healer
             }
 
             return
-                actionID;
+                nonAspectedMode ? Helios : OriginalHook(AspectedHelios);
         }
     }
     #endregion

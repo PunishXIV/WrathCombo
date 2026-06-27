@@ -1,5 +1,6 @@
 using System;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.MCH.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -11,7 +12,7 @@ internal partial class MCH : PhysicalRanged
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (SplitShot or HeatedSplitShot))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SplitShot, HeatedSplitShot))
                 return actionID;
 
             //Reassemble to start before combat/after downtime
@@ -93,7 +94,7 @@ internal partial class MCH : PhysicalRanged
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (SpreadShot or Scattergun))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpreadShot, Scattergun))
                 return actionID;
 
             if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCDTotal))
@@ -154,7 +155,7 @@ internal partial class MCH : PhysicalRanged
             if (ActionReady(OriginalHook(Heatblast)) && IsOverheated)
                 return OverheatGCD(onAoE: true);
 
-            return actionID;
+            return OriginalHook(SpreadShot);
         }
     }
 
@@ -164,7 +165,7 @@ internal partial class MCH : PhysicalRanged
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (SplitShot or HeatedSplitShot))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SplitShot, HeatedSplitShot))
                 return actionID;
 
             // Opener
@@ -307,7 +308,7 @@ internal partial class MCH : PhysicalRanged
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (SpreadShot or Scattergun))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpreadShot, Scattergun))
                 return actionID;
 
             if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCDTotal))
@@ -390,7 +391,7 @@ internal partial class MCH : PhysicalRanged
             if (ActionReady(OriginalHook(Heatblast)) && IsOverheated)
                 return OverheatGCD(true, IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet));
 
-            return actionID;
+            return OriginalHook(SpreadShot);
         }
     }
 

@@ -65,7 +65,8 @@ internal partial class SAM
                     ? Role.TrueNorth
                     : Kasha;
         }
-        return actionId;
+
+        return OriginalHook(Hakaze);
     }
 
     #endregion
@@ -233,7 +234,7 @@ internal partial class SAM
     private static uint DoAoECombo(uint actionId, bool useOka = true)
     {
         if (ComboTimer is 0 && !HasStatusEffect(Buffs.MeikyoShisui))
-            return actionId;
+            return OriginalHook(Fuga);
 
         if (useOka && LevelChecked(Oka) && (!HasKa || !HasStatusEffect(Buffs.Fuka)))
             return Oka;
@@ -242,7 +243,7 @@ internal partial class SAM
             (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !LevelChecked(Oka) || !useOka))
             return Mangetsu;
 
-        return actionId;
+        return OriginalHook(Fuga);
     }
 
     private static bool CanAoESenGcd(
@@ -407,7 +408,7 @@ internal partial class SAM
                 ? Role.TrueNorth
                 : Kasha;
 
-        return actionId;
+        return OriginalHook(Hakaze);
     }
 
     #endregion

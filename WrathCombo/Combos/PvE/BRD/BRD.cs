@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.BRD.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -13,7 +14,7 @@ internal partial class BRD : PhysicalRanged
         protected internal override Preset Preset => Preset.BRD_AoE_SimpleMode;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Ladonsbite or QuickNock))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, QuickNock, Ladonsbite))
                 return actionID;
 
             #region Special Content
@@ -28,8 +29,8 @@ internal partial class BRD : PhysicalRanged
             
             if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
-            
-            return actionID;
+
+            return OriginalHook(QuickNock);
         }
     }
 
@@ -38,7 +39,7 @@ internal partial class BRD : PhysicalRanged
         protected internal override Preset Preset => Preset.BRD_ST_SimpleMode;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (HeavyShot or BurstShot))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HeavyShot, BurstShot))
                 return actionID;
 
             #region Special Content
@@ -53,9 +54,9 @@ internal partial class BRD : PhysicalRanged
             
             if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
-            
-            return actionID;
-        }
+
+            return OriginalHook(HeavyShot);
+    }
     }
     #endregion
 
@@ -65,7 +66,7 @@ internal partial class BRD : PhysicalRanged
         protected internal override Preset Preset => Preset.BRD_AoE_AdvMode;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Ladonsbite or QuickNock))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Ladonsbite, QuickNock))
                 return actionID;
 
             #region Special Content
@@ -80,9 +81,9 @@ internal partial class BRD : PhysicalRanged
             
             if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
-            
-            return actionID;
-        }
+
+        return OriginalHook(QuickNock);
+    }
     }
 
     internal class BRD_ST_AdvMode : CustomCombo
@@ -90,7 +91,7 @@ internal partial class BRD : PhysicalRanged
         protected internal override Preset Preset => Preset.BRD_ST_AdvMode;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (HeavyShot or BurstShot))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HeavyShot, BurstShot))
                 return actionID;
 
             #region Opener
@@ -122,9 +123,9 @@ internal partial class BRD : PhysicalRanged
             
             if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
-            
-            return actionID;
-        }
+
+        return OriginalHook(HeavyShot);
+    }
     }
     #endregion
 

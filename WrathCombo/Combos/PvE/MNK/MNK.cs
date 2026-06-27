@@ -1,5 +1,6 @@
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.MNK.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -11,8 +12,7 @@ internal partial class MNK : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Bootshine or LeapingOpo))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Bootshine, LeapingOpo)) return actionID;
 
             if (CanMeditate())
                 return OriginalHook(SteeledMeditation);
@@ -83,8 +83,7 @@ internal partial class MNK : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, ArmOfTheDestroyer, ShadowOfTheDestroyer)) return actionID;
 
             if (CanMeditate(true))
                 return OriginalHook(InspiritedMeditation);
@@ -152,8 +151,7 @@ internal partial class MNK : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Bootshine or LeapingOpo))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Bootshine, LeapingOpo)) return actionID;
 
             if (IsEnabled(Preset.MNK_STUseOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -269,8 +267,7 @@ internal partial class MNK : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, ArmOfTheDestroyer, ShadowOfTheDestroyer)) return actionID;
 
             if (IsEnabled(Preset.MNK_AoEUseMeditation) &&
                 CanMeditate(true))

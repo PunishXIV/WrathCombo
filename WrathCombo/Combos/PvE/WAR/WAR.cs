@@ -4,6 +4,7 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.WAR.Config;
 
 namespace WrathCombo.Combos.PvE;
@@ -17,9 +18,8 @@ internal partial class WAR
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID != HeavySwing)
-                return actionID;
-            
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HeavySwing)) return actionID;
+
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
             
@@ -48,9 +48,8 @@ internal partial class WAR
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID != Overpower)
-                return actionID;
-           
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Overpower)) return actionID;
+
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
             
@@ -82,9 +81,8 @@ internal partial class WAR
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not HeavySwing)
-                return actionID;
-            
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HeavySwing)) return actionID;
+
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
             
@@ -117,9 +115,8 @@ internal partial class WAR
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID != Overpower)
-                return actionID; //Our button
-            
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Overpower)) return actionID;
+
             // Special Content
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;

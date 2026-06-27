@@ -536,9 +536,15 @@ public static class ActionWatching
     {
         try
         {
+            if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == actionId, out var customAct))
+            {
+                if (customAct.OnClick != null)
+                    customAct.OnClick();
+
+            }
             if (actionType is ActionType.Action)
             {
-                var disablingReplacingTemp = mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding;
+                var disablingReplacingTemp = (mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding) && actionId < All.SingleTargetDPS;
                 if (disablingReplacingTemp) // This is so we can remove queue suppression
                     Service.ActionReplacer.DisableActionReplacingIfRequired(); // It gets re-enabled at the end of sending. 
 
@@ -567,7 +573,7 @@ public static class ActionWatching
                 if (actionManager->QueuedTargetId.Id != 0)
                     targetId = actionManager->QueuedTargetId.Id;
 
-                var areaTargeted = ActionSheet[replacedWith].TargetArea;
+                var areaTargeted = replacedWith >= 1_000_000 ? false : ActionSheet[replacedWith].TargetArea;
 
                 if (areaTargeted && disablingReplacingTemp) //Ground targets don't hit the send method, so it has to be re-enabled here. Could be re-enabled further down the line if it causes output issues.
                     Service.ActionReplacer.EnableActionReplacingIfRequired();
@@ -646,6 +652,7 @@ public static class ActionWatching
         catch (Exception ex)
         {
             Svc.Log.Error(ex, "UseActionDetour");
+            Service.ActionReplacer.EnableActionReplacingIfRequired();
             return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
         }
     }

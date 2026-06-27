@@ -1,4 +1,5 @@
 using WrathCombo.CustomComboNS;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.DRG.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -10,8 +11,8 @@ internal partial class DRG : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not TrueThrust)
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, TrueThrust))
+            return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -85,7 +86,7 @@ internal partial class DRG : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not DoomSpike)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DoomSpike))
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -157,7 +158,7 @@ internal partial class DRG : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not TrueThrust)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, TrueThrust))
                 return actionID;
 
             if (IsEnabled(Preset.DRG_ST_Opener) &&
@@ -280,7 +281,7 @@ internal partial class DRG : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not DoomSpike)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DoomSpike))
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))

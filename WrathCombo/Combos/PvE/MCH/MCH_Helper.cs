@@ -607,7 +607,7 @@ internal partial class MCH
             }
         }
 
-        return actionId;
+        return OriginalHook(SplitShot);
     }
 
     #endregion

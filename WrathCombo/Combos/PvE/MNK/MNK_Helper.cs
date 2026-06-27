@@ -124,7 +124,7 @@ internal partial class MNK
             if (HasStatusEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker))
                 return Rockbreaker;
 
-            return actionId;
+            return OriginalHook(ArmOfTheDestroyer);
         }
 
         if (!LevelChecked(TrueStrike))
@@ -155,7 +155,7 @@ internal partial class MNK
                     : OriginalHook(SnapPunch);
         }
 
-        return actionId;
+        return OriginalHook(Bootshine);
     }
 
     #endregion

@@ -1,13 +1,14 @@
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameFunctions;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Linq;
-using Dalamud.Game.ClientState.Objects.Types;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using WrathCombo.Combos.PvE.Enums;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.RDM.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -20,8 +21,7 @@ internal partial class RDM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Jolt or Jolt2 or Jolt3))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Jolt, Jolt2, Jolt3)) return actionID;
 
             #region Special Content
             if (ContentSpecificActions.TryGet(out var contentAction))
@@ -114,7 +114,7 @@ internal partial class RDM : Caster
             if (UseVerFire())
                 return Verfire;
 
-            return actionID;
+            return OriginalHook(Jolt);
             #endregion
         }
     }
@@ -125,8 +125,7 @@ internal partial class RDM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Scatter or Impact))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Scatter, Impact)) return actionID;
 
             #region Special Content
             if (ContentSpecificActions.TryGet(out var contentAction))
@@ -203,7 +202,7 @@ internal partial class RDM : Caster
             if (!CanInstantCast)
                 return UseThunderAeroAoE(actionID);
 
-            return !LevelChecked(Scatter) ? UseInstantCastST(actionID) : actionID;
+            return !LevelChecked(Scatter) ? UseInstantCastST(actionID) : OriginalHook(Scatter);
             #endregion
         }
     }
@@ -216,8 +215,7 @@ internal partial class RDM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Jolt or Jolt2 or Jolt3))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Jolt, Jolt2, Jolt3)) return actionID;
 
             #region Opener
 
@@ -359,7 +357,7 @@ internal partial class RDM : Caster
                     return Verfire;
             }
 
-            return actionID;
+            return OriginalHook(Jolt);
             #endregion
         }
     }
@@ -370,8 +368,7 @@ internal partial class RDM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Scatter or Impact))
-                return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Scatter, Impact)) return actionID;
 
             #region Special Content
             if (ContentSpecificActions.TryGet(out var contentAction))
@@ -476,7 +473,7 @@ internal partial class RDM : Caster
             if (IsEnabled(Preset.RDM_AoE_ThunderAero) && !CanInstantCast)
                 return UseThunderAeroAoE(actionID);
 
-            return !LevelChecked(Scatter) ? UseInstantCastST(actionID) : actionID;
+            return !LevelChecked(Scatter) ? UseInstantCastST(actionID) : OriginalHook(Scatter);
             #endregion
         }
     }

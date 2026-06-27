@@ -91,7 +91,7 @@ internal partial class DRG
                 return Drakesbane;
         }
 
-        return actionId;
+        return OriginalHook(TrueThrust);
     }
 
     #endregion
@@ -123,6 +123,7 @@ internal partial class DRG
 
             return JustUsed(DoomSpike);
         }
+    
 
         if (!InActionRange(TrueThrust))
             return false;
@@ -144,6 +145,7 @@ internal partial class DRG
 
         return false;
     }
+    
 
     #endregion
 
