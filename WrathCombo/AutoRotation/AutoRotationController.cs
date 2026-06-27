@@ -800,6 +800,11 @@ internal unsafe class AutoRotationController
             if (LocalPlayer is not { } player)
                 return false;
 
+            var target = !cfg.DPSSettings.AoEIgnoreManual && cfg.DPSRotationMode == DPSRotationMode.Manual ?
+    Svc.Targets.Target : DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
+
+            if (target is null && cfg.PauseWhenNoTarget) return true;
+
             if (attributes.AutoAction!.IsHeal)
             {
                 LockedAoE = false;
@@ -831,9 +836,6 @@ internal unsafe class AutoRotationController
             }
             else
             {
-                var target = !cfg.DPSSettings.AoEIgnoreManual && cfg.DPSRotationMode == DPSRotationMode.Manual ?
-                    Svc.Targets.Target : DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
-
                 if (!NIN.InMudra)
                 {
                     var st = GetSingleTarget(mode);
@@ -854,6 +856,7 @@ internal unsafe class AutoRotationController
                         LockedST = false;
                     }
                 }
+
                 OverrideTarget = target ?? OverrideTarget;
                 uint outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, OverrideTarget));
                 if (outAct is All.SavageBlade) return true;
@@ -923,6 +926,9 @@ internal unsafe class AutoRotationController
                 return false;
 
             var target = GetSingleTarget(mode);
+
+            if (target is null && cfg.PauseWhenNoTarget) return true;
+
             OverrideTarget = target ?? OverrideTarget;
             var outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, target));
             if (!ActionReady(outAct))
