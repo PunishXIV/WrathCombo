@@ -5,7 +5,9 @@ using ECommons.DalamudServices;
 using ECommons.EzIpcManager;
 using ECommons.Logging;
 using ECommons.Reflection;
+using FFXIVClientStructs.FFXIV.Common.Lua;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // ReSharper disable InlineTemporaryVariable
@@ -45,6 +47,43 @@ internal sealed class BossModIPC(
         }
     }
 
+    private object? GetTickService()
+    {
+        var tickServiceType = Plugin.GetType().Assembly.GetType("BossMod.Services.TickService");
+        if (tickServiceType is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access TickServiceType");
+            return null;
+        }
+
+        var host = Plugin.GetType().BaseType.GetProperty("Host").GetValue(Plugin);
+        if (host is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access Host");
+            return null;
+        }
+
+        var services = host.GetType().GetProperty("Services").GetValue(host);
+        if (services is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access Services");
+            return null;
+        }
+
+        var tickServiceValue = services.GetType().GetMethod("GetService").Invoke(services, [tickServiceType]);
+        if (tickServiceValue is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access TickServiceValue");
+            return null;
+        }
+
+        return tickServiceValue;
+    }
+
     public bool IsAutoTargetingEnabled()
     {
         if (!PluginIsLoaded)
@@ -54,33 +93,68 @@ internal sealed class BossModIPC(
             return false;
         }
 
-        var ai = Plugin.GetFoP("_ai");
-        if (ai == null)
+        var tickServiceValue = GetTickService();
+
+        var rotationManager = tickServiceValue.GetFoP("_rotation");
+        if (rotationManager is null)
         {
             PluginLog.Debug(
-                $"[ConflictingPlugins] [{PluginName}] Could not access _ai field");
+                    $"[ConflictingPlugins] [{PluginName}] Could not access RotationManager");
             return false;
         }
 
-        var aiConfig = ai.GetFoP("Config") ?? ai.GetFoP("_config");
-        if (aiConfig == null)
+        var presets = rotationManager.GetFoP("Presets");
+        if (presets is null)
         {
             PluginLog.Debug(
-                $"[ConflictingPlugins] [{PluginName}] Could not access AI.Config field");
+                    $"[ConflictingPlugins] [{PluginName}] Could not access Presets");
             return false;
         }
 
-        var aiEnabled = (bool)(aiConfig.GetFoP("Enabled") ??
-                         (ai.GetFoP("Beh") is not null));
-        var aiDisableTargeting = aiConfig.GetFoP<bool>("ForbidActions");
-        var aiManualTargeting = (bool)(aiConfig.GetFoP("ManualTarget") ?? false);
-        var targetingDisabled = aiDisableTargeting || aiManualTargeting;
+        var presetType = Plugin.GetType().Assembly.GetType("BossMod.Autorotation.Preset");
+        if (presetType is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access PresetType");
+            return false;
+        }
 
-        PluginLog.Verbose(
-            $"[ConflictingPlugins] [{PluginName}] `AI.Enabled`: {aiEnabled}, " +
-            $"`AI.DisableTargeting`: {targetingDisabled}");
+        var autoTargetType = Plugin.GetType().Assembly.GetType("BossMod.Autorotation.MiscAI.AutoTarget");
+        if (autoTargetType is null)
+        {
+            PluginLog.Debug(
+                    $"[ConflictingPlugins] [{PluginName}] Could not access AutoTargetType");
+            return false;
+        }
 
-        return aiEnabled && !targetingDisabled;
+        var count = (int)presets.GetType().GetProperty("Count")!.GetValue(presets)!;
+        for (int i = 0; i < count; i++)
+        {
+            var item = presets.GetType().GetProperty("Item")!.GetValue(presets, new object[] { i });
+            var modules = item?.GetFoP("Modules");
+            if (modules is null)
+            {
+                continue;
+            }
+            var modCount = (int)modules.GetType().GetProperty("Count").GetValue(modules)!;
+
+            for (int p = 0; p < modCount; p++)
+            {
+                var module = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { p });
+                var moduleType = module.GetType().GetProperty("Type").GetValue(module);
+                if (moduleType is not Type mt)
+                {
+                    PluginLog.Debug(
+                            $"[ConflictingPlugins] [{PluginName}] Could not access ModuleType");
+                    continue;
+                }
+
+                if (mt == autoTargetType)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     public bool IsUsingCustomQueuing()
@@ -92,37 +166,7 @@ internal sealed class BossModIPC(
             return false;
         }
 
-        var tickServiceType = Plugin.GetType().Assembly.GetType("BossMod.Services.TickService");
-        if (tickServiceType is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access TickServiceType");
-            return false;
-        }
-
-        var host = Plugin.GetType().BaseType.GetProperty("Host").GetValue(Plugin);
-        if (host is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access Host");
-            return false;
-        }
-
-        var services = host.GetType().GetProperty("Services").GetValue(host);
-        if (services is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access Services");
-            return false;
-        }
-
-        var tickServiceValue = services.GetType().GetMethod("GetService").Invoke(services, [tickServiceType]);
-        if (tickServiceValue is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access TickServiceValue");
-            return false;
-        }
+        var tickServiceValue = GetTickService();
 
         var amex = tickServiceValue.GetFoP("_amex");
         if (amex == null)
