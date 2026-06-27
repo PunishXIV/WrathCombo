@@ -10,11 +10,13 @@ using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
+using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.FFXIV.Common.Lua;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System;
@@ -431,6 +433,8 @@ internal class Debug : ConfigWindow, IDisposable
                     break;
             }
 
+            Util.ShowObject(player.Struct()->CastInfo);
+
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 
             if (ImGui.TreeNode("Content Data"))
@@ -506,7 +510,8 @@ internal class Debug : ConfigWindow, IDisposable
             {
                 if (ImGui.TreeNode($"{member?.BattleChara?.Name}###{member.GameObjectId}"))
                 {
-                    CustomStyleText("Health:", $"{member.CurrentHP:N0} / {member.BattleChara.MaxHp:N0} ({MathF.Round(member.CurrentHP * 100f / member.BattleChara.MaxHp, 2)}%)");
+                    CustomStyleText("Health:", $"{GetTargetCurrentHP(member.BattleChara):N0} / {member.BattleChara.MaxHp:N0} ({GetTargetHPPercent(member.BattleChara)}%)");
+                    CustomStyleText("Regen Tick:", $"{member.BattleChara.MaxHp / 100}");
                     CustomStyleText("MP:", $"{member.CurrentMP:N0} / {member.BattleChara.MaxMp:N0}");
                     CustomStyleText("Job:", $"{member.RealJob?.NameEnglish} (ID: {member.RealJob?.RowId})");
                     CustomStyleText("Dead Timer:", TimeSpentDead(member.BattleChara.GameObjectId));
@@ -1045,6 +1050,49 @@ internal class Debug : ConfigWindow, IDisposable
             ImGui.Unindent();
         }
 
+        if (ImGui.CollapsingHeader("Pending HP"))
+        {
+            ImGui.Indent();
+            foreach (var p in SimpleTargetState.TargetStates)
+            {
+                if (p.GameObjectID.GetObject() is IBattleChara t)
+                {
+                    if (ImGui.CollapsingHeader($"{t?.Name}###SimpleTarget{p.GameObjectID}"))
+                    {
+                        CustomStyleText($"ID", $"{p.GameObjectID}");
+                        CustomStyleText($"HP", $"{p.CurrentHP} ({GetTargetHPPercent(t, forceUsePending: true):N0}%)");
+                        CustomStyleText($"Object HP", $"{t.CurrentHp} ({GetTargetHPPercent(t, forceUsePending: false):N0}%)");
+
+                        if (ImGui.CollapsingHeader($"Action Efftcts###af{t.GameObjectId}"))
+                        {
+                            foreach (var eff in t.Struct()->ActionEffectHandler.IncomingEffects)
+                            {
+                                ImGui.Separator();
+                                CustomStyleText($"GS:", $"{eff.GlobalSequence}");
+                                CustomStyleText($"Action:", $"{eff.ActionId.ActionName()}");
+                                CustomStyleText($"Target Confirmed:", $"{eff.TargetConfirmed}");
+                                CustomStyleText($"Source Confirmed:", $"{eff.SourceConfirmed}");
+                                foreach (var ef in eff.Effects.Effects)
+                                {
+                                    if (ef.Type == 0)
+                                        continue;
+
+                                    CustomStyleText($"{(Data.ActionEffectType)ef.Type}", $"{ef.Value + ((ef.Param4 & 0x40) != 0 ? ef.Param3 * 0x10000 : 0)}");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var pending in ActionWatching.PendingHPChanges)
+            {
+                ImGui.Text($"{pending.gameObjectId.GetObject()?.Name} {pending.gameObjectId} {pending.globalSequence}");
+            }
+            ImGui.Unindent();
+        }
+
+
         #endregion
 
         ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
@@ -1274,7 +1322,8 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Name:", target?.Name);
             CustomStyleText("Nameplate:", target?.GetNameplateKind().ToString());
             CustomStyleText("Rank:", $"{battleNPCRow?.Rank.ToString() ?? "null"} (found sheet: {(foundSheet is true ? "yes" : "no")})");
-            CustomStyleText("Health:", $"{GetTargetCurrentHP():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
+            CustomStyleText("Health:", $"{GetTargetCurrentHP(forceUsePending: false):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(forceUsePending: false), 2)}%)");
+            CustomStyleText("Health (with pending):", $"{GetTargetCurrentHP(forceUsePending: true):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(forceUsePending: true), 2)}%)");
             CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(), 2)}y");
             CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
             CustomStyleText("In Melee Range:", InMeleeRange());
@@ -1311,6 +1360,8 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText("Action Range:", $"{GetActionRange(charaSpell?.RowId ?? 0)}y");
                     CustomStyleText("Effect Range:", $"{charaSpell?.EffectRange ?? 0}y");
                     CustomStyleText("Interruptible:", $"{castChara.IsCastInterruptible}");
+
+                    Util.ShowObject(castChara.Struct()->CastInfo);
                 }
                 else CustomStyleText("No valid target.", "");
 

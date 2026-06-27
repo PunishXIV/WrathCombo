@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.Throttlers;
@@ -240,12 +241,16 @@ internal abstract partial class CustomComboFunctions
     public static float PlayerHealthPercentageHp() => LocalPlayer is { } player ? player.CurrentHp * 100f / player.MaxHp : 0f;
 
     /// <summary> Gets an object's current HP as a percentage. Defaults to CurrentTarget unless specified. </summary>
-    public static float GetTargetHPPercent(IGameObject? optionalTarget = null, bool includeShield = false)
+    public static float GetTargetHPPercent(IGameObject? optionalTarget = null, bool includeShield = false, bool forceUsePending = false)
     {
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara)
             return 0f;
 
-        float charaHPPercent = chara.CurrentHp * 100f / chara.MaxHp;
+        uint currentHp = chara.CurrentHp;
+        if ((Service.Configuration.UseExperimentalHP || forceUsePending) && SimpleTargetState.TargetStates.TryGetFirst(x => x.GameObjectID == chara.GameObjectId, out var p))
+            currentHp = p.CurrentHP;
+
+        float charaHPPercent = currentHp * 100f / chara.MaxHp;
 
         return includeShield
             ? Math.Clamp(charaHPPercent + chara.ShieldPercentage, 0f, 100f)
@@ -256,7 +261,19 @@ internal abstract partial class CustomComboFunctions
     public static uint GetTargetMaxHP(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara ? chara.MaxHp : 0;
 
     /// <summary> Gets an object's current HP. Defaults to CurrentTarget unless specified. </summary>
-    public static uint GetTargetCurrentHP(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara ? chara.CurrentHp : 0;
+    public static uint GetTargetCurrentHP(IGameObject? optionalTarget = null, bool forceUsePending = false)
+    {
+        optionalTarget ??= CurrentTarget;
+        if (optionalTarget is IBattleChara chara) 
+        {
+            if ((Service.Configuration.UseExperimentalHP || forceUsePending) && SimpleTargetState.TargetStates.TryGetFirst(x => x.GameObjectID == chara.GameObjectId, out var p))
+                return p.CurrentHP;
+            else
+                return chara.CurrentHp;
+        }
+
+        return 0;
+    }
 
     /// <summary> Gets the average HP percentage of all enemies within a specified range. </summary>
     public static float GetAvgEnemyHPPercentInRange(float range)

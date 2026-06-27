@@ -1039,6 +1039,7 @@ internal unsafe class AutoRotationController
         private static bool Query(IGameObject x) =>
             x is IBattleChara chara &&
             !chara.IsDead &&
+            GetTargetCurrentHP(chara, true) > 0 &&
             chara.IsTargetable &&
             chara.IsHostile() &&
             IsInRange(chara, InBossEncounter() && cfg.DPSSettings.IgnoreRangeInBoss ? 50f : cfg.DPSSettings.MaxDistance) &&

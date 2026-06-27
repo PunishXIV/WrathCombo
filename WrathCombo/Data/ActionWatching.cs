@@ -9,6 +9,8 @@ using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Network;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Frozen;
@@ -16,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
-using System.Threading.Tasks;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
@@ -26,6 +27,7 @@ using WrathCombo.Services;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
+using Task = System.Threading.Tasks.Task;
 namespace WrathCombo.Data;
 
 public static class ActionWatching
@@ -51,6 +53,7 @@ public static class ActionWatching
     internal readonly static List<uint> WeaveActions = [];
     internal readonly static List<uint> CombatActions = [];
     internal readonly static HashSet<uint> BossesBaseIds = [.. Svc.Data.GetExcelSheet<BNpcBase>().Where(charaSheet => charaSheet.Rank is 2 or 6).Select(charaSheet => charaSheet.RowId)];
+    internal readonly static List<PendingHPChange> PendingHPChanges = [];
 
     // Delegates
     public delegate void LastActionChangeDelegate();
@@ -59,31 +62,121 @@ public static class ActionWatching
     public delegate void ActionSendDelegate();
     public static event ActionSendDelegate? OnActionSend;
 
-    private unsafe delegate void ReceiveActionEffectDelegate(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds);
-    private readonly static Hook<ReceiveActionEffectDelegate>? ReceiveActionEffectHook;
-
-    private unsafe delegate bool UseActionDelegate(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted);
-    private readonly static Hook<UseActionDelegate>? UseActionHook;
+    private readonly static Hook<Delegates.Receive>? ReceiveActionEffectHook;
+    private readonly static Hook<ActionManager.Delegates.UseAction>? UseActionHook;
+    private readonly static Hook<ActionManager.Delegates.UseActionLocation>? UseActionLocHook;
 
     private delegate void SendActionDelegate(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
     private static readonly Hook<SendActionDelegate>? SendActionHook;
-
-    public unsafe delegate bool CanQueueActionDelegate(ActionManager* actionManager, uint actionType, uint actionID);
-    public static readonly Hook<CanQueueActionDelegate> CanQueueAction;
+    public static readonly Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction;
+    public static readonly Hook<PacketDispatcher.Delegates.HandleActorControlPacket> ActorControlPacketHook;
+    public static readonly Hook<PacketDispatcher.Delegates.OnReceivePacket> OnRecievePacketHook;
 
     private static Task UpdateActionTask = null!;
     private static CancellationTokenSource source = new CancellationTokenSource();
     private static CancellationToken token;
 
     public static bool UpdatingActions;
+    private static bool _tainted;
 
     static unsafe ActionWatching()
     {
-        ReceiveActionEffectHook ??= Svc.Hook.HookFromAddress<ReceiveActionEffectDelegate>(Addresses.Receive.Value, ReceiveActionEffectDetour);
+        ReceiveActionEffectHook ??= Svc.Hook.HookFromAddress<Delegates.Receive>(Addresses.Receive.Value, ReceiveActionEffectDetour);
         SendActionHook ??= Svc.Hook.HookFromSignature<SendActionDelegate>("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B E9 41 0F B7 D9", SendActionDetour);
-        UseActionHook ??= Svc.Hook.HookFromAddress<UseActionDelegate>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
+        UseActionHook ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.UseAction>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
+        UseActionLocHook ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.UseActionLocation>(ActionManager.Addresses.UseActionLocation.Value, UseActionLocationDetour);
+        CanQueueAction ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.IsActionOffCooldown>(ActionManager.Addresses.IsActionOffCooldown.Value, CanQueueActionDetour);
+        ActorControlPacketHook ??= Svc.Hook.HookFromAddress<PacketDispatcher.Delegates.HandleActorControlPacket>(PacketDispatcher.Addresses.HandleActorControlPacket.Value, ActorControlDetour);
+        OnRecievePacketHook ??= Svc.Hook.HookFromAddress<PacketDispatcher.Delegates.OnReceivePacket>((nint)PacketDispatcher.StaticVirtualTablePointer->OnReceivePacket, OnReceivePacketDetour);
         OnCastInterrupted += CancelPendingLastActionUpdate;
-        CanQueueAction ??= Svc.Hook.HookFromAddress<CanQueueActionDelegate>(ActionManager.Addresses.IsActionOffCooldown.Value, CanQueueActionDetour);
+
+    }
+
+    private static unsafe void OnReceivePacketDetour(PacketDispatcher* thisPtr, uint targetId, nint packet)
+    {
+        OnRecievePacketHook.Original(thisPtr, targetId, packet);
+        var opCode = *(ushort*)(packet + 2);
+        var tar = ((ulong)targetId).GetObject();
+
+        if (Service.Configuration.OpCodes is { } codes && codes.GameVersion == Framework.Instance()->GameVersionString)
+        {
+            var opCodeName = "";
+            try
+            {
+                opCodeName = Service.Configuration.OpCodesBackup.First(x => x.Version == codes.RetailVersion).Lists.ServerZoneIpcType.First(x => x.Opcode == opCode).Name;
+            }
+            catch { }
+
+            if (!string.IsNullOrEmpty(opCodeName))
+                Svc.Log.Verbose($"[OpCodeVerboseAf] Found {opCodeName} on {tar?.Name}");
+
+            if (opCodeName == "UpdateHpMpTp")
+            {
+                var newHealth = *(uint*)(packet + 16);
+                var newMp = *(ushort*)(packet + 20);
+                Svc.Log.Verbose($"[OpCode] Natty Regen on {tar?.Name} with new health {newHealth} and MP {newMp}");
+                SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
+            }
+
+            if (opCodeName is "EffectResult" or "EffectResultBasic")
+            {
+                var newHealth = *(uint*)(packet + 28);
+                var globalSequence = *(uint*)(packet + 20);
+                var val = *(uint*)(packet + 16);
+                Svc.Log.Verbose($"[OpCode] Effect Resolved on {tar?.Name} with GS {globalSequence}.");
+                PendingHPChanges.RemoveAll(x => x.globalSequence == globalSequence);
+                SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
+            }
+
+            if (opCodeName is "Effect")
+            {
+                //This is an interesting one, for heals you get this right away but if the heal does not actually change HP it
+                //doesn't get resolved above so maybe worth just timing these out after 1.5s if not resolved
+                var globalSequence = *(uint*)(packet + 28);
+                Svc.Framework.RunOnTick(() => PendingHPChanges.RemoveAll(x => x.globalSequence == globalSequence), TimeSpan.FromSeconds(1.5f));
+            }
+        }
+    }
+
+    private static void ActorControlDetour(uint entityId, uint category, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, uint arg8, GameObjectId targetId, bool isRecorded)
+    {
+        Svc.Log.Verbose($"[ActorControl] {entityId} {category} {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {targetId.Id} {isRecorded}");
+        ActorControlPacketHook.Original(entityId, category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, targetId, isRecorded);
+
+        if (category == 1541) // Dots
+            SimpleTargetState.UpdatePeriodicHealthChange(entityId, arg2, true);
+
+        if (category == 1540) // Hots
+            SimpleTargetState.UpdatePeriodicHealthChange(entityId, arg2, false);
+
+        if (category == 4 && arg1 == 0)
+            SimpleTargetState.RemoveDueToDroppedCombat(entityId);
+
+    }
+
+    private static unsafe bool UseActionLocationDetour(ActionManager* thisPtr, ActionType actionType, uint actionId, ulong targetId, Vector3* location, uint extraParam, byte a7)
+    {
+        // TODO Revisit maybe
+        //if (actionType == ActionType.Action && !_tainted && !(location->X != 0 || location->Y != 0 || location->Z != 0))
+        //{
+        //    var obj = targetId.GetObject();
+        //    if (!obj.CanUseOn(actionId) && !Svc.Data.GetExcelSheet<Action>().GetRow(actionId).CanTargetSelf)
+        //    {
+        //        _tainted = true;
+        //        if (CurrentTarget?.CanUseOn(actionId) == true)
+        //            targetId = CurrentTarget.ObjectId;
+        //        else if (Player.Object?.CanUseOn(actionId) == true)
+        //            targetId = Player.Object.ObjectId;
+
+        //        if (targetId.GetObject() is { } validObj)
+        //            DuoLog.Error($"{actionId.ActionName()} has been attempted to be used on an invalid target, likely due to using another rotation plugin. We have updated the target to {validObj.Name} which it can be used on. Please ensure you are only using one rotation plugin for correct behaviour.");
+        //        else
+        //            DuoLog.Error($"{actionId.ActionName()} has been attempted to be used on an invalid target, likely due to using another rotation plugin. We are unable to redirect this to a valid target. Please ensure you are only using one rotation plugin for correct behaviour.");
+
+        //        Svc.Framework.RunOnTick(() => _tainted = false, TimeSpan.FromSeconds(2));
+        //    }
+        //}
+        return UseActionLocHook.Original(thisPtr, actionType, actionId, targetId, location, extraParam, a7);
     }
 
     public static void Enable()
@@ -91,8 +184,11 @@ public static class ActionWatching
         ReceiveActionEffectHook?.Enable();
         SendActionHook?.Enable();
         UseActionHook?.Enable();
-        Svc.Condition.ConditionChange += ResetActions;
+        UseActionLocHook?.Enable();
         CanQueueAction?.Enable();
+        ActorControlPacketHook?.Enable();
+        OnRecievePacketHook?.Enable();
+        Svc.Condition.ConditionChange += ResetActions;
     }
 
 
@@ -102,8 +198,11 @@ public static class ActionWatching
         ReceiveActionEffectHook?.Dispose();
         SendActionHook?.Dispose();
         UseActionHook?.Dispose();
-        OnCastInterrupted -= CancelPendingLastActionUpdate;
+        UseActionLocHook?.Dispose();
         CanQueueAction?.Dispose();
+        ActorControlPacketHook?.Dispose();
+        OnRecievePacketHook?.Dispose();
+        OnCastInterrupted -= CancelPendingLastActionUpdate;
     }
 
     /// <summary> Handles logic when an action causes an effect. </summary>
@@ -157,9 +256,11 @@ public static class ActionWatching
                         $"Type: {effType} | " +
                         $"Value: {effValue} | " +
                         $"Params: [{eff.Param0}, {eff.Param1}, {eff.Param2}, {eff.Param3}, {eff.Param4}] | " +
+                        $"Damage HealValue: {eff.DamageHealValue} | " +
                         $"Action: {debugActionName} (ID: {actionId}) → " +
-                        $"Target: {debugTargetName} | " +
-                        $"Flags: [AtSource: {eff.AtSource}, FromTarget: {eff.FromTarget}]"
+                        $"Target: {debugTargetName} ({targetId}) | " +
+                        $"[AtSource: {eff.AtSource}, FromTarget: {eff.FromTarget}] | " +
+                        $"Flags: {header->Flags}"
                     );
 #endif
 
@@ -168,13 +269,15 @@ public static class ActionWatching
                     {
                         if (partyMembers.TryGetValue(targetId, out var member))
                         {
-                            member.CurrentHP = effType == ActionEffectType.Damage
-                                ? Math.Min(member.BattleChara.MaxHp, member.CurrentHP - effValue)
-                                : Math.Min(member.BattleChara.MaxHp, member.CurrentHP + effValue);
+                            member.CurrentHP = (uint)(effType == ActionEffectType.Damage
+                                ? Math.Min(member.BattleChara.MaxHp, member.CurrentHP - eff.DamageHealValue)
+                                : Math.Min(member.BattleChara.MaxHp, member.CurrentHP + eff.DamageHealValue));
 
                             member.HPUpdatePending = true;
                             Svc.Framework.RunOnTick(() => member.HPUpdatePending = false, TimeSpan.FromSeconds(1.5));
                         }
+
+                        PendingHPChanges.Add(new PendingHPChange(effObjectId, eff.DamageHealValue, effType == ActionEffectType.Heal, header->GlobalSequence));
                     }
 
                     // Event: MP Gain or MP Loss
@@ -366,25 +469,25 @@ public static class ActionWatching
         }
     }
 
-    public unsafe static bool CanQueueCS(uint actionId) => CanQueueActionDetour(ActionManager.Instance(), 1, actionId);
+    public unsafe static bool CanQueueCS(uint actionId) => CanQueueActionDetour(ActionManager.Instance(), ActionType.Action, actionId);
 
-    private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, uint actionType, uint actionID)
+    private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, ActionType actionType, uint actionID)
     {
         float threshold = Service.Configuration.QueueAdjust ? Service.Configuration.QueueAdjustThreshold : 0.5f;
 
         return GetRemainingActionRecast(actionManager, actionType, actionID) is { } remaining && remaining <= threshold;
 
-        unsafe float? GetRemainingActionRecast(ActionManager* actionManager, uint actionType, uint actionID)
+        unsafe float? GetRemainingActionRecast(ActionManager* actionManager, ActionType actionType, uint actionID)
         {
             var recastGroupDetail = actionManager->GetRecastGroupDetail(actionManager->GetRecastGroup((int)actionType, actionID));
             if (recastGroupDetail == null) return null;
 
-            var additionalRecastGroupDetail = actionManager->GetRecastGroupDetail(actionManager->GetAdditionalRecastGroup((ActionType)actionType, actionID));
+            var additionalRecastGroupDetail = actionManager->GetRecastGroupDetail(actionManager->GetAdditionalRecastGroup(actionType, actionID));
             var additionalRecastRemaining = additionalRecastGroupDetail != null && additionalRecastGroupDetail->IsActive ? additionalRecastGroupDetail->Total - additionalRecastGroupDetail->Elapsed : 0;
 
             if (!recastGroupDetail->IsActive) return additionalRecastRemaining;
 
-            var charges = actionType == 1 ? ActionManager.GetMaxCharges(actionID, Player.MaxLevel) : 1;
+            var charges = actionType == ActionType.Action ? ActionManager.GetMaxCharges(actionID, Player.MaxLevel) : 1;
             var recastRemaining = recastGroupDetail->Total / charges - recastGroupDetail->Elapsed;
             return recastRemaining > additionalRecastRemaining ? recastRemaining : additionalRecastRemaining;
         }
@@ -584,8 +687,11 @@ public static class ActionWatching
         ReceiveActionEffectHook.Disable();
         SendActionHook?.Disable();
         UseActionHook?.Disable();
-        Svc.Condition.ConditionChange -= ResetActions;
+        UseActionLocHook?.Disable();
         CanQueueAction?.Disable();
+        ActorControlPacketHook?.Disable();
+        OnRecievePacketHook?.Disable();
+        Svc.Condition.ConditionChange -= ResetActions;
     }
 
     [Obsolete("Use CustomComboFunctions.GetActionName instead. This method will be removed in a future update.")]
@@ -621,4 +727,6 @@ public static class ActionWatching
         Weaponskill = 3,
         Ability = 4,
     }
+
+    public record struct PendingHPChange(ulong gameObjectId, int value, bool positiveChange, uint globalSequence = 0);
 }

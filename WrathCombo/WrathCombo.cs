@@ -56,7 +56,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         AutomaticDecompression = DecompressionMethods.All,
         ConnectCallback = new HappyEyeballsCallback().ConnectCallback,
     };
-    private readonly HttpClient httpClient = new(httpHandler) { Timeout = TimeSpan.FromSeconds(5) };
+    internal readonly HttpClient HTTPClient = new(httpHandler) { Timeout = TimeSpan.FromSeconds(5) };
     private readonly IDtrBarEntry DtrBarEntry;
     public readonly IDtrBarEntry OpenerDtr;
     internal Provider IPC;
@@ -187,6 +187,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.Address.Setup(Svc.SigScanner);
         MoveHook = new();
         PresetStorage.RemoveRedundantPresets();
+        OpCodeConfigHelper.UpdateOpCodes();
 
         Service.ComboCache = new CustomComboCache();
         Service.ActionReplacer = new ActionReplacer();
@@ -398,6 +399,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
             if (Service.Configuration.AoEDamageTTS || Service.Configuration.AoEDamageToast)
                 CustomComboFunctions.PlayGroupwideAlert();
+
+            SimpleTargetState.ManageStateList();
         }
         catch (Exception ex)
         {
@@ -436,7 +439,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
             var basicMessage = $"Welcome to WrathCombo v{GetType().Assembly
                 .GetName().Version}!";
             using var motd =
-                httpClient.GetAsync("https://raw.githubusercontent.com/PunishXIV/WrathCombo/main/res/motd.txt").Result;
+                HTTPClient.GetAsync("https://raw.githubusercontent.com/PunishXIV/WrathCombo/main/res/motd.txt").Result;
             motd.EnsureSuccessStatusCode();
             var data = motd.Content.ReadAsStringAsync().Result;
             List<Payload> payloads =

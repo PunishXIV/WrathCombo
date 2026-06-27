@@ -738,4 +738,25 @@ It is recommended to enable this if you are a keyboard+mouse user and enable Ret
   <data name="AoEDamageToast_defaultValue" xml:space="preserve">
     <value>Off</value>
   </data>
+  <data name="UseExperimentalHP_Name" xml:space="preserve">
+    <value>Experimental HP Check Feature</value>
+  </data>
+  <data name="UseExperimentalHP_helpMark" xml:space="preserve">
+    <value>This is a new way of evaluating current HP values, using pre-emptively obtained values to update health values internally before it is reflected in-game properly.
+
+As such, you may see things happen earlier than what may be expected, as values for damage and healing are generated much earlier than shown in game. For example, as soon as you hit the slidecast window the value of the spell is already known.
+
+This is actually best recommended for healers using auto-rotation to mitigate the amount of double casted heals. For DPS, this will switch targets with auto-rotation the moment a killing blow goes out, rather than waiting until the target is officially recognized as dead.
+
+Used currently when evaluating HP% checks in features and auto-rotation.</value>
+  </data>
+  <data name="UseExperimentalHP_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="UseExperimentalHP_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="UseExperimentalHP_warningMark" xml:space="preserve">
+    <value>This is highly experimental, and may have undesired behaviours. Please be vigilant and report this.</value>
+  </data>
 </root>
