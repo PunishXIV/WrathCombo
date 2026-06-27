@@ -156,14 +156,14 @@ public static class ConflictingPluginsChecks
 
             // Check for a targeting conflict
             TargetingSettingConflicted =
-                IPC.IsAutoTargetingEnabled() &&
+                IPC.IsAutoTargetingEnabledReborn() &&
                 AutoRotationController.cfg.DPSRotationMode != DPSRotationMode.Manual;
 
             // Check for a queue conflict
-            QueueSettingConflicted = IPC.IsUsingCustomQueuing();
+            QueueSettingConflicted = IPC.IsUsingCustomQueuingReborn();
 
             // Check for a combo conflict
-            if (IPC.HasAutomaticActionsQueued())
+            if (IPC.HasAutomaticActionsQueuedReborn())
             {
                 PluginLog.Verbose(
                     $"[ConflictingPlugins] [{Name}] Actions are Queued");

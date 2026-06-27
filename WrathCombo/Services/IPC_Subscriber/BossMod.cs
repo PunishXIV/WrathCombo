@@ -214,6 +214,111 @@ internal sealed class BossModIPC(
         return false;
     }
 
+    public bool HasAutomaticActionsQueuedReborn()
+    {
+        if (!IsEnabled)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"IPC is not enabled.");
+            return false;
+        }
+
+        try
+        {
+            var hasEntries = _hasEntries();
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{PluginName}] `ActionQueue.HasEntries`: " +
+                hasEntries);
+            return hasEntries;
+        }
+        catch (Exception e)
+        {
+            PluginLog.Warning($"[ConflictingPlugins] [{PluginName}] " +
+                              $"`ActionQueue.HasEntries` failed:" +
+                              e.ToStringFull());
+            return false;
+        }
+    }
+
+    public bool IsAutoTargetingEnabledReborn()
+    {
+        if (!PluginIsLoaded)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"Plugin is not loaded.");
+            return false;
+        }
+
+        var ai = Plugin.GetFoP("_ai");
+        if (ai == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access _ai field");
+            return false;
+        }
+
+        var aiConfig = ai.GetFoP("Config") ?? ai.GetFoP("_config");
+        if (aiConfig == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AI.Config field");
+            return false;
+        }
+
+        var aiEnabled = (bool)(aiConfig.GetFoP("Enabled") ??
+                         (ai.GetFoP("Beh") is not null));
+        var aiDisableTargeting = aiConfig.GetFoP<bool>("ForbidActions");
+        var aiManualTargeting = (bool)(aiConfig.GetFoP("ManualTarget") ?? false);
+        var targetingDisabled = aiDisableTargeting || aiManualTargeting;
+
+        PluginLog.Verbose(
+            $"[ConflictingPlugins] [{PluginName}] `AI.Enabled`: {aiEnabled}, " +
+            $"`AI.DisableTargeting`: {targetingDisabled}");
+
+        return aiEnabled && !targetingDisabled;
+    }
+
+    public bool IsUsingCustomQueuingReborn()
+    {
+        if (!PluginIsLoaded)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"Plugin is not loaded.");
+            return false;
+        }
+
+        var amex = Plugin.GetFoP("_amex");
+        if (amex == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx field");
+            return false;
+        }
+
+        var manualQueue = amex.GetFoP("_manualQueue");
+        if (manualQueue == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx.Manual field");
+            return false;
+        }
+
+        var manualQueueConfig = manualQueue.GetFoP("_config");
+        if (manualQueueConfig == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx.Manual.Config field");
+            return false;
+        }
+
+        var customQueuingEnabled = manualQueueConfig.GetFoP<bool>("UseManualQueue");
+
+        PluginLog.Verbose(
+            $"[ConflictingPlugins] [{PluginName}] `ManualQueue.Enabled`: {customQueuingEnabled}");
+
+        return customQueuingEnabled;
+    }
+
     public DateTime LastModified()
     {
         if (!IsEnabled) return DateTime.MinValue;
