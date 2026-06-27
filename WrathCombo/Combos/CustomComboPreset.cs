@@ -5158,6 +5158,7 @@ public enum Preset
     #region Blood Stalk/Grim Swathe Combo Section
 
     [ReplaceSkill(RPR.BloodStalk, RPR.GrimSwathe)]
+    [ConflictingCombos(RPR_BloodStalkEnshroudCombo)]
     [JobInfo(Job.RPR)]
     RPR_GluttonyBloodSwathe = 12200,
 
@@ -5181,7 +5182,20 @@ public enum Preset
     [JobInfo(Job.RPR)]
     RPR_TrueNorthGluttony = 12310,
 
-    // Last value = 12314
+    [ReplaceSkill(RPR.BloodStalk, RPR.GrimSwathe)]
+    [ConflictingCombos(RPR_GluttonyBloodSwathe)]
+    [JobInfo(Job.RPR)]
+    RPR_BloodStalkEnshroudCombo = 12311,
+
+    [ParentCombo(RPR_BloodStalkEnshroudCombo)]
+    [JobInfo(Job.RPR)]
+    RPR_BloodStalkEnshroudCombo_BloodSwatheCombo = 12312,
+
+    [ParentCombo(RPR_BloodStalkEnshroudCombo)]
+    [JobInfo(Job.RPR)]
+    RPR_BloodStalkEnshroudCombo_Enshroud = 12315,
+
+    // Last value = 12315
 
     #endregion
 
@@ -6126,7 +6140,7 @@ public enum Preset
 
     [ParentCombo(SAM_ST_AdvancedMode)]
     [JobInfo(Job.SAM)]
-    SAM_ST_StunInterupt = 15096,
+    SAM_ST_StunInterrupt = 15096,
 
     [ParentCombo(SAM_ST_AdvancedMode)]
     [JobInfo(Job.SAM)]
@@ -6175,7 +6189,7 @@ public enum Preset
 
     [ParentCombo(SAM_AoE_CDs)]
     [JobInfo(Job.SAM)]
-    SAM_AOE_CDs_Ikishoten = 15108,
+    SAM_AoE_CDs_Ikishoten = 15108,
 
     #endregion
 
@@ -6213,7 +6227,7 @@ public enum Preset
 
     [ParentCombo(SAM_AoE_AdvancedMode)]
     [JobInfo(Job.SAM)]
-    SAM_AoE_StunInterupt = 15196,
+    SAM_AoE_StunInterrupt = 15196,
 
     [ParentCombo(SAM_AoE_AdvancedMode)]
     [JobInfo(Job.SAM)]

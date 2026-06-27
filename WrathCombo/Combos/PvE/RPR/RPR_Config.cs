@@ -17,6 +17,15 @@ internal partial class RPR
                 #region ST
 
                 case Preset.RPR_ST_Opener:
+                    DrawHorizontalRadioButton(RPR_SelectedOpener,
+                        Generics.StandardOpener,
+                        Generics.UsesStandardOpener, 0);
+
+                    DrawHorizontalRadioButton(RPR_SelectedOpener,
+                        RPR_Config.FirstGcdBuffsOpener,
+                        FormatAndCache(RPR_Config.UseFirstGcdBuffsOpener), 1);
+
+                    ImGui.NewLine();
                     DrawBossOnlyChoice(RPR_Balance_Content);
                     break;
 
@@ -28,11 +37,11 @@ internal partial class RPR
                     ImGui.TextColored(ImGuiColors.DalamudYellow,
                         Generics.EnemyTypeCheck);
 
-                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircleBossOption,
+                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircleHPBossOption,
                         Generics.NonBosses,
                         Generics.HPCheckNonBosses, 0);
 
-                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircleBossOption,
+                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircleHPBossOption,
                         Generics.AllEnemies,
                         Generics.HPCheckAllEnemies, 1);
                     ImGui.Unindent();
@@ -72,10 +81,10 @@ internal partial class RPR
                     break;
 
                 case Preset.RPR_ST_ComboHeals:
-                    DrawSliderInt(0, 100, RPR_STSecondWindHPThreshold,
+                    DrawSliderInt(0, 100, RPR_ST_SecondWindHPThreshold,
                         FormatAndCache(Generics.HPPercentageThreshold, Role.SecondWind.ActionName()));
 
-                    DrawSliderInt(0, 100, RPR_STBloodbathHPThreshold,
+                    DrawSliderInt(0, 100, RPR_ST_BloodbathHPThreshold,
                         FormatAndCache(Generics.HPPercentageThreshold, Role.Bloodbath.ActionName()));
                     break;
 
@@ -94,10 +103,10 @@ internal partial class RPR
                     break;
 
                 case Preset.RPR_AoE_ComboHeals:
-                    DrawSliderInt(0, 100, RPR_AoESecondWindHPThreshold,
+                    DrawSliderInt(0, 100, RPR_AoE_SecondWindHPThreshold,
                         FormatAndCache(Generics.HPPercentageThreshold, Role.SecondWind.ActionName()));
 
-                    DrawSliderInt(0, 100, RPR_AoEBloodbathHPThreshold,
+                    DrawSliderInt(0, 100, RPR_AoE_BloodbathHPThreshold,
                         FormatAndCache(Generics.HPPercentageThreshold, Role.Bloodbath.ActionName()));
                     break;
 
@@ -148,19 +157,20 @@ internal partial class RPR
             //ST
             RPR_Positional = new("RPR_Positional"),
             RPR_Balance_Content = new("RPR_Balance_Content", 1),
+            RPR_SelectedOpener = new("RPR_SelectedOpener"),
             RPR_ST_ArcaneCircleHPOption = new("RPR_ST_ArcaneCircleHPOption", 25),
-            RPR_ST_ArcaneCircleBossOption = new("RPR_ST_ArcaneCircleBossOption"),
+            RPR_ST_ArcaneCircleHPBossOption = new("RPR_ST_ArcaneCircleHPBossOption"),
             RPR_SoDRefreshRange = new("RPR_SoDRefreshRange", 6),
-            RPR_SoDHPThreshold = new("RPR_SoDThreshold"),
+            RPR_SoDHPThreshold = new("RPR_SoDHPThreshold"),
             RPR_ManualTN = new("RPR_ManualTN"),
-            RPR_STSecondWindHPThreshold = new("RPR_STSecondWindThreshold", 40),
-            RPR_STBloodbathHPThreshold = new("RPR_STBloodbathThreshold", 30),
+            RPR_ST_SecondWindHPThreshold = new("RPR_ST_SecondWindHPThreshold", 40),
+            RPR_ST_BloodbathHPThreshold = new("RPR_ST_BloodbathHPThreshold", 30),
 
             //AoE
-            RPR_WoDHPThreshold = new("RPR_WoDThreshold", 40),
+            RPR_WoDHPThreshold = new("RPR_WoDHPThreshold", 40),
             RPR_AoE_ArcaneCircleHPThreshold = new("RPR_AoE_ArcaneCircleHPThreshold", 40),
-            RPR_AoESecondWindHPThreshold = new("RPR_AoESecondWindThreshold", 40),
-            RPR_AoEBloodbathHPThreshold = new("RPR_AoEBloodbathThreshold", 30),
+            RPR_AoE_SecondWindHPThreshold = new("RPR_AoE_SecondWindHPThreshold", 40),
+            RPR_AoE_BloodbathHPThreshold = new("RPR_AoE_BloodbathHPThreshold", 30),
 
             //Misc
             RPR_SoDRefreshRangeBasicCombo = new("RPR_SoDRefreshRangeBasicCombo", 6),

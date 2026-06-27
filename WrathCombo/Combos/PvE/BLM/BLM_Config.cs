@@ -53,11 +53,11 @@ internal partial class BLM
                         Generics.StopEnemyHpPercent);
                     ImGui.Indent();
 
-                    DrawHorizontalRadioButton(BLM_ST_LeyLinesBossOption,
+                    DrawHorizontalRadioButton(BLM_ST_LeyLinesHPBossOption,
                         Generics.NonBosses,
                         Generics.HPCheckNonBosses, 0);
 
-                    DrawHorizontalRadioButton(BLM_ST_LeyLinesBossOption,
+                    DrawHorizontalRadioButton(BLM_ST_LeyLinesHPBossOption,
                         Generics.AllEnemies,
                         Generics.HPCheckAllEnemies, 1);
                     break;
@@ -142,13 +142,13 @@ internal partial class BLM
 
                 case Preset.BLM_ST_Thunder:
 
-                    DrawSliderInt(0, 100, BLM_ST_ThunderBossOption,
+                    DrawSliderInt(0, 100, BLM_ST_ThunderBossHPOption,
                         Generics.BossOnlyHpPercent);
 
-                    DrawSliderInt(0, 100, BLM_ST_ThunderBossAddsOption,
+                    DrawSliderInt(0, 100, BLM_ST_ThunderBossAddsHPOption,
                         Generics.BossEncounterNonBossHpPercent);
 
-                    DrawSliderInt(0, 100, BLM_ST_ThunderTrashOption,
+                    DrawSliderInt(0, 100, BLM_ST_ThunderTrashHPOption,
                         Generics.NonBossHpPercent);
 
                     DrawRoundedSliderFloat(0, 5, BLM_ST_ThunderRefresh,
@@ -298,11 +298,11 @@ internal partial class BLM
             BLM_Balance_Content = new("BLM_Balance_Content", 1),
             BLM_ST_LeyLinesCharges = new("BLM_ST_LeyLinesCharges", 1),
             BLM_ST_LeyLinesMovement = new("BLM_ST_LeyLinesMovement"),
-            BLM_ST_LeyLinesHPOption = new("BLM_ST_LeyLinesOption", 25),
-            BLM_ST_LeyLinesBossOption = new("BLM_ST_LeyLinesSubOption"),
-            BLM_ST_ThunderBossOption = new("BLM_ST_ThunderBossOption"),
-            BLM_ST_ThunderBossAddsOption = new("BLM_ST_ThunderBossAddsOption", 10),
-            BLM_ST_ThunderTrashOption = new("BLM_ST_ThunderTrashOption", 25),
+            BLM_ST_LeyLinesHPOption = new("BLM_ST_LeyLinesHPOption", 25),
+            BLM_ST_LeyLinesHPBossOption = new("BLM_ST_LeyLinesHPBossOption"),
+            BLM_ST_ThunderBossHPOption = new("BLM_ST_ThunderBossHPOption"),
+            BLM_ST_ThunderBossAddsHPOption = new("BLM_ST_ThunderBossAddsHPOption", 10),
+            BLM_ST_ThunderTrashHPOption = new("BLM_ST_ThunderTrashHPOption", 25),
             BLM_ST_Triplecast_WhenToUse = new("BLM_ST_Triplecast_WhenToUse", 1),
             BLM_ST_TriplecastMovementCharges = new("BLM_ST_TriplecastMovementCharges", 1),
             BLM_ST_PolyglotMovement = new("BLM_ST_PolyglotMovement", 1),
@@ -325,7 +325,7 @@ internal partial class BLM
         public static UserFloat
             BLM_ST_LeyLinesTimeStill = new("BLM_ST_LeyLinesTimeStill", 2.5f),
             BLM_AoE_LeyLinesTimeStill = new("BLM_AoE_LeyLinesTimeStill", 2.5f),
-            BLM_ST_ThunderRefresh = new("BLM_ST_ThunderUptime_Threshold", 2.5f);
+            BLM_ST_ThunderRefresh = new("BLM_ST_ThunderRefresh", 2.5f);
 
         public static UserBool
             BLM_AM_FieldMouseover = new("BLM_AM_FieldMouseover"),

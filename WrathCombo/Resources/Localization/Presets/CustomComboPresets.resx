@@ -3552,17 +3552,17 @@ These features are ideal for users who want to fully customize their rotation.</
   <data name="GNB_AoE_BowShock_Name" xml:space="preserve">
     <value>Bow Shock Option</value>
   </data>
-  <data name="GNB_AoE_FatedBrand_Desc" xml:space="preserve">
-    <value>Adds Fated Brand into the AoE rotation when available.</value>
-  </data>
-  <data name="GNB_AoE_FatedBrand_Name" xml:space="preserve">
-    <value>Fated Brand Option</value>
-  </data>
   <data name="GNB_AoE_DoubleDown_Desc" xml:space="preserve">
     <value>Adds Double Down into the AoE rotation when appropriate.</value>
   </data>
   <data name="GNB_AoE_DoubleDown_Name" xml:space="preserve">
     <value>Double Down Option</value>
+  </data>
+  <data name="GNB_AoE_FatedBrand_Desc" xml:space="preserve">
+    <value>Adds Fated Brand into the AoE rotation when available.</value>
+  </data>
+  <data name="GNB_AoE_FatedBrand_Name" xml:space="preserve">
+    <value>Fated Brand Option</value>
   </data>
   <data name="GNB_AoE_FatedCircle_Desc" xml:space="preserve">
     <value>Adds Fated Circle into the AoE rotation when appropriate.</value>
@@ -3616,14 +3616,14 @@ This feature is ideal for any fresh newcomers to the job.</value>
   <data name="GNB_Aurora_Features_Desc" xml:space="preserve">
     <value>Collection of Aurora related features.</value>
   </data>
-  <data name="GNB_Aurora_Features_Name" xml:space="preserve">
-    <value>Aurora Features</value>
-  </data>
   <data name="GNB_Aurora_Features_Lockout_Desc" xml:space="preserve">
     <value>Blocks Aurora if your current target already has the status active.</value>
   </data>
   <data name="GNB_Aurora_Features_Lockout_Name" xml:space="preserve">
     <value>Overwrite Prevention</value>
+  </data>
+  <data name="GNB_Aurora_Features_Name" xml:space="preserve">
+    <value>Aurora Features</value>
   </data>
   <data name="GNB_Aurora_Features_RetargetMO_Desc" xml:space="preserve">
     <value>Retargets Aurora to your Mouseover target if they do not have the status active.</value>
@@ -3957,23 +3957,23 @@ This feature is ideal for any fresh newcomers to the job.</value>
   <data name="GNB_Mit_OneButton_Corundum_Name" xml:space="preserve">
     <value>Heart of Corundum Option</value>
   </data>
+  <data name="GNB_Mit_OneButton_Desc" xml:space="preserve">
+    <value>Replaces Camouflage with an all-in-one mitigation button.</value>
+  </data>
   <data name="GNB_Mit_OneButton_HeartOfLight_Desc" xml:space="preserve">
     <value>Adds Heart Of Light to the one-button mitigation.</value>
   </data>
   <data name="GNB_Mit_OneButton_HeartOfLight_Name" xml:space="preserve">
     <value>Heart Of Light Option</value>
   </data>
+  <data name="GNB_Mit_OneButton_Name" xml:space="preserve">
+    <value>One-Button Mitigation Feature</value>
+  </data>
   <data name="GNB_Mit_OneButton_Nebula_Desc" xml:space="preserve">
     <value>Adds Nebula to the one-button mitigation.</value>
   </data>
   <data name="GNB_Mit_OneButton_Nebula_Name" xml:space="preserve">
     <value>Nebula Option</value>
-  </data>
-  <data name="GNB_Mit_OneButton_Desc" xml:space="preserve">
-    <value>Replaces Camouflage with an all-in-one mitigation button.</value>
-  </data>
-  <data name="GNB_Mit_OneButton_Name" xml:space="preserve">
-    <value>One-Button Mitigation Feature</value>
   </data>
   <data name="GNB_Mit_OneButton_Party_Desc" xml:space="preserve">
     <value>Replaces Heart of Light with Reprisal when ready.</value>
@@ -4242,6 +4242,9 @@ Double Check / Checkmate option</value>
   <data name="MCH_AoE_Adv_Hypercharge_Name" xml:space="preserve">
     <value>Hypercharge Option</value>
   </data>
+  <data name="MCH_AoE_Adv_HyperchargeToolHold" xml:space="preserve">
+    <value>s, wait to Hypercharge until Tool cooldowns are at least this value</value>
+  </data>
   <data name="MCH_AoE_Adv_Interrupt_Desc" xml:space="preserve">
     <value>Uses Head Graze to interrupt during the rotation, where applicable.</value>
   </data>
@@ -4285,7 +4288,7 @@ Double Check / Checkmate option</value>
     <value>Barrel Stabilizer Option</value>
   </data>
   <data name="MCH_AoE_Adv_Tools_Desc" xml:space="preserve">
-    <value>Adds Bioblaster, Chainsaw and Excavator to the rotation.</value>
+    <value>Adds Tools to the rotation.</value>
   </data>
   <data name="MCH_AoE_Adv_Tools_Name" xml:space="preserve">
     <value>Tools</value>
@@ -4412,6 +4415,12 @@ Double Check / Checkmate option</value>
   <data name="MCH_ST_Adv_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 90/100)</value>
   </data>
+  <data name="MCH_ST_Adv_QueenInHypercharge_Desc" xml:space="preserve">
+    <value>Allow Automaton Queen to be used while in Hypercharge</value>
+  </data>
+  <data name="MCH_ST_Adv_QueenInHypercharge_Name" xml:space="preserve">
+    <value>Queen use in Hypercharge</value>
+  </data>
   <data name="MCH_ST_Adv_QueenOverdrive_Desc" xml:space="preserve">
     <value>Adds Rook or Queen Overdrive to the rotation.</value>
   </data>
@@ -4451,6 +4460,18 @@ Excavator - Chainsaw - Air Anchor - Drill - Clean Shot</value>
   <data name="MCH_ST_Adv_Tactician_Name" xml:space="preserve">
     <value>Tactician Raidwide Option</value>
   </data>
+  <data name="MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Desc" xml:space="preserve">
+    <value>When enabled, if Chainsaw, Wildfire and Hypercharge are ready, will use Wildfire+Hypercharge first, Chainsaw after it. </value>
+  </data>
+  <data name="MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Name" xml:space="preserve">
+    <value>Allow using Chainsaw after Wildfire</value>
+  </data>
+  <data name="MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Desc" xml:space="preserve">
+    <value>When enabled, if Excavator, Wildfire and Hypercharge are ready, will use Wildfire+Hypercharge first, Excavator after it. </value>
+  </data>
+  <data name="MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Name" xml:space="preserve">
+    <value>Allow using Excavator after Wildfire</value>
+  </data>
   <data name="MCH_ST_Adv_Tools_Desc" xml:space="preserve">
     <value>Adds Hotshot, Drill, Air Anchor, Chainsaw and Excavator to the rotation.</value>
   </data>
@@ -4462,6 +4483,9 @@ Excavator - Chainsaw - Air Anchor - Drill - Clean Shot</value>
   </data>
   <data name="MCH_ST_Adv_TurretQueen_Name" xml:space="preserve">
     <value>Rook Autoturret/Automaton Queen Option</value>
+  </data>
+  <data name="MCH_ST_Adv_WildfireHyperchargeCutoffThreshold" xml:space="preserve">
+    <value>s, drift Wildfire over Tools if tools cooldowns are less than this value</value>
   </data>
   <data name="MCH_ST_Adv_WildFire_Desc" xml:space="preserve">
     <value>Adds Wildfire to the rotation.</value>
@@ -6066,6 +6090,14 @@ Requires Occult Potions in inventory.</value>
   <data name="Phantom_Ranger_PhantomAim_Name" xml:space="preserve">
     <value>Phantom Aim</value>
   </data>
+  <data name="Phantom_RestrictToBuff_Desc" xml:space="preserve">
+      <value>Will restrict damaging Phantom Abilities to when you or your party have damage buffs (including minor ones on yourself, like Paladin's Fight or Flight).
+
+NOT RECOMMENDED!</value>
+  </data>
+  <data name="Phantom_RestrictToBuff_Name" xml:space="preserve">
+      <value>Restrict Damaging Phantom Abilities to Buff Windows</value>
+  </data>
   <data name="Phantom_Samurai_Desc" xml:space="preserve">
     <value>Enable this to add Samurai-specific actions into the rotation.</value>
   </data>
@@ -6262,13 +6294,13 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="PLD_AoE_AdvancedMode_FoF_Name" xml:space="preserve">
     <value>Fight or Flight Option</value>
   </data>
-    <data name="PLD_AoE_AdvancedMode_GoringBlade_Desc" xml:space="preserve">
+  <data name="PLD_AoE_AdvancedMode_GoringBlade_Desc" xml:space="preserve">
     <value>Adds Goring Blade to Advanced Mode.
 - Uses when less than 4 targets.</value>
   </data>
-    <data name="PLD_AoE_AdvancedMode_GoringBlade_Name" xml:space="preserve">
+  <data name="PLD_AoE_AdvancedMode_GoringBlade_Name" xml:space="preserve">
     <value>Goring Blade Option</value>
-  </data>    
+  </data>
   <data name="PLD_AoE_AdvancedMode_HolyCircle_Desc" xml:space="preserve">
     <value>Adds Holy Circle to Advanced Mode.
 - Uses only when under Divine Might.</value>
@@ -6303,13 +6335,13 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="PLD_AoE_AdvancedMode_Requiescat_Name" xml:space="preserve">
     <value>Requiescat Option</value>      
   </data>
-    <data name="PLD_AoE_AdvancedMode_ShieldLob_Desc" xml:space="preserve">
+  <data name="PLD_AoE_AdvancedMode_ShieldLob_Desc" xml:space="preserve">
     <value>Adds Shield Lob to Advanced Mode.
 - Will only Use when out of melee range.</value>
   </data>
-    <data name="PLD_AoE_AdvancedMode_ShieldLob_Name" xml:space="preserve">
+  <data name="PLD_AoE_AdvancedMode_ShieldLob_Name" xml:space="preserve">
     <value>Shield Lob Option</value>
-  </data>    
+  </data>
   <data name="PLD_AoE_AdvancedMode_SpiritsWithin_Desc" xml:space="preserve">
     <value>Adds Spirits Within to Advanced Mode.
 - Prefers to use during Fight or Flight.</value>
@@ -6655,7 +6687,7 @@ NOTE: Will not use unless there is a target within range to prevent waste</value
   </data>
   <data name="PLD_ST_AdvancedMode_BladeOfHonor_Name" xml:space="preserve">
     <value>Blade of Honor Option</value>
-  </data>  
+  </data>
   <data name="PLD_ST_AdvancedMode_CircleOfScorn_Desc" xml:space="preserve">
     <value>Adds Circle of Scorn to Advanced Mode.
 - Uses only when in range of the target.
@@ -7109,6 +7141,24 @@ Applies to suboption for Addle as well.</value>
   <data name="RDM_Raise_Vercure_Name" xml:space="preserve">
     <value>Vercure Option</value>
   </data>
+  <data name="RDM_RetargetVercure_Desc" xml:space="preserve">
+    <value>Will retarget Vercure according to following Suboptions</value>
+  </data>
+  <data name="RDM_RetargetVercure_LowHP_Desc" xml:space="preserve">
+    <value>Will Heal Lowest Health Party member until you fall below set threshold</value>
+  </data>
+  <data name="RDM_RetargetVercure_LowHP_Name" xml:space="preserve">
+    <value>Low hp Vercure Option</value>
+  </data>
+  <data name="RDM_RetargetVercure_MO_Desc" xml:space="preserve">
+    <value>Adds UI mouseover to the priority. Above LowHP option.</value>
+  </data>
+  <data name="RDM_RetargetVercure_MO_Name" xml:space="preserve">
+    <value>Mouseover Vercure Option</value>
+  </data>
+  <data name="RDM_RetargetVercure_Name" xml:space="preserve">
+    <value>Retarget Vercure Feature</value>
+  </data>
   <data name="RDM_Riposte_Desc" xml:space="preserve">
     <value>Replaces Riposte with the basic melee combo.</value>
   </data>
@@ -7325,24 +7375,6 @@ To start the melee combo, you must be within melee range.</value>
   <data name="RDM_VerAero_Name" xml:space="preserve">
     <value>Spell Combo on Veraero</value>
   </data>
-  <data name="RDM_RetargetVercure_Desc" xml:space="preserve">
-    <value>Will retarget Vercure according to following Suboptions</value>
-  </data>
-    <data name="RDM_RetargetVercure_LowHP_Desc" xml:space="preserve">
-    <value>Will Heal Lowest Health Party member until you fall below set threshold</value>
-  </data>
-    <data name="RDM_RetargetVercure_LowHP_Name" xml:space="preserve">
-    <value>Low hp Vercure Option</value>
-  </data>
-    <data name="RDM_RetargetVercure_MO_Desc" xml:space="preserve">
-    <value>Adds UI mouseover to the priority. Above LowHP option.</value>
-  </data>
-    <data name="RDM_RetargetVercure_MO_Name" xml:space="preserve">
-    <value>Mouseover Vercure Option</value>
-  </data>
-    <data name="RDM_RetargetVercure_Name" xml:space="preserve">
-    <value>Retarget Vercure Feature</value>
-  </data>
   <data name="RDM_VerThunder2_Desc" xml:space="preserve">
     <value>Replaces Verthunder 2 with options.</value>
   </data>
@@ -7433,6 +7465,18 @@ These features are ideal if you want to customize the rotation.</value>
   </data>
   <data name="RPR_AoE_ArcaneCircle_Name" xml:space="preserve">
     <value>Arcane Circle Option</value>
+  </data>
+  <data name="RPR_AoE_BasicCombo_Desc" xml:space="preserve">
+    <value>Replace Nightmare Scythe with its combo chain.</value>
+  </data>
+  <data name="RPR_AoE_BasicCombo_Name" xml:space="preserve">
+    <value>Basic AoE Combo</value>
+  </data>
+  <data name="RPR_AoE_BasicCombo_WoD_Desc" xml:space="preserve">
+    <value>Adds Whorl of Death to the rotation.</value>
+  </data>
+  <data name="RPR_AoE_BasicCombo_WoD_Name" xml:space="preserve">
+    <value>Whorl of Death Option</value>
   </data>
   <data name="RPR_AoE_ComboHeals_Desc" xml:space="preserve">
     <value>Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.</value>
@@ -7587,6 +7631,25 @@ Adds (Executioner's) Guillotine on Grim Swathe.</value>
   <data name="RPR_GluttonyBloodSwathe_Sacrificium_Name" xml:space="preserve">
     <value>Sacrificium only Option</value>
   </data>
+  <data name="RPR_BloodStalkEnshroudCombo_Name" xml:space="preserve">
+    <value>Blood Stalk/Grim Swathe Combos (No Gluttony)</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_Desc" xml:space="preserve">
+    <value>Adds Gibbet/Gallows and Enshroud combo on Blood Stalk and Grim Swathe without replacing them with Gluttony. Conflicts with Gluttony on Blood Stalk/Grim Swathe.</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name" xml:space="preserve">
+    <value>Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc" xml:space="preserve">
+    <value>Adds (Executioner's) Gibbet and Gallows on Blood Stalk.
+Adds (Executioner's) Guillotine on Grim Swathe.</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_Enshroud_Name" xml:space="preserve">
+    <value>Enshroud Combo Option</value>
+  </data>
+  <data name="RPR_BloodStalkEnshroudCombo_Enshroud_Desc" xml:space="preserve">
+    <value>Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure's Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe.</value>
+  </data>
   <data name="RPR_LemureOnGGG_Desc" xml:space="preserve">
     <value>Adds Lemure's Slice to Gibbet/Gallows and Lemure's Scythe to Guillotine.</value>
   </data>
@@ -7642,18 +7705,6 @@ These features are ideal if you want to customize the rotation.</value>
   </data>
   <data name="RPR_ST_BasicCombo_SoD_Name" xml:space="preserve">
     <value>Shadow Of Death Option</value>
-  </data>
-    <data name="RPR_AoE_BasicCombo_Desc" xml:space="preserve">
-    <value>Replace Nightmare Scythe with its combo chain.</value>
-  </data>
-    <data name="RPR_AoE_BasicCombo_Name" xml:space="preserve">
-    <value>Basic AoE Combo</value>
-  </data>
-    <data name="RPR_AoE_BasicCombo_WoD_Desc" xml:space="preserve">
-    <value>Adds Whorl of Death to the rotation.</value>
-  </data>
-    <data name="RPR_AoE_BasicCombo_WoD_Name" xml:space="preserve">
-    <value>Whorl of Death Option</value>
   </data>
   <data name="RPR_ST_Bloodstalk_Desc" xml:space="preserve">
     <value>Adds Bloodstalk to the rotation.</value>
@@ -7857,11 +7908,11 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="SAM_AoE_CDs_Desc" xml:space="preserve">
     <value>Collection of Cooldown features on main combo.</value>
   </data>
-  <data name="SAM_AOE_CDs_Ikishoten_Desc" xml:space="preserve">
+  <data name="SAM_AoE_CDs_Ikishoten_Desc" xml:space="preserve">
     <value>Adds Ikishoten when at or below 50 Kenki.
 Will dump Kenki at 10 seconds left to allow Ikishoten to be used.</value>
   </data>
-  <data name="SAM_AOE_CDs_Ikishoten_Name" xml:space="preserve">
+  <data name="SAM_AoE_CDs_Ikishoten_Name" xml:space="preserve">
     <value>Ikishoten Option</value>
   </data>
   <data name="SAM_AoE_CDs_Name" xml:space="preserve">
@@ -7941,10 +7992,10 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SAM_AoE_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - AoE</value>
   </data>
-  <data name="SAM_AoE_StunInterupt_Desc" xml:space="preserve">
+  <data name="SAM_AoE_StunInterrupt_Desc" xml:space="preserve">
     <value>Adds Leg Sweep when target non-boss is casting.</value>
   </data>
-  <data name="SAM_AoE_StunInterupt_Name" xml:space="preserve">
+  <data name="SAM_AoE_StunInterrupt_Name" xml:space="preserve">
     <value>Leg Sweep Option</value>
   </data>
   <data name="SAM_AoE_TenkaGoken_Desc" xml:space="preserve">
@@ -8260,10 +8311,10 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SAM_ST_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - Single Target</value>
   </data>
-  <data name="SAM_ST_StunInterupt_Desc" xml:space="preserve">
+  <data name="SAM_ST_StunInterrupt_Desc" xml:space="preserve">
     <value>Adds Leg Sweep when target non-boss is casting.</value>
   </data>
-  <data name="SAM_ST_StunInterupt_Name" xml:space="preserve">
+  <data name="SAM_ST_StunInterrupt_Name" xml:space="preserve">
     <value>Leg Sweep Option</value>
   </data>
   <data name="SAM_ST_ThirdEye_Desc" xml:space="preserve">
@@ -9627,6 +9678,12 @@ Egi abilities will appear on their respective Egi summon ability, as well as Tit
   </data>
   <data name="SMN_Raise_Retarget_Name" xml:space="preserve">
     <value>Retarget Raises</value>
+  </data>
+  <data name="SMN_Rekindle_Desc" xml:space="preserve">
+    <value>Retargets Rekindle to Target's Target &gt; Tank in need &gt; A party member in need &gt; Self</value>
+  </data>
+  <data name="SMN_Rekindle_Name" xml:space="preserve">
+    <value>Rekindle Retarget</value>
   </data>
   <data name="SMN_RuinMobility_Desc" xml:space="preserve">
     <value>Puts Ruin III on Ruin IV when you don't have Further Ruin.</value>
@@ -11386,40 +11443,5 @@ This is the ideal option for newcomers to the job.</value>
   </data>
   <data name="WHM_ThinAirRaise_Name" xml:space="preserve">
     <value>Thin Air Raise Feature</value>
-  </data>
-  <data name="SMN_Rekindle_Name" xml:space="preserve">
-    <value>Rekindle Retarget</value>
-  </data>
-  <data name="SMN_Rekindle_Desc" xml:space="preserve">
-    <value>Retargets Rekindle to Target's Target > Tank in need > A party member in need > Self</value>
-  </data>
-  <data name="Phantom_RestrictToBuff_Name" xml:space="preserve">
-      <value>Restrict Damaging Phantom Abilities to Buff Windows</value>
-  </data>
-  <data name="Phantom_RestrictToBuff_Desc" xml:space="preserve">
-      <value>Will restrict damaging Phantom Abilities to when you or your party have damage buffs (including minor ones on yourself, like Paladin's Fight or Flight).
-
-NOT RECOMMENDED!</value>
-  </data>
-  <data name="MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Name" xml:space="preserve">
-    <value>Allow using Excavator after Wildfire</value>
-  </data>
-  <data name="MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Desc" xml:space="preserve">
-    <value>When enabled, if Excavator, Wildfire and Hypercharge are ready, will use Wildfire+Hypercharge first, Excavator after it. </value>
-  </data>
-  <data name="MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Name" xml:space="preserve">
-    <value>Allow using Chainsaw after Wildfire</value>
-  </data>
-  <data name="MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Desc" xml:space="preserve">
-    <value>When enabled, if Chainsaw, Wildfire and Hypercharge are ready, will use Wildfire+Hypercharge first, Chainsaw after it. </value>
-  </data>
-  <data name="MCH_ST_Adv_QueenInHypercharge_Name" xml:space="preserve">
-    <value>Queen use in Hypercharge</value>
-  </data>
-  <data name="MCH_ST_Adv_WildfireHyperchargeCutoffThreshold" xml:space="preserve">
-    <value>s, drift Wildfire over Tools if tools cooldowns are less than this value</value>
-  </data>
-  <data name="MCH_ST_Adv_QueenInHypercharge_Desc" xml:space="preserve">
-    <value>Allow Automaton Queen to be used while in Hypercharge</value>
   </data>
 </root>

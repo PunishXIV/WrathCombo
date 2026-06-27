@@ -60,6 +60,15 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1st GCD Buffs opener..
+        /// </summary>
+        internal static string FirstGcdBuffsOpener {
+            get {
+                return ResourceManager.GetString("FirstGcdBuffsOpener", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First positional: {0}..
         /// </summary>
         internal static string FirstPositional0 {
@@ -111,6 +120,15 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         internal static string SecondsBeforeRefreshing0 {
             get {
                 return ResourceManager.GetString("SecondsBeforeRefreshing0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses the 1st GCD buffs opener..
+        /// </summary>
+        internal static string UseFirstGcdBuffsOpener {
+            get {
+                return ResourceManager.GetString("UseFirstGcdBuffsOpener", resourceCulture);
             }
         }
         

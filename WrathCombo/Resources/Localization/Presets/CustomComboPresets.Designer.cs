@@ -11914,7 +11914,16 @@ namespace WrathCombo.Resources.Localization.Presets {
                 return ResourceManager.GetString("MCH_AoE_Adv_Hypercharge_Name", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to s, wait to Hypercharge until Tool cooldowns are at least this value.
+        /// </summary>
+        internal static string MCH_AoE_Adv_HyperchargeToolHold {
+            get {
+                return ResourceManager.GetString("MCH_AoE_Adv_HyperchargeToolHold", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Uses Head Graze to interrupt during the rotation, where applicable..
         /// </summary>
@@ -12042,7 +12051,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Bioblaster, Chainsaw and Excavator to the rotation..
+        ///   Looks up a localized string similar to Adds Tools to the rotation..
         /// </summary>
         internal static string MCH_AoE_Adv_Tools_Desc {
             get {
@@ -21839,6 +21848,61 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blood Stalk/Grim Swathe Combos (No Gluttony).
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Gibbet/Gallows and Enshroud combo on Blood Stalk and Grim Swathe without replacing them with Gluttony. Conflicts with Gluttony on Blood Stalk/Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature.
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds (Executioner&apos;s) Gibbet and Gallows on Blood Stalk.
+        ///Adds (Executioner&apos;s) Guillotine on Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enshroud Combo Option.
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Enshroud_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Enshroud_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure&apos;s Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Enshroud_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Enshroud_Desc", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Adds Lemure&apos;s Slice to Gibbet/Gallows and Lemure&apos;s Scythe to Guillotine..
         /// </summary>
         internal static string RPR_LemureOnGGG_Desc {
@@ -22636,18 +22700,18 @@ namespace WrathCombo.Resources.Localization.Presets {
         ///   Looks up a localized string similar to Adds Ikishoten when at or below 50 Kenki.
         ///Will dump Kenki at 10 seconds left to allow Ikishoten to be used..
         /// </summary>
-        internal static string SAM_AOE_CDs_Ikishoten_Desc {
+        internal static string SAM_AoE_CDs_Ikishoten_Desc {
             get {
-                return ResourceManager.GetString("SAM_AOE_CDs_Ikishoten_Desc", resourceCulture);
+                return ResourceManager.GetString("SAM_AoE_CDs_Ikishoten_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Ikishoten Option.
         /// </summary>
-        internal static string SAM_AOE_CDs_Ikishoten_Name {
+        internal static string SAM_AoE_CDs_Ikishoten_Name {
             get {
-                return ResourceManager.GetString("SAM_AOE_CDs_Ikishoten_Name", resourceCulture);
+                return ResourceManager.GetString("SAM_AoE_CDs_Ikishoten_Name", resourceCulture);
             }
         }
         
@@ -22881,18 +22945,18 @@ namespace WrathCombo.Resources.Localization.Presets {
         /// <summary>
         ///   Looks up a localized string similar to Adds Leg Sweep when target non-boss is casting..
         /// </summary>
-        internal static string SAM_AoE_StunInterupt_Desc {
+        internal static string SAM_AoE_StunInterrupt_Desc {
             get {
-                return ResourceManager.GetString("SAM_AoE_StunInterupt_Desc", resourceCulture);
+                return ResourceManager.GetString("SAM_AoE_StunInterrupt_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Leg Sweep Option.
         /// </summary>
-        internal static string SAM_AoE_StunInterupt_Name {
+        internal static string SAM_AoE_StunInterrupt_Name {
             get {
-                return ResourceManager.GetString("SAM_AoE_StunInterupt_Name", resourceCulture);
+                return ResourceManager.GetString("SAM_AoE_StunInterrupt_Name", resourceCulture);
             }
         }
         
@@ -23824,18 +23888,18 @@ namespace WrathCombo.Resources.Localization.Presets {
         /// <summary>
         ///   Looks up a localized string similar to Adds Leg Sweep when target non-boss is casting..
         /// </summary>
-        internal static string SAM_ST_StunInterupt_Desc {
+        internal static string SAM_ST_StunInterrupt_Desc {
             get {
-                return ResourceManager.GetString("SAM_ST_StunInterupt_Desc", resourceCulture);
+                return ResourceManager.GetString("SAM_ST_StunInterrupt_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Leg Sweep Option.
         /// </summary>
-        internal static string SAM_ST_StunInterupt_Name {
+        internal static string SAM_ST_StunInterrupt_Name {
             get {
-                return ResourceManager.GetString("SAM_ST_StunInterupt_Name", resourceCulture);
+                return ResourceManager.GetString("SAM_ST_StunInterrupt_Name", resourceCulture);
             }
         }
         
