@@ -23,10 +23,10 @@ internal partial class BRD : PhysicalRanged
 
             const Combo comboFlags = Combo.AoE | Combo.Simple;
 
-            if (TryOGCDAttacks(comboFlags, ref actionID))
+            if (TryOGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
             
-            if (TryGCDAttacks(comboFlags, ref actionID))
+            if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
             
             return actionID;
@@ -48,10 +48,10 @@ internal partial class BRD : PhysicalRanged
 
             const Combo comboFlags = Combo.ST | Combo.Simple;
 
-            if (TryOGCDAttacks(comboFlags, ref actionID))
+            if (TryOGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
             
-            if (TryGCDAttacks(comboFlags, ref actionID))
+            if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
             
             return actionID;
@@ -75,10 +75,10 @@ internal partial class BRD : PhysicalRanged
             
             const Combo comboFlags = Combo.AoE | Combo.Adv;
 
-            if (TryOGCDAttacks(comboFlags, ref actionID))
+            if (TryOGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
             
-            if (TryGCDAttacks(comboFlags, ref actionID))
+            if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
             
             return actionID;
@@ -117,10 +117,10 @@ internal partial class BRD : PhysicalRanged
 
             const Combo comboFlags = Combo.ST | Combo.Adv;
 
-            if (TryOGCDAttacks(comboFlags, ref actionID))
+            if (TryOGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
             
-            if (TryGCDAttacks(comboFlags, ref actionID))
+            if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
             
             return actionID;
