@@ -5,10 +5,8 @@ using ECommons.DalamudServices;
 using ECommons.EzIpcManager;
 using ECommons.Logging;
 using ECommons.Reflection;
-using FFXIVClientStructs.FFXIV.Common.Lua;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 // ReSharper disable InlineTemporaryVariable
 
@@ -85,11 +83,11 @@ internal sealed class BossModIPC(
     }
 
 
-    private IEnumerable<object?> GetModuleTypes()
+    private IEnumerable<object?> GetModuleTypes(bool isReborn)
     {
-        var tickServiceValue = GetTickService();
+        var entryPoint = isReborn ? Plugin : GetTickService();
 
-        var rotationManager = tickServiceValue.GetFoP("_rotation");
+        var rotationManager = entryPoint.GetFoP("_rotation");
         if (rotationManager is null)
         {
             PluginLog.Debug(
@@ -97,7 +95,21 @@ internal sealed class BossModIPC(
             yield return null;
         }
 
-        var presets = rotationManager.GetFoP("Presets");
+        if (isReborn)
+        {
+            var preset = rotationManager.GetFoP("Preset");
+
+            var modules = preset.GetFoP("Modules");
+            var c = (int)modules.GetType().GetProperty("Count")!.GetValue(modules)!;
+            for (int i = 0; i < c; i++)
+            {
+                var item = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { i });
+                var moduleType = item.GetType().GetProperty("Type").GetValue(item);
+                yield return moduleType;
+            }
+        }
+
+        var presets = isReborn ? rotationManager.GetFoP("ActiveModules") : rotationManager.GetFoP("Presets");
         if (presets is null)
         {
             PluginLog.Debug(
@@ -105,35 +117,38 @@ internal sealed class BossModIPC(
             yield return null;
         }
 
-        var presetType = Plugin.GetType().Assembly.GetType("BossMod.Autorotation.Preset");
-        if (presetType is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access PresetType");
-            yield return null;
-        }
 
         var count = (int)presets.GetType().GetProperty("Count")!.GetValue(presets)!;
         for (int i = 0; i < count; i++)
         {
             var item = presets.GetType().GetProperty("Item")!.GetValue(presets, new object[] { i });
-            var modules = item?.GetFoP("Modules");
+            if (item is null)
+                continue;
+
+            var modules = isReborn ? item?.GetFoP("Module") : item?.GetFoP("Modules");
             if (modules is null)
             {
                 continue;
             }
-            var modCount = (int)modules.GetType().GetProperty("Count").GetValue(modules)!;
-
-            for (int p = 0; p < modCount; p++)
+            if (isReborn)
             {
-                var module = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { p });
-                var moduleType = module.GetType().GetProperty("Type").GetValue(module);
-                yield return moduleType;
+                yield return modules.GetType();
+            }
+            else
+            {
+                var modCount = (int)modules.GetType().GetProperty("Count").GetValue(modules)!;
+
+                for (int p = 0; p < modCount; p++)
+                {
+                    var module = modules.GetType().GetProperty("Item")!.GetValue(modules, new object[] { p });
+                    var moduleType = module.GetType().GetProperty("Type").GetValue(module);
+                    yield return moduleType;
+                }
             }
         }
     }
 
-    public bool IsAutoTargetingEnabled()
+    public bool IsAutoTargetingEnabled(bool isReborn)
     {
         if (!PluginIsLoaded)
         {
@@ -142,7 +157,7 @@ internal sealed class BossModIPC(
             return false;
         }
 
-        var modules = GetModuleTypes();
+        var modules = GetModuleTypes(isReborn);
         foreach (var module in modules)
         {
             if (module is Type mt && mt.Name.Contains("AutoTarget"))
@@ -191,11 +206,11 @@ internal sealed class BossModIPC(
 
         PluginLog.Verbose(
             $"[ConflictingPlugins] [{PluginName}] `ManualQueue.Enabled`: {customQueuingEnabled}");
-        
+
         return customQueuingEnabled;
     }
 
-    public bool IsUsingAutorotation()
+    public bool IsUsingAutorotation(bool isReborn)
     {
         if (!PluginIsLoaded)
         {
@@ -204,7 +219,7 @@ internal sealed class BossModIPC(
             return false;
         }
 
-        var modules = GetModuleTypes();
+        var modules = GetModuleTypes(isReborn);
         foreach (var module in modules)
         {
             if (module is Type mt && !mt.FullName.Contains("MiscAI"))

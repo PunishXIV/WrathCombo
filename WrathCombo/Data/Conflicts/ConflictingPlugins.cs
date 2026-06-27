@@ -463,7 +463,7 @@ public static class ConflictingPlugins
         {
             conflicts = conflicts.Append(new Conflict(
                     "BossMod", ConflictType.Settings,
-                    "AI is enabled WITH targeting [check 'Disable auto-targeting']"))
+                    "Autorotation Preset is enabled WITH targeting [remove 'Automatic Targeting' from preset or use a non-default preset]"))
                 .ToArray();
         }
 
@@ -472,6 +472,14 @@ public static class ConflictingPlugins
             conflicts = conflicts.Append(new Conflict(
                     "BossMod", ConflictType.Settings,
                     "Manual Queueing is Enabled [uncheck 'Use custom queueing']"))
+                .ToArray();
+        }
+
+        if (ConflictingPluginsChecks.BossMod.AutorotationConflicted)
+        {
+            conflicts = conflicts.Append(new Conflict(
+                    "BossMod", ConflictType.Settings,
+                    "Autorotation Preset is enabled WITH job rotations [remove rotations from preset or use a non-default preset]"))
                 .ToArray();
         }
 
@@ -495,6 +503,13 @@ public static class ConflictingPlugins
                 .ToArray();
         }
 
+        if (ConflictingPluginsChecks.BossModReborn.AutorotationConflicted)
+        {
+            conflicts = conflicts.Append(new Conflict(
+                    "BossModReborn", ConflictType.Settings,
+                    "Autorotation Preset is enabled WITH job rotations [remove rotations from preset or use a non-default preset]"))
+                .ToArray();
+        }
         #endregion
 
         #region Redirect
