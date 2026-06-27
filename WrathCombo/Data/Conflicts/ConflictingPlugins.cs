@@ -495,6 +495,14 @@ public static class ConflictingPlugins
                 .ToArray();
         }
 
+        if (ConflictingPluginsChecks.BossModReborn.RetargetingConflicted)
+        {
+            conflicts = conflicts.Append(new Conflict(
+                    "BossModReborn", ConflictType.Settings,
+                    "Smart Ability Targeting is Enabled [uncheck 'Use Smart Ability Targeting']"))
+                .ToArray();
+        }
+
         if (ConflictingPluginsChecks.BossModReborn.QueueSettingConflicted)
         {
             conflicts = conflicts.Append(new Conflict(

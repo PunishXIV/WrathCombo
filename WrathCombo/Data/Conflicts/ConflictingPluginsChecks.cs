@@ -120,6 +120,7 @@ public static class ConflictingPluginsChecks
         public bool TargetingSettingConflicted;
         public bool QueueSettingConflicted;
         public bool AutorotationConflicted;
+        public bool RetargetingConflicted;
 
         protected override BossModIPC IPC => (BossModIPC)_ipc;
 
@@ -159,6 +160,8 @@ public static class ConflictingPluginsChecks
             // Check for a targeting conflict
             TargetingSettingConflicted = IPC.IsAutoTargetingEnabled(isReborn) &&
                 AutoRotationController.cfg.DPSRotationMode != DPSRotationMode.Manual;
+
+            RetargetingConflicted = isReborn && IPC.IsSmartTargetEnabled();
 
             // Check for a queue conflict
             QueueSettingConflicted = isReborn ? IPC.IsUsingCustomQueuingReborn() : IPC.IsUsingCustomQueuing();

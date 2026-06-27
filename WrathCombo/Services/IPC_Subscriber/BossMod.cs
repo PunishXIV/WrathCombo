@@ -257,44 +257,6 @@ internal sealed class BossModIPC(
         }
     }
 
-    public bool IsAutoTargetingEnabledReborn()
-    {
-        if (!PluginIsLoaded)
-        {
-            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
-                            $"Plugin is not loaded.");
-            return false;
-        }
-
-        var ai = Plugin.GetFoP("_ai");
-        if (ai == null)
-        {
-            PluginLog.Debug(
-                $"[ConflictingPlugins] [{PluginName}] Could not access _ai field");
-            return false;
-        }
-
-        var aiConfig = ai.GetFoP("Config") ?? ai.GetFoP("_config");
-        if (aiConfig == null)
-        {
-            PluginLog.Debug(
-                $"[ConflictingPlugins] [{PluginName}] Could not access AI.Config field");
-            return false;
-        }
-
-        var aiEnabled = (bool)(aiConfig.GetFoP("Enabled") ??
-                         (ai.GetFoP("Beh") is not null));
-        var aiDisableTargeting = aiConfig.GetFoP<bool>("ForbidActions");
-        var aiManualTargeting = (bool)(aiConfig.GetFoP("ManualTarget") ?? false);
-        var targetingDisabled = aiDisableTargeting || aiManualTargeting;
-
-        PluginLog.Verbose(
-            $"[ConflictingPlugins] [{PluginName}] `AI.Enabled`: {aiEnabled}, " +
-            $"`AI.DisableTargeting`: {targetingDisabled}");
-
-        return aiEnabled && !targetingDisabled;
-    }
-
     public bool IsUsingCustomQueuingReborn()
     {
         if (!PluginIsLoaded)
@@ -351,6 +313,47 @@ internal sealed class BossModIPC(
                               e.ToStringFull());
             return DateTime.MinValue;
         }
+    }
+
+    internal bool IsSmartTargetEnabled()
+    {
+        if (!PluginIsLoaded)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"Plugin is not loaded.");
+            return false;
+        }
+
+        var amex = Plugin.GetFoP("_amex");
+        if (amex == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx field");
+            return false;
+        }
+
+        var manualQueue = amex.GetFoP("_manualQueue");
+        if (manualQueue == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx.Manual field");
+            return false;
+        }
+
+        var manualQueueConfig = manualQueue.GetFoP("_config");
+        if (manualQueueConfig == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx.Manual.Config field");
+            return false;
+        }
+
+        var smartTargetEnabled = manualQueueConfig.GetFoP<bool>("SmartTargeting");
+
+        PluginLog.Verbose(
+            $"[ConflictingPlugins] [{PluginName}] `SmartTarget.Enabled`: {smartTargetEnabled}");
+
+        return smartTargetEnabled;
     }
 
 #pragma warning disable CS0649, CS8618 // Complaints of the method
