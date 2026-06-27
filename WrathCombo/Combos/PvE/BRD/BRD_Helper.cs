@@ -524,7 +524,7 @@ internal partial class BRD
             
             if (flags.HasFlag(Combo.ST) && autoWardenST && WardenResolver() is not null)
             {
-                actionID = TheWardensPaeon.Retarget([HeavyShot, BurstShot], WardenResolver);
+                actionID = TheWardensPaeon.Retarget(actionID, WardenResolver);
                 return true;
             }
 
@@ -771,19 +771,19 @@ internal partial class BRD
             {
                 if (ironTarget is not null && LevelChecked(IronJaws))
                 {
-                    actionID = IronJaws.Retarget([HeavyShot, BurstShot], ironTarget);
+                    actionID = IronJaws.Retarget(actionID, ironTarget);
                     return true;
                 }
 
                 if (blueTarget is not null && LevelChecked(Windbite))
                 {
-                    actionID = blueDotAction.Retarget([HeavyShot, BurstShot], blueTarget);
+                    actionID = blueDotAction.Retarget(actionID, blueTarget);
                     return true;
                 }
 
                 if (purpleTarget is not null && LevelChecked(VenomousBite))
                 {
-                    actionID = purpleDotAction.Retarget([HeavyShot, BurstShot], purpleTarget);
+                    actionID = purpleDotAction.Retarget(actionID, purpleTarget);
                     return true;
                 }
             }
@@ -791,19 +791,19 @@ internal partial class BRD
             {
                 if (ironTarget is not null && LevelChecked(IronJaws))
                 {
-                    actionID = IronJaws.Retarget([QuickNock, Ladonsbite], ironTarget);
+                    actionID = IronJaws.Retarget(actionID, ironTarget);
                     return true;
                 }
 
                 if (blueTarget is not null && LevelChecked(Windbite))
                 {
-                    actionID = blueDotAction.Retarget([QuickNock, Ladonsbite], blueTarget);
+                    actionID = blueDotAction.Retarget(actionID, blueTarget);
                     return true;
                 }
 
                 if (purpleTarget is not null && LevelChecked(VenomousBite))
                 {
-                    actionID = purpleDotAction.Retarget([QuickNock, Ladonsbite], purpleTarget);
+                    actionID = purpleDotAction.Retarget(actionID, purpleTarget);
                     return true;
                 }
             }
