@@ -192,7 +192,6 @@ internal partial class AST : Healer
         {
             #region Button Selection
 
-            bool alternateMode = AST_ST_DPS_AltMode == 1;
             var replacedActions = (int)AST_ST_DPS_AltMode switch
             {
                 1 => CombustList.Keys.ToArray(),
@@ -351,10 +350,6 @@ internal partial class AST : Healer
                 if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && AST_ST_DPS_CombustUptime_TwoTarget)
                     return dotAction.Retarget(replacedActions, target);
             }
-
-            //Alternate Mode (idles as Malefic)
-            if (alternateMode)
-                return OriginalHook(Combust);
             #endregion
 
             return OriginalHook(Malefic);
