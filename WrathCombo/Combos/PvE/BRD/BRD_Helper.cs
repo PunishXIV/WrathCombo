@@ -522,15 +522,9 @@ internal partial class BRD
                 return true;
             }
             
-            if (flags.HasFlag(Combo.ST) && autoWardenST && WardenResolver() is not null)
+            if (autoWardenST && WardenResolver() is not null)
             {
                 actionID = TheWardensPaeon.Retarget(actionID, WardenResolver);
-                return true;
-            }
-
-            if (flags.HasFlag(Combo.AoE) && autoWardenST && WardenResolver() is not null)
-            {
-                actionID = TheWardensPaeon.Retarget([Ladonsbite, QuickNock], WardenResolver);
                 return true;
             }
         }
@@ -766,50 +760,25 @@ internal partial class BRD
             var blueTarget = SimpleTarget.DottableEnemy(blueDotAction, blueDotDebuffID, ComputeMultidotHpThreshold, computeMultidotRefresh);
             var purpleTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, ComputeMultidotHpThreshold, computeMultidotRefresh);
             #endregion
-            
-            if (flags.HasFlag(Combo.ST))
+           
+            if (ironTarget is not null && LevelChecked(IronJaws))
             {
-                if (ironTarget is not null && LevelChecked(IronJaws))
-                {
-                    actionID = IronJaws.Retarget(actionID, ironTarget);
-                    return true;
-                }
-
-                if (blueTarget is not null && LevelChecked(Windbite))
-                {
-                    actionID = blueDotAction.Retarget(actionID, blueTarget);
-                    return true;
-                }
-
-                if (purpleTarget is not null && LevelChecked(VenomousBite))
-                {
-                    actionID = purpleDotAction.Retarget(actionID, purpleTarget);
-                    return true;
-                }
+                actionID = IronJaws.Retarget(actionID, ironTarget);
+                return true;
             }
-            if (flags.HasFlag(Combo.AoE))
+
+            if (blueTarget is not null && LevelChecked(Windbite))
             {
-                if (ironTarget is not null && LevelChecked(IronJaws))
-                {
-                    actionID = IronJaws.Retarget(actionID, ironTarget);
-                    return true;
-                }
-
-                if (blueTarget is not null && LevelChecked(Windbite))
-                {
-                    actionID = blueDotAction.Retarget(actionID, blueTarget);
-                    return true;
-                }
-
-                if (purpleTarget is not null && LevelChecked(VenomousBite))
-                {
-                    actionID = purpleDotAction.Retarget(actionID, purpleTarget);
-                    return true;
-                }
+                actionID = blueDotAction.Retarget(actionID, blueTarget);
+                return true;
             }
-            
+
+            if (purpleTarget is not null && LevelChecked(VenomousBite))
+            {
+                actionID = purpleDotAction.Retarget(actionID, purpleTarget);
+                return true;
+            }
         }
-        
         #endregion
 
         return false;
