@@ -31,13 +31,7 @@ internal partial class SMN : Caster
             #endregion
 
             if (TryOGCDSpells(comboFlags, ref actionID))
-                return actionID == Rekindle && IsEnabled(Preset.SMN_ST_Advanced_Combo_DemiSummons_Rekindle)
-                    ? OriginalHook(AstralFlow).Retarget([Ruin, Ruin2, Ruin3], 
-                        SimpleTarget.TargetsTarget.IfInParty() ??
-                        SimpleTarget.AnyTank.IfMissingHP() ??
-                        SimpleTarget.LowestHPPAlly.IfMissingHP() ??
-                        SimpleTarget.Self)
-                    : actionID;
+                return actionID;
             
             if (TryMitigation(comboFlags, ref actionID))
                 return actionID;
@@ -83,13 +77,7 @@ internal partial class SMN : Caster
             #endregion
 
             if (TryOGCDSpells(comboFlags, ref actionID))
-                return actionID == Rekindle && IsEnabled(Preset.SMN_ST_Advanced_Combo_DemiSummons_Rekindle)
-                    ? OriginalHook(AstralFlow).Retarget([Outburst, Tridisaster], 
-                        SimpleTarget.TargetsTarget.IfInParty() ??
-                        SimpleTarget.AnyTank.IfMissingHP() ??
-                        SimpleTarget.LowestHPPAlly.IfMissingHP() ??
-                        SimpleTarget.Self)
-                    : actionID;
+                return actionID;
             
             if (TryMitigation(comboFlags, ref actionID))
                 return actionID;
@@ -122,17 +110,16 @@ internal partial class SMN : Caster
         protected internal override Preset Preset => Preset.SMN_ST_Advanced_Combo;
         protected override uint Invoke(uint actionID)
         {
+            const Combo comboFlags = Combo.ST | Combo.Adv;
+            
             bool allRuins = SMN_ST_Advanced_Combo_AltMode == 0;
+            
+            var replacedActions = allRuins ? AllRuinsList.ToArray() : NotRuin3List.ToArray();
 
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, allRuins ? AllRuinsList.ToArray() : NotRuin3List.ToArray())) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, replacedActions.ToArray())) return actionID;
 
             if (NeedToSummon)
                 return SummonCarbuncle;
-
-            #region Variables
-            const Combo comboFlags = Combo.ST | Combo.Adv;
-            var replacedActions = allRuins ? AllRuinsList.ToArray() : NotRuin3List.ToArray();
-            #endregion
 
             #region Opener
             if (IsEnabled(Preset.SMN_ST_Advanced_Combo_Balance_Opener) &&
@@ -146,13 +133,7 @@ internal partial class SMN : Caster
             #endregion
             
             if (TryOGCDSpells(comboFlags, ref actionID))
-                return actionID == Rekindle && IsEnabled(Preset.SMN_ST_Advanced_Combo_DemiSummons_Rekindle)
-                    ? OriginalHook(AstralFlow).Retarget(replacedActions, 
-                         SimpleTarget.TargetsTarget.IfInParty() ??
-                         SimpleTarget.AnyTank.IfMissingHP() ??
-                         SimpleTarget.LowestHPPAlly.IfMissingHP() ??
-                         SimpleTarget.Self)
-                    : actionID;
+                return actionID;
             
             if (TryMitigation(comboFlags, ref actionID))
                 return actionID;
@@ -198,13 +179,7 @@ internal partial class SMN : Caster
             #endregion
 
             if (TryOGCDSpells(comboFlags, ref actionID))
-                return actionID == Rekindle && IsEnabled(Preset.SMN_ST_Advanced_Combo_DemiSummons_Rekindle)
-                    ? OriginalHook(AstralFlow).Retarget([Outburst, Tridisaster], 
-                        SimpleTarget.TargetsTarget.IfInParty() ??
-                        SimpleTarget.AnyTank.IfMissingHP() ??
-                        SimpleTarget.LowestHPPAlly.IfMissingHP() ??
-                        SimpleTarget.Self)
-                    : actionID;
+                return actionID;
             
             if (TryMitigation(comboFlags, ref actionID))
                 return actionID;
