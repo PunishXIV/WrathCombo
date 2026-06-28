@@ -73,7 +73,13 @@ internal sealed class ActionReplacer : IDisposable
         isActionReplaceableHook.Dispose();
     }
 
-    private ulong IsActionReplaceableDetour(uint actionID) => 1;
+    private ulong IsActionReplaceableDetour(uint actionID)
+    {
+        if (actionID >= All.SingleTargetDPS && Service.Configuration.CustomActionSettings.AlwaysShowIcon)
+            return 0;
+
+        return 1;
+    }
 
     /// <summary> Calls the original hook. </summary>
     /// <param name="actionID"> Action ID. </param>
