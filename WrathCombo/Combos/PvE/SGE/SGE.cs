@@ -126,7 +126,7 @@ internal partial class SGE : Healer
                 // Addersgall Protection
                 if (ActionReady(Druochole) && Addersgall >= 3)
                     return Druochole
-                        .RetargetIfEnabled(OriginalHook(actionID));
+                        .RetargetIfEnabled(actionID);
 
                 // Psyche
                 if (ActionReady(Psyche) && HasBattleTarget() &&
@@ -352,7 +352,7 @@ internal partial class SGE : Healer
                 if (IsEnabled(Preset.SGE_AoE_DPS_AddersgallProtect) &&
                     ActionReady(Druochole) && Addersgall >= SGE_AoE_DPS_AddersgallProtect)
                     return Druochole
-                        .RetargetIfEnabled(OriginalHook(actionID));
+                        .RetargetIfEnabled(actionID);
 
                 // Psyche
                 if (IsEnabled(Preset.SGE_AoE_DPS_Psyche))
@@ -460,7 +460,7 @@ internal partial class SGE : Healer
                 if (ActionReady(Krasis))
                     return Krasis.RetargetIfEnabled(actionID);
                 if (ActionReady(Taurochole) && HasAddersgall())
-                    return Taurochole.RetargetIfEnabled(Diagnosis);
+                    return Taurochole.RetargetIfEnabled(actionID);
                 if (ActionReady(Haima) && !HasStatusEffect(Buffs.Panhaima, healTarget))
                     return Haima.RetargetIfEnabled(actionID);
             }
@@ -486,7 +486,7 @@ internal partial class SGE : Healer
                     ? EukrasianDiagnosis
                     : Eukrasia;
 
-            return Diagnosis.RetargetIfEnabled();
+            return Diagnosis.RetargetIfEnabled(actionID);
         }
     }
 
@@ -616,7 +616,7 @@ internal partial class SGE : Healer
                             .RetargetIfEnabled(actionID);
             }
 
-            return Diagnosis.RetargetIfEnabled();
+            return Diagnosis.RetargetIfEnabled(actionID);
         }
     }
 
