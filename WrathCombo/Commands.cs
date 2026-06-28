@@ -135,8 +135,8 @@ public partial class WrathCombo
             case "pvp":
                 HandleOpenCommand(tab: OpenWindow.PvP, forceOpen: true); break;
             
-            case "custom":
-            case "customactions": // unlisted
+            case "customactions":
+            case "custom": // unlisted
                 HandleOpenCommand(tab: OpenWindow.CustomActions, forceOpen: true); break;
 
             case "dbg": // unlisted
