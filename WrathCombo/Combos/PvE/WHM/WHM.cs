@@ -432,7 +432,7 @@ internal partial class WHM : Healer
             
             return LevelChecked(Cure2)
                 ? Cure2.RetargetIfEnabled(actionID)
-                : Cure.RetargetIfEnabled();
+                : Cure.RetargetIfEnabled(actionID);
         }
     }
     
@@ -578,7 +578,7 @@ internal partial class WHM : Healer
                     ? ThinAir
                     : Cure2.RetargetIfEnabled(actionID);
 
-            return Cure.RetargetIfEnabled();
+            return Cure.RetargetIfEnabled(actionID);
         }
     }
 
