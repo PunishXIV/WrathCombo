@@ -50,7 +50,7 @@ internal partial class DRG
             if (includeDisembowel && !HasStatusEffect(Buffs.PowerSurge) && !LevelChecked(SonicThrust))
                 return OriginalHook(TrueThrust);
 
-            return actionId;
+            return OriginalHook(DoomSpike);
         }
 
         if (ComboTimer > 0)
