@@ -205,7 +205,7 @@ internal partial class RPR
         !ShouldDeferSoulOverflowWeave &&
         InNormalRotation &&
         !IsComboExpiring(3);
-    
+
     private static bool ShouldSpendSoulOvercapST(bool gluttonyEnabled)
     {
         if (!LevelChecked(Gluttony))
@@ -285,48 +285,17 @@ internal partial class RPR
 
     #region GCD Burst
 
-    private const float PerfectioFlexAfterHarvest = 58f;
-
-    private const float PerfectioFlexAfterArcaneCircle = 88f;
-
     private static bool WithinGcd(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
 
     private static bool HasPerfectioReady =>
         HasStatusEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio);
 
-    private static float PerfectioRemaining =>
-        GetStatusEffectRemainingTime(Buffs.PerfectioParata);
-
     private static uint PerfectioAction =>
         WithinGcd(Perfectio) ? Perfectio : OriginalHook(Communio);
 
-    private static bool InPerfectioFlexWindow =>
-        HasPerfectioReady && PerfectioRemaining > GCDTotal * 2 &&
-        (JustUsed(PlentifulHarvest, PerfectioFlexAfterHarvest) ||
-         IsOnCooldown(ArcaneCircle) && GetCooldownElapsed(ArcaneCircle) < PerfectioFlexAfterArcaneCircle ||
-         JustUsed(Communio, 30f));
-
-    private static bool ShouldHoldPerfectioInMelee =>
-        HasPerfectioReady && InMeleeRange() && UsesBurstAlignment &&
-        JustUsed(Communio, 30f) && InPerfectioFlexWindow &&
-        PerfectioRemaining > GCDTotal * 5 && AcCD > 15f;
-
-    private static bool ShouldHoldPerfectioForUptime =>
-        HasPerfectioReady && !InMeleeRange() && HasBattleTarget() &&
-        InPerfectioFlexWindow && PerfectioRemaining > GCDTotal * 3 && AcCD > 10f;
-
-    private static bool ShouldSpendPerfectioNow()
-    {
-        if (!HasPerfectioReady)
-            return false;
-
-        // Failsafe: use before falloff regardless of burst alignment.
-        if (PerfectioRemaining <= GCDTotal * 4 || AcCD <= 10f)
-            return true;
-
-        return !ShouldHoldPerfectioInMelee && !ShouldHoldPerfectioForUptime;
-    }
+    private static bool ShouldSpendPerfectioNow() =>
+        HasPerfectioReady;
 
     private static bool CanPerfectioGCD() =>
         HasPerfectioReady && ShouldSpendPerfectioNow() && InActionRange(PerfectioAction);
@@ -362,6 +331,10 @@ internal partial class RPR
         if (!InPostBurstSequence)
             return 0;
 
+        if (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner) ||
+            HasStatusEffect(Buffs.ImmortalSacrifice))
+            return 0;
+
         if (ContinueBasicCombo(onAoE) is var combo and not 0)
             return combo;
 
@@ -371,9 +344,12 @@ internal partial class RPR
         return 0;
     }
 
+    private static bool HasImmortalSacrificeStacks =>
+        HasStatusEffect(Buffs.ImmortalSacrifice) && GetStatusEffectStacks(Buffs.ImmortalSacrifice) > 0;
+
     private static bool CanPlentifulHarvest() =>
         !HasStatusEffect(Buffs.Enshrouded) && !HasStatusEffect(Buffs.SoulReaver) &&
-        !HasStatusEffect(Buffs.Executioner) && HasStatusEffect(Buffs.ImmortalSacrifice) &&
+        !HasStatusEffect(Buffs.Executioner) && HasImmortalSacrificeStacks &&
         (GetStatusEffectRemainingTime(Buffs.BloodsownCircle) <= 1 || JustUsed(Communio));
 
     private static bool CanWhorlOfDeath(int refreshThreshold = 6, int hpThreshold = 0) =>
