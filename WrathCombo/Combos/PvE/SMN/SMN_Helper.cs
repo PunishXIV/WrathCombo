@@ -4,8 +4,10 @@ using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SMN.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using AetherFlags = Dalamud.Game.ClientState.JobGauge.Enums.AetherFlags;
@@ -345,6 +347,11 @@ internal partial class SMN
             IsSTEnabled(flags, Preset.SMN_ST_Advanced_Combo_DemiSummons_Rekindle) ||
             IsAoEEnabled(flags, Preset.SMN_AoE_Advanced_Combo_DemiSummons_Rekindle);
         
+        bool rekindleRetargetEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.SMN_ST_Advanced_Combo_DemiSummons_Rekindle_Retarget) ||
+            IsAoEEnabled(flags, Preset.SMN_AoE_Advanced_Combo_DemiSummons_Rekindle_Retarget);
+        
         bool searingFlashEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.SMN_ST_Advanced_Combo_SearingFlash) ||
@@ -442,11 +449,22 @@ internal partial class SMN
                     actionID = OriginalHook(AstralFlow);
                     return true;
                 }
-                
+
                 if (rekindleEnabled && ActionReady(OriginalHook(AstralFlow)) && DemiPheonix)
                 {
-                    actionID = Rekindle;
-                    return true;
+                    if (rekindleRetargetEnabled)
+                    {
+                        actionID = Rekindle.Retarget(actionID,
+                            SimpleTarget.TargetsTarget.IfInParty() ??
+                            SimpleTarget.AnyTank.IfMissingHP() ??
+                            SimpleTarget.LowestHPPAlly.IfMissingHP() ??
+                            SimpleTarget.Self);
+                        return true;
+                    }
+                    {
+                        actionID = Rekindle;
+                        return true;
+                    }
                 }
             }
             #endregion

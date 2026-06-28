@@ -82,8 +82,8 @@ internal partial class BRD : PhysicalRanged
             if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
 
-        return OriginalHook(QuickNock);
-    }
+            return OriginalHook(QuickNock);
+        }
     }
 
     internal class BRD_ST_AdvMode : CustomCombo
@@ -124,8 +124,8 @@ internal partial class BRD : PhysicalRanged
             if (TryGCDAttacks(comboFlags, ref actionID) && ActionReady(actionID))
                 return actionID;
 
-        return OriginalHook(HeavyShot);
-    }
+            return OriginalHook(HeavyShot);
+        }
     }
     #endregion
 

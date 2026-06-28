@@ -192,7 +192,6 @@ internal partial class AST : Healer
         {
             #region Button Selection
 
-            bool alternateMode = AST_ST_DPS_AltMode > 0;
             var replacedActions = (int)AST_ST_DPS_AltMode switch
             {
                 1 => CombustList.Keys.ToArray(),
@@ -351,13 +350,9 @@ internal partial class AST : Healer
                 if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && AST_ST_DPS_CombustUptime_TwoTarget)
                     return dotAction.Retarget(replacedActions, target);
             }
-
-            //Alternate Mode (idles as Malefic)
-            if (alternateMode)
-                return OriginalHook(Malefic);
             #endregion
 
-            return OriginalHook(replacedActions.First());
+            return OriginalHook(Malefic);
         }
     }
     internal class AST_AOE_DPS : CustomCombo
@@ -503,16 +498,16 @@ internal partial class AST : Healer
             if (ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget) >= 40 &&
                 cleansableTarget)
-                return Role.Esuna.RetargetIfEnabled(Benefic);
+                return Role.Esuna.RetargetIfEnabled(actionID);
 
             if (CanWeave() && Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
 
             if (ActionReady(EssentialDignity) && GetTargetHPPercent(healTarget) <= 30)
-                return EssentialDignity.RetargetIfEnabled(Benefic);
+                return EssentialDignity.RetargetIfEnabled(actionID);
 
             if (ActionReady(Exaltation) && (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty()))
-                return Exaltation.RetargetIfEnabled(Benefic);
+                return Exaltation.RetargetIfEnabled(actionID);
 
             if (!InBossEncounter())
             {
@@ -532,24 +527,24 @@ internal partial class AST : Healer
             if (ActionReady(AspectedBenefic) &&
                 (!HasStatusEffect(Buffs.AspectedBenefic, healTarget) ||
                  !HasStatusEffect(Buffs.NeutralSectShield, healTarget) && HasStatusEffect(Buffs.NeutralSect)))
-                return OriginalHook(AspectedBenefic).RetargetIfEnabled(Benefic);
+                return OriginalHook(AspectedBenefic).RetargetIfEnabled(actionID);
 
             if ((HasArrow || HasBole) &&
                 (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty()))
-                return OriginalHook(Play2).RetargetIfEnabled(Benefic);
+                return OriginalHook(Play2).RetargetIfEnabled(actionID);
 
             if (HasEwer || HasSpire)
-                return OriginalHook(Play3).RetargetIfEnabled(Benefic);
+                return OriginalHook(Play3).RetargetIfEnabled(actionID);
 
             if (ActionReady(CelestialIntersection) && !HasStatusEffect(Buffs.Intersection) && GetRemainingCharges(EssentialDignity) <= GetRemainingCharges(CelestialIntersection))
-                return CelestialIntersection.RetargetIfEnabled(Benefic);
+                return CelestialIntersection.RetargetIfEnabled(actionID);
 
             if (ActionReady(EssentialDignity))
-                return EssentialDignity.RetargetIfEnabled(Benefic);
+                return EssentialDignity.RetargetIfEnabled(actionID);
 
             return !LevelChecked(Benefic2)
-                ? Benefic.RetargetIfEnabled()
-                : Benefic2.RetargetIfEnabled(Benefic);
+                ? Benefic.RetargetIfEnabled(actionID)
+                : Benefic2.RetargetIfEnabled(actionID);
         }
     }
 
@@ -633,7 +628,7 @@ internal partial class AST : Healer
                 ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields) >= AST_ST_SimpleHeals_Esuna &&
                 cleansableTarget)
-                return Role.Esuna.RetargetIfEnabled(Benefic);
+                return Role.Esuna.RetargetIfEnabled(actionID);
 
             //Priority List
             for (int i = 0; i < AST_ST_SimpleHeals_Priority.Count; i++)
@@ -645,12 +640,12 @@ internal partial class AST : Healer
                 {
                     if (GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields) <= config &&
                         ActionReady(spell))
-                        return spell.RetargetIfEnabled(Benefic);
+                        return spell.RetargetIfEnabled(actionID);
                 }
             }
             return !LevelChecked(Benefic2) ?
-                Benefic.RetargetIfEnabled(Benefic) :
-                Benefic2.RetargetIfEnabled(Benefic);
+                Benefic.RetargetIfEnabled(actionID) :
+                Benefic2.RetargetIfEnabled(actionID);
         }
     }
 

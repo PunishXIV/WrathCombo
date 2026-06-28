@@ -60,7 +60,7 @@ internal partial class DNC
     /// <remarks>
     ///     This is used for <see cref="Improvisation" />.
     /// </remarks>
-    private static bool EnemyIn8Yalms => NumberOfEnemiesInRange(Improvisation) > 0;
+    private static bool AlliesIn8Yalms => NumberOfAlliesInRange(Improvisation) > 2;
 
     /// <summary>
     ///     Logic to pick different openers.

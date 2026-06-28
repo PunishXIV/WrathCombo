@@ -173,16 +173,15 @@ internal partial class WHM : Healer
 
             #region Opener
 
-            if (IsEnabled(Preset.WHM_ST_MainCombo_Opener))
-                if (Opener().FullOpener(ref actionID))
-                    return actionID;
+            if (IsEnabled(Preset.WHM_ST_MainCombo_Opener) && Opener().FullOpener(ref actionID))
+                return actionID;
 
             #endregion
 
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
 
-            if (!PartyInCombat()) return actionID;
+            if (!PartyInCombat()) return OriginalHook(Stone1);
 
             #region Special Feature Raidwide
 
@@ -235,7 +234,7 @@ internal partial class WHM : Healer
                 
                 //2 target Dotting System to maintain dots on 2 enemies. Works with the same sliders and one target
                 if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && WHM_ST_MainCombo_DoT_TwoTarget)
-                    return dotAction.Retarget(actionID, target);
+                    return dotAction.Retarget(replacedActions, target);
             }
             
             // Blood Lily Spend
@@ -433,7 +432,7 @@ internal partial class WHM : Healer
             
             return LevelChecked(Cure2)
                 ? Cure2.RetargetIfEnabled(actionID)
-                : Cure.RetargetIfEnabled();
+                : Cure.RetargetIfEnabled(actionID);
         }
     }
     
@@ -579,7 +578,7 @@ internal partial class WHM : Healer
                     ? ThinAir
                     : Cure2.RetargetIfEnabled(actionID);
 
-            return Cure.RetargetIfEnabled();
+            return Cure.RetargetIfEnabled(actionID);
         }
     }
 
