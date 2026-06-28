@@ -205,7 +205,7 @@ internal partial class SCH : Healer
                     ? OriginalHook(EmergencyTactics)
                     : OriginalHook(Adloquium).RetargetIfEnabled(actionID);
             
-            return Physick.RetargetIfEnabled();
+            return Physick.RetargetIfEnabled(actionID);
         }
     }
     
@@ -506,7 +506,7 @@ internal partial class SCH : Healer
                         return spell.RetargetIfEnabled(actionID);
                 }
             }
-            return Physick.RetargetIfEnabled();
+            return Physick.RetargetIfEnabled(actionID);
         }
     }
     
