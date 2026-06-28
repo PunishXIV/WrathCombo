@@ -134,6 +134,10 @@ public partial class WrathCombo
 
             case "pvp":
                 HandleOpenCommand(tab: OpenWindow.PvP, forceOpen: true); break;
+            
+            case "custom":
+            case "customactions": // unlisted
+                HandleOpenCommand(tab: OpenWindow.CustomActions, forceOpen: true); break;
 
             case "dbg": // unlisted
             case "debugtab": // unlisted
@@ -839,10 +843,8 @@ public partial class WrathCombo
         var sub = argument.Length > 1 ? argument[1] : "";
         var enable = sub switch
         {
-            "hold" => false,
-            "disable" => false,
-            "resume" => true,
-            "enable" => true,
+            "hold"   or "disable" => false,
+            "resume" or "enable"  => true,
             _ => !PresetStorage.IsEnabled(presets[0]),
         };
 
