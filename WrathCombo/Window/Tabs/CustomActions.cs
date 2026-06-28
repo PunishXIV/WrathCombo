@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.Config;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
@@ -43,6 +44,8 @@ namespace WrathCombo.Window.Tabs
 
             if (ImGui.Checkbox($"Don't Override Icons with Job Actions (drag action to hotbar again to take effect)", ref Service.Configuration.CustomActionSettings.AlwaysShowIcon))
                 Service.Configuration.Save();
+
+            ImGuiComponents.HelpMarker("This will hide all combo outputs on custom actions, leaving only these icons showing. This is not advised if you wish to see the real actions being output by the combos on your hotbar, and should only be used if you feel it's something you want.");
 
             if (ImGui.GetIO().MouseDownDuration[0] > 0.5f)
                 DragDropMode = true;
