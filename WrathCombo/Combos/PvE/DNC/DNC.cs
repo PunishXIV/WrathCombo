@@ -308,7 +308,7 @@ internal partial class DNC : PhysicalRanged
                     ActionReady(Improvisation) &&
                     !HasStatusEffect(Buffs.TechnicalFinish) &&
                     InCombat() &&
-                    EnemyIn8Yalms)
+                    AlliesIn8Yalms)
                     return Improvisation;
             }
 
