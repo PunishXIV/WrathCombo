@@ -19,6 +19,19 @@
     <File Path="docs/CODEOWNERS" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/Control Files/">
+    <File Path="res/motd.txt" />
+    <File Path="res/ipc_status.txt" />
+  </Folder>
+  <Folder Name="/Images/">
+    <File Path="res/plugin/wrathcombo.png" />
+    <File Path="res/custom_action_images/SingleTargetDPS.png" />
+    <File Path="res/custom_action_images/SingleTargetHeals.png" />
+    <File Path="res/custom_action_images/AoEDPS.png" />
+    <File Path="res/custom_action_images/AoEHeals.png" />
+    <File Path="res/readme_images/adding_repo.jpg" />
+    <File Path="res/readme_images/demo.gif" />
+  </Folder>
   <Project Path="ECommons/ECommons/ECommons.csproj">
     <Platform Project="x64" />
   </Project>
