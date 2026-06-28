@@ -93,7 +93,7 @@ public sealed unsafe class CustomAction : IDisposable
 public sealed unsafe class CustomActionManager : IDisposable
 {
     private const string SigGetActionRow = "48 83 EC 28 48 8B 05 ?? ?? ?? ?? 44 8B C1 BA 04 00 00 00";
-    private const string SigIsSlotUsable = "48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 0F B6 F2 48 8B D9 41 8B F8 8D 46 FF 83 F8 22";
+    //private const string SigIsSlotUsable = "48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 0F B6 F2 48 8B D9 41 8B F8 8D 46 FF 83 F8 22";
     private const string SigGetActionTransient = "E8 ?? ?? ?? ?? 4C 8B E0 48 85 FF 0F 84";
     private const string SigFormatName = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC ?? 8B D9 41 8B E9";
 
@@ -102,7 +102,7 @@ public sealed unsafe class CustomActionManager : IDisposable
 
     private readonly Hook<GetActionRowDelegate> _getActionRowHook;
     private readonly Dictionary<uint, ISharedImmediateTexture> _iconTextures = new();
-    private readonly Hook<IsSlotUsableDelegate> _isSlotUsableHook;
+    private readonly Hook<RaptureHotbarModule.HotbarSlot.Delegates.IsSlotUsable> _isSlotUsableHook;
     private readonly Hook<LoadIconDelegate> _loadIconHook;
     private readonly Hook<GetActionRowTransientDelegate> _updateTooltipHook;
     private readonly Hook<FormatNameDelegate> _updateNameHook;
@@ -119,7 +119,7 @@ public sealed unsafe class CustomActionManager : IDisposable
         _framework = framework;
 
         _getActionRowHook = hooks.HookFromAddress<GetActionRowDelegate>(sig.ScanText(SigGetActionRow), GetActionRowDetour);
-        _isSlotUsableHook = hooks.HookFromAddress<IsSlotUsableDelegate>(sig.ScanText(SigIsSlotUsable), IsSlotUsableDetour);
+        _isSlotUsableHook = hooks.HookFromAddress<RaptureHotbarModule.HotbarSlot.Delegates.IsSlotUsable>(RaptureHotbarModule.HotbarSlot.Addresses.IsSlotUsable.Value, IsSlotUsableDetour);
         _loadIconHook = hooks.HookFromAddress<LoadIconDelegate>(AtkComponentIcon.Addresses.LoadIcon.Value, LoadIconDetour);
         _updateTooltipHook = hooks.HookFromAddress<GetActionRowTransientDelegate>(sig.ScanText(SigGetActionTransient), UpdateTooltipDetour);
         _updateNameHook = hooks.HookFromAddress<FormatNameDelegate>(sig.ScanText(SigFormatName), FormatNameDetour);
