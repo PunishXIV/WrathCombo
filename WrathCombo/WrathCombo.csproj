@@ -67,19 +67,11 @@
     <!-- Logo -->
     <ItemGroup>
         <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-        
-        <None Update="..\res\custom_action_images\AoEDPS.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="..\res\custom_action_images\AoEHeals.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="..\res\custom_action_images\SingleTargetDPS.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="..\res\custom_action_images\SingleTargetHeals.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
+
+        <Content Include="..\res\custom_action_images\AoEDPS.png" Link="images\AoEDPS.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="..\res\custom_action_images\AoEHeals.png" Link="images\AoEHeals.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="..\res\custom_action_images\SingleTargetDPS.png" Link="images\SingleTargetDPS.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+        <Content Include="..\res\custom_action_images\SingleTargetHeals.png" Link="images\SingleTargetHeals.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
     <!-- Dalamud Packaging -->

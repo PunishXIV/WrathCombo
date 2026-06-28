@@ -370,10 +370,28 @@ public sealed unsafe class CustomActionSetup : IDisposable
         EzSignatureHelper.Initialize(this);
         AddonActionBarBase_ReceiveEventHook?.Enable();
         Manager = new(Svc.SigScanner, Svc.Hook, Svc.Texture, Svc.Framework);
-        _singleTargetDPS = new(All.SingleTargetDPS, "Single Target DPS", "This is for the Single Target DPS combos.", 1504, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/SingleTargetDPS.png"));
-        _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos.", 1505, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/AoEDPS.png"));
-        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos.", 1508, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/SingleTargetHeals.png"));
-        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE Heal combos.", 1510, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/AoEHeals.png"));
+        var path = Svc.PluginInterface.AssemblyLocation.Directory?.FullName!;
+
+        _singleTargetDPS = new(All.SingleTargetDPS,
+            "Single Target DPS",
+            "This is for the Single Target DPS combos.", 1504, 
+            customIconPath: Path.Combine(path,
+                "images\\SingleTargetDPS.png"));
+        _aoeDPS = new(All.AoEDPS,
+            "AoE DPS",
+            "This is for the AoE DPS combos.", 1505,
+            customIconPath: Path.Combine(path,
+                "images\\AoEDPS.png"));
+        _singleTargeHeals = new(All.SingleTargetHeals,
+            "Single Target Heals",
+            "This is for the Single Target Heal combos.", 1508, 
+            customIconPath: Path.Combine(path,
+                "images\\SingleTargetHeals.png"));
+        _aoeHeals = new(All.AoeHeals,
+            "AoE Heals",
+            "This is for the AoE Heal combos.", 1510,
+            customIconPath: Path.Combine(path,
+                "images\\AoEHeals.png"));
 
         Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals);
     }
