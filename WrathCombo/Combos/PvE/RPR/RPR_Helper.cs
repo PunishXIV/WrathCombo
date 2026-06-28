@@ -31,12 +31,12 @@ internal partial class RPR
                 //Balance burst prep: SoD near 60s / 30s on Arcane Circle
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
                     UsesBurstAlignment && (AcCD.InRange(58f, 62f) || AcCD.InRange(28f, 32f)) &&
-                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32)
+                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
                     return true;
 
                 //Double enshroud
                 if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                    AcCD <= GCDTotal && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32 &&
+                    AcCD <= GCDTotal && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh &&
                     (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
@@ -348,12 +348,13 @@ internal partial class RPR
         InPostBurstSequence &&
         !HasBurstComboContinue(onAoE) &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
-        (Soul < 50 || !ActionReady(Gluttony)) &&
+        Soul <= 50 &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice) && !IsComboExpiring(2));
 
     private static bool ShouldDeferSoulOverflowWeave =>
+        Soul < 100 &&
         InPostBurstSequence && !JustUsed(Gluttony, GCDTotal * 8);
 
     private static uint PostBurstGCD(bool onAoE, bool soulSliceEnabled = true)
