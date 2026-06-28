@@ -273,7 +273,6 @@ internal partial class SCH : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            bool alternateMode = SCH_ST_DPS_Adv_Actions > 0;
             var replacedActions = (int)SCH_ST_DPS_Adv_Actions switch
             {
                 1 => BioList.Keys.ToArray(),
@@ -356,11 +355,8 @@ internal partial class SCH : Healer
             //Ruin 2 Movement
             if (IsEnabled(Preset.SCH_ST_ADV_DPS_Ruin2Movement) && ActionReady(Ruin2) && IsMoving() && InCombat())
                 return OriginalHook(Ruin2);
-            
-            if (alternateMode)
-                return OriginalHook(Ruin);
 
-            return OriginalHook(replacedActions.First());
+            return OriginalHook(Ruin);
         }
     }
     
