@@ -308,9 +308,6 @@ public sealed unsafe class CustomActionManager : IDisposable
 
     private delegate CustomActionRow* GetActionRowDelegate(uint rowId);
 
-    private delegate bool IsSlotUsableDelegate(RaptureHotbarModule.HotbarSlot* self,
-                                               RaptureHotbarModule.HotbarSlotType type,
-                                               uint actionId);
 
     private delegate bool UseActionDelegate(ActionManager* self,
                                             ActionType actionType,
@@ -391,6 +388,7 @@ public class CustomActionSettings()
     public bool AoEDPS = false;
     public bool SingleTargetHeals = false;
     public bool AoEHeals = false;
+    public bool AlwaysShowIcon = false;
 }
 
 public enum CustomActionType

@@ -25,19 +25,24 @@ namespace WrathCombo.Window.Tabs
 
             ImGui.Separator();
 
-            using var table = ImRaii.Table($"CustomActionsTable", 3);
-
-            if (!table)
-                return;
-
-            ImGui.TableSetupColumn("Setting", ImGuiTableColumnFlags.WidthFixed);
-            ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.WidthFixed);
-            ImGui.TableSetupColumn("Description", ImGuiTableColumnFlags.WidthFixed, ImGui.GetContentRegionAvail().X);
-
-            foreach (var act in P.CustomActions.Manager.Actions)
+            using (var table = ImRaii.Table($"CustomActionsTable", 3))
             {
-                DrawAction(act);
+                if (!table)
+                    return;
+
+                ImGui.TableSetupColumn("Setting", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("Description", ImGuiTableColumnFlags.WidthFixed, ImGui.GetContentRegionAvail().X);
+
+                foreach (var act in P.CustomActions.Manager.Actions)
+                {
+                    DrawAction(act);
+                }
             }
+
+
+            if (ImGui.Checkbox($"Don't Override Icons with Job Actions (drag action to hotbar again to take effect)", ref Service.Configuration.CustomActionSettings.AlwaysShowIcon))
+                Service.Configuration.Save();
 
             if (ImGui.GetIO().MouseDownDuration[0] > 0.5f)
                 DragDropMode = true;
