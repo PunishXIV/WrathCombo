@@ -14,6 +14,7 @@ internal class Help : ConfigWindow
 {
     public enum Tab
     {
+        Tips,
         GettingStarted,
         Optimization,
         WhatIsWrath,
@@ -25,7 +26,7 @@ internal class Help : ConfigWindow
 
     public static bool ShouldShowDevelopmentTab;
 
-    public static Tab ActiveTab { get; private set; } = Tab.GettingStarted;
+    public static Tab ActiveTab { get; private set; } = Tab.Tips;
 
     internal new static void Draw()
     {
@@ -49,6 +50,7 @@ internal class Help : ConfigWindow
         inDebugMode = true;
 #endif
 
+        DrawTab(Tab.Tips, requestedTab == Tab.Tips);
         DrawTab(Tab.GettingStarted, requestedTab == Tab.GettingStarted);
         DrawTab(Tab.WhatIsWrath, requestedTab == Tab.WhatIsWrath);
         DrawTab(Tab.Optimization, requestedTab == Tab.Optimization);
