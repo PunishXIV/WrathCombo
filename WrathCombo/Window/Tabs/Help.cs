@@ -27,7 +27,7 @@ internal class Help : ConfigWindow
     {
         AutoRotation,
         Retargeting,
-        ContentSpecificActions,
+        Content,
         OtherPlugins,
         PvP,
     }

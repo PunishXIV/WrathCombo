@@ -171,7 +171,7 @@ public partial class WrathCombo
             case "help/specific/content":
                 Help.OpenToSpecificTab = Help.Tab.Specific;
                 Help.OpenToSpecificSpecificTab =
-                    Help.SpecificTab.ContentSpecificActions;
+                    Help.SpecificTab.Content;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
             case "help/specific/otherplugins":
