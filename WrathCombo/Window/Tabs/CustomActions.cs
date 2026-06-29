@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Linq;
+using System.Numerics;
 using Dalamud.Game.Config;
 using Dalamud.Interface.Components;
 using ECommons.DalamudServices;
@@ -16,6 +18,9 @@ namespace WrathCombo.Window.Tabs
         private static bool DragDropMode;
         private static uint HiddenSlots;
         private const UiControlOption HotbarSetting = UiControlOption.HotbarEmptyVisible;
+        private static float longestDescriptionWidth =>
+            P.CustomActions.Manager.Actions
+                .Max(x => ImGui.CalcTextSize(x.Description).X);
 
         internal unsafe static new void Draw()
         {
@@ -40,6 +45,8 @@ namespace WrathCombo.Window.Tabs
             foreach (var act in P.CustomActions.Manager.Actions)
                 DrawAction(act);
             ImGui.Unindent();
+
+            ImGuiEx.Spacing(new Vector2(0, 15));
 
             if (ImGui.Checkbox($"Don't Override Icons with Job Actions (drag action to hotbar again to take effect)", ref Service.Configuration.CustomActionSettings.AlwaysShowIcon))
                 Service.Configuration.Save();
@@ -89,14 +96,14 @@ namespace WrathCombo.Window.Tabs
             #endregion
         }
 
-        private static unsafe void DrawAction(CustomAction act)
+        private static void DrawAction(CustomAction act)
         {
             if (P.CustomActions.Manager.IconTextures[act.IconId].TryGetWrap(out var texture, out _))
             {
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
                 var type = CustomActionHelper.GetCustomActionType(act.Id);
                 bool changed = false;
+                var alternativeChange = false;
+                var preTitlePos = ImGui.GetCursorPos();
                 switch (type)
                 {
                     case CustomActionType.SingleTargetDPS:
@@ -111,43 +118,99 @@ namespace WrathCombo.Window.Tabs
                     case CustomActionType.AoEHeals:
                         changed |= ImGui.Checkbox($"{act.Name}##Custom{act.Id}", ref Service.Configuration.CustomActionSettings.AoEHeals);
                         break;
-
                 }
 
-                if (changed)
-                    Service.Configuration.Save();
+                ImGui.Indent(30f.Scale());
+                ImGuiEx.TextWrapped(act.Description);
+                ImGui.Unindent(30f.Scale());
+                ImGui.SameLine();
+                ImGuiEx.HelpMarker(
+                    $"Action ID is {act.Id}, " +
+                    $"if you'd like to try to execute it in some other way, " +
+                    $"like QoLBar or DelvCD or something.");
+                var postDescPos = ImGui.GetCursorPos();
 
+                ImGui.SetCursorPos(preTitlePos with
+                {
+                    X = preTitlePos.X +
+                        longestDescriptionWidth +
+                        70f.Scale()
+                });
                 var btnSize = ImGui.GetFrameHeight() * 2.5f.Scale();
-                ImGui.TableNextColumn();
-                ImGui.ImageButton(texture.Handle, new(btnSize));
+                ImGui.ImageButton(texture.Handle, new Vector2(btnSize));
 
                 if (ImGui.IsItemHovered())
                 {
+                    #region Icon Dragging
+
                     if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
                     {
                         Svc.GameConfig.TryGet(HotbarSetting, out HiddenSlots);
                         Svc.Log.Debug($"User has slots {(HiddenSlots == 0 ? "hidden" : "shown")}");
+                        alternativeChange = true;
                     }
                     if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
                     {
                         SelectedAction = act;
                         Svc.GameConfig.Set(HotbarSetting, 1);
+                        alternativeChange = true;
                     }
 
+                    #endregion
+
                     ImGui.BeginTooltip();
-                    ImGui.Image(texture.Handle, new(50));
+                    ImGui.Image(texture.Handle, new Vector2(50));
                     ImGui.SameLine();
-                    var pos = ImGui.GetCursorPos();
-                    ImGuiEx.Text($"{act.Name}");
-                    ImGui.SetCursorPosX(pos.X);
-                    ImGui.SetCursorPosY(pos.Y + 20f.Scale());
-                    ImGuiEx.Text($"{act.Description}");
+                    var tooltipPos = ImGui.GetCursorPos();
+                    ImGuiEx.Text(act.Name);
+                    ImGui.SetCursorPosX(tooltipPos.X);
+                    ImGui.SetCursorPosY(tooltipPos.Y + 20f.Scale());
+                    ImGuiEx.Text(act.Description);
                     ImGui.EndTooltip();
                 }
 
+                ImGui.SetCursorPos(postDescPos);
+                ImGuiEx.Spacing(new Vector2(0, 5));
 
-                ImGui.TableNextColumn();
-                ImGuiEx.TextWrapped($"{act.Description}");
+                #region Alternative Change
+                // Pretends we are clicking the checkbox on
+                // if we click anything other than the checkbox
+
+                if (alternativeChange)
+                {
+                    switch (type)
+                    {
+                        case CustomActionType.SingleTargetDPS:
+                            changed |= !Service.Configuration
+                                .CustomActionSettings.SingleTargetDPS;
+                            Service.Configuration.CustomActionSettings
+                                .SingleTargetDPS = true;
+                            break;
+                        case CustomActionType.AoEDPS:
+                            changed |= !Service.Configuration
+                                .CustomActionSettings.AoEDPS;
+                            Service.Configuration.CustomActionSettings
+                                .AoEDPS = true;
+                            break;
+                        case CustomActionType.SingleTargetHeals:
+                            changed |= !Service.Configuration
+                                .CustomActionSettings.SingleTargetHeals;
+                            Service.Configuration.CustomActionSettings
+                                .SingleTargetHeals = true;
+                            break;
+                        case CustomActionType.AoEHeals:
+                            changed |= !Service.Configuration
+                                .CustomActionSettings.AoEHeals;
+                            Service.Configuration.CustomActionSettings
+                                .AoEHeals = true;
+                            break;
+                    }
+                }
+
+                #endregion
+
+                if (changed)
+                    Service.Configuration.Save();
             }
             else
                 ImGuiEx.Text(Colors.Orange,
