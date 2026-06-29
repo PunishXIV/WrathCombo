@@ -14,7 +14,6 @@ internal partial class SAM
     #region Basic Combo
 
     private static uint DoBasicCombo(
-        uint actionId,
         bool useTrueNorth = true,
         bool useYukikaze = true,
         bool useKasha = true,
@@ -221,17 +220,16 @@ internal partial class SAM
     #region Combo Resolution
 
     private static uint DoStCombo(
-        uint actionId,
         bool useTrueNorth,
         bool useYukikaze = true,
         bool useKasha = true,
         bool useGekko = true,
         int trueNorthCharges = 0) =>
         HasStatusEffect(Buffs.MeikyoShisui)
-            ? DoMeikyoCombo(actionId, useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges)
-            : DoBasicCombo(actionId, useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges);
+            ? DoMeikyoCombo(useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges)
+            : DoBasicCombo(useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges);
 
-    private static uint DoAoECombo(uint actionId, bool useOka = true)
+    private static uint DoAoECombo(bool useOka = true)
     {
         if (ComboTimer is 0 && !HasStatusEffect(Buffs.MeikyoShisui))
             return OriginalHook(Fuga);
@@ -370,7 +368,6 @@ internal partial class SAM
     }
 
     private static uint DoMeikyoCombo(
-        uint actionId,
         bool useTrueNorth = true,
         bool useYukikaze = true,
         bool useKasha = true,

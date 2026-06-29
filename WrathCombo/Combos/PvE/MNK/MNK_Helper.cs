@@ -105,7 +105,7 @@ internal partial class MNK
             ? Demolish
             : OriginalHook(SnapPunch);
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = true, bool onAoE = false, int trueNorthCharges = 0)
+    private static uint DoBasicCombo(bool useTrueNorth = true, bool onAoE = false, int trueNorthCharges = 0)
     {
         if (onAoE)
         {

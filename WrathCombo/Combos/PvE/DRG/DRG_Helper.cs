@@ -19,7 +19,6 @@ internal partial class DRG
     #region Basic Combo
 
     private static uint DoBasicCombo(
-        uint actionId,
         bool useTrueNorth = false,
         bool onAoE = false,
         bool includeDisembowel = false,
@@ -123,7 +122,7 @@ internal partial class DRG
 
             return JustUsed(DoomSpike);
         }
-    
+
 
         if (!InActionRange(TrueThrust))
             return false;
@@ -145,7 +144,6 @@ internal partial class DRG
 
         return false;
     }
-    
 
     #endregion
 
@@ -210,7 +208,7 @@ internal partial class DRG
         return diveExpiring || !DRG_ST_DoubleMirage;
     }
 
-    private static bool CanUseGeirskogul(bool onAoE = false, int hpThreshold = 0) =>
+    private static bool CanUseGeirskogul(int hpThreshold = 0) =>
         ActionReady(Geirskogul) &&
         InActionRange(Geirskogul) &&
         HasBattleTarget() &&
@@ -218,9 +216,9 @@ internal partial class DRG
         GetTargetHPPercent() > hpThreshold;
 
     private static int GeirskogulHPThreshold() =>
-        InBossEncounter() ? TargetIsBoss() 
+        InBossEncounter() ? TargetIsBoss()
                 ? DRG_ST_GeirskogulBossHPOption
-                : DRG_ST_GeirskogulBossAddsHPOption 
+                : DRG_ST_GeirskogulBossAddsHPOption
             : DRG_ST_GeirskogulTrashHPOption;
 
     private static bool CanStarcross() =>
@@ -327,7 +325,7 @@ internal partial class DRG
                 return RiseOfTheDragon;
 
             if (options.UseGeirskogul &&
-                CanUseGeirskogul(true, options.GeirskogulHpThreshold) && InCombat())
+                CanUseGeirskogul(options.GeirskogulHpThreshold) && InCombat())
                 return Geirskogul;
 
             if (options.UseNastrond &&
@@ -338,7 +336,7 @@ internal partial class DRG
                 ActionReady(PiercingTalon) && !CanDRGWeave())
                 return PiercingTalon;
 
-            return DoBasicCombo(actionId, onAoE: true, includeDisembowel: options.IncludeDisembowel);
+            return DoBasicCombo(onAoE: true, includeDisembowel: options.IncludeDisembowel);
         }
 
         if (options.UseMirage &&
@@ -369,7 +367,7 @@ internal partial class DRG
             ActionReady(PiercingTalon))
             return PiercingTalon;
 
-        return DoBasicCombo(actionId, options.UseTrueNorth, trueNorthCharges: options.TrueNorthCharges);
+        return DoBasicCombo(options.UseTrueNorth, trueNorthCharges: options.TrueNorthCharges);
     }
 
     #endregion

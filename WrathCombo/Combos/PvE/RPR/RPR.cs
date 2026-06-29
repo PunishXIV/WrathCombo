@@ -89,7 +89,7 @@ internal partial class RPR : Melee
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
                 ? RangedAttack(actionID, true, true)
-                : DoBasicCombo(actionID);
+                : DoBasicCombo();
         }
     }
 
@@ -157,7 +157,7 @@ internal partial class RPR : Melee
             if (CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return DoBasicCombo(actionID, true);
+            return DoBasicCombo(onAoE: true);
         }
     }
 
@@ -287,7 +287,7 @@ internal partial class RPR : Melee
                     IsEnabled(Preset.RPR_ST_RangedFiller),
                     RPR_ST_EnhancedHarpe,
                     !RPR_ST_EnhancedHarpe)
-                : DoBasicCombo(actionID);
+                : DoBasicCombo();
         }
     }
 
@@ -375,7 +375,7 @@ internal partial class RPR : Melee
                 CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return DoBasicCombo(actionID, true);
+            return DoBasicCombo(onAoE: true);
         }
     }
 

@@ -1,6 +1,5 @@
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
-using WrathCombo.Extensions;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.BLM.Config;
 namespace WrathCombo.Combos.PvE;

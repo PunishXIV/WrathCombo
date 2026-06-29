@@ -591,7 +591,7 @@ internal partial class MCH
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
-    private static uint DoBasicCombo(uint actionId, bool allowReassembleOnClean = false, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
+    private static uint DoBasicCombo(bool allowReassembleOnClean = false, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
     {
         if (ComboTimer > 0)
         {

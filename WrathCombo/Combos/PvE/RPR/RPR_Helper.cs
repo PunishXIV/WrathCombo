@@ -122,10 +122,8 @@ internal partial class RPR
         return OriginalHook(Slice);
     }
 
-    private static uint DoBasicCombo(uint actionId, bool onAoE = false) =>
-        ContinueBasicCombo(onAoE) is var continued and not 0
-            ? continued
-            : actionId;
+    private static uint DoBasicCombo(bool onAoE = false) =>
+        ContinueBasicCombo(onAoE);
 
     #endregion
 
@@ -304,10 +302,10 @@ internal partial class RPR
         JustUsed(Perfectio, GCDTotal * 8) ||
         JustUsed(OriginalHook(Communio), GCDTotal * 2) && !HasPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
 
-    private static bool HasBurstComboContinue(bool onAoE = false) =>
+    private static bool HasBurstComboContinue() =>
         InPostBurstSequence &&
         !IsComboExpiring(2) &&
-        ContinueBasicCombo(onAoE) != 0;
+        ComboTimer > 0;
 
     private static bool CanBurstGluttonyWeave() =>
         InPostBurstSequence && Soul >= 50 && ActionReady(Gluttony) &&
@@ -315,7 +313,7 @@ internal partial class RPR
 
     private static bool CanBurstSoulSliceScythe(bool onAoE = false) =>
         InPostBurstSequence &&
-        !HasBurstComboContinue(onAoE) &&
+        !HasBurstComboContinue() &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
         Soul <= 50 &&
         (onAoE

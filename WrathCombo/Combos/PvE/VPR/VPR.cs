@@ -282,7 +282,7 @@ internal partial class VPR : Melee
                 LevelChecked(SerpentsTail) && InActionRange(DeathRattle))
                 return OriginalHook(SerpentsTail);
 
-            return DoBasicCombo(actionID);
+            return DoBasicCombo();
         }
     }
 

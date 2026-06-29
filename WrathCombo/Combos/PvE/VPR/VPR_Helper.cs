@@ -20,7 +20,7 @@ internal partial class VPR
         GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
         Role.CanTrueNorth();
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool onAoE = false, int trueNorthCharges = 0,
+    private static uint DoBasicCombo(bool useTrueNorth = false, bool onAoE = false, int trueNorthCharges = 0,
         bool dynamicHoldCharge = false)
     {
         if (onAoE)
@@ -491,7 +491,7 @@ internal partial class VPR
         bool dynamicHoldCharge = false) =>
         useReawakenCombo && HasStatusEffect(Buffs.Reawakened)
             ? ReawakenCombo(actionId)
-            : DoBasicCombo(actionId, useTrueNorth, onAoE, trueNorthCharges, dynamicHoldCharge);
+            : DoBasicCombo(useTrueNorth, onAoE, trueNorthCharges, dynamicHoldCharge);
 
     #endregion
 

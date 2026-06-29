@@ -1,4 +1,3 @@
-using Dalamud.Bindings.ImPlot;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.SAM.Config;
@@ -92,7 +91,7 @@ internal partial class SAM : Melee
             if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
                 return Enpi;
 
-            return DoStCombo(actionID, true);
+            return DoStCombo(true);
         }
     }
 
@@ -150,7 +149,7 @@ internal partial class SAM : Melee
 
             return CanAoESenGcd(out uint senAction, onlyWhenStationary: true)
                 ? senAction
-                : DoAoECombo(actionID);
+                : DoAoECombo();
         }
     }
 
@@ -293,7 +292,7 @@ internal partial class SAM : Melee
                     return Enpi;
             }
 
-            return DoStCombo(actionID,
+            return DoStCombo(
                 IsEnabled(Preset.SAM_ST_TrueNorth),
                 IsEnabled(Preset.SAM_ST_Yukikaze),
                 IsEnabled(Preset.SAM_ST_Kasha),
@@ -379,7 +378,7 @@ internal partial class SAM : Melee
                     return senAction;
             }
 
-            return DoAoECombo(actionID, IsEnabled(Preset.SAM_AoE_Oka));
+            return DoAoECombo(IsEnabled(Preset.SAM_AoE_Oka));
         }
     }
 
