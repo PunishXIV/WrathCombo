@@ -77,7 +77,6 @@ public static class ActionWatching
     private static CancellationToken token;
 
     public static bool UpdatingActions;
-    private static bool _tainted;
 
     static unsafe ActionWatching()
     {
