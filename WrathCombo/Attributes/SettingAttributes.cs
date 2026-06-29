@@ -2,6 +2,7 @@
 
 using System;
 using WrathCombo.Resources.Localization.UI.Settings;
+
 // ReSharper disable ClassNeverInstantiated.Global
 
 #endregion
@@ -29,11 +30,11 @@ public class SettingCategory(SettingCategory.Category category) : Attribute
         {
             return TheCategory switch
             {
-                Category.Main_UI_Options => SettingsCfgUI.MainUIOptions_Category,
+                Category.Main_UI_Options           => SettingsCfgUI.MainUIOptions_Category,
                 Category.Rotation_Behavior_Options => SettingsCfgUI.RotationBehaviourOptions_Category,
-                Category.Targeting_Options => SettingsCfgUI.TargetingOptions_Category,
-                Category.Troubleshooting_Options => SettingsCfgUI.TroubleshootingOptions_Category,
-                _ => "UNKNOWN"
+                Category.Targeting_Options         => SettingsCfgUI.TargetingOptions_Category,
+                Category.Troubleshooting_Options   => SettingsCfgUI.TroubleshootingOptions_Category,
+                _                                  => "UNKNOWN"
             };
         }
     }
@@ -49,6 +50,7 @@ public class SettingGroup(
     internal string NameSpace { get; } = nameSpace;
     internal bool ShouldThisGroupGetDisabled { get; } = shouldThisGroupGetDisabled;
 }
+
 [AttributeUsage(AttributeTargets.Field)]
 public class SettingCollapsibleGroup(string groupName) : Attribute
 {
@@ -80,22 +82,20 @@ public class Setting(
         Slider_Float,
         Stack,
     }
-    
-    internal string Name { get; }
-    internal string HelpMark { get; } 
-    internal string RecommendedValue { get; } 
-    internal string DefaultValue { get; } 
-    internal string? UnitLabel { get; }
+
+    // All text is now fetched when loaded from attribute from our localizations
+
     internal Type TheType { get; } = type;
-    internal string? ExtraHelpMark { get; }
-    internal string? WarningMark { get; }
-    internal string? ExtraText { get; }
-    internal float? MinFloat { get; } = 
+
+    internal float? MinFloat { get; } =
         float.IsNaN(minFloat) ? null : minFloat;
-    internal float? MaxFloat { get; } = 
+
+    internal float? MaxFloat { get; } =
         float.IsNaN(maxFloat) ? null : maxFloat;
+
     internal int? MinInt { get; } =
         minInt == int.MinValue ? null : minInt;
+
     internal int? MaxInt { get; } =
         maxInt == int.MaxValue ? null : maxInt;
 
