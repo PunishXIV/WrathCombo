@@ -149,6 +149,10 @@ namespace WrathCombo.Window.Tabs
                 ImGui.TableNextColumn();
                 ImGuiEx.TextWrapped($"{act.Description}");
             }
+            else
+                ImGuiEx.Text(Colors.Orange,
+                    "Sorry, we are failing to load our own Custom Action Icons!\n" +
+                    "Please report this!");
         }
     }
 }
