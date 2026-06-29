@@ -87,6 +87,11 @@ internal unsafe class AutoRotationController
             Paused = true;
             Svc.Framework.RunOnTick(() => Paused = false, TimeSpan.FromSeconds(UnpauseSeconds));
         }
+
+        if (raidwideWarningFound)
+        {
+            //
+        }
     }
 
     public void Dispose()
