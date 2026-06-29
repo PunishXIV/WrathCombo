@@ -16,13 +16,24 @@ internal class Help : ConfigWindow
     {
         Tips,
         GettingStarted,
+        Specific,
         Optimization,
         WhatIsWrath,
         Troubleshooting,
         Development,
     }
 
-    public static Tab? OpenToSpecificTab;
+    public enum SpecificTab
+    {
+        AutoRotation,
+        Retargeting,
+        ContentSpecificActions,
+        OtherPlugins,
+        PvP,
+    }
+
+    public static Tab?         OpenToSpecificTab;
+    public static SpecificTab? OpenToSpecificSpecificTab;
 
     public static bool ShouldShowDevelopmentTab;
 
@@ -52,6 +63,7 @@ internal class Help : ConfigWindow
 
         DrawTab(Tab.Tips, requestedTab == Tab.Tips);
         DrawTab(Tab.GettingStarted, requestedTab == Tab.GettingStarted);
+        DrawTab(Tab.Specific, requestedTab == Tab.Specific);
         DrawTab(Tab.WhatIsWrath, requestedTab == Tab.WhatIsWrath);
         DrawTab(Tab.Optimization, requestedTab == Tab.Optimization);
         DrawTab(Tab.Troubleshooting, requestedTab == Tab.Troubleshooting);

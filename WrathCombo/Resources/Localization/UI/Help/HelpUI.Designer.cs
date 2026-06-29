@@ -114,6 +114,15 @@ namespace WrathCombo.Resources.Localization.UI.Help {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parts of Wrath.
+        /// </summary>
+        internal static string tabSpecific {
+            get {
+                return ResourceManager.GetString("tabSpecific", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quick Tips.
         /// </summary>
         internal static string tabTips {

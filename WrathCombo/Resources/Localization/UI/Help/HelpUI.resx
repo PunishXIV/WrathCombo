@@ -45,4 +45,7 @@
     <data name="noTabText" xml:space="preserve">
         <value>Sorry, zbee is lazy, this tab will come soon though! (hopefully!)</value>
     </data>
+    <data name="tabSpecific" xml:space="preserve">
+        <value>Parts of Wrath</value>
+    </data>
 </root>

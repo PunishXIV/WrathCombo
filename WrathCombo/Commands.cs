@@ -138,33 +138,70 @@ public partial class WrathCombo
             case "customactions":
             case "custom": // unlisted
                 HandleOpenCommand(tab: OpenWindow.CustomActions, forceOpen: true); break;
-            
+
+            #region Help Commands (they all start with `help/`)
+
             case "help":
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
             case "help/about":
-            case "help/whatisthis": //unlisted
+            case "help/whatisthis":  //unlisted
             case "help/whatiswrath": // unlisted
-            case "help/what": // unlisted
+            case "help/what":        // unlisted
                 Help.OpenToSpecificTab = Help.Tab.WhatIsWrath;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
+            case "help/specific":
+            case "help/parts": //unlisted
+                Help.OpenToSpecificTab = Help.Tab.Specific;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "help/specific/autorotation":
+                Help.OpenToSpecificTab = Help.Tab.Specific;
+                Help.OpenToSpecificSpecificTab =
+                    Help.SpecificTab.AutoRotation;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "help/specific/retargeting":
+                Help.OpenToSpecificTab = Help.Tab.Specific;
+                Help.OpenToSpecificSpecificTab =
+                    Help.SpecificTab.Retargeting;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "help/specific/content":
+                Help.OpenToSpecificTab = Help.Tab.Specific;
+                Help.OpenToSpecificSpecificTab =
+                    Help.SpecificTab.ContentSpecificActions;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "help/specific/otherplugins":
+                Help.OpenToSpecificTab = Help.Tab.Specific;
+                Help.OpenToSpecificSpecificTab =
+                    Help.SpecificTab.OtherPlugins;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "help/specific/pvp":
+                Help.OpenToSpecificTab = Help.Tab.Specific;
+                Help.OpenToSpecificSpecificTab =
+                    Help.SpecificTab.PvP;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
             case "help/troubleshooting":
-            case "help/issue": // unlisted
+            case "help/issue":   // unlisted
             case "help/problem": // unlisted
                 Help.OpenToSpecificTab = Help.Tab.Troubleshooting;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
             case "help/optimize":
             case "help/optimization": //unlisted
-            case "help/optimizing": // unlisted
-            case "help/balance": // unlisted
+            case "help/optimizing":   // unlisted
+            case "help/balance":      // unlisted
                 Help.OpenToSpecificTab = Help.Tab.Optimization;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
             case "help/gettingstarted":
             case "help/welcome": // unlisted
-            case "help/setup": // unlisted
+            case "help/setup":   // unlisted
                 Help.OpenToSpecificTab = Help.Tab.GettingStarted;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
@@ -173,13 +210,15 @@ public partial class WrathCombo
                 Help.OpenToSpecificTab = Help.Tab.Tips;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
-            case "help/dev": // unlisted
+            case "help/dev":         // unlisted
             case "help/development": // unlisted
-            case "help/developing": // unlisted
-            case "help/code": // unlisted
+            case "help/developing":  // unlisted
+            case "help/code":        // unlisted
                 Help.OpenToSpecificTab = Help.Tab.Development;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
+
+            #endregion
 
             case "dbg": // unlisted
             case "debugtab": // unlisted
