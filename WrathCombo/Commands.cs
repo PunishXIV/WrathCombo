@@ -792,11 +792,11 @@ public partial class WrathCombo
         }
         else
         {
-            DuoLog.Error($"{argument[0]} is not a correct job abbreviation.");
-            return;
+            if (argument[0].Length < 4)
+                DuoLog.Error($"{argument[0]} is not a correct job abbreviation.");
+            else
+                DuoLog.Error($"{argument[0]} is not an understood command.");
         }
-
-
     }
 
     /// <summary>
