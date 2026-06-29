@@ -119,15 +119,15 @@ namespace WrathCombo.Window.Tabs
                         changed |= ImGui.Checkbox($"{act.Name}##Custom{act.Id}", ref Service.Configuration.CustomActionSettings.AoEHeals);
                         break;
                 }
-
-                ImGui.Indent(30f.Scale());
-                ImGuiEx.TextWrapped(act.Description);
-                ImGui.Unindent(30f.Scale());
                 ImGui.SameLine();
                 ImGuiEx.HelpMarker(
                     $"Action ID is {act.Id}, " +
                     $"if you'd like to try to execute it in some other way, " +
                     $"like QoLBar or DelvCD or something.");
+
+                ImGui.Indent(30f.Scale());
+                ImGuiEx.TextWrapped(act.Description);
+                ImGui.Unindent(30f.Scale());
                 var postDescPos = ImGui.GetCursorPos();
 
                 ImGui.SetCursorPos(preTitlePos with
