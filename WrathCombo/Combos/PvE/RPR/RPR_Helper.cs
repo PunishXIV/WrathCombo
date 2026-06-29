@@ -28,15 +28,14 @@ internal partial class RPR
 
             if (!trashOnly || InBossEncounter() || !arcaneCircleEnabled)
             {
-                //Balance burst prep: SoD near 60s / 30s on Arcane Circle
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
                     UsesBurstAlignment && (AcCD.InRange(58f, 62f) || AcCD.InRange(28f, 32f)) &&
-                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
+                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32)
                     return true;
 
                 //Double enshroud
                 if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                    AcCD <= GCDTotal && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh &&
+                    AcCD <= GCDTotal && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32 &&
                     (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
