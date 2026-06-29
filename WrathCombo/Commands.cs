@@ -140,7 +140,6 @@ public partial class WrathCombo
                 HandleOpenCommand(tab: OpenWindow.CustomActions, forceOpen: true); break;
             
             case "help":
-                Help.OpenToSpecificTab = null;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
             case "help/about":
@@ -167,6 +166,11 @@ public partial class WrathCombo
             case "help/welcome": // unlisted
             case "help/setup": // unlisted
                 Help.OpenToSpecificTab = Help.Tab.GettingStarted;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "help/tips":
+            case "help/quicktips": // unlisted
+                Help.OpenToSpecificTab = Help.Tab.Tips;
                 HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
                 break;
             case "help/dev": // unlisted

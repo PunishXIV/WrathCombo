@@ -39,4 +39,7 @@
     <data name="tabDevelopment" xml:space="preserve">
         <value>Development Info</value>
     </data>
+    <data name="tabTips" xml:space="preserve">
+        <value>Quick Tips</value>
+    </data>
 </root>
