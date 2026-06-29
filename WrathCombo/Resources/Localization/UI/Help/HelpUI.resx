@@ -42,4 +42,7 @@
     <data name="tabTips" xml:space="preserve">
         <value>Quick Tips</value>
     </data>
+    <data name="noTabText" xml:space="preserve">
+        <value>Sorry, zbee is lazy, this tab will come soon though! (hopefully!)</value>
+    </data>
 </root>

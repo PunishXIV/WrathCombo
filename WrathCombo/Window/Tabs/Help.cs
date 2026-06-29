@@ -81,6 +81,8 @@ internal class Help : ConfigWindow
                     HelpUI.ResourceManager, true);
                 if (textBlock is not null)
                     ImGui.TextWrapped(textBlock);
+                else if (i == 1)
+                    ImGui.TextWrapped(GetI18nText("noTabText"));
             }
 
             ImGui.EndTabItem();

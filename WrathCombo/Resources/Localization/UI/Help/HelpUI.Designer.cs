@@ -60,6 +60,15 @@ namespace WrathCombo.Resources.Localization.UI.Help {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry, zbee is lazy, this tab will come soon though! (hopefully!).
+        /// </summary>
+        internal static string noTabText {
+            get {
+                return ResourceManager.GetString("noTabText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This section is the first-stop for getting help with or understanding Wrath Combo..
         /// </summary>
         internal static string section {
