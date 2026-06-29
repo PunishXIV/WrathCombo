@@ -432,7 +432,7 @@ internal partial class MNK
         if (onAoE)
             return true;
 
-        if (HasStatusEffect(Buffs.RiddleOfFire) || HasStatusEffect(Buffs.Brotherhood))
+        if (HasStatusEffect(Buffs.RiddleOfFire))
             return true;
 
         return !LevelChecked(RiddleOfFire);
@@ -484,6 +484,11 @@ internal partial class MNK
     private static bool CanUseChakra(bool onAoE = false)
     {
         if (CanBrotherhood() || CanRoF())
+            return false;
+
+        if (!HasStatusEffect(Buffs.Brotherhood) &&
+            ActionReady(RiddleOfFire) && LevelChecked(Brotherhood) &&
+            GetCooldownRemainingTime(Brotherhood) <= GCDTotal)
             return false;
 
         uint meditation = onAoE ? InspiritedMeditation : SteeledMeditation;
