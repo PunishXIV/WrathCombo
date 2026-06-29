@@ -31,6 +31,7 @@ public class Setting
         if (CachedSettings.TryGetValue(settingName, out var cachedSetting))
         {
             Category              = cachedSetting.Category;
+            CategoryName          = cachedSetting.CategoryName;
             Name                  = cachedSetting.Name;
             HelpMark              = cachedSetting.HelpMark;
             RecommendedValue      = cachedSetting.RecommendedValue;
