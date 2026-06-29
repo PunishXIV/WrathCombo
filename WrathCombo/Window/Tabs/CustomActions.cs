@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Numerics;
 using Dalamud.Game.Config;
+using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
@@ -125,9 +125,9 @@ namespace WrathCombo.Window.Tabs
                     $"if you'd like to try to execute it in some other way, " +
                     $"like QoLBar or DelvCD or something.");
 
-                ImGui.Indent(30f.Scale());
-                ImGuiEx.TextWrapped(act.Description);
-                ImGui.Unindent(30f.Scale());
+                ImGui.Indent(35f.Scale());
+                ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey, act.Description);
+                ImGui.Unindent(35f.Scale());
                 var postDescPos = ImGui.GetCursorPos();
 
                 ImGui.SetCursorPos(preTitlePos with
@@ -213,7 +213,7 @@ namespace WrathCombo.Window.Tabs
                     Service.Configuration.Save();
             }
             else
-                ImGuiEx.Text(Colors.Orange,
+                ImGuiEx.Text(ImGuiColors.DalamudYellow,
                     "Sorry, we are failing to load our own Custom Action Icons!\n" +
                     "Please report this!");
         }
