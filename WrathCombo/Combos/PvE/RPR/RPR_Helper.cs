@@ -107,7 +107,7 @@ internal partial class RPR
                 ComboAction == OriginalHook(SpinningScythe) && LevelChecked(NightmareScythe))
                 return OriginalHook(NightmareScythe);
 
-            return 0;
+            return OriginalHook(SpinningScythe);
         }
 
         if (ComboTimer > 0)
@@ -119,7 +119,7 @@ internal partial class RPR
                 return OriginalHook(InfernalSlice);
         }
 
-        return 0;
+        return OriginalHook(Slice);
     }
 
     private static uint DoBasicCombo(uint actionId, bool onAoE = false) =>
