@@ -310,7 +310,7 @@ internal partial class RPR
         InPostBurstSequence && Soul >= 50 && ActionReady(Gluttony) &&
         !HasBurstComboContinue();
 
-    private static bool ShouldSpendSoulSliceChargeOvercap(bool onAoE)
+    private static bool SoulSliceOVercapProtection(bool onAoE)
     {
         if (Soul >= 100)
             return false;
@@ -330,7 +330,7 @@ internal partial class RPR
         InPostBurstSequence &&
         !HasBurstComboContinue() &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
-        (Soul <= 50 || ShouldSpendSoulSliceChargeOvercap(onAoE)) &&
+        (Soul <= 50 || SoulSliceOVercapProtection(onAoE)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice) && !IsComboExpiring(2));
@@ -535,7 +535,7 @@ internal partial class RPR
     private static bool CanSoulSliceScythe(bool onAoE) =>
         !InPostBurstSequence &&
         InNormalRotation && !IsComboExpiring(3) &&
-        (Soul <= 50 || ShouldSpendSoulSliceChargeOvercap(onAoE)) &&
+        (Soul <= 50 || SoulSliceOVercapProtection(onAoE)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice));
