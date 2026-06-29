@@ -297,6 +297,11 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>OccultCrescent.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Localization\UI\Help\HelpUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>HelpUI.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Update="Resources\Localization\JobConfigs\AST_Config.resx">
@@ -426,6 +431,10 @@
       <EmbeddedResource Update="Resources\Localization\Content\OccultCrescent.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>OccultCrescent.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\Help\HelpUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>HelpUI.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 

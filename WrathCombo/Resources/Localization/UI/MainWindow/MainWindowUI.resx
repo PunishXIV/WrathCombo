@@ -200,4 +200,7 @@ to prevent unexpected behavior and bugs.</value>
   <data name="Button_About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="Button_Help" xml:space="preserve">
+      <value>Help</value>
+  </data>
 </root>

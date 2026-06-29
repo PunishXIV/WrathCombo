@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="section" xml:space="preserve">
+        <value>This section is the first-stop for getting help with or understanding Wrath Combo.</value>
+    </data>
+    <data name="tabError" xml:space="preserve">
+        <value>Sorry! There has been a UI error. Please report!</value>
+    </data>
+    <data name="tabGettingStarted" xml:space="preserve">
+        <value>Getting Started</value>
+    </data>
+    <data name="tabWhatIsWrath" xml:space="preserve">
+        <value>What is Wrath</value>
+    </data>
+    <data name="tabOptimization" xml:space="preserve">
+        <value>How to Optimize</value>
+    </data>
+    <data name="tabTroubleshooting" xml:space="preserve">
+        <value>Troubleshooting</value>
+    </data>
+    <data name="tabDevelopment" xml:space="preserve">
+        <value>Development Info</value>
+    </data>
+</root>

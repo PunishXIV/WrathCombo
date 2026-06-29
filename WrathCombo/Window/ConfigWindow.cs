@@ -248,6 +248,11 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
             OpenWindow = OpenWindow.Settings;
 
         ImGui.Spacing();
+        if (ImGui.Selectable(MainWindowUI.Button_Help,
+                OpenWindow == OpenWindow.Help))
+            OpenWindow = OpenWindow.Help;
+
+        ImGui.Spacing();
         if (ImGui.Selectable(MainWindowUI.Button_About, OpenWindow == OpenWindow.About))
             OpenWindow = OpenWindow.About;
 
@@ -310,8 +315,10 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
             case OpenWindow.CustomActions:
                 CustomActions.Draw();
                 break;
-        }
-        ;
+            case OpenWindow.Help:
+                Help.Draw();
+                break;
+        };
     }
 
     private static void DrawCollapseButton()
@@ -380,4 +387,5 @@ public enum OpenWindow
     About = 5,
     Debug = 6,
     CustomActions = 7,
+    Help = 8,
 }

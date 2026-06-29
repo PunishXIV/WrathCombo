@@ -138,6 +138,41 @@ public partial class WrathCombo
             case "customactions":
             case "custom": // unlisted
                 HandleOpenCommand(tab: OpenWindow.CustomActions, forceOpen: true); break;
+            
+            case "help":
+                Help.OpenToSpecificTab = null;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "whatisthis":
+            case "whatiswrath": // unlisted
+            case "what": // unlisted
+            case "about": // unlisted
+                Help.OpenToSpecificTab = Help.Tab.WhatIsWrath;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "troubleshooting":
+            case "issue": // unlisted
+            case "problem": // unlisted
+                Help.OpenToSpecificTab = Help.Tab.Troubleshooting;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "optimization":
+            case "optimizing": // unlisted
+            case "optimize": // unlisted
+            case "balance": // unlisted
+                Help.OpenToSpecificTab = Help.Tab.Optimization;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "gettingstarted":
+            case "welcome": // unlisted
+            case "setup": // unlisted
+                Help.OpenToSpecificTab = Help.Tab.GettingStarted;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
+            case "helpdev": // unlisted
+                Help.OpenToSpecificTab = Help.Tab.Development;
+                HandleOpenCommand(tab: OpenWindow.Help, forceOpen: true);
+                break;
 
             case "dbg": // unlisted
             case "debugtab": // unlisted
