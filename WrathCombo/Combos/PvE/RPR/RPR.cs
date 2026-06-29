@@ -1,4 +1,3 @@
-using Dalamud.Bindings.ImPlot;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.RPR.Config;
@@ -582,8 +581,7 @@ internal partial class RPR : Melee
             if (actionID is not ArcaneCircle)
                 return actionID;
 
-            return HasStatusEffect(Buffs.ImmortalSacrifice) &&
-                   LevelChecked(PlentifulHarvest)
+            return HasImmortalSacrificeStacks && LevelChecked(PlentifulHarvest)
                 ? PlentifulHarvest
                 : actionID;
         }
