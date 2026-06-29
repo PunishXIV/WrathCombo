@@ -31,12 +31,12 @@ internal partial class RPR
                 //Balance burst prep: SoD near 60s / 30s on Arcane Circle
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
                     UsesBurstAlignment && (AcCD.InRange(58f, 62f) || AcCD.InRange(28f, 32f)) &&
-                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32)
+                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
                     return true;
 
                 //Double enshroud
                 if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                    AcCD <= GCDTotal && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32 &&
+                    AcCD <= GCDTotal && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh &&
                     (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
@@ -107,7 +107,7 @@ internal partial class RPR
                 ComboAction == OriginalHook(SpinningScythe) && LevelChecked(NightmareScythe))
                 return OriginalHook(NightmareScythe);
 
-            return 0;
+            return OriginalHook(SpinningScythe);
         }
 
         if (ComboTimer > 0)
@@ -119,7 +119,7 @@ internal partial class RPR
                 return OriginalHook(InfernalSlice);
         }
 
-        return 0;
+        return OriginalHook(Slice);
     }
 
     private static uint DoBasicCombo(uint actionId, bool onAoE = false) =>
@@ -205,7 +205,7 @@ internal partial class RPR
         !ShouldDeferSoulOverflowWeave &&
         InNormalRotation &&
         !IsComboExpiring(3);
-    
+
     private static bool ShouldSpendSoulOvercapST(bool gluttonyEnabled)
     {
         if (!LevelChecked(Gluttony))
@@ -285,48 +285,17 @@ internal partial class RPR
 
     #region GCD Burst
 
-    private const float PerfectioFlexAfterHarvest = 58f;
-
-    private const float PerfectioFlexAfterArcaneCircle = 88f;
-
     private static bool WithinGcd(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
 
     private static bool HasPerfectioReady =>
         HasStatusEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio);
 
-    private static float PerfectioRemaining =>
-        GetStatusEffectRemainingTime(Buffs.PerfectioParata);
-
     private static uint PerfectioAction =>
         WithinGcd(Perfectio) ? Perfectio : OriginalHook(Communio);
 
-    private static bool InPerfectioFlexWindow =>
-        HasPerfectioReady && PerfectioRemaining > GCDTotal * 2 &&
-        (JustUsed(PlentifulHarvest, PerfectioFlexAfterHarvest) ||
-         IsOnCooldown(ArcaneCircle) && GetCooldownElapsed(ArcaneCircle) < PerfectioFlexAfterArcaneCircle ||
-         JustUsed(Communio, 30f));
-
-    private static bool ShouldHoldPerfectioInMelee =>
-        HasPerfectioReady && InMeleeRange() && UsesBurstAlignment &&
-        JustUsed(Communio, 30f) && InPerfectioFlexWindow &&
-        PerfectioRemaining > GCDTotal * 5 && AcCD > 15f;
-
-    private static bool ShouldHoldPerfectioForUptime =>
-        HasPerfectioReady && !InMeleeRange() && HasBattleTarget() &&
-        InPerfectioFlexWindow && PerfectioRemaining > GCDTotal * 3 && AcCD > 10f;
-
-    private static bool ShouldSpendPerfectioNow()
-    {
-        if (!HasPerfectioReady)
-            return false;
-
-        // Failsafe: use before falloff regardless of burst alignment.
-        if (PerfectioRemaining <= GCDTotal * 4 || AcCD <= 10f)
-            return true;
-
-        return !ShouldHoldPerfectioInMelee && !ShouldHoldPerfectioForUptime;
-    }
+    private static bool ShouldSpendPerfectioNow() =>
+        HasPerfectioReady;
 
     private static bool CanPerfectioGCD() =>
         HasPerfectioReady && ShouldSpendPerfectioNow() && InActionRange(PerfectioAction);
@@ -348,17 +317,22 @@ internal partial class RPR
         InPostBurstSequence &&
         !HasBurstComboContinue(onAoE) &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
-        (Soul < 50 || !ActionReady(Gluttony)) &&
+        Soul <= 50 &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice) && !IsComboExpiring(2));
 
     private static bool ShouldDeferSoulOverflowWeave =>
+        Soul < 100 &&
         InPostBurstSequence && !JustUsed(Gluttony, GCDTotal * 8);
 
     private static uint PostBurstGCD(bool onAoE, bool soulSliceEnabled = true)
     {
         if (!InPostBurstSequence)
+            return 0;
+
+        if (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner) ||
+            HasStatusEffect(Buffs.ImmortalSacrifice))
             return 0;
 
         if (ContinueBasicCombo(onAoE) is var combo and not 0)
@@ -370,9 +344,12 @@ internal partial class RPR
         return 0;
     }
 
+    private static bool HasImmortalSacrificeStacks =>
+        HasStatusEffect(Buffs.ImmortalSacrifice) && GetStatusEffectStacks(Buffs.ImmortalSacrifice) > 0;
+
     private static bool CanPlentifulHarvest() =>
         !HasStatusEffect(Buffs.Enshrouded) && !HasStatusEffect(Buffs.SoulReaver) &&
-        !HasStatusEffect(Buffs.Executioner) && HasStatusEffect(Buffs.ImmortalSacrifice) &&
+        !HasStatusEffect(Buffs.Executioner) && HasImmortalSacrificeStacks &&
         (GetStatusEffectRemainingTime(Buffs.BloodsownCircle) <= 1 || JustUsed(Communio));
 
     private static bool CanWhorlOfDeath(int refreshThreshold = 6, int hpThreshold = 0) =>
