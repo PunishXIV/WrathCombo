@@ -49,7 +49,9 @@ internal unsafe class AutoRotationController
 
     public static bool WouldLikeToGroundTarget;
     public static bool Paused;
+#pragma warning disable CS0649
     public static int UnpauseSeconds;
+#pragma warning restore CS0649
 
     public static IGameObject? AutorotHealTarget;
     public static bool AutorotRaidwiding;
