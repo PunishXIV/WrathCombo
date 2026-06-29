@@ -399,8 +399,6 @@ internal sealed class BossModIPC(
 
             var ai = isReborn ? Plugin.GetFoP("_aiConfig") : rotationManager.GetFoP("_aiConfig");
 
-            Svc.Log.Debug($"{ai is not null}");
-
             var enabled = ai.GetFoP<bool>("Enabled");
             var target = ai.GetFoP<bool>("ForbidActions");
 

@@ -555,6 +555,12 @@ public static class ActionWatching
                 var changed = CheckForChangedTarget(original, ref changedTargetId,
                     out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
 
+                if ((!Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) && actionId >= All.SingleTargetDPS) || (Service.ActionReplacer.LastActionInvokeFor.TryGetValue(actionId, out var p) && p >= All.SingleTargetDPS))
+                {
+                    Svc.Toasts.ShowError("This is a custom action, it does nothing on its own.");
+                    return false;
+                }
+
                 // If retargeting kicks in, update target ID
                 if (changed)
                 {
