@@ -1,6 +1,6 @@
-﻿using Dalamud.Game.Config;
+﻿using System.Numerics;
+using Dalamud.Game.Config;
 using Dalamud.Interface.Components;
-using Dalamud.Interface.Utility.Raii;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
@@ -16,36 +16,39 @@ namespace WrathCombo.Window.Tabs
         private static bool DragDropMode;
         private static uint HiddenSlots;
         private const UiControlOption HotbarSetting = UiControlOption.HotbarEmptyVisible;
+
         internal unsafe static new void Draw()
         {
-            ImGuiEx.TextWrapped($"This section is a purely optional way of replacing actions on your hotbar, using \"Custom Actions\". " +
-                $"For all single button features (everything marked as either Simple or Advanced) you can instead opt to use completely custom actions on your hotbar instead of it overriding an existing job action. " +
-                $"This frees up the actions for manual use, for example, for downtime where you only want to use 1-2-3 combos, or for healers to always have access to basic healing actions.\n\n" +
-                $"To get started, enable each of the type of combo you wish to use custom actions for. " +
-                $"Then, you can either just click once to select the item and click on a slot on your hotbar to place it, or click and hold the mouse button down, and drag it to the slot and release the mouse button.");
+            ImGuiEx.TextWrapped(
+                "This section is a purely optional way of replacing actions on your hotbar, using \"Custom Actions\".");
 
+            ImGuiEx.Spacing(new Vector2(0, 10));
             ImGui.Separator();
+            ImGuiEx.Spacing(new Vector2(0, 10));
 
-            using (var table = ImRaii.Table($"CustomActionsTable", 3))
-            {
-                if (!table)
-                    return;
+            ImGuiEx.TextWrapped(
+                "For all Single Button Combos (everything labeled either Simple or Advanced) you can opt to use completely custom actions on your hotbar instead of it overriding an existing job action.\n\n" +
+                "This frees up the actions for manual use, for example, for downtime where you only want to use 1-2-3 combos, or for healers to always have access to basic healing actions.\n\n" +
+                "To get started, enable each Combo you wish to use custom actions for.\n" +
+                "Then, you can either just click once to select the item and click on a slot on your hotbar to place it, or click and hold the mouse button down, and drag it to the slot and release the mouse button.");
 
-                ImGui.TableSetupColumn("Setting", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Description", ImGuiTableColumnFlags.WidthFixed, ImGui.GetContentRegionAvail().X);
+            ImGuiEx.Spacing(new Vector2(0, 10));
+            ImGui.Separator();
+            ImGuiEx.Spacing(new Vector2(0, 10));
 
-                foreach (var act in P.CustomActions.Manager.Actions)
-                {
-                    DrawAction(act);
-                }
-            }
-
+            ImGui.Indent();
+            foreach (var act in P.CustomActions.Manager.Actions)
+                DrawAction(act);
+            ImGui.Unindent();
 
             if (ImGui.Checkbox($"Don't Override Icons with Job Actions (drag action to hotbar again to take effect)", ref Service.Configuration.CustomActionSettings.AlwaysShowIcon))
                 Service.Configuration.Save();
 
-            ImGuiComponents.HelpMarker("This will hide all combo outputs on custom actions, leaving only these icons showing. This is not advised if you wish to see the real actions being output by the combos on your hotbar, and should only be used if you feel it's something you want.");
+            ImGuiComponents.HelpMarker(
+                "This will hide all combo outputs on custom actions, leaving only these icons here showing.\n" +
+                "This is not advised if you wish to see the real actions being output by the combos on your hotbar, and should only be used if you particularly like these icons.");
+
+            #region Icon Dragging
 
             if (ImGui.GetIO().MouseDownDuration[0] > 0.5f)
                 DragDropMode = true;
@@ -82,6 +85,8 @@ namespace WrathCombo.Window.Tabs
                 }
 
             }
+
+            #endregion
         }
 
         private static unsafe void DrawAction(CustomAction act)
