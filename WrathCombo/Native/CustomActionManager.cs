@@ -340,7 +340,7 @@ public sealed unsafe class CustomActionSetup : IDisposable
     public (int Hotbar, int Slot)? HoveredSlot = null;
 
     [EzHook("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC 20 48 8B 7C 24 ?? 48 8B D9", false)]
-    private EzHook<AddonActionBarBase.Delegates.ReceiveEvent>? AddonActionBarBase_ReceiveEventHook;
+    private EzHook<AddonActionBarBase.Delegates.ReceiveEvent>? AddonActionBarBase_ReceiveEventHook = null!;
 
     private unsafe void AddonActionBarBase_ReceiveEventDetour(AddonActionBarBase* thisPtr, AtkEventType eventType, int eventParam, AtkEvent* atkEvent, AtkEventData* atkEventData)
     {
