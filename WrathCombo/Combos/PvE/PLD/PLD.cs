@@ -268,9 +268,17 @@ internal partial class PLD : Tank
                 (PLD_ShieldLob_Feature_FieldMO 
                     ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(ShieldLob.ActionRange())
                     : null) ??
+    
+                (PLD_ShieldLob_Feature_SmartTargeting == 1
+                    ? PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer
+                        ? SimpleTarget.FurthestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(ShieldLob.ActionRange())
+                        : SimpleTarget.FurthestEnemyOver5YalmsAway.IfWithinRange(ShieldLob.ActionRange())
+                    : null) ??
 
-                (PLD_ShieldLob_Feature_NearestOOR
-                    ? SimpleTarget.NearstEnemyOver5YalmsAway .IfWithinRange(ShieldLob.ActionRange())
+                (PLD_ShieldLob_Feature_SmartTargeting == 2 
+                    ? PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer
+                        ? SimpleTarget.NearestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(ShieldLob.ActionRange())
+                        : SimpleTarget.NearestEnemyOver5YalmsAway.IfWithinRange(ShieldLob.ActionRange())
                     : null);
             
             if (PLD_ShieldLob_Feature_HolySpirit && LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && 

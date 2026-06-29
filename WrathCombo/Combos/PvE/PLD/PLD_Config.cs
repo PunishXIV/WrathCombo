@@ -1,3 +1,4 @@
+using System.Numerics;
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
 using FFXIVClientStructs.FFXIV.Client.System.Input.SoftKeyboards;
@@ -214,11 +215,31 @@ internal partial class PLD
 
                 #region Standalones
                 case Preset.PLD_ShieldLob_Feature:
-                    DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, ShieldLob.ActionName()));
-                    DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_NearestOOR, Generics.NearestOOR, FormatAndCache(Generics.NearestOORRetarget, ShieldLob.ActionName()));
                     DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_HolySpirit, "Smart Holy Spirit", 
-                        "Replaces Shield Lob with Holy Spirit when available. Retargeting features will also apply to Holy Spirit" +
-                        "\n Must be under the effect of Divine Might or not moving.");
+                        "Replaces Shield Lob with Holy Spirit when available. " +
+                        "\nMust be under the effect of Divine Might or not moving." +
+                        "\nRetargeting features will also apply to Holy Spirit.");
+                    DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, ShieldLob.ActionName()));
+                    
+                    ImGui.Indent(12f.Scale());
+                    ImGui.NewLine();
+                    DrawHorizontalRadioButton(PLD_ShieldLob_Feature_SmartTargeting,
+                        Generics.OffRangeBasedTargeting, "", 0, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(PLD_ShieldLob_Feature_SmartTargeting,
+                        Generics.FurthestOOR, 
+                        FormatAndCache(Generics.FurthestOORRetarget, ShieldLob.ActionName()), 1, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(PLD_ShieldLob_Feature_SmartTargeting,
+                        Generics.NearestOOR, 
+                        FormatAndCache(Generics.NearestOORRetarget, ShieldLob.ActionName()), 2, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    ImGuiEx.Spacing(new Vector2(0, 5));
+                    if (PLD_ShieldLob_Feature_SmartTargeting > 0)
+                    {
+                        DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer, Generics.SmartTargeting, Generics.SmartTargetingNotTargetingPlayer);
+                    }
+                    ImGui.Unindent();
                     break;
 
                 case Preset.PLD_Requiescat_Options:
@@ -360,6 +381,7 @@ internal partial class PLD
             PLD_RetargetClemency_Health = new("PLD_RetargetClemency_Health", 30),
             PLD_RetargetShieldBash_Strength = new("PLD_RetargetShieldBash_Strength", 3),
             PLD_RetargetCover_Health = new("PLD_RetargetCover_Health", 30),
+            PLD_ShieldLob_Feature_SmartTargeting =  new("PLD_ShieldLob_Feature_SmartTargeting"),
 
             //One-Button Mitigation
             PLD_Mit_HallowedGround_Max_Health = new("PLD_Mit_HallowedGround_Max_Health", 20),
@@ -389,7 +411,7 @@ internal partial class PLD
             PLD_SpiritsWithin_SubOption = new("PLD_SpiritsWithin_SubOption"),
             PLD_Requiescat_SubOption_GoringBlade = new("PLD_Requiescat_SubOption_GoringBlade"),
             PLD_ShieldLob_Feature_FieldMO = new("PLD_ShieldLob_Feature_FieldMO"),
-            PLD_ShieldLob_Feature_NearestOOR = new("PLD_ShieldLob_Feature_NearestOOR"),
+            PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer = new("PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer"),
             PLD_ShieldLob_Feature_HolySpirit = new("PLD_ShieldLob_Feature_HolySpirit");
             
 

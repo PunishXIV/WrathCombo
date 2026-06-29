@@ -1,4 +1,6 @@
+using System.Numerics;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Style;
 using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -428,10 +430,29 @@ internal partial class WAR
                 case Preset.WAR_ArmsLengthLockout:
                     DrawSliderInt(0, 5, WAR_ArmsLengthLockout_Time, "Time (In Seconds) remaining on Inner Strength to Lock out Arm's Length until.");
                     break;
-                
+                   
                 case Preset.WAR_RetargetTomahawk:
                     DrawAdditionalBoolChoice(WAR_RetargetTomahawk_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, Tomahawk.ActionName()));
-                    DrawAdditionalBoolChoice(WAR_RetargetTomahawk_NearestOOR, Generics.NearestOOR, FormatAndCache(Generics.NearestOORRetarget, Tomahawk.ActionName()));
+                    
+                    ImGui.Indent(12f.Scale());
+                    ImGui.NewLine();
+                    DrawHorizontalRadioButton(WAR_RetargetTomahawk_SmartTargeting,
+                        Generics.OffRangeBasedTargeting, "", 0, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(WAR_RetargetTomahawk_SmartTargeting,
+                        Generics.FurthestOOR, 
+                        FormatAndCache(Generics.FurthestOORRetarget, Tomahawk.ActionName()), 1, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(WAR_RetargetTomahawk_SmartTargeting,
+                        Generics.NearestOOR, 
+                        FormatAndCache(Generics.NearestOORRetarget, Tomahawk.ActionName()), 2, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    ImGuiEx.Spacing(new Vector2(0, 5));
+                    if (WAR_RetargetTomahawk_SmartTargeting > 0)
+                    {
+                        DrawAdditionalBoolChoice(WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer, Generics.SmartTargeting, Generics.SmartTargetingNotTargetingPlayer);
+                    }
+                    ImGui.Unindent();
                     break;
                     #endregion
             }
@@ -491,6 +512,7 @@ internal partial class WAR
             WAR_FC_PrimalRend_Movement = new("WAR_FC_PrimalRend_Movement"),
             WAR_FC_PrimalRend_EarlyLate = new("WAR_FC_PrimalRend_EarlyLate"),
             WAR_ArmsLengthLockout_Time = new("WAR_ArmsLengthLockout_Time", 3),
+            WAR_RetargetTomahawk_SmartTargeting = new("WAR_RetargetTomahawk_SmartTargeting"),
 
             //One Button Mitigation
             WAR_Mit_Holmgang_Health = new("WAR_Mit_Holmgang_Health", 20),
@@ -535,7 +557,9 @@ internal partial class WAR
             WAR_AoE_Onslaught_ManualPooling = new("WAR_AoE_Onslaught_ManualPooling"),
 
             WAR_RetargetTomahawk_FieldMO = new("WAR_RetargetTomahawk_FieldMO"),
-            WAR_RetargetTomahawk_NearestOOR = new("WAR_RetargetTomahawk_NearestOOR");
+            WAR_RetargetTomahawk_FurthestOOR = new("WAR_RetargetTomahawk_FurthestOOR"),
+            WAR_RetargetTomahawk_NearestOOR = new("WAR_RetargetTomahawk_NearestOOR"),
+            WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer = new("WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer");
         public static UserIntArray
             WAR_Mit_Priorities = new("WAR_Mit_Priorities");
 

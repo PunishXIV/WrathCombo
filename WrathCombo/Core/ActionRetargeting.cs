@@ -401,7 +401,8 @@ public class ActionRetargeting : IDisposable
     private void ClearCachedRetargetsOnConfigChange
         (object? _, Configuration.ConfigChangeEventArgs args)
     {
-        if (args.Type == Configuration.ConfigChangeType.Preset)
+        if (args.Type is (Configuration.ConfigChangeType.Preset or
+            Configuration.ConfigChangeType.UserData))
             // todo: restrict this to only clear the retargets associated
             //  with the preset, once Retargeting is based on Presets.
             ClearCachedRetargets();

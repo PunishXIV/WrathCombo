@@ -416,16 +416,25 @@ internal partial class WAR
         {
             if (actionID is not Tomahawk)
                 return actionID;
-
+            
             IGameObject? target =
                 //Mouseover Retarget
                 (WAR_RetargetTomahawk_FieldMO 
                     ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(Tomahawk.ActionRange())
                     : null) ??
+    
+                (WAR_RetargetTomahawk_SmartTargeting == 1
+                    ? WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer
+                        ? SimpleTarget.FurthestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(Tomahawk.ActionRange())
+                        : SimpleTarget.FurthestEnemyOver5YalmsAway.IfWithinRange(Tomahawk.ActionRange())
+                    : null) ??
 
-                (WAR_RetargetTomahawk_NearestOOR
-                    ? SimpleTarget.NearstEnemyOver5YalmsAway .IfWithinRange(Tomahawk.ActionRange())
+                (WAR_RetargetTomahawk_SmartTargeting == 2 
+                    ? WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer
+                        ? SimpleTarget.NearestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(Tomahawk.ActionRange())
+                        : SimpleTarget.NearestEnemyOver5YalmsAway.IfWithinRange(Tomahawk.ActionRange())
                     : null);
+                    
             
             return target != null
                 ? actionID.Retarget(target)

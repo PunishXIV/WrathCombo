@@ -464,9 +464,17 @@ internal partial class DRK : Tank
                 (DRK_Retarget_Unmend_FieldMO 
                     ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(Unmend.ActionRange())
                     : null) ??
+    
+                (DRK_Retarget_Unmend_SmartTargeting == 1
+                    ? DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer
+                        ? SimpleTarget.FurthestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(Unmend.ActionRange())
+                        : SimpleTarget.FurthestEnemyOver5YalmsAway.IfWithinRange(Unmend.ActionRange())
+                    : null) ??
 
-                (DRK_Retarget_Unmend_NearestOOR
-                    ? SimpleTarget.NearstEnemyOver5YalmsAway .IfWithinRange(Unmend.ActionRange())
+                (DRK_Retarget_Unmend_SmartTargeting == 2 
+                    ? DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer
+                        ? SimpleTarget.NearestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(Unmend.ActionRange())
+                        : SimpleTarget.NearestEnemyOver5YalmsAway.IfWithinRange(Unmend.ActionRange())
                     : null);
             
             return target != null

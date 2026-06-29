@@ -1,5 +1,6 @@
 #region
 
+using System.Numerics;
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
@@ -473,12 +474,28 @@ internal partial class DRK
                     break;
                 
                 case Preset.DRK_Retarget_Unmend:
-                    DrawAdditionalBoolChoice(DRK_Retarget_Unmend_FieldMO, 
-                        Generics.Mouseover, 
-                        FormatAndCache(Generics.MouseoverRetargetHostile, Unmend.ActionName()));
-                    DrawAdditionalBoolChoice(DRK_Retarget_Unmend_NearestOOR, 
+                    DrawAdditionalBoolChoice(DRK_Retarget_Unmend_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, Unmend.ActionName()));
+                    
+                    ImGui.Indent(12f.Scale());
+                    ImGui.NewLine();
+                    DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
+                        Generics.OffRangeBasedTargeting, "", 0, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
+                        Generics.FurthestOOR, 
+                        FormatAndCache(Generics.FurthestOORRetarget, Unmend.ActionName()), 1, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
                         Generics.NearestOOR, 
-                        FormatAndCache(Generics.NearestOORRetarget, Unmend.ActionName()));
+                        FormatAndCache(Generics.NearestOORRetarget, Unmend.ActionName()), 2, 
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    ImGuiEx.Spacing(new Vector2(0, 5));
+                    if (DRK_Retarget_Unmend_SmartTargeting > 0)
+                    {
+                        DrawAdditionalBoolChoice(DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer, Generics.SmartTargeting, Generics.SmartTargetingNotTargetingPlayer);
+                    }
+                    ImGui.Unindent();
+                    break;
                     break;
 
                     #endregion
@@ -995,11 +1012,12 @@ internal partial class DRK
         #region Standalones
 
         public static readonly UserInt
-            DRK_RetargetOblationDuration = new("DRK_RetargetOblationDuration");
+            DRK_RetargetOblationDuration = new("DRK_RetargetOblationDuration"),
+            DRK_Retarget_Unmend_SmartTargeting = new("DRK_Retarget_Unmend_SmartTargeting");
         
         public static readonly UserBool
             DRK_Retarget_Unmend_FieldMO = new("DRK_Retarget_Unmend_FieldMO"),
-            DRK_Retarget_Unmend_NearestOOR  = new("DRK_Retarget_Unmend_NearestOOR");
+            DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer  = new("DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer");
 
         #endregion
 
