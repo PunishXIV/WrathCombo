@@ -53,7 +53,6 @@ public static class UserConfig
             IsSubBox = true,
             ContentsFunc = () =>
             {
-                bool inputChanged = false;
                 Vector2 currentPos = ImGui.GetCursorPos();
                 ImGui.SetCursorPosX(currentPos.X + itemWidth);
                 ImGui.PushTextWrapPos(wrapPos);
@@ -64,17 +63,10 @@ public static class UserConfig
                 Vector2 textLength = ImGui.CalcTextSize(sliderDescription);
                 string newLines = "";
                 for (int i = 1; i < lines; i++)
-                {
                     if (i % 2 == 0)
-                    {
                         newLines += "\n";
-                    }
                     else
-                    {
                         newLines += "\n\n";
-                    }
-
-                }
 
                 if (hasAdditionalChoice)
                 {
