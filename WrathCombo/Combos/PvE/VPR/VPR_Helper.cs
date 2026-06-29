@@ -392,7 +392,6 @@ internal partial class VPR
 
     private static bool CanSerpentsIre(int hpThreshold = 0) =>
         InCombat() && !MaxCoils && ActionReady(SerpentsIre) &&
-        HasBothBuffs &&
         GetTargetHPPercent() > hpThreshold;
 
     private static bool ShouldSpendCoilStacks(int holdCharges, int hpThreshold) =>
@@ -411,11 +410,13 @@ internal partial class VPR
               !IsComboExpiring(2) && !IsVenomExpiring(2) && !IsHoningExpiring(2) && !IsEmpowermentExpiring(3));
 
     private static bool UncoiledFuryOvercapProtection(bool onAoE) =>
-        onAoE
-            ? MaxCoils && !HasStatusEffect(Buffs.Reawakened) &&
-              (HasCharges(Vicepit) && NoAoEComboWeaves || IreCD <= GCDTotal * 2)
-            : MaxCoils && !HasStatusEffect(Buffs.Reawakened) &&
-              (HasCharges(Vicewinder) && NoSTComboWeaves || IreCD <= GCDTotal * 3);
+        MaxCoils &&
+        ActionReady(UncoiledFury) &&
+        InActionRange(UncoiledFury) &&
+        !HasStatusEffect(Buffs.Reawakened) &&
+        (onAoE ? NoAoEComboWeaves : NoSTComboWeaves) &&
+        (LevelChecked(SerpentsIre) && IreCD <= GCDTotal * (onAoE ? 2 : 3) ||
+         HasCharges(onAoE ? Vicepit : Vicewinder));
 
     private static bool CanUseUncoiledFury(
         bool onAoE = false,

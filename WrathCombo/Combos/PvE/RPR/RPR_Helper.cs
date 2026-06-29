@@ -311,11 +311,27 @@ internal partial class RPR
         InPostBurstSequence && Soul >= 50 && ActionReady(Gluttony) &&
         !HasBurstComboContinue();
 
+    private static bool ShouldSpendSoulSliceChargeOvercap(bool onAoE)
+    {
+        if (Soul >= 100)
+            return false;
+
+        uint action = onAoE ? SoulScythe : SoulSlice;
+        if (!ActionReady(action))
+            return false;
+
+        if (GetRemainingCharges(action) >= GetMaxCharges(action))
+            return true;
+
+        return GetRemainingCharges(action) >= 1 &&
+               GetCooldownChargeRemainingTime(action) <= GCDTotal * 2;
+    }
+
     private static bool CanBurstSoulSliceScythe(bool onAoE = false) =>
         InPostBurstSequence &&
         !HasBurstComboContinue() &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
-        Soul <= 50 &&
+        (Soul <= 50 || ShouldSpendSoulSliceChargeOvercap(onAoE)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice) && !IsComboExpiring(2));
@@ -333,13 +349,13 @@ internal partial class RPR
             HasStatusEffect(Buffs.ImmortalSacrifice))
             return 0;
 
-        if (ContinueBasicCombo(onAoE) is var combo and not 0)
-            return combo;
+        if (HasBurstComboContinue())
+            return ContinueBasicCombo(onAoE);
 
         if (soulSliceEnabled && CanBurstSoulSliceScythe(onAoE))
             return onAoE ? SoulScythe : SoulSlice;
 
-        return 0;
+        return ContinueBasicCombo(onAoE);
     }
 
     private static bool HasImmortalSacrificeStacks =>
@@ -519,7 +535,8 @@ internal partial class RPR
 
     private static bool CanSoulSliceScythe(bool onAoE) =>
         !InPostBurstSequence &&
-        Soul <= 50 && InNormalRotation && !IsComboExpiring(3) &&
+        InNormalRotation && !IsComboExpiring(3) &&
+        (Soul <= 50 || ShouldSpendSoulSliceChargeOvercap(onAoE)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice));

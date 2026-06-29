@@ -272,7 +272,7 @@ internal partial class MCH
         if (ToolsReady(Drill))
             numberOfReadyTools += (int)GetRemainingCharges(Drill);
 
-        if (ToolsReady(Chainsaw))
+        if (ToolReadyForReassembleWeave(Chainsaw))
         {
             numberOfReadyTools++;
             if (LevelChecked(Excavator))
@@ -284,7 +284,7 @@ internal partial class MCH
             numberOfReadyTools++;
         }
 
-        if (ToolsReady(OriginalHook(AirAnchor)))
+        if (ToolReadyForReassembleWeave(AirAnchor))
             numberOfReadyTools++;
 
         if (!LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot &&
@@ -306,17 +306,17 @@ internal partial class MCH
         if (remainingCharges == 0 || remainingCharges <= chargePool)
             return false;
 
-        if (ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+        if (ToolReadyForReassembleWeave(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
-        if (ToolsReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ToolReadyForReassembleWeave(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
-        if (ToolsReady(AirAnchor) &&
+        if (ToolReadyForReassembleWeave(AirAnchor) &&
             (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2))
             return true;
 
-        if (CanUseDrill(true) && ToolsReady(Drill))
+        if (CanUseDrill(true) && ToolReadyForReassembleWeave(Drill))
             return true;
 
         if (LevelChecked(Scattergun) && ActionReady(Scattergun))
@@ -360,12 +360,12 @@ internal partial class MCH
                 return numberOfReadyTools >= remainingCharges;
             }
 
-            case 1 when ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolsReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolsReady(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2):
-            case 1 when ToolsReady(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2):
+            case 1 when ToolReadyForReassembleWeave(Excavator) && HasStatusEffect(Buffs.ExcavatorReady):
+            case 1 when ToolReadyForReassembleWeave(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady):
+            case 1 when ToolReadyForReassembleWeave(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2):
+            case 1 when ToolReadyForReassembleWeave(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2):
             case 1 when !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot):
-            case 1 when !LevelChecked(CleanShot) && ToolsReady(HotShot):
+            case 1 when !LevelChecked(CleanShot) && ToolReadyForReassembleWeave(HotShot):
                 return true;
 
             default:
@@ -497,6 +497,14 @@ internal partial class MCH
 
     private static bool ToolsReady(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
+
+    // Reassemble weave window — tool not castable yet, but lands within half a GCD after this oGCD.
+    private static bool ToolReadyForReassembleWeave(uint actionId) =>
+        LevelChecked(actionId) &&
+        !ActionReady(actionId) &&
+        (HasCharges(actionId)
+            ? GetCooldownChargeRemainingTime(actionId) <= GCDTotal * 0.5f
+            : GetCooldownRemainingTime(actionId) <= GCDTotal * 0.5f);
 
     private static bool CanUseDrill(bool onAoE) =>
         !onAoE || !LevelChecked(BioBlaster);
