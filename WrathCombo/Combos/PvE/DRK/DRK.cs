@@ -449,6 +449,32 @@ internal partial class DRK : Tank
                 : actionID;
         }
     }
+    
+    internal class DRK_RetargetUnmend : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.DRK_Retarget_Unmend;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Unmend)
+                return actionID;
+
+            IGameObject? target =
+                //Mouseover Retarget
+                (DRK_Retarget_Unmend_FieldMO 
+                    ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(Unmend.ActionRange())
+                    : null) ??
+
+                (DRK_Retarget_Unmend_NearestOOR
+                    ? SimpleTarget.NearstEnemyOver5YalmsAway .IfWithinRange(Unmend.ActionRange())
+                    : null);
+            
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
+        }
+    }
+    
 
     #endregion
 

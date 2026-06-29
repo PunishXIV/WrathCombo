@@ -60,7 +60,9 @@ internal partial class GNB
 
         public static UserBool
             GNB_Mit_Advanced_Boss_Camouflage_Align = new("GNB_Mit_Advanced_Boss_Camouflage_Align", true),
-            GNB_Mit_Advanced_Boss_Nebula_First = new("GNB_Mit_Advanced_Boss_Nebula_First", true);
+            GNB_Mit_Advanced_Boss_Nebula_First = new("GNB_Mit_Advanced_Boss_Nebula_First", true),
+            GNB_RetargetLightningShot_FieldMO = new("GNB_RetargetLightningShot_FieldMO", true),
+            GNB_RetargetLightningShot_NearestOOR = new("GNB_RetargetLightningShot_NearestOOR", true);
 
         public static UserIntArray
             GNB_Mit_OneButton_Priorities = new("GNB_Mit_OneButton_Priorities");
@@ -383,6 +385,11 @@ internal partial class GNB
                         "All Procs", $"Uses all {Continuation.ActionName()} procs available as soon as possible", 0);
                     DrawHorizontalRadioButton(GNB_FC_Continuation_Procs,
                         "Only Fated Brand", $"Only uses {FatedBrand.ActionName()} regardless of other {Continuation.ActionName()} procs currently available", 1);
+                    break;
+                
+                case Preset.GNB_RetargetLightningShot:
+                    DrawAdditionalBoolChoice(GNB_RetargetLightningShot_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, LightningShot.ActionName()));
+                    DrawAdditionalBoolChoice(GNB_RetargetLightningShot_NearestOOR, Generics.NearestOOR, FormatAndCache(Generics.NearestOORRetarget, LightningShot.ActionName()));
                     break;
                     #endregion
             }

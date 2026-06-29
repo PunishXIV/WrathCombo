@@ -202,18 +202,16 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
                 return ResourceManager.GetString("Align0With1", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Keep {0} aligned with manual use of {1}..
         /// </summary>
-        internal static string Align0WithManual1
-        {
-            get
-            {
+        internal static string Align0WithManual1 {
+            get {
                 return ResourceManager.GetString("Align0WithManual1", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to All Content.
         /// </summary>
@@ -743,6 +741,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mouseover.
+        /// </summary>
+        internal static string Mouseover {
+            get {
+                return ResourceManager.GetString("Mouseover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will retarget {0} at your mouseover target (if Hostile)..
+        /// </summary>
+        internal static string MouseoverRetargetHostile {
+            get {
+                return ResourceManager.GetString("MouseoverRetargetHostile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Movement Option.
         /// </summary>
         internal static string MovementOption {
@@ -766,6 +782,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         internal static string MPLessOrEqual {
             get {
                 return ResourceManager.GetString("MPLessOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nearest Out of Range.
+        /// </summary>
+        internal static string NearestOOR {
+            get {
+                return ResourceManager.GetString("NearestOOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will {0} at the nearest hostile outside of 5 Yalms..
+        /// </summary>
+        internal static string NearestOORRetarget {
+            get {
+                return ResourceManager.GetString("NearestOORRetarget", resourceCulture);
             }
         }
         

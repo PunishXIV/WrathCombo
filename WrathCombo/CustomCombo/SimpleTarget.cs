@@ -347,6 +347,13 @@ internal static class SimpleTarget
             .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsInCombat() && x.IsNotInvincible())
             .OrderBy(x => GetTargetDistance(x))
             .FirstOrDefault();
+    
+    public static IGameObject? NearstEnemyOver5YalmsAway  =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway())
+            .OrderBy(x => GetTargetDistance(x))
+            .FirstOrDefault();
 
     public static IGameObject? NearestEnemyToTarget
         (IGameObject? target, float maximumRangeFromPlayer = 35f) =>

@@ -428,7 +428,11 @@ internal partial class WAR
                 case Preset.WAR_ArmsLengthLockout:
                     DrawSliderInt(0, 5, WAR_ArmsLengthLockout_Time, "Time (In Seconds) remaining on Inner Strength to Lock out Arm's Length until.");
                     break;
-
+                
+                case Preset.WAR_RetargetTomahawk:
+                    DrawAdditionalBoolChoice(WAR_RetargetTomahawk_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, Tomahawk.ActionName()));
+                    DrawAdditionalBoolChoice(WAR_RetargetTomahawk_NearestOOR, Generics.NearestOOR, FormatAndCache(Generics.NearestOORRetarget, Tomahawk.ActionName()));
+                    break;
                     #endregion
             }
         }
@@ -528,7 +532,10 @@ internal partial class WAR
             WAR_AoE_Decimate_Pooling = new("WAR_AoE_Decimate_Pooling"),
             WAR_AoE_Decimate_Pooling_BossOnly = new("WAR_AoE_Decimate_Pooling_BossOnly"),
             WAR_AoE_Decimate_Smart = new("WAR_AoE_Decimate_Smart"),
-            WAR_AoE_Onslaught_ManualPooling = new("WAR_AoE_Onslaught_ManualPooling");
+            WAR_AoE_Onslaught_ManualPooling = new("WAR_AoE_Onslaught_ManualPooling"),
+
+            WAR_RetargetTomahawk_FieldMO = new("WAR_RetargetTomahawk_FieldMO"),
+            WAR_RetargetTomahawk_NearestOOR = new("WAR_RetargetTomahawk_NearestOOR");
         public static UserIntArray
             WAR_Mit_Priorities = new("WAR_Mit_Priorities");
 

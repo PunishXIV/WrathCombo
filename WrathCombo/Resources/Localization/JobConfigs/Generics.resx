@@ -345,6 +345,12 @@ Set to Zero to disable this check.</value>
   <data name="MinimumNumberOfEnemies" xml:space="preserve">
     <value>Minimum Number of enemies in range to use. </value>
   </data>
+  <data name="Mouseover" xml:space="preserve">
+    <value>Mouseover</value>
+  </data>
+  <data name="MouseoverRetargetHostile" xml:space="preserve">
+    <value>Will retarget {0} at your mouseover target (if Hostile).</value>
+  </data>
   <data name="MovementOption" xml:space="preserve">
     <value>Movement Option</value>
   </data>
@@ -356,6 +362,12 @@ Set to Zero to disable this check.</value>
   </data>
   <data name="NoMovement" xml:space="preserve">
     <value>No Movement</value>
+  </data>
+  <data name="NearestOOR" xml:space="preserve">
+    <value>Nearest Out of Range</value>
+  </data>
+  <data name="NearestOORRetarget" xml:space="preserve">
+    <value>Will {0} at the nearest hostile outside of 5 Yalms.</value>
   </data>
   <data name="NonBossEncountersOnly" xml:space="preserve">
     <value>Non-boss Encounters Only</value>

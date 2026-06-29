@@ -706,6 +706,33 @@ internal partial class GNB : Tank
         }
     }
     #endregion
+    
+    #region Lightning Shot Retargeting
+    internal class GNB_RetargetLightningShot : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.GNB_RetargetLightningShot;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not LightningShot)
+                return actionID;
+
+            IGameObject? target =
+                //Mouseover Retarget
+                (GNB_RetargetLightningShot_FieldMO 
+                    ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(LightningShot.ActionRange())
+                    : null) ??
+
+                (GNB_RetargetLightningShot_NearestOOR
+                    ? SimpleTarget.NearstEnemyOver5YalmsAway .IfWithinRange(LightningShot.ActionRange())
+                    : null);
+            
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
+        }
+    }
+    #endregion
 
     #region Basic Combos
     internal class GNB_ST_BasicCombo : CustomCombo

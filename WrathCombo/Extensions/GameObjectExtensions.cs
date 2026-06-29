@@ -266,6 +266,13 @@ public static class GameObjectExtensions
         /// </summary>
         public bool IsWithinRange(float range = 25) =>
             obj != null && IsInRange(obj, range);
+        
+        /// <summary>
+        ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+        ///     boolean check for if the target is within range.
+        /// </summary>
+        public bool IsAtLeastFiveYalmsAway(float range = 5) =>
+            obj != null && !IsInRange(obj, range);
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick

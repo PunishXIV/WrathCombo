@@ -262,11 +262,26 @@ internal partial class PLD : Tank
         {
             if (actionID is not ShieldLob)
                 return actionID;
+            
+            IGameObject? target =
+                //Mouseover Retarget
+                (PLD_ShieldLob_Feature_FieldMO 
+                    ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(ShieldLob.ActionRange())
+                    : null) ??
 
-            if (LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && (TimeMoving.Ticks == 0 || HasStatusEffect(Buffs.DivineMight)))
-                return HolySpirit;
-
-            return actionID;
+                (PLD_ShieldLob_Feature_NearestOOR
+                    ? SimpleTarget.NearstEnemyOver5YalmsAway .IfWithinRange(ShieldLob.ActionRange())
+                    : null);
+            
+            if (PLD_ShieldLob_Feature_HolySpirit && LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && 
+                (TimeMoving.Ticks == 0 || HasStatusEffect(Buffs.DivineMight)))
+                return target != null 
+                    ? HolySpirit.Retarget(ShieldLob, target)
+                    : HolySpirit;
+            
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
         }
     }
 
