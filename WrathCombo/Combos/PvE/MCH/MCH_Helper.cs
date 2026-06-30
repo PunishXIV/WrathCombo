@@ -293,7 +293,7 @@ internal partial class MCH
         return numberOfReadyTools;
     }
 
-    private static bool CanReassembleAoE(int chargePool = 0, int hpThreshold = 25)
+    private static bool CanReassembleAoE(int chargePool = 0, int hpThreshold = 25, bool forPrepull = false)
     {
         uint remainingCharges = GetRemainingCharges(Reassemble);
 
@@ -305,17 +305,17 @@ internal partial class MCH
         if (remainingCharges == 0 || remainingCharges <= chargePool)
             return false;
 
-        if (ToolReadyForReassembleWeave(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+        if (ToolReadyForReassemble(Excavator, forPrepull) && HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
-        if (ToolReadyForReassembleWeave(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ToolReadyForReassemble(Chainsaw, forPrepull) && !HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
-        if (ToolReadyForReassembleWeave(AirAnchor) &&
+        if (ToolReadyForReassemble(AirAnchor, forPrepull) &&
             (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2))
             return true;
 
-        if (CanUseDrill(true) && ToolReadyForReassembleWeave(Drill))
+        if (CanUseDrill(true) && ToolReadyForReassemble(Drill, forPrepull))
             return true;
 
         if (LevelChecked(Scattergun) && ActionReady(Scattergun))
@@ -331,10 +331,10 @@ internal partial class MCH
         LevelChecked(Scattergun) && InActionRange(OriginalHook(SpreadShot)) ||
         !LevelChecked(Drill) && InActionRange(OriginalHook(SpreadShot));
 
-    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25) =>
-        onAoE ? CanReassembleAoE(chargePool, hpThreshold) : CanReassembleST(reassembleChoice, chargePool, hpThreshold);
+    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25, bool forPrepull = false) =>
+        onAoE ? CanReassembleAoE(chargePool, hpThreshold, forPrepull) : CanReassembleST(reassembleChoice, chargePool, hpThreshold, forPrepull);
 
-    private static bool CanReassembleST(int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
+    private static bool CanReassembleST(int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25, bool forPrepull = false)
     {
         UpdateReassembleChargeTracking();
 
@@ -359,12 +359,12 @@ internal partial class MCH
                 return numberOfReadyTools >= remainingCharges;
             }
 
-            case 1 when ToolReadyForReassembleWeave(Excavator) && HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolReadyForReassembleWeave(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolReadyForReassembleWeave(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2):
-            case 1 when ToolReadyForReassembleWeave(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2):
+            case 1 when ToolReadyForReassemble(Excavator, forPrepull) && HasStatusEffect(Buffs.ExcavatorReady):
+            case 1 when ToolReadyForReassemble(Chainsaw, forPrepull) && !HasStatusEffect(Buffs.ExcavatorReady):
+            case 1 when ToolReadyForReassemble(AirAnchor, forPrepull) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2):
+            case 1 when ToolReadyForReassemble(Drill, forPrepull) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2):
             case 1 when !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot):
-            case 1 when !LevelChecked(CleanShot) && ToolReadyForReassembleWeave(HotShot):
+            case 1 when !LevelChecked(CleanShot) && ToolReadyForReassemble(HotShot, forPrepull):
                 return true;
 
             default:
@@ -499,10 +499,14 @@ internal partial class MCH
 
     private static bool ToolReadyForReassembleWeave(uint actionId) =>
         LevelChecked(actionId) &&
-        !ActionReady(actionId) &&
-        (HasCharges(actionId)
-            ? GetCooldownChargeRemainingTime(actionId) <= GCDTotal * 0.5f
-            : GetCooldownRemainingTime(actionId) <= GCDTotal * 0.5f);
+        (HasCharges(actionId) && GetRemainingCharges(actionId) > 0 ||
+         IsOnCooldown(actionId) && (HasCharges(actionId)
+             ? GetCooldownChargeRemainingTime(actionId) <= GCDTotal * 0.5f
+             : GetCooldownRemainingTime(actionId) <= GCDTotal * 0.5f) ||
+         !IsOnCooldown(actionId) && GetCooldownRemainingTime(actionId) <= GCDTotal * 0.5f);
+
+    private static bool ToolReadyForReassemble(uint actionId, bool forPrepull) =>
+        forPrepull ? ToolsReady(actionId) : ToolReadyForReassembleWeave(actionId);
 
     private static bool CanUseDrill(bool onAoE) =>
         !onAoE || !LevelChecked(BioBlaster);

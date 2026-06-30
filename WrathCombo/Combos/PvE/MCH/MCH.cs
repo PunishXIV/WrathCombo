@@ -16,7 +16,7 @@ internal partial class MCH : PhysicalRanged
                 return actionID;
 
             //Reassemble to start before combat/after downtime
-            if (CanReassemble(false) && !IsOverheated && !HasWeaved())
+            if (CanReassemble(false, forPrepull: true) && !IsOverheated && !HasWeaved())
                 return Reassemble;
 
             if (!IsOverheated &&
@@ -176,7 +176,7 @@ internal partial class MCH : PhysicalRanged
 
             //Reassemble to start before combat/after downtime
             if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold) &&
+                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold, forPrepull: true) &&
                 !IsOverheated && !HasWeaved())
                 return Reassemble;
 
