@@ -91,7 +91,7 @@ internal partial class SAM : Melee
             if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
                 return Enpi;
 
-            return DoCombo(false, true);
+            return DoCombo(false);
         }
     }
 
