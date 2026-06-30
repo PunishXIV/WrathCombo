@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
@@ -66,21 +66,17 @@ internal partial class RPR
         bool enhancedHarpeOnly = false,
         bool allowHarpeWhileMoving = true)
     {
-        //Harvest Moon
         if (useHarvestMoon &&
             ActionReady(HarvestMoon) && HasStatusEffect(Buffs.Soulsow))
             return HarvestMoon;
 
-        //Perfectio ranged flex — prefer over Harpe when available out of melee
         if (HasPerfectioReady && InActionRange(PerfectioAction) &&
             (!InMeleeRange() || ShouldSpendPerfectioNow()))
             return PerfectioAction;
 
-        //Ranged Attacks
         if (useRangedFiller &&
             ActionReady(OriginalHook(Harpe)))
         {
-            //Communio
             if (HasStatusEffect(Buffs.Enshrouded) && Lemure is 1 &&
                 LevelChecked(Communio))
                 return Communio;
@@ -148,30 +144,24 @@ internal partial class RPR
             !HasStatusEffect(Buffs.SoulReaver) && !HasStatusEffect(Buffs.Executioner) && HasBattleTarget() &&
             !HasStatusEffect(Buffs.PerfectioParata) && !HasStatusEffect(Buffs.Enshrouded))
         {
-            // Before Plentiful Harvest 
             if (!LevelChecked(PlentifulHarvest))
                 return true;
 
-            // Shroud in Arcane Circle 
             if (HasStatusEffect(Buffs.ArcaneCircle))
                 return true;
 
-            // Prep for double Enshroud (~9s AC: two filler GCDs, then Enshroud)
             if (LevelChecked(PlentifulHarvest) &&
                 AcCD <= GCDTotal + 1.5f)
                 return true;
 
-            //2nd part of Double Enshroud
             if (LevelChecked(PlentifulHarvest) &&
                 JustUsed(PlentifulHarvest, 5))
                 return true;
 
-            //Natural Odd Minute Shrouds
             if (!HasStatusEffect(Buffs.ArcaneCircle) && !IsDebuffExpiring(5) &&
                 AcCD.InRange(49, 66))
                 return true;
 
-            // Correction for 2 min windows 
             if (!HasStatusEffect(Buffs.ArcaneCircle) && !IsDebuffExpiring(5) &&
                 Soul >= 90)
                 return true;
@@ -217,7 +207,6 @@ internal partial class RPR
         return IsOnCooldown(Gluttony) && GetCooldownRemainingTime(Gluttony) > GCDTotal * 4;
     }
 
-    // AoE: pool for Gluttony unless at cap or its CD is too far out.
     private static bool ShouldSpendSoulOvercapAoE() =>
         !LevelChecked(Gluttony) ||
         Soul is 100 ||
@@ -571,7 +560,6 @@ internal partial class RPR
 
     #region Misc
 
-    //Auto Arcane Crest
     private static bool CanUseArcaneCrest =>
         ActionReady(ArcaneCrest) && InCombat() &&
         (GroupDamageIncoming(3f) ||
@@ -887,3 +875,4 @@ internal partial class RPR
 
     #endregion
 }
+

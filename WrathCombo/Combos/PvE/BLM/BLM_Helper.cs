@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.GameHelpers;
 using System;
@@ -898,3 +898,4 @@ internal partial class BLM
 
     #endregion
 }
+

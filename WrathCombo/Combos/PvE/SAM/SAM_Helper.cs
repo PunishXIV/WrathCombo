@@ -13,13 +13,37 @@ internal partial class SAM
 {
     #region Basic Combo
 
-    private static uint DoBasicCombo(
+    private static uint ContinueBasicCombo(
+        bool onAoE = false,
         bool useTrueNorth = true,
         bool useYukikaze = true,
         bool useKasha = true,
         bool useGekko = true,
+        bool useOka = true,
         int trueNorthCharges = 0)
     {
+        if (onAoE)
+        {
+            if (ComboTimer is 0)
+                return OriginalHook(Fuga);
+
+            if (ComboAction is Fuko or Fuga)
+            {
+                if (useOka && LevelChecked(Oka) &&
+                    (!HasKa || !HasStatusEffect(Buffs.Fuka) ||
+                     SenCount is 2 or 3 && RefreshFuka))
+                    return Oka;
+
+                if (LevelChecked(Mangetsu) &&
+                    HasStatusEffect(Buffs.Fuka) &&
+                    (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !useOka || !LevelChecked(Oka) ||
+                     SenCount is 2 or 3 && RefreshFugetsu))
+                    return Mangetsu;
+            }
+
+            return OriginalHook(Fuga);
+        }
+
         if (ComboTimer > 0)
         {
             if (ComboAction is Hakaze or Gyofu)
@@ -68,6 +92,14 @@ internal partial class SAM
         return OriginalHook(Hakaze);
     }
 
+    private static uint DoBasicCombo(
+        bool useTrueNorth = true,
+        bool useYukikaze = true,
+        bool useKasha = true,
+        bool useGekko = true,
+        int trueNorthCharges = 0) =>
+        ContinueBasicCombo(false, useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges: trueNorthCharges);
+
     #endregion
 
     #region Iaijutsu
@@ -93,7 +125,6 @@ internal partial class SAM
                 !LevelChecked(MidareSetsugekka))
                 return true;
 
-            // Spend as soon as iaijutsu is replaced on the hotbar (Meikyo/Tendo).
             if (useMidare &&
                 OriginalHook(Iaijutsu) is MidareSetsugekka or TendoSetsugekka &&
                 LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
@@ -174,7 +205,6 @@ internal partial class SAM
     private static bool CanUseShinten() =>
         ActionReady(Shinten) && InActionRange(Shinten);
 
-    // Execute, hard overcap, or post-iai dump windows.
     private static bool ShouldSpendKenkiUrgent() =>
         Kenki is 100 && ComboAction == OriginalHook(Gyofu) ||
         Kenki >= 95 && (ComboAction is Jinpu or Shifu || SenCount is 3) ||
@@ -196,7 +226,6 @@ internal partial class SAM
                GetCooldownRemainingTime(Senei) >= 25 && Kenki >= kenkiOvercapAmount;
     }
 
-    // Pre-Enhanced Senei (Ikishoten-era pooling).
     private static bool ShouldSpendKenkiPreEnhanced(int kenkiOvercapAmount) =>
         !EnhancedSenei &&
         (GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= kenkiOvercapAmount ||
@@ -219,30 +248,17 @@ internal partial class SAM
 
     #region Combo Resolution
 
-    private static uint DoStCombo(
-        bool useTrueNorth,
+    private static uint DoCombo(
+        bool onAoE,
+        bool useTrueNorth = true,
         bool useYukikaze = true,
         bool useKasha = true,
         bool useGekko = true,
+        bool useOka = true,
         int trueNorthCharges = 0) =>
         HasStatusEffect(Buffs.MeikyoShisui)
-            ? DoMeikyoCombo(useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges)
-            : DoBasicCombo(useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges);
-
-    private static uint DoAoECombo(bool useOka = true)
-    {
-        if (ComboTimer is 0 && !HasStatusEffect(Buffs.MeikyoShisui))
-            return OriginalHook(Fuga);
-
-        if (useOka && LevelChecked(Oka) && (!HasKa || !HasStatusEffect(Buffs.Fuka)))
-            return Oka;
-
-        if (LevelChecked(Mangetsu) &&
-            (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !LevelChecked(Oka) || !useOka))
-            return Mangetsu;
-
-        return OriginalHook(Fuga);
-    }
+            ? DoMeikyoCombo(onAoE, useTrueNorth, useYukikaze, useKasha, useGekko, useOka, trueNorthCharges)
+            : ContinueBasicCombo(onAoE, useTrueNorth, useYukikaze, useKasha, useGekko, useOka, trueNorthCharges);
 
     private static bool CanAoESenGcd(
         out uint action,
@@ -344,7 +360,6 @@ internal partial class SAM
         {
             if (EnhancedSenei)
             {
-                // ~6:00 even-burst Meikyo reset after Kaeshi: Namikiri (Icy Veins 2.14 drift recovery)
                 if (GetRemainingCharges(MeikyoShisui) >= 1 &&
                     JustUsed(KaeshiNamikiri, 10f) &&
                     GetCooldownChargeRemainingTime(MeikyoShisui) is >= 35 and <= 43)
@@ -368,12 +383,30 @@ internal partial class SAM
     }
 
     private static uint DoMeikyoCombo(
+        bool onAoE = false,
         bool useTrueNorth = true,
         bool useYukikaze = true,
         bool useKasha = true,
         bool useGekko = true,
+        bool useOka = true,
         int trueNorthCharges = 0)
     {
+        if (onAoE)
+        {
+            if (useOka && LevelChecked(Oka) &&
+                (!HasKa || !HasStatusEffect(Buffs.Fuka) ||
+                 SenCount is 2 or 3 && RefreshFuka))
+                return Oka;
+
+            if (LevelChecked(Mangetsu) &&
+                HasStatusEffect(Buffs.Fuka) &&
+                (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !useOka || !LevelChecked(Oka) ||
+                 SenCount is 2 or 3 && RefreshFugetsu))
+                return Mangetsu;
+
+            return OriginalHook(Fuga);
+        }
+
         if (useYukikaze &&
             LevelChecked(Yukikaze) && !HasSetsu &&
             (HasKa || !useGekko) &&
@@ -854,3 +887,4 @@ internal partial class SAM
 
     #endregion
 }
+

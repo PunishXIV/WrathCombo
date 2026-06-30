@@ -91,7 +91,7 @@ internal partial class SAM : Melee
             if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
                 return Enpi;
 
-            return DoStCombo(true);
+            return DoCombo(onAoE: false, useTrueNorth: true);
         }
     }
 
@@ -149,7 +149,7 @@ internal partial class SAM : Melee
 
             return CanAoESenGcd(out uint senAction, onlyWhenStationary: true)
                 ? senAction
-                : DoAoECombo();
+                : DoCombo(onAoE: true);
         }
     }
 
@@ -292,12 +292,13 @@ internal partial class SAM : Melee
                     return Enpi;
             }
 
-            return DoStCombo(
+            return DoCombo(
+                onAoE: false,
                 IsEnabled(Preset.SAM_ST_TrueNorth),
                 IsEnabled(Preset.SAM_ST_Yukikaze),
                 IsEnabled(Preset.SAM_ST_Kasha),
                 IsEnabled(Preset.SAM_ST_Gekko),
-                SAM_ST_ManualTN);
+                trueNorthCharges: SAM_ST_ManualTN);
         }
     }
 
@@ -378,7 +379,7 @@ internal partial class SAM : Melee
                     return senAction;
             }
 
-            return DoAoECombo(IsEnabled(Preset.SAM_AoE_Oka));
+            return DoCombo(onAoE: true, useOka: IsEnabled(Preset.SAM_AoE_Oka));
         }
     }
 
@@ -564,6 +565,7 @@ internal partial class SAM : Melee
                     return Oka;
 
                 if (LevelChecked(Mangetsu) &&
+                    HasStatusEffect(Buffs.Fuka) &&
                     (!HasGetsu ||
                      !SAM_Mangetsu_Oka ||
                      !HasStatusEffect(Buffs.Fugetsu) ||

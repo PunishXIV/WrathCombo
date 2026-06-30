@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
@@ -139,7 +139,6 @@ internal partial class MCH
         if (!IsHyperchargeReady())
             return false;
 
-        // Pre-Bio Blaster: spend Drill. After: spend Bio Blaster (DoT counts as spent).
         if (LevelChecked(BioBlaster))
         {
             if (!UsedBioBlaster(toolHoldThreshold))
@@ -498,7 +497,6 @@ internal partial class MCH
     private static bool ToolsReady(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
 
-    // Reassemble weave window — tool not castable yet, but lands within half a GCD after this oGCD.
     private static bool ToolReadyForReassembleWeave(uint actionId) =>
         LevelChecked(actionId) &&
         !ActionReady(actionId) &&
@@ -599,8 +597,16 @@ internal partial class MCH
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
-    private static uint DoBasicCombo(bool allowReassembleOnClean = false, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
+    private static uint ContinueBasicCombo(
+        bool onAoE = false,
+        bool allowReassembleOnClean = false,
+        int reassembleChoice = 1,
+        int chargePool = 0,
+        int hpThreshold = 25)
     {
+        if (onAoE)
+            return OriginalHook(SpreadShot);
+
         if (ComboTimer > 0)
         {
             if (ComboAction is SplitShot && ActionReady(OriginalHook(SlugShot)))
@@ -617,6 +623,14 @@ internal partial class MCH
 
         return OriginalHook(SplitShot);
     }
+
+    private static uint DoBasicCombo(
+        bool onAoE = false,
+        bool allowReassembleOnClean = false,
+        int reassembleChoice = 1,
+        int chargePool = 0,
+        int hpThreshold = 25) =>
+        ContinueBasicCombo(onAoE, allowReassembleOnClean, reassembleChoice, chargePool, hpThreshold);
 
     #endregion
 
@@ -908,3 +922,4 @@ internal partial class MCH
 
     #endregion
 }
+

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
@@ -222,11 +222,9 @@ internal partial class VPR
             GetTargetHPPercent() < hpThresholdDontSave)
             return true;
 
-        // Standard double burst: one GCD after Ire, then first Reawaken
         if (!JustUsed(SerpentsIre, GCDTotal) && HasStatusEffect(Buffs.ReadyToReawaken))
             return true;
 
-        // Second Reawaken back-to-back after Ouroboros when gauge is ready
         if (UsesBurstAlignment && JustUsed(Ouroboros, GCDTotal * 12) && SerpentOffering >= 50)
             return true;
 
@@ -239,7 +237,6 @@ internal partial class VPR
         if (!LevelChecked(Ouroboros) && JustUsed(FourthGeneration))
             return true;
 
-        // ~1min offering Reawaken; defer when pooling for an imminent Ire burst
         if (IreCD is >= 50 and <= 62 &&
             SerpentOffering >= 50 &&
             (!UsesBurstAlignment || !ShouldSaveOfferingForBurst))
@@ -428,7 +425,6 @@ internal partial class VPR
         if (!ActionReady(UncoiledFury) || !InActionRange(UncoiledFury))
             return false;
 
-        // ST range uptime
         if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget())
             return true;
 
@@ -515,7 +511,6 @@ internal partial class VPR
             LevelChecked(Vicewinder) && InActionRange(Vicewinder) &&
             !HasStatusEffect(Buffs.Reawakened))
         {
-            // Swiftskin's Coil (Rear)
             if (UsedVicewinder &&
                 (!HasStatusEffect(Buffs.Swiftscaled) ||
                  HasBothBuffs && (!OnTargetsFlank() || !TargetNeedsPositionals()) ||
@@ -526,7 +521,6 @@ internal partial class VPR
                 return true;
             }
 
-            // Hunter's Coil (Flank)
             if (UsedVicewinder &&
                 (!HasStatusEffect(Buffs.HuntersInstinct) ||
                  HasBothBuffs && (!OnTargetsRear() || !TargetNeedsPositionals()) ||
@@ -823,3 +817,4 @@ internal partial class VPR
 
     #endregion
 }
+

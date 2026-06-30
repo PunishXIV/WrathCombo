@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
@@ -191,19 +191,15 @@ internal partial class MNK
         if (!IsRoFCDInPerfectBalanceWindow())
             return false;
 
-        // Even window first PB — RoF and BH both 2-7s on Opo GCD
         if (IsEvenWindowApproaching())
             return true;
 
-        // Double Lunar odd minutes use post-RoF PB instead of pre-RoF
         if (IsDoubleLunarOpener(useOpenerBalance) && GetCooldownRemainingTime(Brotherhood) > 7)
             return false;
 
-        // Solar odd — RoF 2-7s only
         return true;
     }
 
-    // Simple ST, Advanced ST without opener, and AoE — RoF 2-7s pre-burst PB.
     private static bool ShouldUsePreRoFPerfectBalanceDefault() =>
         IsRoFCDInPerfectBalanceWindow();
 
@@ -233,7 +229,7 @@ internal partial class MNK
 
     private static bool ForceSecondOpo(bool onAoE, bool useFiresReply = true)
     {
-        if (useFiresReply)
+        if (useFiresReply && LevelChecked(FiresReply))
             return false;
 
         if (!HasStatusEffect(Buffs.Brotherhood) || !HasStatusEffect(Buffs.RiddleOfFire))
@@ -251,12 +247,10 @@ internal partial class MNK
         if (HasStatusEffect(Buffs.FiresRumination) ||
             JustUsed(FiresReply, GCDTotal * 12))
             return false;
-
-        // First post-blitz Opo (Formless) done — insert a second Opo before 2nd PB
+        
         if (!HasElapsedSinceBlitz(1f) || HasElapsedSinceBlitz(4f))
             return false;
-
-        // Second Opo just used — PB weave is next
+        
         if (JustUsedOpoGCD(GCDTotal, onAoE) && HasElapsedSinceBlitz(2f))
             return false;
 
@@ -277,14 +271,9 @@ internal partial class MNK
         if (!HasUsedBlitzRecently(GCDTotal * 12))
             return false;
 
-        // FR spent this burst (combo or manual) — weave 2nd PB after the post-FR Formless Opo.
-        if (JustUsed(FiresReply, GCDTotal * 6) && !HasStatusEffect(Buffs.FiresRumination))
-            return true;
+        if (useFiresReply && LevelChecked(FiresReply))
+            return JustUsed(FiresReply, GCDTotal * 6) && !HasStatusEffect(Buffs.FiresRumination);
 
-        if (useFiresReply)
-            return false;
-
-        // FR intentionally skipped in combo — Blitz → Opo → Opo → PB
         return HasElapsedSinceBlitz(2.5f);
     }
 
@@ -304,8 +293,7 @@ internal partial class MNK
 
         return true;
     }
-
-    // Both burst buffs are ready but PB must weave first (burst-hold release / drift recovery).
+    
     private static bool IsBurstHoldReleaseReady()
     {
         if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
@@ -318,7 +306,6 @@ internal partial class MNK
         if (HasStatusEffect(Buffs.Brotherhood) || HasStatusEffect(Buffs.RiddleOfFire))
             return false;
 
-        // Pre-RoF PB timing already handles ordering when CDs are in the 2-7s window.
         if (IsRoFCDInPerfectBalanceWindow())
             return false;
 
@@ -370,7 +357,6 @@ internal partial class MNK
         return onAoE && CanPerfectBalanceMaxChargeAoE();
     }
 
-    // Last-resort AoE PB — only at full charges when normal timing does not apply.
     private static bool CanPerfectBalanceMaxChargeAoE()
     {
         if (GetRemainingCharges(PerfectBalance) != GetMaxCharges(PerfectBalance))
@@ -504,7 +490,6 @@ internal partial class MNK
 
     #region Buffs
 
-    //RoF
     private static bool CanRoF() =>
         !IsBurstHoldReleaseReady() &&
         ActionReady(RiddleOfFire) &&
@@ -517,6 +502,7 @@ internal partial class MNK
          !LevelChecked(Brotherhood));
 
     private static bool CanFiresReply(bool onAoE = false) =>
+        LevelChecked(FiresReply) &&
         HasStatusEffect(Buffs.FiresRumination) &&
         !HasStatusEffect(Buffs.FormlessFist) &&
         IsOriginal(MasterfulBlitz) &&
@@ -527,7 +513,6 @@ internal partial class MNK
          GetStatusEffectRemainingTime(Buffs.FiresRumination) < GCDTotal * 2 ||
          !InMeleeRange());
 
-    //Brotherhood
     private static bool CanBrotherhood() =>
         !IsBurstHoldReleaseReady() &&
         ActionReady(Brotherhood) &&
@@ -535,7 +520,6 @@ internal partial class MNK
         !HasStatusEffect(Buffs.Brotherhood) &&
         (InBossEncounter() || TimeStoodStill.Seconds >= 2);
 
-    //RoW
     private static bool CanRoW() =>
         ActionReady(RiddleOfWind) &&
         !HasStatusEffect(Buffs.WindsRumination);
@@ -939,3 +923,4 @@ internal static class MNKExtensions
 {
     public const Nadi None = 0;
 }
+
