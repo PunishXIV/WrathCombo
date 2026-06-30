@@ -91,7 +91,7 @@ internal partial class SAM : Melee
             if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
                 return Enpi;
 
-            return DoCombo(onAoE: false, useTrueNorth: true);
+            return DoCombo(false, true);
         }
     }
 
@@ -293,7 +293,7 @@ internal partial class SAM : Melee
             }
 
             return DoCombo(
-                onAoE: false,
+                false,
                 IsEnabled(Preset.SAM_ST_TrueNorth),
                 IsEnabled(Preset.SAM_ST_Yukikaze),
                 IsEnabled(Preset.SAM_ST_Kasha),
@@ -379,7 +379,7 @@ internal partial class SAM : Melee
                     return senAction;
             }
 
-            return DoCombo(onAoE: true, useOka: IsEnabled(Preset.SAM_AoE_Oka));
+            return DoCombo(true, useOka: IsEnabled(Preset.SAM_AoE_Oka));
         }
     }
 

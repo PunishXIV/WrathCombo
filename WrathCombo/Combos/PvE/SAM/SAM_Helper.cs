@@ -11,6 +11,44 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM
 {
+    #region Iaijutsu
+
+    private static bool CanIaijutsu(
+        bool useHiganbana,
+        bool useTenkaGoken,
+        bool useMidare,
+        int higanbanaHpThreshold = 0,
+        double higanbanaDotRefresh = 15)
+    {
+        if (LevelChecked(Iaijutsu) && InActionRange(OriginalHook(Iaijutsu)))
+        {
+            //Higanbana
+            if (useHiganbana &&
+                SenCount is 1 &&
+                CanHiganbana(higanbanaHpThreshold, higanbanaDotRefresh))
+                return true;
+
+            //Tenka Goken
+            if (useTenkaGoken &&
+                SenCount is 2 &&
+                !LevelChecked(MidareSetsugekka))
+                return true;
+
+            if (useMidare &&
+                OriginalHook(Iaijutsu) is MidareSetsugekka or TendoSetsugekka &&
+                LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
+                return true;
+
+            //Midare Setsugekka
+            if (useMidare &&
+                SenCount is 3 &&
+                LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
+                return true;
+        }
+        return false;
+    }
+
+    #endregion
     #region Basic Combo
 
     private static uint ContinueBasicCombo(
@@ -99,45 +137,6 @@ internal partial class SAM
         bool useGekko = true,
         int trueNorthCharges = 0) =>
         ContinueBasicCombo(false, useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges: trueNorthCharges);
-
-    #endregion
-
-    #region Iaijutsu
-
-    private static bool CanIaijutsu(
-        bool useHiganbana,
-        bool useTenkaGoken,
-        bool useMidare,
-        int higanbanaHpThreshold = 0,
-        double higanbanaDotRefresh = 15)
-    {
-        if (LevelChecked(Iaijutsu) && InActionRange(OriginalHook(Iaijutsu)))
-        {
-            //Higanbana
-            if (useHiganbana &&
-                SenCount is 1 &&
-                CanHiganbana(higanbanaHpThreshold, higanbanaDotRefresh))
-                return true;
-
-            //Tenka Goken
-            if (useTenkaGoken &&
-                SenCount is 2 &&
-                !LevelChecked(MidareSetsugekka))
-                return true;
-
-            if (useMidare &&
-                OriginalHook(Iaijutsu) is MidareSetsugekka or TendoSetsugekka &&
-                LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
-                return true;
-
-            //Midare Setsugekka
-            if (useMidare &&
-                SenCount is 3 &&
-                LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
-                return true;
-        }
-        return false;
-    }
 
     #endregion
 
@@ -887,4 +886,3 @@ internal partial class SAM
 
     #endregion
 }
-

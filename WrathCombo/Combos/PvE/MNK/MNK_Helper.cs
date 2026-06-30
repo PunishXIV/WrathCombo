@@ -247,10 +247,10 @@ internal partial class MNK
         if (HasStatusEffect(Buffs.FiresRumination) ||
             JustUsed(FiresReply, GCDTotal * 12))
             return false;
-        
+
         if (!HasElapsedSinceBlitz(1f) || HasElapsedSinceBlitz(4f))
             return false;
-        
+
         if (JustUsedOpoGCD(GCDTotal, onAoE) && HasElapsedSinceBlitz(2f))
             return false;
 
@@ -293,7 +293,7 @@ internal partial class MNK
 
         return true;
     }
-    
+
     private static bool IsBurstHoldReleaseReady()
     {
         if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
@@ -923,4 +923,3 @@ internal static class MNKExtensions
 {
     public const Nadi None = 0;
 }
-
