@@ -46,11 +46,11 @@ internal partial class VPR : Melee
             if (CanVicewinderCombo(ref actionID))
                 return actionID;
 
-            if (UncoiledFuryOvercapProtection(false))
-                return UncoiledFury;
-
             if (CanReawaken())
                 return Reawaken;
+
+            if (UncoiledFuryOvercapProtection(false))
+                return UncoiledFury;
 
             if (CanUseVicewinder)
                 return UseVicewinder();
@@ -103,11 +103,11 @@ internal partial class VPR : Melee
             if (UseVicepitCombo(ref actionID))
                 return actionID;
 
-            if (UncoiledFuryOvercapProtection(true))
-                return UncoiledFury;
-
             if (CanReawaken(true) && InActionRange(Reawaken))
                 return Reawaken;
+
+            if (UncoiledFuryOvercapProtection(true))
+                return UncoiledFury;
 
             if (CanVicepit())
                 return Vicepit;
@@ -170,13 +170,13 @@ internal partial class VPR : Melee
                 CanVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio))
                 return actionID;
 
-            if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&
-                UncoiledFuryOvercapProtection(false))
-                return UncoiledFury;
-
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
                 CanReawaken(hpThresholdUsage: ReawakenHPThreshold(), hpThresholdDontSave: VPR_ST_ReAwakenAlwaysUse))
                 return Reawaken;
+
+            if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&
+                UncoiledFuryOvercapProtection(false))
+                return UncoiledFury;
 
             if (IsEnabled(Preset.VPR_ST_Vicewinder) &&
                 CanUseVicewinder)
@@ -248,14 +248,14 @@ internal partial class VPR : Melee
                 UseVicepitCombo(ref actionID, VPR_AoE_VicepitComboRangeCheck == 1))
                 return actionID;
 
-            if (IsEnabled(Preset.VPR_AoE_UncoiledFury) &&
-                UncoiledFuryOvercapProtection(true))
-                return UncoiledFury;
-
             if (IsEnabled(Preset.VPR_AoE_Reawaken) &&
                 CanReawaken(true, hpThresholdUsageAoE: VPR_AoE_ReawakenHPThreshold) &&
                 (InActionRange(Reawaken) || VPR_AoE_ReawakenRangecheck == 1))
                 return Reawaken;
+
+            if (IsEnabled(Preset.VPR_AoE_UncoiledFury) &&
+                UncoiledFuryOvercapProtection(true))
+                return UncoiledFury;
 
             if (IsEnabled(Preset.VPR_AoE_Vicepit) &&
                 CanVicepit(VPR_AoE_VicepitRangeCheck == 1))
