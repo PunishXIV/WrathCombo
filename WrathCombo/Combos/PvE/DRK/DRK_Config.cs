@@ -475,29 +475,27 @@ internal partial class DRK
                 
                 case Preset.DRK_Retarget_Unmend:
                     DrawAdditionalBoolChoice(DRK_Retarget_Unmend_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, Unmend.ActionName()));
-                    
-                    ImGui.Indent(12f.Scale());
-                    ImGui.NewLine();
-                    DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
-                        Generics.OffRangeBasedTargeting, "", 0, 
-                        descriptionColor:ImGuiColors.DalamudWhite);
-                    DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
-                        Generics.FurthestOOR, 
-                        FormatAndCache(Generics.FurthestOORRetarget, Unmend.ActionName()), 1, 
-                        descriptionColor:ImGuiColors.DalamudWhite);
-                    DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
-                        Generics.NearestOOR, 
-                        FormatAndCache(Generics.NearestOORRetarget, Unmend.ActionName()), 2, 
-                        descriptionColor:ImGuiColors.DalamudWhite);
-                    ImGuiEx.Spacing(new Vector2(0, 5));
-                    if (DRK_Retarget_Unmend_SmartTargeting > 0)
+                    DrawAdditionalBoolChoice(DRK_Retarget_Unmend_RangeBasedTargeting, Generics.RangeBasedTargeting, Generics.RangeBasedTargetingDesc);
+                    if (DRK_Retarget_Unmend_RangeBasedTargeting)
                     {
+                        ImGui.Indent();
+                        ImGui.NewLine();
+                        DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
+                            Generics.FurthestOOR, 
+                            FormatAndCache(Generics.FurthestOORRetarget, Unmend.ActionName()), 0, 
+                            descriptionColor:ImGuiColors.DalamudWhite);
+                        DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
+                            Generics.NearestOOR, 
+                            FormatAndCache(Generics.NearestOORRetarget, Unmend.ActionName()), 1, 
+                            descriptionColor:ImGuiColors.DalamudWhite);
+                        ImGuiEx.Spacing(new Vector2(0, 5));
+                        ImGui.Unindent();
+                        
+                        ImGui.Indent(10f.Scale());
                         DrawAdditionalBoolChoice(DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer, Generics.SmartTargeting, Generics.SmartTargetingNotTargetingPlayer);
+                        ImGui.Unindent();
                     }
-                    ImGui.Unindent();
                     break;
-                    break;
-
                     #endregion
             }
         }
@@ -1017,6 +1015,7 @@ internal partial class DRK
         
         public static readonly UserBool
             DRK_Retarget_Unmend_FieldMO = new("DRK_Retarget_Unmend_FieldMO"),
+            DRK_Retarget_Unmend_RangeBasedTargeting = new("DRK_Retarget_Unmend_RangeBasedTargeting"),
             DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer  = new("DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer");
 
         #endregion

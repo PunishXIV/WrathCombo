@@ -64,8 +64,9 @@ internal partial class GNB
         public static UserBool
             GNB_Mit_Advanced_Boss_Camouflage_Align = new("GNB_Mit_Advanced_Boss_Camouflage_Align", true),
             GNB_Mit_Advanced_Boss_Nebula_First = new("GNB_Mit_Advanced_Boss_Nebula_First", true),
-            GNB_RetargetLightningShot_FieldMO = new("GNB_RetargetLightningShot_FieldMO", true),
-            GNB_RetargetLightningShot_SmartTargeting_NotTargetingPlayer = new("GNB_RetargetLightningShot_SmartTargeting_NotTargetingPlayer", true);
+            GNB_RetargetLightningShot_FieldMO = new("GNB_RetargetLightningShot_FieldMO"),
+            GNB_RetargetLightningShot_RangeBasedTargeting = new("GNB_RetargetLightningShot_RangeBasedTargeting"),
+            GNB_RetargetLightningShot_SmartTargeting_NotTargetingPlayer = new("GNB_RetargetLightningShot_SmartTargeting_NotTargetingPlayer");
 
         public static UserIntArray
             GNB_Mit_OneButton_Priorities = new("GNB_Mit_OneButton_Priorities");
@@ -393,26 +394,29 @@ internal partial class GNB
                 case Preset.GNB_RetargetLightningShot:
                     DrawAdditionalBoolChoice(GNB_RetargetLightningShot_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, LightningShot.ActionName()));
                     
-                    ImGui.Indent(12f.Scale());
-                    ImGui.NewLine();
-                    DrawHorizontalRadioButton(GNB_RetargetLightningShot_SmartTargeting,
-                        Generics.OffRangeBasedTargeting, "", 0, 
-                        descriptionColor:ImGuiColors.DalamudWhite);
-                    DrawHorizontalRadioButton(GNB_RetargetLightningShot_SmartTargeting,
-                        Generics.FurthestOOR, 
-                        FormatAndCache(Generics.FurthestOORRetarget, LightningShot.ActionName()), 1, 
-                        descriptionColor:ImGuiColors.DalamudWhite);
-                    DrawHorizontalRadioButton(GNB_RetargetLightningShot_SmartTargeting,
-                        Generics.NearestOOR, 
-                        FormatAndCache(Generics.NearestOORRetarget, LightningShot.ActionName()), 2, 
-                        descriptionColor:ImGuiColors.DalamudWhite);
-                    ImGuiEx.Spacing(new Vector2(0, 5));
-                    if (GNB_RetargetLightningShot_SmartTargeting > 0)
+                    DrawAdditionalBoolChoice(GNB_RetargetLightningShot_RangeBasedTargeting, Generics.RangeBasedTargeting, Generics.RangeBasedTargetingDesc);
+                    
+                    if (GNB_RetargetLightningShot_RangeBasedTargeting)
                     {
+                        ImGui.Indent();
+                        ImGui.NewLine();
+                        DrawHorizontalRadioButton(GNB_RetargetLightningShot_SmartTargeting,
+                            Generics.FurthestOOR, 
+                            FormatAndCache(Generics.FurthestOORRetarget, LightningShot.ActionName()), 0, 
+                            descriptionColor:ImGuiColors.DalamudWhite);
+                        DrawHorizontalRadioButton(GNB_RetargetLightningShot_SmartTargeting,
+                            Generics.NearestOOR, 
+                            FormatAndCache(Generics.NearestOORRetarget, LightningShot.ActionName()), 1, 
+                            descriptionColor:ImGuiColors.DalamudWhite);
+                        ImGuiEx.Spacing(new Vector2(0, 5));
+                        ImGui.Unindent();
+                        
+                        ImGui.Indent(10f.Scale());
                         DrawAdditionalBoolChoice(GNB_RetargetLightningShot_SmartTargeting_NotTargetingPlayer, Generics.SmartTargeting, Generics.SmartTargetingNotTargetingPlayer);
+                        ImGui.Unindent();
                     }
-                    ImGui.Unindent();
                     break;
+                    
                     #endregion
             }
         }

@@ -269,13 +269,13 @@ internal partial class PLD : Tank
                     ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(ShieldLob.ActionRange())
                     : null) ??
     
-                (PLD_ShieldLob_Feature_SmartTargeting == 1
+                (PLD_ShieldLob_Feature_SmartTargeting == 0 && PLD_ShieldLob_Feature_RangeBasedTargeting
                     ? PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer
                         ? SimpleTarget.FurthestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(ShieldLob.ActionRange())
                         : SimpleTarget.FurthestEnemyOver5YalmsAway.IfWithinRange(ShieldLob.ActionRange())
                     : null) ??
 
-                (PLD_ShieldLob_Feature_SmartTargeting == 2 
+                (PLD_ShieldLob_Feature_SmartTargeting == 1 && PLD_ShieldLob_Feature_RangeBasedTargeting
                     ? PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer
                         ? SimpleTarget.NearestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(ShieldLob.ActionRange())
                         : SimpleTarget.NearestEnemyOver5YalmsAway.IfWithinRange(ShieldLob.ActionRange())

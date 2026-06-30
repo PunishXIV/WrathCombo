@@ -719,17 +719,17 @@ internal partial class GNB : Tank
             
             IGameObject? target =
                 //Mouseover Retarget
-                (GNB_RetargetLightningShot_FieldMO 
+                (GNB_RetargetLightningShot_FieldMO
                     ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(LightningShot.ActionRange())
                     : null) ??
     
-                (GNB_RetargetLightningShot_SmartTargeting == 1
+                (GNB_RetargetLightningShot_SmartTargeting == 0 && GNB_RetargetLightningShot_RangeBasedTargeting
                     ? GNB_RetargetLightningShot_SmartTargeting_NotTargetingPlayer
                         ? SimpleTarget.FurthestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(LightningShot.ActionRange())
                         : SimpleTarget.FurthestEnemyOver5YalmsAway.IfWithinRange(LightningShot.ActionRange())
                     : null) ??
 
-                (GNB_RetargetLightningShot_SmartTargeting == 2 
+                (GNB_RetargetLightningShot_SmartTargeting == 1 && GNB_RetargetLightningShot_RangeBasedTargeting
                     ? GNB_RetargetLightningShot_SmartTargeting_NotTargetingPlayer
                         ? SimpleTarget.NearestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(LightningShot.ActionRange())
                         : SimpleTarget.NearestEnemyOver5YalmsAway.IfWithinRange(LightningShot.ActionRange())

@@ -894,15 +894,6 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Range Based Targeting Off.
-        /// </summary>
-        internal static string OffRangeBasedTargeting {
-            get {
-                return ResourceManager.GetString("OffRangeBasedTargeting", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to On {0}.
         /// </summary>
         internal static string On0 {
@@ -1066,6 +1057,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         internal static string Priority {
             get {
                 return ResourceManager.GetString("Priority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Range Based Targeting.
+        /// </summary>
+        internal static string RangeBasedTargeting {
+            get {
+                return ResourceManager.GetString("RangeBasedTargeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose to retarget to the nearest of furthest enemy outside of 5y..
+        /// </summary>
+        internal static string RangeBasedTargetingDesc {
+            get {
+                return ResourceManager.GetString("RangeBasedTargetingDesc", resourceCulture);
             }
         }
         

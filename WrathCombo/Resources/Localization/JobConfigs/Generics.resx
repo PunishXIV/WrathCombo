@@ -396,10 +396,13 @@ Set to Zero to disable this check.</value>
   <data name="NotInBossEncounters" xml:space="preserve">
     <value>Not In Boss Encounters</value>
   </data>
-  <data name="OffRangeBasedTargeting" xml:space="preserve">
-    <value>Range Based Targeting Off</value>
+  <data name="RangeBasedTargeting" xml:space="preserve">
+    <value>Range Based Targeting</value>
   </data>
-  <data name="On0" xml:space="preserve">
+  <data name="RangeBasedTargetingDesc" xml:space="preserve">
+    <value>Choose to retarget to the nearest of furthest enemy outside of 5y.</value>
+  </data>
+    <data name="On0" xml:space="preserve">
     <value>On {0}</value>
     <comment>Used for simple "On {Action}" strings</comment>
   </data>

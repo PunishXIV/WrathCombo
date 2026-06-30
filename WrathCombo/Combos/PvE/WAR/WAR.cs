@@ -423,13 +423,13 @@ internal partial class WAR
                     ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(Tomahawk.ActionRange())
                     : null) ??
     
-                (WAR_RetargetTomahawk_SmartTargeting == 1
+                (WAR_RetargetTomahawk_SmartTargeting == 0 && WAR_RetargetTomahawk_RangeBasedTargeting
                     ? WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer
                         ? SimpleTarget.FurthestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(Tomahawk.ActionRange())
                         : SimpleTarget.FurthestEnemyOver5YalmsAway.IfWithinRange(Tomahawk.ActionRange())
                     : null) ??
 
-                (WAR_RetargetTomahawk_SmartTargeting == 2 
+                (WAR_RetargetTomahawk_SmartTargeting == 1 && WAR_RetargetTomahawk_RangeBasedTargeting
                     ? WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer
                         ? SimpleTarget.NearestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(Tomahawk.ActionRange())
                         : SimpleTarget.NearestEnemyOver5YalmsAway.IfWithinRange(Tomahawk.ActionRange())
