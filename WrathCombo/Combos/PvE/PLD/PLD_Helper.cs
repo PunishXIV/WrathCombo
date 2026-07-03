@@ -765,13 +765,14 @@ internal partial class PLD
     #region Openers
 
     internal static PLDLvl100StandardOpener Lvl100StandardOpener = new();
+    internal static PLDLvl100EarlyBuffOpener Lvl100EarlyBuffOpener = new();
 
     internal static WrathOpener Opener()
     {
-        if (Lvl100StandardOpener.LevelChecked)
-            return Lvl100StandardOpener;
+        if (PLD_SelectedOpener == 1 && Lvl100EarlyBuffOpener.LevelChecked)
+            return Lvl100EarlyBuffOpener;
 
-        return WrathOpener.Dummy;
+        return Lvl100StandardOpener.LevelChecked ? Lvl100StandardOpener : WrathOpener.Dummy;
     }
 
     internal class PLDLvl100StandardOpener : WrathOpener
@@ -806,6 +807,53 @@ internal partial class PLD
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([11, 13], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
+        ];
+
+        public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
+        internal override UserData ContentCheckConfig => PLD_Balance_Content;
+
+        public override bool HasCooldowns() =>
+            IsOffCooldown(FightOrFlight) &&
+            IsOffCooldown(Imperator) &&
+            IsOffCooldown(CircleOfScorn) &&
+            IsOffCooldown(Expiacion) &&
+            IsOffCooldown(GoringBlade);
+    }
+
+    internal class PLDLvl100EarlyBuffOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            HolySpirit,
+            FastBlade,
+            FightOrFlight,
+            Imperator,
+            RiotBlade,
+            CircleOfScorn,
+            Expiacion,
+            RoyalAuthority,
+            Intervene,
+            Intervene,
+            GoringBlade,
+            Confiteor,
+            BladeOfFaith,
+            BladeOfTruth,
+            BladeOfValor,
+            BladeOfHonor,
+            HolySpirit
+        ];
+
+        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
+        [
+            ([1], FastBlade, () => !HasTarget())
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([9, 10], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
         ];
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;

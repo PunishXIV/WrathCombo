@@ -92,11 +92,15 @@ internal partial class PLD
                 #region ST
 
                 case Preset.PLD_ST_AdvancedMode_BalanceOpener:
+                    DrawRadioButton(PLD_SelectedOpener, Generics.StandardOpener, "", 0);
+                    DrawRadioButton(PLD_SelectedOpener, "Early Buff Window Opener",
+                        "Moves the buff window forward about 1 GCD.", 1, descriptionAsTooltip: true);
+                    ImGui.NewLine();
                     DrawBossOnlyChoice(PLD_Balance_Content);
                     ImGui.NewLine();
-                    DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene, FormatAndCache(Generics.Use0, Intervene.ActionName()), 
+                    DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene, FormatAndCache(Generics.Use0, Intervene.ActionName()),
                         FormatAndCache(Generics.GapcloserUse, Intervene.ActionName()), 0);
-                    DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene, FormatAndCache(Generics.DontUse0, Intervene.ActionName()), 
+                    DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene, FormatAndCache(Generics.DontUse0, Intervene.ActionName()),
                         FormatAndCache(Generics.GapcloseSkip, Intervene.ActionName()), 1);
                     break;
 
@@ -326,6 +330,7 @@ internal partial class PLD
 
             //ST
             PLD_Balance_Content = new("PLD_Balance_Content", 1),
+            PLD_SelectedOpener = new("PLD_SelectedOpener"),
             PLD_ST_AdvancedMode_BalanceOpener_Intervene = new("PLD_ST_AdvancedMode_BalanceOpener_Intervene"),
             PLD_ST_Intervene_Charges = new("PLD_ST_Intervene_Charges"),
             PLD_ST_Intervene_Movement = new("PLD_ST_Intervene_Movement"),
