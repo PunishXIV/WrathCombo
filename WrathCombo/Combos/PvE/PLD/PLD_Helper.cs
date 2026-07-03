@@ -836,23 +836,27 @@ internal partial class PLD
             Expiacion,
             RoyalAuthority,
             Intervene,
-            Intervene,
             GoringBlade,
+            Intervene,
             Confiteor,
             BladeOfFaith,
             BladeOfTruth,
             BladeOfValor,
             BladeOfHonor,
-            HolySpirit
+            HolySpirit,
+            Atonement,
+            Supplication,
+            Sepulchre
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
-            ([1], FastBlade, () => !HasTarget())
+            ([1], FastBlade, () => !HasTarget() || InCombat())
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
+            ([2], () => ComboAction == FastBlade),
             ([9, 10], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
         ];
 
