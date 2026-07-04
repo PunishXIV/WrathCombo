@@ -408,6 +408,7 @@ public static class GameObjectExtensions
     /// <param name="id">The GameObjectID to convert.</param>
     /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
     public static IGameObject? GetObject(this ulong id) =>
+        id == 0xE0000000 ? Player.Object :
         GetObjectFrom(id);
 
     /// <summary>

@@ -837,7 +837,7 @@ internal unsafe class AutoRotationController
             }
             else
             {
-                if (!NIN.InMudra)
+                if (!LockedAoE)
                 {
                     var st = GetSingleTarget(mode);
                     var maxHit = NumberOfEnemiesInRange(DontChangeForAoe(gameAct) ? gameAct : OriginalHook(gameAct), target, true);
@@ -847,15 +847,8 @@ internal unsafe class AutoRotationController
                         target = st;
 
                     if (cfg.DPSSettings.DPSAoETargets == null || maxHit < cfg.DPSSettings.DPSAoETargets)
-                    {
-                        LockedAoE = false;
                         return false;
-                    }
-                    else
-                    {
-                        LockedAoE = true;
-                        LockedST = false;
-                    }
+
                 }
 
                 OverrideTarget = target ?? OverrideTarget;

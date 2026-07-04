@@ -312,19 +312,39 @@ internal partial class NIN
     #region TCJ Methods
     internal static bool STTenChiJin(ref uint actionID)
     {
-        if (!JustUsed(TenChiJin, 6f))
-            return false;
-
-        var original = actionID;
-        actionID = ActionWatching.LastAction switch
+        if (HasStatusEffect(Buffs.TenChiJin))
         {
-            TenChiJin => TCJFumaShurikenTen,
-            TCJFumaShurikenTen => TCJRaiton,
-            TCJRaiton => TCJSuiton,
-            _ => actionID,
-        };
+            if (FirstMudra == MudraFlags.None)
+            {
+                actionID = TCJFumaShurikenTen;
+                return true;
+            }
 
-        return ActionWatching.LastAction is not TCJSuiton && original != actionID;
+            if (SecondMudra == MudraFlags.None)
+            {
+                if (FirstMudra == MudraFlags.TenFirst)
+                    actionID = TCJRaiton;
+                else if (FirstMudra == MudraFlags.JinFirst)
+                    actionID = TCJKaton;
+                else
+                    actionID = TCJHyoton;
+
+                return true;
+            }
+            else
+            {
+                if (UnusedJutsus.Contains(Ten))
+                    actionID = TCJHuton;
+                else if (UnusedJutsus.Contains(Chi))
+                    actionID = TCJDoton;
+                else
+                    actionID = TCJSuiton;
+
+                return true;
+            }
+
+        }
+        return false;
     }
     internal static bool AoETenChiJin(ref uint actionID, bool advancedMode)
     {
@@ -394,7 +414,7 @@ internal partial class NIN
                 {
                     Svc.Log.Debug($"{AssociatedPreset} -> {CurrentMudra} set");
                 }
-                else 
+                else
                 {
                     Svc.Log.Debug($"{AssociatedPreset} -> {CurrentMudra} reset to none");
                     CurrentMudra = MudraState.None;
