@@ -46,7 +46,7 @@ internal partial class NIN
     public static uint CurrentNinjutsu => OriginalHook(Ninjutsu);
     internal static bool InMudra => JutsuFromFlags > 0;
 
-    internal static MudraFlags Flags => HasStatusEffect(Buffs.Mudra) ? (MudraFlags)(GetStatusEffect(Buffs.Mudra).Param) : MudraFlags.None;
+    internal static MudraFlags Flags => HasStatusEffect(Buffs.Mudra) ? (MudraFlags)(GetStatusEffect(Buffs.Mudra).Param) : HasStatusEffect(Buffs.TenChiJin) ? (MudraFlags)(GetStatusEffect(Buffs.TenChiJin).Param) : MudraFlags.None;
     internal static MudraFlags FirstMudra => Flags & MudraFlags.JinFirst;
     internal static MudraFlags SecondMudra => Flags & MudraFlags.JinSecond;
     internal static MudraFlags ThirdMudra => Flags & MudraFlags.JinThird;
@@ -146,6 +146,22 @@ internal partial class NIN
             (SecondMudra == MudraFlags.JinSecond ? 1 : 0) +
             (ThirdMudra == MudraFlags.JinThird ? 1 : 0)
         ) > 1;
+
+    internal static List<uint> UnusedJutsus
+    {
+        get
+        {
+            List<uint> output = [];
+            if (FirstMudra != MudraFlags.TenFirst && SecondMudra != MudraFlags.TenSecond && ThirdMudra != MudraFlags.TenThird)
+                output.Add(Ten);
+            if (FirstMudra != MudraFlags.ChiFirst && SecondMudra != MudraFlags.ChiSecond && ThirdMudra != MudraFlags.ChiThird)
+                output.Add(Chi);
+            if (FirstMudra != MudraFlags.JinFirst && SecondMudra != MudraFlags.JinSecond && ThirdMudra != MudraFlags.JinThird)
+                output.Add(Jin);
+
+            return output;
+        }
+    }
 
     internal static bool Rabbitting => GetStatusEffect(Buffs.Mudra)?.Param == 255;
     internal static bool MudraPhase => WasLastAction(Ten) || WasLastAction(Chi) || WasLastAction(Jin) || WasLastAction(TenCombo) || WasLastAction(ChiCombo) || WasLastAction(JinCombo);
@@ -310,39 +326,47 @@ internal partial class NIN
 
         return ActionWatching.LastAction is not TCJSuiton && original != actionID;
     }
-    internal static bool AoETenChiJinDoton(ref uint actionID)
+    internal static bool AoETenChiJin(ref uint actionID, bool advancedMode)
     {
-        if (!JustUsed(TenChiJin, 6f))
-            return false;
-
-        var original = actionID;
-        actionID = ActionWatching.LastAction switch
+        if (HasStatusEffect(Buffs.TenChiJin))
         {
-            TenChiJin => TCJFumaShurikenJin,
-            TCJFumaShurikenJin => TCJKaton,
-            TCJKaton => TCJDoton,
-            _ => actionID,
-        };
+            if (FirstMudra == MudraFlags.None)
+            {
+                if (DotonRemaining >= (advancedMode ? NIN_AoE_AdvancedMode_TCJ_Doton_Timer : 3))
+                    actionID = TCJFumaShurikenTen;
+                else
+                    actionID = TCJFumaShurikenJin;
 
-        return ActionWatching.LastAction is not TCJDoton && original != actionID;
+                return true;
+            }
+
+            if (SecondMudra == MudraFlags.None)
+            {
+                if (FirstMudra == MudraFlags.TenFirst)
+                    actionID = TCJRaiton;
+                else if (FirstMudra == MudraFlags.JinFirst)
+                    actionID = TCJKaton;
+                else
+                    actionID = TCJHyoton;
+
+                return true;
+            }
+            else
+            {
+                if (UnusedJutsus.Contains(Ten))
+                    actionID = TCJHuton;
+                else if (UnusedJutsus.Contains(Chi))
+                    actionID = TCJDoton;
+                else
+                    actionID = TCJSuiton;
+
+                return true;
+            }
+
+        }
+        return false;
     }
 
-    internal static bool AoETenChiJinSuiton(ref uint actionID)
-    {
-        if (!JustUsed(TenChiJin, 6f))
-            return false;
-
-        var original = actionID;
-        actionID = ActionWatching.LastAction switch
-        {
-            TenChiJin => TCJFumaShurikenChi,
-            TCJFumaShurikenChi => TCJKaton,
-            TCJKaton => TCJSuiton,
-            _ => actionID,
-        };
-
-        return ActionWatching.LastAction is not TCJSuiton && original != actionID;
-    }
     #endregion
 
     #region Mudra
