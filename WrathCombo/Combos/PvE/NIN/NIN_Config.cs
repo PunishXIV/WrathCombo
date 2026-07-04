@@ -199,7 +199,7 @@ internal partial class NIN
 
                     if (NIN_AoE_AdvancedMode_TenChiJin_Auto)
                     {
-                        DrawSliderFloat(1, 17, NIN_AoE_AdvancedMode_TCJ_Doton_Timer, "Doton Remaing Timer For Doton Path", decimals: 1);
+                        DrawSliderFloat(1, 17, NIN_AoE_AdvancedMode_TCJ_Doton_Timer, "Doton Remaining Timer For Doton Path", decimals: 1);
                     }
                     break;
 
