@@ -352,6 +352,9 @@ internal partial class NIN
 
         public MudraState CurrentMudra = MudraState.None;
 
+        public bool PresetEnabled => AssociatedPreset is { } pre && IsEnabled(pre);
+        internal Preset? AssociatedPreset;
+
         public MudraCasting()
         {
             OnStatusChanged += StatusChanged;
@@ -359,12 +362,17 @@ internal partial class NIN
 
         private void StatusChanged(uint statusId, bool onPlayer)
         {
+            if (!PresetEnabled) return;
+
             if (statusId == Buffs.Mudra)
             {
-                Svc.Log.Debug($"Mudra {(onPlayer ? "gained" : "lost")}");
-                if (!InMudra)
+                if (InMudra)
                 {
-                    Svc.Log.Debug($"{CurrentMudra} reset to none");
+                    Svc.Log.Debug($"{AssociatedPreset} -> {CurrentMudra} set");
+                }
+                else 
+                {
+                    Svc.Log.Debug($"{AssociatedPreset} -> {CurrentMudra} reset to none");
                     CurrentMudra = MudraState.None;
                     ActionWatching.LastAction = 0;
                 }

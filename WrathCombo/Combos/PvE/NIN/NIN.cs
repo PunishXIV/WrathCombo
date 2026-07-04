@@ -20,6 +20,7 @@ internal partial class NIN : Melee
         protected internal override Preset Preset => Preset.NIN_ST_SimpleMode;
         protected override uint Invoke(uint actionID)
         {
+            MudraState.AssociatedPreset = Preset;
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SpinningEdge)) return actionID;
 
             if (MudraFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
@@ -138,6 +139,7 @@ internal partial class NIN : Melee
         protected internal override Preset Preset => Preset.NIN_AoE_SimpleMode;
         protected override uint Invoke(uint actionID)
         {
+            MudraState.AssociatedPreset = Preset;
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DeathBlossom)) return actionID;
 
             if (MudraFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
@@ -251,8 +253,8 @@ internal partial class NIN : Melee
         protected internal override Preset Preset => Preset.NIN_ST_AdvancedMode;
         protected override uint Invoke(uint actionID)
         {
+            MudraState.AssociatedPreset = Preset;
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SpinningEdge)) return actionID;
-
 
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -403,8 +405,8 @@ internal partial class NIN : Melee
         protected internal override Preset Preset => Preset.NIN_AoE_AdvancedMode;
         protected override uint Invoke(uint actionID)
         {
+            MudraState.AssociatedPreset = Preset;
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DeathBlossom)) return actionID;
-
 
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) &&
                 MudraFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
