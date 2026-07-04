@@ -23,8 +23,8 @@ internal partial class NIN : Melee
             MudraState.AssociatedPreset = Preset;
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SpinningEdge)) return actionID;
 
-            if (MudraFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
-                return MudraFromFlags;
+            if (JutsuFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
+                return JutsuFromFlags;
 
             if (BlockDueToLag)
                 return All.SavageBlade;
@@ -142,8 +142,8 @@ internal partial class NIN : Melee
             MudraState.AssociatedPreset = Preset;
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DeathBlossom)) return actionID;
 
-            if (MudraFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
-                return MudraFromFlags;
+            if (JutsuFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
+                return JutsuFromFlags;
 
             if (BlockDueToLag)
                 return All.SavageBlade;
@@ -261,8 +261,8 @@ internal partial class NIN : Melee
                 return actionID;
 
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus) &&
-                MudraFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
-                return MudraFromFlags;
+                JutsuFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
+                return JutsuFromFlags;
 
             if (BlockDueToLag)
                 return All.SavageBlade;
@@ -409,8 +409,8 @@ internal partial class NIN : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DeathBlossom)) return actionID;
 
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) &&
-                MudraFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
-                return MudraFromFlags;
+                JutsuFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
+                return JutsuFromFlags;
 
             if (BlockDueToLag)
                 return All.SavageBlade;
@@ -695,17 +695,17 @@ internal partial class NIN : Melee
             {
                 if (Ten.LevelChecked() && actionID == Ten)
                 {
-                    if (Jin.LevelChecked() && MudraFromFlags is Raiton)
+                    if (Jin.LevelChecked() && JutsuFromFlags is Raiton)
                     {
                         return OriginalHook(JinCombo);
                     }
 
-                    if (Chi.LevelChecked() && MudraFromFlags is HyoshoRanryu)
+                    if (Chi.LevelChecked() && JutsuFromFlags is HyoshoRanryu)
                     {
                         return OriginalHook(ChiCombo);
                     }
 
-                    if (MudraFromFlags == FumaShuriken)
+                    if (JutsuFromFlags == FumaShuriken)
                     {
                         if (HasStatusEffect(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
                             return JinCombo;
@@ -720,12 +720,12 @@ internal partial class NIN : Melee
 
                 if (Chi.LevelChecked() && actionID == Chi)
                 {
-                    if (MudraFromFlags is Hyoton)
+                    if (JutsuFromFlags is Hyoton)
                     {
                         return OriginalHook(TenCombo);
                     }
 
-                    if (Jin.LevelChecked() && MudraFromFlags == FumaShuriken)
+                    if (Jin.LevelChecked() && JutsuFromFlags == FumaShuriken)
                     {
                         return OriginalHook(JinCombo);
                     }
@@ -733,30 +733,30 @@ internal partial class NIN : Melee
 
                 if (Jin.LevelChecked() && actionID == Jin)
                 {
-                    if (MudraFromFlags is GokaMekkyaku or Katon)
+                    if (JutsuFromFlags is GokaMekkyaku or Katon)
                     {
                         return OriginalHook(ChiCombo);
                     }
 
-                    if (MudraFromFlags == FumaShuriken)
+                    if (JutsuFromFlags == FumaShuriken)
                     {
                         return OriginalHook(TenCombo);
                     }
                 }
 
-                return MudraFromFlags;
+                return JutsuFromFlags;
             }
 
             if (mudrapath == 2)
             {
                 if (Ten.LevelChecked() && actionID == Ten)
                 {
-                    if (Chi.LevelChecked() && MudraFromFlags is Hyoton or HyoshoRanryu)
+                    if (Chi.LevelChecked() && JutsuFromFlags is Hyoton or HyoshoRanryu)
                     {
                         return OriginalHook(Chi);
                     }
 
-                    if (MudraFromFlags == FumaShuriken)
+                    if (JutsuFromFlags == FumaShuriken)
                     {
                         if (Jin.LevelChecked())
                             return OriginalHook(JinCombo);
@@ -768,12 +768,12 @@ internal partial class NIN : Melee
 
                 if (Chi.LevelChecked() && actionID == Chi)
                 {
-                    if (Jin.LevelChecked() && MudraFromFlags is Katon or GokaMekkyaku)
+                    if (Jin.LevelChecked() && JutsuFromFlags is Katon or GokaMekkyaku)
                     {
                         return OriginalHook(Jin);
                     }
 
-                    if (MudraFromFlags == FumaShuriken)
+                    if (JutsuFromFlags == FumaShuriken)
                     {
                         return OriginalHook(Ten);
                     }
@@ -781,17 +781,17 @@ internal partial class NIN : Melee
 
                 if (Jin.LevelChecked() && actionID == Jin)
                 {
-                    if (MudraFromFlags is Raiton)
+                    if (JutsuFromFlags is Raiton)
                     {
                         return OriginalHook(Ten);
                     }
 
-                    if (MudraFromFlags == GokaMekkyaku)
+                    if (JutsuFromFlags == GokaMekkyaku)
                     {
                         return OriginalHook(Chi);
                     }
 
-                    if (MudraFromFlags == FumaShuriken)
+                    if (JutsuFromFlags == FumaShuriken)
                     {
                         if (HasStatusEffect(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
                             return OriginalHook(Ten);
@@ -799,7 +799,7 @@ internal partial class NIN : Melee
                     }
                 }
 
-                return MudraFromFlags;
+                return JutsuFromFlags;
             }
 
             return actionID;
@@ -815,7 +815,7 @@ internal partial class NIN : Melee
             if (!MudraSigns.Any(x => x == actionID))
                 return actionID;
 
-            if (MudraFromFlags == Rabbit)
+            if (JutsuFromFlags == Rabbit)
                 return Rabbit;
 
             switch (actionID)

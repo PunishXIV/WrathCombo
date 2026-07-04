@@ -23,12 +23,12 @@ internal partial class NIN
     {
         get
         {
-            return ActionWatching.LastAction != LastJutsu && MudraSigns.Any(x => x == ActionWatching.LastAction);
+            return ActionWatching.LastAction != LastMudra && MudraSigns.Any(x => x == ActionWatching.LastAction);
         }
     }
 
     #region Mudra Logic
-    public enum JutsuFlags
+    public enum MudraFlags
     {
         None = 0,
         TenFirst = 1,
@@ -44,14 +44,14 @@ internal partial class NIN
     }
 
     public static uint CurrentNinjutsu => OriginalHook(Ninjutsu);
-    internal static bool InMudra => MudraFromFlags > 0;
+    internal static bool InMudra => JutsuFromFlags > 0;
 
-    internal static JutsuFlags Flags => HasStatusEffect(Buffs.Mudra) ? (JutsuFlags)(GetStatusEffect(Buffs.Mudra).Param) : JutsuFlags.None;
-    internal static JutsuFlags FirstMudra => Flags & JutsuFlags.JinFirst;
-    internal static JutsuFlags SecondMudra => Flags & JutsuFlags.JinSecond;
-    internal static JutsuFlags ThirdMudra => Flags & JutsuFlags.JinThird;
+    internal static MudraFlags Flags => HasStatusEffect(Buffs.Mudra) ? (MudraFlags)(GetStatusEffect(Buffs.Mudra).Param) : MudraFlags.None;
+    internal static MudraFlags FirstMudra => Flags & MudraFlags.JinFirst;
+    internal static MudraFlags SecondMudra => Flags & MudraFlags.JinSecond;
+    internal static MudraFlags ThirdMudra => Flags & MudraFlags.JinThird;
 
-    internal static uint LastJutsu
+    internal static uint LastMudra
     {
         get
         {
@@ -59,29 +59,29 @@ internal partial class NIN
 
             return ThirdMudra switch
             {
-                not JutsuFlags.None => ThirdMudra switch
+                not MudraFlags.None => ThirdMudra switch
                 {
-                    JutsuFlags.TenThird => TenCombo,
-                    JutsuFlags.ChiThird => ChiCombo,
-                    JutsuFlags.JinThird => JinCombo,
+                    MudraFlags.TenThird => TenCombo,
+                    MudraFlags.ChiThird => ChiCombo,
+                    MudraFlags.JinThird => JinCombo,
                     _ => 0
                 },
 
                 _ => SecondMudra switch
                 {
-                    not JutsuFlags.None => SecondMudra switch
+                    not MudraFlags.None => SecondMudra switch
                     {
-                        JutsuFlags.TenSecond => TenCombo,
-                        JutsuFlags.ChiSecond => ChiCombo,
-                        JutsuFlags.JinSecond => JinCombo,
+                        MudraFlags.TenSecond => TenCombo,
+                        MudraFlags.ChiSecond => ChiCombo,
+                        MudraFlags.JinSecond => JinCombo,
                         _ => 0
                     },
 
                     _ => FirstMudra switch
                     {
-                        JutsuFlags.TenFirst => HasKassatsu ? TenCombo : Ten,
-                        JutsuFlags.ChiFirst => HasKassatsu ? ChiCombo : Chi,
-                        JutsuFlags.JinFirst => HasKassatsu ? JinCombo : Jin,
+                        MudraFlags.TenFirst => HasKassatsu ? TenCombo : Ten,
+                        MudraFlags.ChiFirst => HasKassatsu ? ChiCombo : Chi,
+                        MudraFlags.JinFirst => HasKassatsu ? JinCombo : Jin,
                         _ => 0
                     }
                 }
@@ -89,38 +89,38 @@ internal partial class NIN
         }
     }
 
-    internal static uint MudraFromFlags
+    internal static uint JutsuFromFlags
     {
         get
         {
-            if (FailedMudra || Flags == JutsuFlags.Rabbit)
+            if (FailedJutsu || Flags == MudraFlags.Rabbit)
                 return Rabbit;
 
             return ThirdMudra switch
             {
-                not JutsuFlags.None => ThirdMudra switch
+                not MudraFlags.None => ThirdMudra switch
                 {
-                    JutsuFlags.TenThird => Huton,
-                    JutsuFlags.ChiThird => Doton,
-                    JutsuFlags.JinThird => Suiton,
+                    MudraFlags.TenThird => Huton,
+                    MudraFlags.ChiThird => Doton,
+                    MudraFlags.JinThird => Suiton,
                     _ => 0
                 },
 
                 _ => SecondMudra switch
                 {
-                    not JutsuFlags.None => SecondMudra switch
+                    not MudraFlags.None => SecondMudra switch
                     {
-                        JutsuFlags.TenSecond => HasKassatsu ? GokaMekkyaku : Katon,
-                        JutsuFlags.ChiSecond => Raiton,
-                        JutsuFlags.JinSecond => HasKassatsu ? HyoshoRanryu : Hyoton,
+                        MudraFlags.TenSecond => HasKassatsu ? GokaMekkyaku : Katon,
+                        MudraFlags.ChiSecond => Raiton,
+                        MudraFlags.JinSecond => HasKassatsu ? HyoshoRanryu : Hyoton,
                         _ => 0
                     },
 
                     _ => FirstMudra switch
                     {
-                        JutsuFlags.TenFirst => FumaShuriken,
-                        JutsuFlags.ChiFirst => FumaShuriken,
-                        JutsuFlags.JinFirst => FumaShuriken,
+                        MudraFlags.TenFirst => FumaShuriken,
+                        MudraFlags.ChiFirst => FumaShuriken,
+                        MudraFlags.JinFirst => FumaShuriken,
                         _ => 0
                     }
                 }
@@ -128,23 +128,23 @@ internal partial class NIN
         }
     }
 
-    internal static bool FailedMudra =>
+    internal static bool FailedJutsu =>
         (
-            (FirstMudra == JutsuFlags.TenFirst ? 1 : 0) +
-            (SecondMudra == JutsuFlags.TenSecond ? 1 : 0) +
-            (ThirdMudra == JutsuFlags.TenThird ? 1 : 0)
+            (FirstMudra == MudraFlags.TenFirst ? 1 : 0) +
+            (SecondMudra == MudraFlags.TenSecond ? 1 : 0) +
+            (ThirdMudra == MudraFlags.TenThird ? 1 : 0)
         ) > 1
         ||
         (
-            (FirstMudra == JutsuFlags.ChiFirst ? 1 : 0) +
-            (SecondMudra == JutsuFlags.ChiSecond ? 1 : 0) +
-            (ThirdMudra == JutsuFlags.ChiThird ? 1 : 0)
+            (FirstMudra == MudraFlags.ChiFirst ? 1 : 0) +
+            (SecondMudra == MudraFlags.ChiSecond ? 1 : 0) +
+            (ThirdMudra == MudraFlags.ChiThird ? 1 : 0)
         ) > 1
         ||
         (
-            (FirstMudra == JutsuFlags.JinFirst ? 1 : 0) +
-            (SecondMudra == JutsuFlags.JinSecond ? 1 : 0) +
-            (ThirdMudra == JutsuFlags.JinThird ? 1 : 0)
+            (FirstMudra == MudraFlags.JinFirst ? 1 : 0) +
+            (SecondMudra == MudraFlags.JinSecond ? 1 : 0) +
+            (ThirdMudra == MudraFlags.JinThird ? 1 : 0)
         ) > 1;
 
     internal static bool Rabbitting => GetStatusEffect(Buffs.Mudra)?.Param == 255;
@@ -416,7 +416,7 @@ internal partial class NIN
             if (CurrentMudra is MudraState.None or MudraState.CastingFumaShuriken)
             {
                 // Finish the Mudra
-                if (LastJutsu is Ten or TenCombo)
+                if (LastMudra is Ten or TenCombo)
                 {
                     actionID = FumaShuriken;
                     return true;
@@ -437,7 +437,7 @@ internal partial class NIN
             if (Raiton.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingRaiton)
             {
                 // Finish the Mudra
-                switch (LastJutsu)
+                switch (LastMudra)
                 {
                     case Ten or TenCombo or Jin or JinCombo:
                         actionID = ChiCombo;
@@ -462,7 +462,7 @@ internal partial class NIN
             if (Suiton.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingSuiton)
             {
                 //Finish the Mudra
-                switch (LastJutsu)
+                switch (LastMudra)
                 {
                     case Ten or TenCombo:
                         actionID = ChiCombo;
@@ -490,7 +490,7 @@ internal partial class NIN
             if (HyoshoRanryu.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingHyoshoRanryu)
             {
                 //Finish the Mudra
-                switch (LastJutsu)
+                switch (LastMudra)
                 {
                     case Ten or TenCombo or Chi or ChiCombo:
                         actionID = JinCombo;
@@ -515,7 +515,7 @@ internal partial class NIN
             if (Katon.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingKaton)
             {
                 //Finish the Mudra
-                switch (LastJutsu)
+                switch (LastMudra)
                 {
                     case Jin or JinCombo or Chi or ChiCombo:
                         actionID = TenCombo;
@@ -540,7 +540,7 @@ internal partial class NIN
             if (Doton.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingDoton)
             {
                 //Finish the Mudra
-                switch (LastJutsu)
+                switch (LastMudra)
                 {
                     case Jin or JinCombo:
                         actionID = TenCombo;
@@ -568,7 +568,7 @@ internal partial class NIN
             if (Huton.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingHuton)
             {
                 //Finish the Mudra
-                switch (LastJutsu)
+                switch (LastMudra)
                 {
                     case Jin or JinCombo:
                         actionID = ChiCombo;
@@ -596,7 +596,7 @@ internal partial class NIN
             if (GokaMekkyaku.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingGokaMekkyaku)
             {
                 //Finish the Mudra
-                switch (LastJutsu)
+                switch (LastMudra)
                 {
                     case Jin or JinCombo or Chi or ChiCombo:
                         actionID = TenCombo;
@@ -621,33 +621,33 @@ internal partial class NIN
     // Single Target
     internal static uint UseFumaShuriken(ref uint actionId)
     {
-        return actionId = LastJutsu is Ten or Chi or Jin ? FumaShuriken : Ten;
+        return actionId = LastMudra is Ten or Chi or Jin ? FumaShuriken : Ten;
     }
     internal static uint UseRaiton(ref uint actionId) // Ten Chi
     {
-        if (LastJutsu == OriginalTen || LastJutsu == OriginalJin)
+        if (LastMudra == OriginalTen || LastMudra == OriginalJin)
             actionId = ChiCombo;
-        else if (LastJutsu == ChiCombo)
+        else if (LastMudra == ChiCombo)
             actionId = Raiton;
 
         return actionId;
     }
     internal static uint UseHyoshoRanryu(ref uint actionId) // Ten Jin
     {
-        if (LastJutsu is TenCombo or ChiCombo)
+        if (LastMudra is TenCombo or ChiCombo)
             actionId = JinCombo;
-        else if (LastJutsu == JinCombo)
+        else if (LastMudra == JinCombo)
             actionId = HyoshoRanryu;
 
         return actionId;
     }
     internal static uint UseSuiton(ref uint actionId) // Ten Chi Jin
     {
-        if (LastJutsu == OriginalTen)
+        if (LastMudra == OriginalTen)
             actionId = ChiCombo;
-        else if (LastJutsu == ChiCombo)
+        else if (LastMudra == ChiCombo)
             actionId = JinCombo;
-        else if (LastJutsu == JinCombo)
+        else if (LastMudra == JinCombo)
             actionId = Suiton;
 
         return actionId;
@@ -655,29 +655,29 @@ internal partial class NIN
     //Multi Target
     internal static uint UseGokaMekkyaku(ref uint actionId) // Chi Ten
     {
-        if (LastJutsu == OriginalChi)
+        if (LastMudra == OriginalChi)
             actionId = TenCombo;
-        else if (LastJutsu is TenCombo)
+        else if (LastMudra is TenCombo)
             actionId = GokaMekkyaku;
 
         return actionId;
     }
     internal static uint UseKaton(ref uint actionId) // Chi Ten
     {
-        if (LastJutsu == OriginalChi)
+        if (LastMudra == OriginalChi)
             actionId = TenCombo;
-        else if (LastJutsu is TenCombo)
+        else if (LastMudra is TenCombo)
             actionId = Katon;
 
         return actionId;
     }
     internal static uint UseDoton(ref uint actionId)  //Jin Ten Chi
     {
-        if (LastJutsu == OriginalJin)
+        if (LastMudra == OriginalJin)
             actionId = TenCombo;
-        else if (LastJutsu is TenCombo)
+        else if (LastMudra is TenCombo)
             actionId = ChiCombo;
-        else if (LastJutsu is ChiCombo)
+        else if (LastMudra is ChiCombo)
             actionId = Doton;
 
         return actionId;
@@ -685,11 +685,11 @@ internal partial class NIN
 
     internal static uint UseHuton(ref uint actionId) // Jin Chi Ten
     {
-        if (LastJutsu == OriginalChi)
+        if (LastMudra == OriginalChi)
             actionId = JinCombo;
-        else if (LastJutsu is JinCombo)
+        else if (LastMudra is JinCombo)
             actionId = TenCombo;
-        else if (LastJutsu is TenCombo)
+        else if (LastMudra is TenCombo)
             actionId = Huton;
 
         return actionId;
