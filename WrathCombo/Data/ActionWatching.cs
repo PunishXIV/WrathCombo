@@ -103,7 +103,7 @@ public static class ActionWatching
         {
             var act = Svc.Data.GetExcelSheet<Action>().GetRow(packet->ActionId);
             var castTime = (act.Cast100ms + act.ExtraCastTime100ms) * 100;
-            var penaltyResolveWindow = (DateTime.Now + TimeSpan.FromMilliseconds(castTime - 1500f), DateTime.Now + TimeSpan.FromMilliseconds(castTime + 1500f));
+            var penaltyResolveWindow = (DateTime.Now + TimeSpan.FromMilliseconds(castTime - 1500f), DateTime.Now + TimeSpan.FromMilliseconds(castTime + 300f));
             ActionPenaltyResolvedAtList.Add(penaltyResolveWindow);
             Svc.Log.Verbose($"Resolving action penalty at {penaltyResolveWindow.Item2.TimeOfDay}");
         }
