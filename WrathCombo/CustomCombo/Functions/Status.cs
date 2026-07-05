@@ -8,6 +8,7 @@ using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -170,7 +171,7 @@ internal abstract partial class CustomComboFunctions
 
     public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || StatusCache.HasEvasionUp(target) || HasStatusEffect(4355, target) || TargetIsInvincible(target);
 
-    public static DateTime ActionPenaltyResolvedAt;
+    public static List<(DateTime Start, DateTime End)> ActionPenaltyResolvedAtList = [];
 
     /// <summary>
     /// Checks to see if the player has a status that should stop all actions and unselect targets
@@ -252,7 +253,7 @@ internal abstract partial class CustomComboFunctions
                         // Others
                         StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
 
-                    ) == true || DateTime.Now < ActionPenaltyResolvedAt;
+                    ) == true || ActionPenaltyResolvedAtList.Any(x => x.Start <= DateTime.Now && x.End >= DateTime.Now);
                 break;
         }
 

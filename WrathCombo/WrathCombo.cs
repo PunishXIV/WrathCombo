@@ -404,6 +404,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
                 CustomComboFunctions.PlayGroupwideAlert();
 
             SimpleTargetState.ManageStateList();
+            ActionWatching.ClearActionPenaltys();
         }
         catch (Exception ex)
         {

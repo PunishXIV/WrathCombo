@@ -102,10 +102,16 @@ public static class ActionWatching
         if (PausingActions.Any(x => x == packet->ActionId) && packet->ActionType == 1)
         {
             var act = Svc.Data.GetExcelSheet<Action>().GetRow(packet->ActionId);
-            var castTime = act.Cast100ms * 100 + act.ExtraCastTime100ms * 100;
-            ActionPenaltyResolvedAt = DateTime.Now + TimeSpan.FromSeconds(castTime + 0.2f);
-            Svc.Log.Verbose($"Resolving action penalty at {ActionPenaltyResolvedAt.TimeOfDay}");
+            var castTime = (act.Cast100ms + act.ExtraCastTime100ms) * 100;
+            var penaltyResolveWindow = (DateTime.Now + TimeSpan.FromMilliseconds(castTime - 1500f), DateTime.Now + TimeSpan.FromMilliseconds(castTime + 1500f));
+            ActionPenaltyResolvedAtList.Add(penaltyResolveWindow);
+            Svc.Log.Verbose($"Resolving action penalty at {penaltyResolveWindow.Item2.TimeOfDay}");
         }
+    }
+
+    public static void ClearActionPenaltys()
+    {
+        ActionPenaltyResolvedAtList.RemoveAll(x => x.End < DateTime.Now);
     }
 
     private static unsafe void OnReceivePacketDetour(PacketDispatcher* thisPtr, uint targetId, nint packet)
