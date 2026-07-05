@@ -541,6 +541,16 @@ public static class ActionWatching
             }
             if (actionType is ActionType.Action)
             {
+
+                if (actionManager->QueuedActionId > 0 && NIN.InMudra && !NIN.MudraSigns.Any(x => x == actionManager->QueuedActionId) && !NIN.NormalJutsus.Any(x => x == actionManager->QueuedActionId))
+                {
+#if DEBUG
+                    DuoLog.Debug($"Blocked NIN flub");
+#endif
+                    actionManager->QueuedActionId = 0;
+                    return false;
+                }
+
                 var disablingReplacingTemp = (mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding) && actionId < All.SingleTargetDPS;
                 if (disablingReplacingTemp) // This is so we can remove queue suppression
                     Service.ActionReplacer.DisableActionReplacingIfRequired(); // It gets re-enabled at the end of sending. 

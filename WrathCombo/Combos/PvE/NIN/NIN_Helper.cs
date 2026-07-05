@@ -16,7 +16,7 @@ internal partial class NIN
 {
     static NINGauge gauge = GetJobGauge<NINGauge>();
     public static FrozenSet<uint> MudraSigns = [Ten, Chi, Jin, TenCombo, ChiCombo, JinCombo];
-    public static FrozenSet<uint> NormalJutsus = [FumaShuriken, Raiton, Katon, Doton, Suiton, Hyoton, HyoshoRanryu, GokaMekkyaku];
+    public static FrozenSet<uint> NormalJutsus = [FumaShuriken, Raiton, Katon, Doton, Suiton, Hyoton, HyoshoRanryu, GokaMekkyaku, Rabbit];
     internal static bool STSimpleMode => IsEnabled(Preset.NIN_ST_SimpleMode);
     internal static bool AoESimpleMode => IsEnabled(Preset.NIN_AoE_SimpleMode);
     internal static bool BlockDueToLag
