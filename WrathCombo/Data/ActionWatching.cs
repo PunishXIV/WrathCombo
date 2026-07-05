@@ -8,6 +8,7 @@ using ECommons.GameHelpers;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using FFXIVClientStructs.FFXIV.Client.Game.Network;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
@@ -71,6 +72,7 @@ public static class ActionWatching
     public static readonly Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction;
     public static readonly Hook<PacketDispatcher.Delegates.HandleActorControlPacket> ActorControlPacketHook;
     public static readonly Hook<PacketDispatcher.Delegates.OnReceivePacket> OnRecievePacketHook;
+    public static readonly Hook<PacketDispatcher.Delegates.HandleActorCastPacket> OnActorCastHook;
 
     private static Task UpdateActionTask = null!;
     private static CancellationTokenSource source = new CancellationTokenSource();
@@ -88,8 +90,22 @@ public static class ActionWatching
         CanQueueAction ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.IsActionOffCooldown>(ActionManager.Addresses.IsActionOffCooldown.Value, CanQueueActionDetour);
         ActorControlPacketHook ??= Svc.Hook.HookFromAddress<PacketDispatcher.Delegates.HandleActorControlPacket>(PacketDispatcher.Addresses.HandleActorControlPacket.Value, ActorControlDetour);
         OnRecievePacketHook ??= Svc.Hook.HookFromAddress<PacketDispatcher.Delegates.OnReceivePacket>((nint)PacketDispatcher.StaticVirtualTablePointer->OnReceivePacket, OnReceivePacketDetour);
+        OnActorCastHook ??= Svc.Hook.HookFromAddress<PacketDispatcher.Delegates.HandleActorCastPacket>(PacketDispatcher.Addresses.HandleActorCastPacket.Value, ActorCastDetour);
         OnCastInterrupted += CancelPendingLastActionUpdate;
 
+    }
+
+    private static unsafe void ActorCastDetour(uint entityId, ActorCastPacket* packet)
+    {
+        OnActorCastHook.Original(entityId, packet);
+        Svc.Log.Verbose($"[ActorCastPacket] {((ulong)entityId).GetObject()?.Name} -> {packet->ActionId.ActionName()} ({packet->ActionId}) {packet->CastTime}");
+        if (PausingActions.Any(x => x == packet->ActionId) && packet->ActionType == 1)
+        {
+            var act = Svc.Data.GetExcelSheet<Action>().GetRow(packet->ActionId);
+            var castTime = act.Cast100ms * 100 + act.ExtraCastTime100ms * 100;
+            ActionPenaltyResolvedAt = DateTime.Now + TimeSpan.FromSeconds(castTime + 0.2f);
+            Svc.Log.Verbose($"Resolving action penalty at {ActionPenaltyResolvedAt.TimeOfDay}");
+        }
     }
 
     private static unsafe void OnReceivePacketDetour(PacketDispatcher* thisPtr, uint targetId, nint packet)
@@ -188,6 +204,7 @@ public static class ActionWatching
         CanQueueAction?.Enable();
         ActorControlPacketHook?.Enable();
         OnRecievePacketHook?.Enable();
+        OnActorCastHook?.Enable();
         Svc.Condition.ConditionChange += ResetActions;
     }
 
@@ -202,6 +219,7 @@ public static class ActionWatching
         CanQueueAction?.Dispose();
         ActorControlPacketHook?.Dispose();
         OnRecievePacketHook?.Dispose();
+        OnActorCastHook?.Dispose();
         OnCastInterrupted -= CancelPendingLastActionUpdate;
     }
 
@@ -704,11 +722,9 @@ public static class ActionWatching
         CanQueueAction?.Disable();
         ActorControlPacketHook?.Disable();
         OnRecievePacketHook?.Disable();
+        OnActorCastHook?.Disable();
         Svc.Condition.ConditionChange -= ResetActions;
     }
-
-    [Obsolete("Use CustomComboFunctions.GetActionName instead. This method will be removed in a future update.")]
-    public static string GetActionName(uint id) => CustomComboFunctions.GetActionName(id);
 
     public static unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)
     {

@@ -170,6 +170,8 @@ internal abstract partial class CustomComboFunctions
 
     public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || StatusCache.HasEvasionUp(target) || HasStatusEffect(4355, target) || TargetIsInvincible(target);
 
+    public static DateTime ActionPenaltyResolvedAt;
+
     /// <summary>
     /// Checks to see if the player has a status that should stop all actions and unselect targets
     /// Acceleration bombs and Pyretics
@@ -250,10 +252,11 @@ internal abstract partial class CustomComboFunctions
                         // Others
                         StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
 
-                    ) == true;
+                    ) == true || DateTime.Now < ActionPenaltyResolvedAt;
                 break;
         }
 
+        Svc.Log.Debug($"Penalty? {hasActionPenalty}");
         if (hasActionPenalty)
         {
             Svc.Targets.Target = null;

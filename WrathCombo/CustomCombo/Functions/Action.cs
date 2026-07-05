@@ -488,4 +488,11 @@ internal abstract partial class CustomComboFunctions
     }
 
     public static bool ActionIsFriendly(uint actionId) => ActionSheet.TryGetValue(actionId, out var s) && s.Unknown4 == 2;
+
+    internal static List<uint> PausingActions =
+    [
+        17856, //Petro Eyes - Supay - A-Rank
+        29821, //Death Forseen - Beatrice - Fell Court of Troia
+        29828, //Death Forseen x2 - Beatrice - Fell Court of Troia
+    ];
 }
