@@ -256,7 +256,6 @@ internal abstract partial class CustomComboFunctions
                 break;
         }
 
-        Svc.Log.Debug($"Penalty? {hasActionPenalty}");
         if (hasActionPenalty)
         {
             Svc.Targets.Target = null;
