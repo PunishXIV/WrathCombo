@@ -1,7 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
-using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.MathHelpers;
@@ -9,6 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using System;
 using System.Linq;
+using WrathCombo.Data.BattleData;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
@@ -179,79 +179,22 @@ internal abstract partial class CustomComboFunctions
         bool hasActionPenalty = false;
 
         // Quick Content Check First
-        switch (Content.TerritoryID)
+        hasActionPenalty = BattleData.PauseActions();
+        if (!hasActionPenalty)
         {
-            case 1345: // The Clyteum
-                // The Eye of the Scorpion
-                // This finds the helper
-                var MotionScannerHelper = Svc.Objects.FirstOrDefault(x =>
-                    x.BaseId == 0x4C2D &&
-                    x.Address != 0 &&
-                    (int)(x.Struct()->RenderFlags) == 0 // There can be two of these objects, only one appears to be active.
-                );
-                if (MotionScannerHelper is IGameObject scanner)
-                {
-                    var facingdirection = MathHelper.GetCardinalDirection(MathHelper.RadToDeg(scanner.Rotation));
+            hasActionPenalty =
+                Player.Status.Any(s =>
+                    // Acceleration Bomb within Timeframe
+                    (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
+                        GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
 
-                    // Scans seem to be West<->East, but added North<->South just incase
-                    float signedDistance = facingdirection switch
-                    {
-                        CardinalDirection.East => (Player.Position.X - scanner.Position.X),        // +X
-                        CardinalDirection.West => (scanner.Position.X - Player.Position.X),        // -X
-                        CardinalDirection.North => (Player.Position.Z - scanner.Position.Z),        // +Z
-                        CardinalDirection.South => (scanner.Position.Z - Player.Position.Z),        // -Z
-                        _ => (Player.Position.X - scanner.Position.X) // East, just to have a default
-                    };
+                    // Pyretic
+                    StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
 
-                    // Positive Distance = Incoming
-                    // Negative Distance = Moving Away
-                    // Distance will go from positive, to 0 when it fully overtakes the player,
-                    // then negative as it moves away, with the status dropping off at around -8y,
-                    // but added a buffer just in case.
+                    // Others
+                    StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
 
-                    hasActionPenalty = signedDistance switch
-                    {
-                        // Too far away
-                        > 12f => false,
-                        // 12y to -8y (about to be overtaken by the field to almost about to clear)
-                        > -8f => true,
-                        // -8y to -12y, waiting for status to clear, should happen close to -8y but added a buffer just in case
-                        > -12f => HasStatusEffect(5191, anyOwner: true),
-                        _ => false,
-                    };
-                }
-                break;
-
-            case 1368: // Windurst
-                if (Svc.Objects.Any(x => x.BaseId == 0x4D92 || x.BaseId == 0x4D96)) // Shinryu Paradox / Hollow King
-                {
-                    // Find VFX
-                    var effects = VfxManager.TrackedEffects
-                        .FilterToTarget(Player.Object.GameObjectId)
-                        .Where(x =>
-                            x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_mv_7s_c0k2.avfx" ||  // Don't Move
-                            x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_lk_7s_c0k2.avfx")    // Don't Look
-                        .ToList();
-
-                    if (effects.Count == 1) hasActionPenalty = MathHelper.InRange(effects[0].AgeSeconds, 4, 8);
-                }
-                break;
-
-            default:
-                hasActionPenalty =
-                    Player.Status.Any(s =>
-                        // Acceleration Bomb within Timeframe
-                        (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
-                            GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
-
-                        // Pyretic
-                        StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
-
-                        // Others
-                        StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
-
-                    ) == true;
-                break;
+                ) == true;
         }
 
         if (hasActionPenalty)
@@ -273,8 +216,8 @@ internal abstract partial class CustomComboFunctions
     {
         if (target is not IBattleChara tar)
             return false;
-        var statuses = tar.SafeStatusList;
-        if (statuses is null)
+
+        if (tar.SafeStatusList is not { } statuses)
             return false;
 
         // Turn Target's status to uint hashset
@@ -283,239 +226,23 @@ internal abstract partial class CustomComboFunctions
 
         // Returning False in each case because there should be no other General Invincibility Check needed
         // for specified areas
-        switch (Content.TerritoryID)
-        {
-            case 1045: // Ifrit Normal
-                return targetID == 207 && Svc.Objects.Any(x => x.BaseId == 208 && !x.IsDead);
-            case 292: // Ifrit Hard
-                return targetID == 209 && Svc.Objects.Any(x => x.BaseId == 210 && !x.IsDead);
-            case 295: // Ifrit Extreme
-                return targetID == 211 && Svc.Objects.Any(x => x.BaseId == 212 && !x.IsDead);
-            case 174: // Labyrinth of the Ancients
-                // Thanatos, Spooky Ghosts Only
-                if (targetID is 2350) return !HasStatusEffect(398);
-                // Allagan Bomb
-                if (targetID is 2407)
-                    return NumberOfObjectsInRange<SelfCircle>(30,
-                        target, // 30 yalms radius range of Allagan Bomb
-                        checkInvincible: false) > 1;
 
-                return false;
+        var checkBattle = BattleData.IsInvincible(tar, targetID, targetStatuses);
 
-            case 189: // Amdapor Keep (Hard), Ferdidad
-                if ((targetID is 3432) && (
-                     // Stoneskins or multiple adds
-                     HasStatusEffect(152, tar, true) || NumberOfObjectsInRange<SelfCircle>(30, checkInvincible: false) > 1))
-                    return true;
-                return false;
+        // If target is invincible based on Battle Data
+        if (checkBattle.Invincible)
+            return true;
 
-            case 281: //Whorleater (Hard)
-                if ((targetID is 2663 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478)) ||
-                    (targetID is 2694 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477)))
-                    return true;
-                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
+        // Are we to bother with checking statuses per Battle Data
+        if (!checkBattle.CheckGenerics)
+            return false;
 
-            case 359: //Whorleater (Extreme)
-                if (targetID is 2802 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478) ||
-                    targetID is 2803 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477))
-                    return true;
-                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
-
-            case 508: // The Void Ark
-                // Sawtooth 5103
-                // Irminsul 5105
-                if ((targetID is 5105 or 5103) &&
-                    ((Player.Job.IsPhysicalRangedDps() && HasStatusEffect(941, tar, true)) ||
-                     (Player.Job.IsMagicalRangedDps() && HasStatusEffect(942, tar, true))
-                    )
-                   ) return true;
-                // Cuchulainn 5139, Checking one of the Stoneskins
-                if (targetID is 5139 && HasStatusEffect(152, tar, true)) return true;
-                return false;
-
-            case 582: // Heart of the Creator
-                if ((targetID is 6101) && // Plasma Shield
-                    AngleToTarget(tar) is not AttackAngle.Front) return true;
-                return false;
-
-            case 801 or 805 or 1122: // Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
-                // Omega-M = 9339
-                // Omega-F = 9340
-                if (targetID is 9339 or 9340) //numbers are for Regular
-                {
-                    if (HasStatusEffect(1660)) return targetID == 9339; // Packet Filter M
-                    if (HasStatusEffect(1661)) return targetID == 9340; // Packet Filter F
-                    if (targetID is 9340) return HasStatusEffect(671, tar, true); // F being covered by M
-                }
-
-                //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500
-                if ((tar.SafeStatusList?.Any(x => x.StatusId == 3454) is true && HasStatusEffect(3499)) ||
-                    (tar.SafeStatusList?.Any(x => x.StatusId == 1675) is true && HasStatusEffect(3500)))
-                    return true;
-
-                //Check for any ol invincibility
-                if (StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses)) return true;
-
-                return false;
-
-            case 821: //Dohn Mheg Final Boss Lyre
-                if (targetID is 3939 && !HasStatusEffect(386))
-                    return true; //Unfooled means you can attack the Lyre
-                return false;
-
-            case 887: // The Epic of Alexander (Ultimate)
-                // Jagd Doll = NameId 3759
-                // Technically not invincible, but killing one wipes the raid;
-                // ignore them once below the 25% HP feed threshold
-                if (tar.BaseId is 11338)
-                    return GetTargetHPPercent(tar) < 25;
-                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
-
-            case 917: //Puppet's Bunker, Flight Mechs
-                // 724P Alpha = 11792 (A)
-                // 767P Beta  = 11793 (B)
-                // 772P Chi   = 11794 (C)
-                if (targetID is 11792 or 11793 or 11794)
-                {
-                    if (HasStatusEffect(2288)) return targetID != 11792;
-                    if (HasStatusEffect(2289)) return targetID != 11793;
-                    if (HasStatusEffect(2290)) return targetID != 11794;
-                }
-                return false;
-
-            case 952: // Tower of Zot final bosses
-                      // Technically not invincible, just need to ignore
-                if (targetID is (13298 or 13299) && Svc.Objects.Any(y => y.BaseId is 13297 && !y.IsDead))
-                    return true;
-                return false;
-
-            case 966: //The Tower at Paradigm's Breach, Hansel & Gretel
-                // Hansel = 12709
-                // Gretel = 12708
-                // If boss has shield or too close, boss gains 680 Parry, so easier to check for that
-                // 680 Directional Parry
-                // 2538 Strong of Shield
-                // 2539 Stronger Together
-
-                if (targetID is 12709 or 12708)
-                {
-                    bool isTank = Player.Job.IsTank();
-                    bool bossHasParry = HasStatusEffect(680, tar);
-                    bool isFrontFacing = AngleToTarget(tar) is AttackAngle.Front;
-
-                    // Non Tanks should just ignore parrying boss(s)
-                    // Tanks should only ignore their target if it has the buff and they aren't in front.
-                    if (bossHasParry && (!isTank || !isFrontFacing)) return true;
-                }
-                return false;
-            case 1174:
-                // Colossus Rubricatus = 9511
-                // No point attacking anymore when it begins to cast self-detonate = 14574
-
-                if (targetID is 9511)
-                {
-                    return tar.CastActionId == 14574;
-                }
-
-                return false;
-
-            case 1241: // Cloud of Darkness Chaotic - Sphere of Naught
-                // Cloud of Darkness = 17950
-                // Stygian Shadow = 17951
-                // Atomos = 17952
-                // Inner Darkness = 4177
-                // Outer Darkness = 4178
-                if (targetID is 17950 && HasStatusEffect(4178, null, true)) return true; // If on the platforms
-                if (targetID is 17951 or 17952 && HasStatusEffect(4177, null, true)) return true; // If on tiles
-
-                return false;
-
-            case 1248: // Jeuno 1 Ark Angels
-                // ArkAngel HM = 18049
-                // ArkAngel MR = 18051 (A)
-                // ArkAngel GK = 18053 (B)
-                // ArkAngel TT = 18052 (C)
-                if (targetID is 18049 && HasStatusEffect(4410, tar, true)) return true;
-
-                if (targetID is 18051 or 18052 or 18053)
-                {
-                    if (HasStatusEffect(4192)) return targetID != 18051; // Alliance A Red Epic
-                    if (HasStatusEffect(4194)) return targetID != 18053; // Alliance B Yellow Fated
-                    if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
-                }
-                return false;
-
-            case 1363: // Dancing Mad (Ultimate)
-                // Chaos = 19508
-                // Exdeath = 19509
-                if (targetID is 19508 or 19509)
-                {
-                    if (HasStatusEffect(4192)) return targetID != 19508; // Epic Hero (α) — Chaos
-                    if (HasStatusEffect(4194)) return targetID != 19509; // Fated Hero (β) — Exdeath
-                }
-                return false;
-
-            case 1263: // M8S
-                // Wolf of Wind = 18219
-                // Wolf of Stone = 18225
-                if (targetID is 18219 or 18225)
-                {
-                    if (HasStatusEffect(4389)) return targetID != 18225; // Target Wolf of Wind
-                    if (HasStatusEffect(4390)) return targetID != 18219; // Target Wolf of Stone
-                }
-                return false;
-
-            case 1267: //Sunken Temple of Qarn Temple Guardian
-                if (targetID is 18300 && HasStatusEffect(350, tar, true)) return true;
-                return false;
-
-            case 1290: //Pilgrim's Traverse
-                // Eminent Grief = 18666
-                // Devoured Eater = 18667
-                if (targetID is 18666 or 18667)
-                {
-                    if (HasStatusEffect(4559)) return targetID != 18667; // Target Eminent Grief
-                    if (HasStatusEffect(4560)) return targetID != 18666; // Target Devoured Eater
-                }
-                return false;
-
-            case 1292: //Meso Terminal
-                // Bloody Headsman = 18576 a
-                // Pale Headsman = 18577 b
-                // Ravenous Headsman = 18578 y
-                // Pestilent Headsman = 18579 d
-                // Hellmaker = 18642
-
-                // Alpha = 4542 Player / 4546 Boss
-                // Beta = 4543 Player / 4547 Boss
-                // Gamma = 4544 Player / 4548 Boss
-                // Delta = 4545 Player / 4549 Boss
-
-                if (targetID is 18576 or 18577 or 18578 or 18579 or 18642)
-                {
-                    if (HasStatusEffect(3065)) return targetID != 18642 || GetTargetDistance(tar) > 20;  // Hellmaker checking for fire floor debuff
-                    if (HasStatusEffect(4542)) return targetID != 18576; // Alpha
-                    if (HasStatusEffect(4543)) return targetID != 18577; // Beta
-                    if (HasStatusEffect(4544)) return targetID != 18578; // Gamma
-                    if (HasStatusEffect(4545)) return targetID != 18579; // Delta
-                }
-                return false;
-
-            case 1323: //M10S
-                // 19287 Red Hot
-                // 19288 Deep Blue
-                return targetID is 19287 or 19288 && GetTargetCurrentHP(target) <= 1;
-
-            case 1368: // Windurst The Third Walk
-                // Alexander Battle
-                // 19805 Gordius System's Perfect Defense
-                return targetID is 19805 && HasStatusEffect(5377, tar, true);
-
-            default:
-                // General invincibility check
-                // Due to large size of InvincibleStatuses, best to check process this way
-                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
-        }
+        // General invincibility check
+        // Due to large size of InvincibleStatuses, best to check process this way
+        return StatusCache.CompareLists(
+            StatusCache.InvincibleStatuses,
+            targetStatuses
+        );
     }
 
     /// <summary>

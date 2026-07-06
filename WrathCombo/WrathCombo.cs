@@ -28,8 +28,8 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Data.BattleData;
 using WrathCombo.Data.Conflicts;
-using WrathCombo.Extensions;
 using WrathCombo.Native;
 using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Services;
@@ -37,7 +37,6 @@ using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window;
-using WrathCombo.Window.Functions;
 using WrathCombo.Window.Tabs;
 using GenericHelpers = ECommons.GenericHelpers;
 
@@ -323,7 +322,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     private void ClientState_TerritoryChanged(uint obj)
     {
         UpdateCaches(false, true, false);
-
+        BattleData.LoadCombatData(obj);
         Task.Run(StancePartner.CheckForIPCControl);
     }
 
