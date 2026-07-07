@@ -807,7 +807,7 @@ internal unsafe class AutoRotationController
             var target = !cfg.DPSSettings.AoEIgnoreManual && cfg.DPSRotationMode == DPSRotationMode.Manual ?
     Svc.Targets.Target : DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
 
-            if (target is null && cfg.PauseWhenNoTarget) return true;
+            if ((target is not { } t || (!t.IsHostile() && !t.IsFriendly())) && cfg.PauseWhenNoTarget) return true;
 
             if (attributes.AutoAction!.IsHeal)
             {
@@ -934,7 +934,7 @@ internal unsafe class AutoRotationController
 
             var target = GetSingleTarget(mode);
 
-            if (target is null && cfg.PauseWhenNoTarget) return true;
+            if ((target is not { } t || (!t.IsHostile() && !t.IsFriendly())) && cfg.PauseWhenNoTarget) return true;
 
             OverrideTarget = target ?? OverrideTarget;
             var outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, target));
