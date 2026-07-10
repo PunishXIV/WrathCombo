@@ -494,16 +494,23 @@ internal partial class MCH
 
     #region Tools
 
+    private static bool IsBelowMaxCharges(uint actionId) =>
+        GetMaxCharges(actionId) > 1 && GetRemainingCharges(actionId) < GetMaxCharges(actionId);
+
+    private static float GetToolCDRemaining(uint actionId) =>
+        IsBelowMaxCharges(actionId)
+            ? GetCooldownChargeRemainingTime(actionId)
+            : GetCooldownRemainingTime(actionId);
+
+    private static bool ToolsReady(uint actionId, float window) =>
+        LevelChecked(actionId) &&
+        (HasCharges(actionId) || GetToolCDRemaining(actionId) <= window);
+
     private static bool ToolsReady(uint actionId) =>
-        LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
+        ToolsReady(actionId, GCDTotal);
 
     private static bool ToolReadyForReassembleWeave(uint actionId) =>
-        LevelChecked(actionId) &&
-        (HasCharges(actionId) && GetRemainingCharges(actionId) > 0 ||
-         IsOnCooldown(actionId) && (HasCharges(actionId)
-             ? GetCooldownChargeRemainingTime(actionId) <= GCDTotal * 0.5f
-             : GetCooldownRemainingTime(actionId) <= GCDTotal * 0.5f) ||
-         !IsOnCooldown(actionId) && GetCooldownRemainingTime(actionId) <= GCDTotal * 0.5f);
+        ToolsReady(actionId, GCDTotal * 0.5f);
 
     private static bool ToolReadyForReassemble(uint actionId, bool forPrepull) =>
         forPrepull ? ToolsReady(actionId) : ToolReadyForReassembleWeave(actionId);
@@ -511,15 +518,20 @@ internal partial class MCH
     private static bool CanUseDrill(bool onAoE) =>
         !onAoE || !LevelChecked(BioBlaster);
 
-    private static bool IsDrillCD(float time = 9f) =>
-        !LevelChecked(Drill) ||
-        !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= time ||
-        TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(Drill) < GetMaxCharges(Drill) && GetCooldownChargeRemainingTime(Drill) >= time;
+    private static bool IsChargedToolCD(uint actionId, float time = 9f)
+    {
+        if (!LevelChecked(actionId))
+            return true;
 
-    private static bool IsBioBlasterCD(float time = 9f) =>
-        !LevelChecked(BioBlaster) ||
-        !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(BioBlaster) >= time ||
-        TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(BioBlaster) < GetMaxCharges(BioBlaster) && GetCooldownChargeRemainingTime(BioBlaster) >= time;
+        if (HasCharges(actionId) && !IsBelowMaxCharges(actionId))
+            return false;
+
+        return GetToolCDRemaining(actionId) >= time;
+    }
+
+    private static bool IsDrillCD(float time = 9f) => IsChargedToolCD(Drill, time);
+
+    private static bool IsBioBlasterCD(float time = 9f) => IsChargedToolCD(BioBlaster, time);
 
     private static bool IsAirAnchorCD(float time = 9f) =>
         !LevelChecked(OriginalHook(HotShot)) ||
