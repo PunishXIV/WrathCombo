@@ -715,14 +715,14 @@ internal partial class MCH
             HeatedCleanShot
         ];
 
+        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
             ([2], () => 4)
         ];
-
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
@@ -778,13 +778,15 @@ internal partial class MCH
             HeatedCleanShot
         ];
 
+        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
             ([2], () => 4)
         ];
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
@@ -834,6 +836,8 @@ internal partial class MCH
             Drill
         ];
 
+        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
@@ -845,7 +849,7 @@ internal partial class MCH
         [
             14
         ];
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&

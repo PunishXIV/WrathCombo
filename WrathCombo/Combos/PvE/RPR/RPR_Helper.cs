@@ -663,10 +663,9 @@ internal partial class RPR
             Slice
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([1], () => InMeleeRange())
-        ];
+        public override Preset Preset => Preset.RPR_ST_Opener;
+
+        internal override UserData ContentCheckConfig => RPR_Balance_Content;
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
@@ -676,8 +675,10 @@ internal partial class RPR
             ([21], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
 
-        public override Preset Preset => Preset.RPR_ST_Opener;
-        internal override UserData ContentCheckConfig => RPR_Balance_Content;
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => InMeleeRange())
+        ];
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(SoulSlice) is 2 &&
@@ -719,6 +720,10 @@ internal partial class RPR
             Slice
         ];
 
+        public override Preset Preset => Preset.RPR_ST_Opener;
+
+        internal override UserData ContentCheckConfig => RPR_Balance_Content;
+
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([5], ExecutionersGallows, OnTargetsRear),
@@ -726,9 +731,6 @@ internal partial class RPR
             ([19], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
             ([20], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
-
-        public override Preset Preset => Preset.RPR_ST_Opener;
-        internal override UserData ContentCheckConfig => RPR_Balance_Content;
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(SoulSlice) is 2 &&
@@ -768,11 +770,10 @@ internal partial class RPR
             Gibbet //19
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([1], () => InMeleeRange())
-        ];
         public override Preset Preset => Preset.RPR_ST_Opener;
+
+        internal override UserData ContentCheckConfig => RPR_Balance_Content;
+
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([16], Gallows, OnTargetsRear),
@@ -781,7 +782,10 @@ internal partial class RPR
             ([19], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
 
-        internal override UserData ContentCheckConfig => RPR_Balance_Content;
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => InMeleeRange())
+        ];
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(SoulSlice) is 2 &&

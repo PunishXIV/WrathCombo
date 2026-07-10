@@ -660,7 +660,7 @@ internal partial class BLM
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -669,7 +669,7 @@ internal partial class BLM
             Role.Swiftcast,
             Amplifier,
             Fire4,
-            LeyLines,
+            LeyLines, //6
             Fire4,
             Fire4,
             Fire4,
@@ -697,11 +697,16 @@ internal partial class BLM
             Fire3
         ];
 
+        public override Preset Preset => Preset.BLM_ST_Opener;
+
         internal override UserData ContentCheckConfig => BLM_Balance_Content;
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [6];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([6], () => HasStatusEffect(Buffs.LeyLines))
+        ];
 
-        public override Preset Preset => Preset.BLM_ST_Opener;
+        public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
         public override bool HasCooldowns() =>
             MP.Full &&
@@ -716,7 +721,7 @@ internal partial class BLM
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -752,11 +757,16 @@ internal partial class BLM
             Fire3
         ];
 
+        public override Preset Preset => Preset.BLM_ST_Opener;
+
         internal override UserData ContentCheckConfig => BLM_Balance_Content;
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [6];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([6], () => HasStatusEffect(Buffs.LeyLines))
+        ];
 
-        public override Preset Preset => Preset.BLM_ST_Opener;
+        public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
         public override bool HasCooldowns() =>
             MP.Full &&

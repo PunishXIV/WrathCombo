@@ -598,6 +598,10 @@ internal partial class VPR
             TwinfangBite //35
         ];
 
+        public override Preset Preset => Preset.VPR_ST_Opener;
+
+        internal override UserData ContentCheckConfig => VPR_Balance_Content;
+
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([30], SwiftskinsCoil, OnTargetsRear),
@@ -615,8 +619,6 @@ internal partial class VPR
             ([28], () => !IsDeathRattleWeave && !JustUsed(HindstingStrike))
         ];
 
-        internal override UserData ContentCheckConfig => VPR_Balance_Content;
-        public override Preset Preset => Preset.VPR_ST_Opener;
         public override bool HasCooldowns() =>
             IsOriginal(ReavingFangs) &&
             GetRemainingCharges(Vicewinder) is 2 &&
@@ -667,6 +669,10 @@ internal partial class VPR
             UncoiledTwinblood //34
         ];
 
+        public override Preset Preset => Preset.VPR_ST_Opener;
+
+        internal override UserData ContentCheckConfig => VPR_Balance_Content;
+
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([23], SwiftskinsCoil, OnTargetsRear),
@@ -682,8 +688,6 @@ internal partial class VPR
             ([19, 20, 21, 29, 30, 31, 32, 33, 34], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil))
         ];
 
-        internal override UserData ContentCheckConfig => VPR_Balance_Content;
-        public override Preset Preset => Preset.VPR_ST_Opener;
         public override bool HasCooldowns() =>
             IsOriginal(ReavingFangs) &&
             GetRemainingCharges(Vicewinder) is 2 &&

@@ -598,14 +598,16 @@ internal partial class MNK
             DragonKick
         ];
 
+        public override Preset Preset => Preset.MNK_STUseOpener;
+
+        internal override UserData ContentCheckConfig => MNK_Balance_Content;
+
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
             ([2], () => JustUsed(FormShift, 30f))
         ];
 
-        internal override UserData ContentCheckConfig => MNK_Balance_Content;
-        public override Preset Preset => Preset.MNK_STUseOpener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(PerfectBalance) is 2 &&
             IsOffCooldown(Brotherhood) &&
@@ -645,14 +647,16 @@ internal partial class MNK
             DragonKick
         ];
 
+        public override Preset Preset => Preset.MNK_STUseOpener;
+
+        internal override UserData ContentCheckConfig => MNK_Balance_Content;
+
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
             ([2], () => JustUsed(FormShift, 30f))
         ];
 
-        internal override UserData ContentCheckConfig => MNK_Balance_Content;
-        public override Preset Preset => Preset.MNK_STUseOpener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(PerfectBalance) is 2 &&
             IsOffCooldown(Brotherhood) &&
@@ -697,14 +701,16 @@ internal partial class MNK
             LeapingOpo
         ];
 
+        public override Preset Preset => Preset.MNK_STUseOpener;
+
+        internal override UserData ContentCheckConfig => MNK_Balance_Content;
+
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
             ([2], () => JustUsed(FormShift, 30f))
         ];
 
-        internal override UserData ContentCheckConfig => MNK_Balance_Content;
-        public override Preset Preset => Preset.MNK_STUseOpener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(PerfectBalance) is 2 &&
             IsOffCooldown(Brotherhood) &&
@@ -749,14 +755,16 @@ internal partial class MNK
             LeapingOpo
         ];
 
+        public override Preset Preset => Preset.MNK_STUseOpener;
+
+        internal override UserData ContentCheckConfig => MNK_Balance_Content;
+
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
             ([2], () => JustUsed(FormShift, 30f))
         ];
 
-        internal override UserData ContentCheckConfig => MNK_Balance_Content;
-        public override Preset Preset => Preset.MNK_STUseOpener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(PerfectBalance) is 2 &&
             IsOffCooldown(Brotherhood) &&
@@ -800,14 +808,16 @@ internal partial class MNK
             DragonKick
         ];
 
+        public override Preset Preset => Preset.MNK_STUseOpener;
+
+        internal override UserData ContentCheckConfig => MNK_Balance_Content;
+
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
             ([2], () => JustUsed(FormShift, 30f))
         ];
 
-        internal override UserData ContentCheckConfig => MNK_Balance_Content;
-        public override Preset Preset => Preset.MNK_STUseOpener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(PerfectBalance) is 2 &&
             IsOffCooldown(Brotherhood) &&

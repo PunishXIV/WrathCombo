@@ -576,19 +576,19 @@ internal partial class SAM
             Higanbana
         ];
 
-        internal override UserData ContentCheckConfig => SAM_Balance_Content;
+        public override Preset Preset => Preset.SAM_ST_Opener;
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => SAM_Opener_PrePullDelay)
-        ];
+        internal override UserData ContentCheckConfig => SAM_Balance_Content;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
             ([2], 11, () => !TargetNeedsPositionals())
         ];
 
-        public override Preset Preset => Preset.SAM_ST_Opener;
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => SAM_Opener_PrePullDelay)
+        ];
 
         public override bool HasCooldowns() =>
             IsOffCooldown(MeikyoShisui) &&
@@ -627,19 +627,19 @@ internal partial class SAM
             KaeshiSetsugekka
         ];
 
-        internal override UserData ContentCheckConfig => SAM_Balance_Content;
+        public override Preset Preset => Preset.SAM_ST_Opener;
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => SAM_Opener_PrePullDelay)
-        ];
+        internal override UserData ContentCheckConfig => SAM_Balance_Content;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
             ([2], 11, () => !TargetNeedsPositionals())
         ];
 
-        public override Preset Preset => Preset.SAM_ST_Opener;
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => SAM_Opener_PrePullDelay)
+        ];
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
@@ -680,19 +680,19 @@ internal partial class SAM
             KaeshiSetsugekka
         ];
 
-        internal override UserData ContentCheckConfig => SAM_Balance_Content;
+        public override Preset Preset => Preset.SAM_ST_Opener;
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => SAM_Opener_PrePullDelay)
-        ];
+        internal override UserData ContentCheckConfig => SAM_Balance_Content;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
             ([2], 11, () => !TargetNeedsPositionals())
         ];
 
-        public override Preset Preset => Preset.SAM_ST_Opener;
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => SAM_Opener_PrePullDelay)
+        ];
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
@@ -738,12 +738,9 @@ internal partial class SAM
             TendoKaeshiSetsugekka //26
         ];
 
-        internal override UserData ContentCheckConfig => SAM_Balance_Content;
+        public override Preset Preset => Preset.SAM_ST_Opener;
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => SAM_Opener_PrePullDelay)
-        ];
+        internal override UserData ContentCheckConfig => SAM_Balance_Content;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
@@ -760,7 +757,10 @@ internal partial class SAM
             ([13], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko)))
         ];
 
-        public override Preset Preset => Preset.SAM_ST_Opener;
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => SAM_Opener_PrePullDelay)
+        ];
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
