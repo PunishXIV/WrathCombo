@@ -170,6 +170,12 @@ internal partial class RPR
         return false;
     }
 
+    private static bool IsShroudCapped =>
+        Shroud >= MaxShroud;
+
+    private static bool IsShroudOvercapping(bool enshroudEnabled = true, bool onAoE = false) =>
+        IsShroudCapped && (!enshroudEnabled || !CanEnshroud(onAoE));
+
     #endregion
 
     #region Weaves
@@ -178,8 +184,9 @@ internal partial class RPR
         ActionReady(ArcaneCircle) && GetTargetHPPercent() > hpThreshold &&
         (onAoE || LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) || !LevelChecked(Enshroud));
 
-    private static bool CanGluttonyWeave() =>
-        CanBurstGluttonyWeave() ||
+    private static bool CanGluttonyWeave(bool enshroudEnabled = true) =>
+        CanBurstGluttonyWeave(enshroudEnabled) ||
+        !IsShroudOvercapping(enshroudEnabled) &&
         ActionReady(Gluttony) && InNormalRotation && !IsComboExpiring(3) &&
         !(InPostBurstSequence && Soul < 50);
 
@@ -189,7 +196,7 @@ internal partial class RPR
         (!advanced || GetRemainingCharges(Role.TrueNorth) > tnChargePool);
 
     private static bool CanUseSoulOverflowWeave() =>
-        !ShouldDeferSoulOverflowWeave &&
+        !ShouldHoldSoulOverflowWeave &&
         InNormalRotation &&
         !IsComboExpiring(3);
 
@@ -212,12 +219,14 @@ internal partial class RPR
         Soul is 100 ||
         GetCooldownRemainingTime(Gluttony) > GCDTotal * 5;
 
-    private static bool CanBloodstalkOverflow(bool gluttonyEnabled = true) =>
+    private static bool CanBloodstalkWeave(bool gluttonyEnabled = true, bool enshroudEnabled = true) =>
+        !IsShroudOvercapping(enshroudEnabled) &&
         CanUseSoulOverflowWeave() &&
         ActionReady(OriginalHook(BloodStalk)) &&
         ShouldSpendSoulOvercapST(gluttonyEnabled);
 
-    private static bool CanGrimSwatheOverflow(bool onAoE = false) =>
+    private static bool CanGrimSwatheWeave(bool onAoE = false, bool enshroudEnabled = true) =>
+        !IsShroudOvercapping(enshroudEnabled, onAoE) &&
         CanUseSoulOverflowWeave() &&
         ActionReady(GrimSwathe) &&
         InActionRange(onAoE ? OriginalHook(GrimSwathe) : GrimSwathe) &&
@@ -295,11 +304,12 @@ internal partial class RPR
         !IsComboExpiring(2) &&
         ComboTimer > 0;
 
-    private static bool CanBurstGluttonyWeave() =>
+    private static bool CanBurstGluttonyWeave(bool enshroudEnabled = true) =>
+        !IsShroudOvercapping(enshroudEnabled) &&
         InPostBurstSequence && Soul >= 50 && ActionReady(Gluttony) &&
         !HasBurstComboContinue();
 
-    private static bool SoulSliceOVercapProtection(bool onAoE)
+    private static bool OvercapSoulSliceProtection(bool onAoE)
     {
         if (Soul >= 100)
             return false;
@@ -319,12 +329,12 @@ internal partial class RPR
         InPostBurstSequence &&
         !HasBurstComboContinue() &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
-        (Soul <= 50 || SoulSliceOVercapProtection(onAoE)) &&
+        (Soul <= 50 || OvercapSoulSliceProtection(onAoE)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice) && !IsComboExpiring(2));
 
-    private static bool ShouldDeferSoulOverflowWeave =>
+    private static bool ShouldHoldSoulOverflowWeave =>
         Soul < 100 &&
         InPostBurstSequence && !JustUsed(Gluttony, GCDTotal * 8);
 
@@ -361,12 +371,14 @@ internal partial class RPR
         !HasStatusEffect(Buffs.SoulReaver) && !HasStatusEffect(Buffs.Executioner) &&
         GetTargetHPPercent() > hpThreshold;
 
-    private static bool CanGuillotineGCD() =>
+    private static bool CanGuillotineGCD(bool enshroudEnabled = true) =>
+        !IsShroudOvercapping(enshroudEnabled, true) &&
         (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)) &&
         !HasStatusEffect(Buffs.Enshrouded) && LevelChecked(Guillotine) &&
         InActionRange(OriginalHook(Guillotine));
 
-    private static bool CanGibbetGallowsGCD() =>
+    private static bool CanGibbetGallowsGCD(bool enshroudEnabled = true) =>
+        !IsShroudOvercapping(enshroudEnabled) &&
         LevelChecked(Gibbet) && !HasStatusEffect(Buffs.Enshrouded) &&
         (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner));
 
@@ -500,8 +512,11 @@ internal partial class RPR
         return 0;
     }
 
-    private static uint BloodStalkGrimSwatheSoulReaverGCD(uint actionId)
+    private static uint BloodStalkGrimSwatheSoulReaverGCD(uint actionId, bool enshroudEnabled = true)
     {
+        if (IsShroudOvercapping(enshroudEnabled, actionId is GrimSwathe))
+            return 0;
+
         if (actionId is GrimSwathe &&
             (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)) &&
             LevelChecked(Guillotine))
@@ -524,7 +539,7 @@ internal partial class RPR
     private static bool CanSoulSliceScythe(bool onAoE) =>
         !InPostBurstSequence &&
         InNormalRotation && !IsComboExpiring(3) &&
-        (Soul <= 50 || SoulSliceOVercapProtection(onAoE)) &&
+        (Soul <= 50 || OvercapSoulSliceProtection(onAoE)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice));
@@ -780,9 +795,13 @@ internal partial class RPR
 
     #region Gauge
 
+    private const byte MaxShroud = 100;
+
     private static RPRGauge Gauge => GetJobGauge<RPRGauge>();
 
     private static byte Soul => Gauge.Soul;
+
+    private static byte Shroud => Gauge.Shroud;
 
     private static byte Lemure => Gauge.LemureShroud;
 

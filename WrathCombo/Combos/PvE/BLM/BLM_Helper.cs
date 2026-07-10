@@ -39,7 +39,7 @@ internal partial class BLM
     private static uint PolyglotSpell =>
         LevelChecked(Xenoglossy) ? Xenoglossy : Foul;
 
-    private static bool PolyglotOvercapProtection() =>
+    private static bool OvercapPolyglotProtection() =>
         HasMaxPolyglotStacks && PolyglotTimer <= 5;
 
     private static bool ShouldSpendPolyglotInFire(
@@ -360,7 +360,7 @@ internal partial class BLM
         useScathe && IsMoving() && !LevelChecked(Triplecast) && ActionReady(Scathe);
 
     private static uint TryStPolyglotOvercap(bool usePolyglot = true) =>
-        usePolyglot && PolyglotOvercapProtection()
+        usePolyglot && OvercapPolyglotProtection()
             ? PolyglotSpell
             : 0;
 
@@ -462,7 +462,7 @@ internal partial class BLM
     #region AoE GCDs
 
     private static uint TryAoEPolyglotOvercap(bool usePolyglot = true) =>
-        usePolyglot && PolyglotOvercapProtection() && ActionReady(Foul)
+        usePolyglot && OvercapPolyglotProtection() && ActionReady(Foul)
             ? Foul
             : 0;
 

@@ -182,7 +182,7 @@ internal partial class VPR
         UsedVicewinder || UsedHuntersCoil || UsedSwiftskinsCoil ||
         UsedVicepit || UsedHuntersDen || UsedSwiftskinsDen;
 
-    private static bool ShouldDeferNewTwinblade =>
+    private static bool ShouldHoldNewTwinblade =>
         ShouldHoldTwinbladeForIre && !InTwinbladeCombo && !IsEmpowermentExpiring(4);
 
     private static bool ShouldSaveOfferingForBurst =>
@@ -396,7 +396,7 @@ internal partial class VPR
         GetTargetHPPercent() < hpThreshold && HasRattlingCoilStacks;
 
     private static bool CanUseUncoiledFuryInRotation(bool onAoE) =>
-        !ShouldDeferNewTwinblade &&
+        !ShouldHoldNewTwinblade &&
         HasBothBuffs &&
         !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) &&
         !JustUsed(Ouroboros) &&
@@ -459,7 +459,7 @@ internal partial class VPR
 
     private static bool CanVicepit(bool ignoreRange = false) =>
         WithinGcd(Vicepit) && !HasStatusEffect(Buffs.Reawakened) && !JustUsed(Vicepit) &&
-        !ShouldDeferNewTwinblade &&
+        !ShouldHoldNewTwinblade &&
         (ignoreRange || InActionRange(Vicepit)) &&
         (!HasBothBuffs || IreCD >= GCDTotal * 4 || !LevelChecked(SerpentsIre));
 
@@ -496,7 +496,7 @@ internal partial class VPR
 
     private static bool CanUseVicewinder =>
         WithinGcd(Vicewinder) && InActionRange(Vicewinder) && InCombat() &&
-        !ShouldDeferNewTwinblade &&
+        !ShouldHoldNewTwinblade &&
         !IsComboExpiring(6) && !IsVenomExpiring(4) && !IsHoningExpiring(4) &&
         !UsedVicewinder && !UsedHuntersCoil && !UsedSwiftskinsCoil &&
         !JustUsed(SerpentsIre, GCDTotal * 4) && !JustUsed(Vicewinder) &&
