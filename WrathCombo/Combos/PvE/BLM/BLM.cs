@@ -217,7 +217,6 @@ internal partial class BLM : Caster
                     IsEnabled(Preset.BLM_ST_Transpose),
                     IsEnabled(Preset.BLM_ST_UsePolyglot),
                     false,
-                    BLM_ST_MovementOption[MovementSwiftcast],
                     BLM_ST_PolyglotMovement,
                     BLM_ST_PolyglotSaveUsage);
                 if (gcd != 0)

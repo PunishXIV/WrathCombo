@@ -44,7 +44,6 @@ internal partial class BLM
 
     private static bool ShouldSpendPolyglotInFire(
         bool alwaysSpend = true,
-        bool useMovementSwiftcastPolyglot = false,
         int polyglotMovementThreshold = 0,
         int polyglotSaveUsage = 0)
     {
@@ -54,12 +53,9 @@ internal partial class BLM
         if (alwaysSpend)
             return true;
 
-        if (useMovementSwiftcastPolyglot &&
-            PolyglotStacks > polyglotMovementThreshold &&
-            PolyglotStacks > polyglotSaveUsage)
-            return true;
-
-        return !useMovementSwiftcastPolyglot &&
+        // Retain manual + movement pools (config enforces sum <= MaxPolyglot).
+        // Spend in rotation only when above both thresholds.
+        return PolyglotStacks > polyglotMovementThreshold &&
                PolyglotStacks > polyglotSaveUsage;
     }
 
@@ -160,13 +156,11 @@ internal partial class BLM
         bool useTranspose = true,
         bool usePolyglot = true,
         bool alwaysSpendPolyglot = true,
-        bool useMovementSwiftcastPolyglot = false,
         int polyglotMovementThreshold = 0,
         int polyglotSaveUsage = 0)
     {
         if (usePolyglot &&
-            ShouldSpendPolyglotInFire(alwaysSpendPolyglot, useMovementSwiftcastPolyglot, polyglotMovementThreshold,
-                polyglotSaveUsage))
+            ShouldSpendPolyglotInFire(alwaysSpendPolyglot, polyglotMovementThreshold, polyglotSaveUsage))
             return PolyglotSpell;
 
         if (CanFireParadox)
