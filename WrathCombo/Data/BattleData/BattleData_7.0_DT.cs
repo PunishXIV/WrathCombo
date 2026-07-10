@@ -108,6 +108,12 @@ namespace WrathCombo.Data.BattleData
                     };
                     break;
 
+                case 1314: // Mistwake
+                    _ignoreRaidwideAIDs = new uint[] {
+                        43330 // Treno Catoblepas Bedeviling Light
+                    }.ToFrozenSet();
+                    break;
+
                 case 1323: //M10S
                            // 19287 Red Hot
                            // 19288 Deep Blue

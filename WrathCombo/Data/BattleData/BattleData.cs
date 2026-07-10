@@ -5,7 +5,6 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
-using WrathCombo.Extensions;
 using static ECommons.ExcelServices.ExcelTerritoryHelper;
 
 namespace WrathCombo.Data.BattleData
@@ -26,6 +25,7 @@ namespace WrathCombo.Data.BattleData
         private static uint _territoryID;
         private static FrozenSet<uint> _tankbusterAIDs = [];
         private static FrozenSet<uint> _raidwideAIDs = [];
+        private static FrozenSet<uint> _ignoreRaidwideAIDs = [];
         #endregion
 
         // Invincible
@@ -54,6 +54,11 @@ namespace WrathCombo.Data.BattleData
         public static bool IsRaidwide(uint actionId)
             => _raidwideAIDs.Contains(actionId);
 
+        // Ignore Raidwides
+        public static FrozenSet<uint> IgnoreRaidwideAIDs => _ignoreRaidwideAIDs;
+        public static bool IgnoreRaidwide(uint actionId)
+            => _ignoreRaidwideAIDs.Contains(actionId);
+
         // Execute on Territory Change
         public static void LoadCombatData(uint territoryID)
         {
@@ -62,6 +67,7 @@ namespace WrathCombo.Data.BattleData
             _pauseActions = () => false;
             _tankbusterAIDs = [];
             _raidwideAIDs = [];
+            _ignoreRaidwideAIDs = [];
 
             // Save the territory ID for later
             _territoryID = territoryID;
