@@ -209,8 +209,8 @@ internal partial class RPR : Melee
 
                 if (IsEnabled(Preset.RPR_ST_Bloodstalk) &&
                     CanBloodstalkWeave(
-                        gluttonyEnabled: IsEnabled(Preset.RPR_ST_Gluttony),
-                        enshroudEnabled: IsEnabled(Preset.RPR_ST_Enshroud)))
+                        IsEnabled(Preset.RPR_ST_Gluttony),
+                        IsEnabled(Preset.RPR_ST_Enshroud)))
                     return OriginalHook(BloodStalk);
 
                 if (UseEnshroudWeaves(out uint weave, false,
@@ -325,7 +325,7 @@ internal partial class RPR : Melee
                     return Gluttony;
 
                 if (IsEnabled(Preset.RPR_AoE_GrimSwathe) &&
-                    CanGrimSwatheWeave(true, enshroudEnabled: IsEnabled(Preset.RPR_AoE_Enshroud)))
+                    CanGrimSwatheWeave(true, IsEnabled(Preset.RPR_AoE_Enshroud)))
                     return GrimSwathe;
 
                 if (UseEnshroudWeaves(out uint weave, true,

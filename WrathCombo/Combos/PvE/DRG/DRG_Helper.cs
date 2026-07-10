@@ -114,7 +114,7 @@ internal partial class DRG
 
                 return HasStatusEffect(Buffs.LanceCharge) ||
                        HasStatusEffect(Buffs.BattleLitany) ||
-                       LoTDActive;
+                       IsLoTDActive;
             }
 
             if (LevelChecked(SonicThrust) && JustUsed(DoomSpike))
@@ -127,7 +127,7 @@ internal partial class DRG
         if (!InActionRange(TrueThrust))
             return false;
 
-        if (LevelChecked(Drakesbane) && LoTDActive &&
+        if (LevelChecked(Drakesbane) && IsLoTDActive &&
             (HasStatusEffect(Buffs.LanceCharge) || HasStatusEffect(Buffs.BattleLitany)) &&
             (JustUsed(WheelingThrust) ||
              JustUsed(FangAndClaw) ||
@@ -188,7 +188,7 @@ internal partial class DRG
         ActionReady(WyrmwindThrust) &&
         FirstmindsFocus is 2 &&
         InActionRange(WyrmwindThrust) &&
-        (LoTDActive ||
+        (IsLoTDActive ||
          HasStatusEffect(Buffs.DraconianFire) ||
          HasStatusEffect(Buffs.RaidenThrustReady) ||
          NumberOfEnemiesInRange(WyrmwindThrust, CurrentTarget) >= 2);
@@ -199,7 +199,7 @@ internal partial class DRG
             OriginalHook(Jump) is not MirageDive || !InActionRange(MirageDive))
             return false;
 
-        if (onAoE || ignoreDoubleMirageHold || LoTDActive)
+        if (onAoE || ignoreDoubleMirageHold || IsLoTDActive)
             return true;
 
         bool diveExpiring = GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
@@ -212,7 +212,7 @@ internal partial class DRG
         ActionReady(Geirskogul) &&
         InActionRange(Geirskogul) &&
         HasBattleTarget() &&
-        !LoTDTimerActive &&
+        !IsLoTDTimerActive &&
         GetTargetHPPercent() > hpThreshold;
 
     private static int GeirskogulHPThreshold() =>
@@ -228,7 +228,7 @@ internal partial class DRG
         ActionReady(RiseOfTheDragon) && HasStatusEffect(Buffs.DragonsFlight) && InActionRange(RiseOfTheDragon);
 
     private static bool CanNastrond() =>
-        ActionReady(Nastrond) && HasStatusEffect(Buffs.NastrondReady) && LoTDActive && InActionRange(Nastrond);
+        ActionReady(Nastrond) && HasStatusEffect(Buffs.NastrondReady) && IsLoTDActive && InActionRange(Nastrond);
 
     private static bool CanHighJump(
         bool onAoE = false,
@@ -240,7 +240,7 @@ internal partial class DRG
             : !LevelChecked(HighJump) && IsOriginal(Jump) ||
               LevelChecked(HighJump) && IsOriginal(HighJump) &&
               (allowDoubleMirageHold || !DRG_ST_DoubleMirage ||
-               DRG_ST_DoubleMirage && (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDTimerActive)));
+               DRG_ST_DoubleMirage && (GetCooldownRemainingTime(Geirskogul) < 13 || IsLoTDTimerActive)));
 
     private static bool CanDragonfireDive(
         UserBoolArray? holdOptions = null,
@@ -248,10 +248,10 @@ internal partial class DRG
         ActionReady(DragonfireDive) && !HasStatusEffect(Buffs.DragonsFlight) &&
         GetTargetHPPercent() > hpThreshold &&
         CanUseWithHoldOptions(holdOptions) &&
-        (LoTDTimerActive || !LevelChecked(Geirskogul));
+        (IsLoTDTimerActive || !LevelChecked(Geirskogul));
 
     private static bool CanStardiver(UserBoolArray? holdOptions = null) =>
-        ActionReady(Stardiver) && LoTDActive && !HasStatusEffect(Buffs.StarcrossReady) &&
+        ActionReady(Stardiver) && IsLoTDActive && !HasStatusEffect(Buffs.StarcrossReady) &&
         CanUseWithHoldOptions(holdOptions);
 
     private readonly struct OutsideOfMeleeOptions
@@ -556,13 +556,13 @@ internal partial class DRG
 
     private static DRGGauge Gauge => GetJobGauge<DRGGauge>();
 
-    private static bool LoTDActive => Gauge.IsLOTDActive;
+    private static bool IsLoTDActive => Gauge.IsLOTDActive;
 
     private static short LoTDTimer => Gauge.LOTDTimer;
 
     private static byte FirstmindsFocus => Gauge.FirstmindsFocusCount;
 
-    private static bool LoTDTimerActive => LoTDTimer > 0;
+    private static bool IsLoTDTimerActive => LoTDTimer > 0;
 
     private static readonly FrozenDictionary<uint, ushort> ChaoticList = new Dictionary<uint, ushort>
     {

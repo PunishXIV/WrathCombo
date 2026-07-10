@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
@@ -69,13 +69,13 @@ internal partial class SAM
             {
                 if (useOka && LevelChecked(Oka) &&
                     (!HasKa || !HasStatusEffect(Buffs.Fuka) ||
-                     SenCount is 2 or 3 && RefreshFuka))
+                     SenCount is 2 or 3 && ShouldRefreshFuka))
                     return Oka;
 
                 if (LevelChecked(Mangetsu) &&
                     HasStatusEffect(Buffs.Fuka) &&
                     (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !useOka || !LevelChecked(Oka) ||
-                     SenCount is 2 or 3 && RefreshFugetsu))
+                     SenCount is 2 or 3 && ShouldRefreshFugetsu))
                     return Mangetsu;
             }
 
@@ -97,7 +97,7 @@ internal partial class SAM
                     ((OnTargetsFlank() || OnTargetsFront()) && !HasKa && LevelChecked(Kasha) ||
                      OnTargetsRear() && HasGetsu && LevelChecked(Kasha) ||
                      !HasStatusEffect(Buffs.Fuka) ||
-                     SenCount is 3 && RefreshFuka))
+                     SenCount is 3 && ShouldRefreshFuka))
                     return Shifu;
 
                 if (useGekko &&
@@ -106,7 +106,7 @@ internal partial class SAM
                      (OnTargetsRear() || OnTargetsFront()) && !HasGetsu && LevelChecked(Gekko) ||
                      OnTargetsFlank() && HasKa && LevelChecked(Gekko) ||
                      !HasStatusEffect(Buffs.Fugetsu) ||
-                     SenCount is 3 && RefreshFugetsu))
+                     SenCount is 3 && ShouldRefreshFugetsu))
                     return Jinpu;
             }
 
@@ -152,8 +152,8 @@ internal partial class SAM
                GetTargetHPPercent() > hpThreshold &&
                dotRemaining <= dotRefresh &&
                HasStatusEffect(Buffs.Fuka) && HasStatusEffect(Buffs.Fugetsu) &&
-               (EnhancedSenei && (JustUsed(Senei, 35f) || JustUsed(Ikishoten, 35f) || !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)) ||
-                !EnhancedSenei);
+               (HasEnhancedSenei && (JustUsed(Senei, 35f) || JustUsed(Ikishoten, 35f) || !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)) ||
+                !HasEnhancedSenei);
     }
 
     private static int HiganbanaHPThreshold()
@@ -168,15 +168,15 @@ internal partial class SAM
 
     #region Misc
 
-    private static bool RefreshFugetsu =>
+    private static bool ShouldRefreshFugetsu =>
         GetStatusEffectRemainingTime(Buffs.Fugetsu) <=
         GetStatusEffectRemainingTime(Buffs.Fuka);
 
-    private static bool RefreshFuka =>
+    private static bool ShouldRefreshFuka =>
         GetStatusEffectRemainingTime(Buffs.Fuka) <=
         GetStatusEffectRemainingTime(Buffs.Fugetsu);
 
-    private static bool EnhancedSenei =>
+    private static bool HasEnhancedSenei =>
         TraitLevelChecked(Traits.EnhancedHissatsu);
 
     private static int SenCount =>
@@ -198,8 +198,8 @@ internal partial class SAM
         (SenCount is 3 ||
          SenCount is 1 && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) < higanbanaDotRefresh ||
          HasStatusEffect(Buffs.OgiNamikiriReady) ||
-         EnhancedSenei && JustUsed(Senei, 30f) ||
-         !EnhancedSenei && JustUsed(KaeshiSetsugekka, 20f));
+         HasEnhancedSenei && JustUsed(Senei, 30f) ||
+         !HasEnhancedSenei && JustUsed(KaeshiSetsugekka, 20f));
 
     private static bool CanUseShinten() =>
         ActionReady(Shinten) && InActionRange(Shinten);
@@ -211,7 +211,7 @@ internal partial class SAM
 
     private static bool ShouldUseSenei(int kenkiOvercapAmount)
     {
-        if (!EnhancedSenei || HasStatusEffect(Buffs.ZanshinReady))
+        if (!HasEnhancedSenei || HasStatusEffect(Buffs.ZanshinReady))
             return false;
 
         float gcd = GetCooldown(OriginalHook(Hakaze)).CooldownTotal;
@@ -226,7 +226,7 @@ internal partial class SAM
     }
 
     private static bool ShouldSpendKenkiPreEnhanced(int kenkiOvercapAmount) =>
-        !EnhancedSenei &&
+        !HasEnhancedSenei &&
         (GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= kenkiOvercapAmount ||
          GetCooldownRemainingTime(Ikishoten) <= 10 && Kenki > 50);
 
@@ -259,7 +259,7 @@ internal partial class SAM
             ? DoMeikyoCombo(onAoE, useTrueNorth, useYukikaze, useKasha, useGekko, useOka, trueNorthCharges)
             : ContinueBasicCombo(onAoE, useTrueNorth, useYukikaze, useKasha, useGekko, useOka, trueNorthCharges);
 
-    private static bool CanAoESenGcd(
+    private static bool CanAoESenGCD(
         out uint action,
         bool allowTsubame = true,
         bool allowIaijutsu = true,
@@ -333,8 +333,8 @@ internal partial class SAM
     private static bool CanAoEOgiNamikiri(bool onlyWhenStationary = false) =>
         ActionReady(OriginalHook(OgiNamikiri)) &&
         (onlyWhenStationary
-            ? !IsMoving() && (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady)
-            : NamikiriReady || HasStatusEffect(Buffs.OgiNamikiriReady) && !IsMoving());
+            ? !IsMoving() && (HasStatusEffect(Buffs.OgiNamikiriReady) || IsNamikiriReady)
+            : IsNamikiriReady || HasStatusEffect(Buffs.OgiNamikiriReady) && !IsMoving());
 
     #endregion
 
@@ -357,7 +357,7 @@ internal partial class SAM
 
         if (InBossEncounter())
         {
-            if (EnhancedSenei)
+            if (HasEnhancedSenei)
             {
                 if (GetRemainingCharges(MeikyoShisui) >= 1 &&
                     JustUsed(KaeshiNamikiri, 10f) &&
@@ -394,13 +394,13 @@ internal partial class SAM
         {
             if (useOka && LevelChecked(Oka) &&
                 (!HasKa || !HasStatusEffect(Buffs.Fuka) ||
-                 SenCount is 2 or 3 && RefreshFuka))
+                 SenCount is 2 or 3 && ShouldRefreshFuka))
                 return Oka;
 
             if (LevelChecked(Mangetsu) &&
                 HasStatusEffect(Buffs.Fuka) &&
                 (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !useOka || !LevelChecked(Oka) ||
-                 SenCount is 2 or 3 && RefreshFugetsu))
+                 SenCount is 2 or 3 && ShouldRefreshFugetsu))
                 return Mangetsu;
 
             return OriginalHook(Fuga);
@@ -465,7 +465,7 @@ internal partial class SAM
          HasStatusEffect(Buffs.TsubameReady)) &&
         (GetStatusEffectRemainingTime(Buffs.TsubameReady) < 5 ||
          SenCount is 3 ||
-         EnhancedSenei && GetCooldownRemainingTime(Senei) > 33);
+         HasEnhancedSenei && GetCooldownRemainingTime(Senei) > 33);
 
     private static bool CanZanshin() =>
         ActionReady(Zanshin) &&
@@ -480,7 +480,7 @@ internal partial class SAM
         bool useHiganbanaBurstRules = true,
         bool higanbanaBossOnly = false)
     {
-        if (NamikiriReady)
+        if (IsNamikiriReady)
             return true;
 
         if (ActionReady(OriginalHook(OgiNamikiri)) && InActionRange(OriginalHook(OgiNamikiri)) &&
@@ -788,7 +788,7 @@ internal partial class SAM
 
     private static Kaeshi Kaeshi => Gauge.Kaeshi;
 
-    private static bool NamikiriReady => Kaeshi is Kaeshi.Namikiri;
+    private static bool IsNamikiriReady => Kaeshi is Kaeshi.Namikiri;
 
     private static int GetSenCount()
     {

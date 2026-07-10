@@ -47,7 +47,7 @@ internal partial class MCH
 
         if (!HasStatusEffect(Buffs.Wildfire) &&
             ActionReady(OriginalHook(RookAutoturret)) &&
-            !RobotActive &&
+            !IsRobotActive &&
             GetTargetHPPercent() > hpThreshold)
         {
             if (LevelChecked(Wildfire))
@@ -863,7 +863,7 @@ internal partial class MCH
 
     private static bool IsOverheated => Gauge.IsOverheated;
 
-    private static bool RobotActive => Gauge.IsRobotActive;
+    private static bool IsRobotActive => Gauge.IsRobotActive;
 
     private static byte Heat => Gauge.Heat;
 

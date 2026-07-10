@@ -70,7 +70,7 @@ internal partial class RPR
             ActionReady(HarvestMoon) && HasStatusEffect(Buffs.Soulsow))
             return HarvestMoon;
 
-        if (HasPerfectioReady && InActionRange(PerfectioAction) &&
+        if (IsPerfectioReady && InActionRange(PerfectioAction) &&
             (!InMeleeRange() || ShouldSpendPerfectioNow()))
             return PerfectioAction;
 
@@ -195,7 +195,7 @@ internal partial class RPR
         LevelChecked(Gluttony) && GetCooldownRemainingTime(Gluttony) <= GCDTotal && Role.CanTrueNorth() &&
         (!advanced || GetRemainingCharges(Role.TrueNorth) > tnChargePool);
 
-    private static bool CanUseSoulOverflowWeave() =>
+    private static bool CanSoulOverflowWeave() =>
         !ShouldHoldSoulOverflowWeave &&
         InNormalRotation &&
         !IsComboExpiring(3);
@@ -221,13 +221,13 @@ internal partial class RPR
 
     private static bool CanBloodstalkWeave(bool gluttonyEnabled = true, bool enshroudEnabled = true) =>
         !IsShroudOvercapping(enshroudEnabled) &&
-        CanUseSoulOverflowWeave() &&
+        CanSoulOverflowWeave() &&
         ActionReady(OriginalHook(BloodStalk)) &&
         ShouldSpendSoulOvercapST(gluttonyEnabled);
 
     private static bool CanGrimSwatheWeave(bool onAoE = false, bool enshroudEnabled = true) =>
         !IsShroudOvercapping(enshroudEnabled, onAoE) &&
-        CanUseSoulOverflowWeave() &&
+        CanSoulOverflowWeave() &&
         ActionReady(GrimSwathe) &&
         InActionRange(onAoE ? OriginalHook(GrimSwathe) : GrimSwathe) &&
         ShouldSpendSoulOvercapAoE();
@@ -280,24 +280,24 @@ internal partial class RPR
 
     #region GCD Burst
 
-    private static bool WithinGcd(uint actionId) =>
+    private static bool WithinGCD(uint actionId) =>
         LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
 
-    private static bool HasPerfectioReady =>
+    private static bool IsPerfectioReady =>
         HasStatusEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio);
 
     private static uint PerfectioAction =>
-        WithinGcd(Perfectio) ? Perfectio : OriginalHook(Communio);
+        WithinGCD(Perfectio) ? Perfectio : OriginalHook(Communio);
 
     private static bool ShouldSpendPerfectioNow() =>
-        HasPerfectioReady;
+        IsPerfectioReady;
 
     private static bool CanPerfectioGCD() =>
-        HasPerfectioReady && ShouldSpendPerfectioNow() && InActionRange(PerfectioAction);
+        IsPerfectioReady && ShouldSpendPerfectioNow() && InActionRange(PerfectioAction);
 
     private static bool InPostBurstSequence =>
         JustUsed(Perfectio, GCDTotal * 8) ||
-        JustUsed(OriginalHook(Communio), GCDTotal * 2) && !HasPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
+        JustUsed(OriginalHook(Communio), GCDTotal * 2) && !IsPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
 
     private static bool HasBurstComboContinue() =>
         InPostBurstSequence &&

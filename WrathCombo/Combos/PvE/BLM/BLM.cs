@@ -54,14 +54,14 @@ internal partial class BLM : Caster
             if (TryStMovementGcd() is var movementGcd and not 0)
                 return movementGcd;
 
-            if (FirePhase)
+            if (IsInFirePhase)
             {
                 uint gcd = UseFirePhaseGcd();
                 if (gcd != 0)
                     return gcd;
             }
 
-            if (IcePhase)
+            if (IsInIcePhase)
             {
                 uint gcd = UseIcePhaseGcd();
                 if (gcd != 0)
@@ -120,10 +120,10 @@ internal partial class BLM : Caster
             if (TryAoEParadoxFiller() is var paradox and not 0)
                 return paradox;
 
-            if (FirePhase && UseAoEFirePhaseGcd() is var fireGcd and not 0)
+            if (IsInFirePhase && UseAoEFirePhaseGcd() is var fireGcd and not 0)
                 return fireGcd;
 
-            if (IcePhase && UseAoEIcePhaseGcd() is var iceGcd and not 0)
+            if (IsInIcePhase && UseAoEIcePhaseGcd() is var iceGcd and not 0)
                 return iceGcd;
 
             return OriginalHook(Blizzard2);
@@ -209,7 +209,7 @@ internal partial class BLM : Caster
                 TryStMovementGcd(useConfiguredPriority: true) is var movementGcd and not 0)
                 return movementGcd;
 
-            if (FirePhase)
+            if (IsInFirePhase)
             {
                 uint gcd = UseFirePhaseGcd(
                     IsEnabled(Preset.BLM_ST_FlareStar),
@@ -224,7 +224,7 @@ internal partial class BLM : Caster
                     return gcd;
             }
 
-            if (IcePhase)
+            if (IsInIcePhase)
             {
                 uint gcd = UseIcePhaseGcd(useTranspose: IsEnabled(Preset.BLM_ST_Transpose));
                 if (gcd != 0)
@@ -285,7 +285,7 @@ internal partial class BLM : Caster
             if (TryAoEParadoxFiller(IsEnabled(Preset.BLM_AoE_ParadoxFiller)) is var paradox and not 0)
                 return paradox;
 
-            if (FirePhase &&
+            if (IsInFirePhase &&
                 UseAoEFirePhaseGcd(
                     IsEnabled(Preset.BLM_AoE_Triplecast),
                     BLM_AoE_TriplecastHoldCharges,
@@ -293,7 +293,7 @@ internal partial class BLM : Caster
                     IsNotEnabled(Preset.BLM_AoE_Transpose)) is var fireGcd and not 0)
                 return fireGcd;
 
-            if (IcePhase &&
+            if (IsInIcePhase &&
                 UseAoEIcePhaseGcd(
                     IsEnabled(Preset.BLM_AoE_Transpose),
                     IsNotEnabled(Preset.BLM_AoE_Transpose),
@@ -346,18 +346,18 @@ internal partial class BLM : Caster
 
             return actionID switch
             {
-                Fire when BLM_F1to3 == 0 && BLM_Fire1_Despair && FirePhase && MP.Cur < 2400 && LevelChecked(Despair) => Despair,
+                Fire when BLM_F1to3 == 0 && BLM_Fire1_Despair && IsInFirePhase && MP.Cur < 2400 && LevelChecked(Despair) => Despair,
 
                 Fire when BLM_F1to3 == 0 && LevelChecked(Fire3) &&
                           (AstralFireStacks is 1 or 2 && HasStatusEffect(Buffs.Firestarter) ||
-                           LevelChecked(Paradox) && !ActiveParadox ||
+                           LevelChecked(Paradox) && !IsParadoxActive ||
                            !InCombat() && LevelChecked(Fire4) ||
-                           IcePhase && !ActiveParadox ||
+                           IsInIcePhase && !IsParadoxActive ||
                            !LevelChecked(Fire4) &&
                            HasStatusEffect(Buffs.Firestarter)) && !JustUsed(Fire3) => Fire3,
 
-                Fire3 when BLM_F1to3 == 1 && LevelChecked(Fire3) && FirePhase &&
-                           (LevelChecked(Paradox) && ActiveParadox && AstralFireStacks is 3 ||
+                Fire3 when BLM_F1to3 == 1 && LevelChecked(Fire3) && IsInFirePhase &&
+                           (LevelChecked(Paradox) && IsParadoxActive && AstralFireStacks is 3 ||
                             !LevelChecked(Fire4) && !HasStatusEffect(Buffs.Firestarter)) &&
                            !JustUsed(OriginalHook(Fire)) => OriginalHook(Fire),
 
@@ -374,7 +374,7 @@ internal partial class BLM : Caster
             if (actionID is not Fire)
                 return actionID;
 
-            return ActiveParadox && IcePhase
+            return IsParadoxActive && IsInIcePhase
                 ? OriginalHook(Blizzard)
                 : ActionReady(Fire4)
                     ? Fire4
@@ -399,7 +399,7 @@ internal partial class BLM : Caster
                     : actionID;
             }
 
-            return IcePhase switch
+            return IsInIcePhase switch
             {
                 false when BLM_Fire4_FlareStar && CanFlareStar() && LevelChecked(FlareStar) => FlareStar,
                 false when BLM_Fire4_Fire3 && AstralFireStacks < 3 => LevelChecked(Fire3) ? Fire3 : Fire,
@@ -424,9 +424,9 @@ internal partial class BLM : Caster
 
             return actionID switch
             {
-                Flare when BLM_Flare_FlareStar && FirePhase && CanFlareStar() => FlareStar,
-                Flare when FirePhase && LevelChecked(Flare) => Flare,
-                Flare when IcePhase && ActionReady(Freeze) => Freeze,
+                Flare when BLM_Flare_FlareStar && IsInFirePhase && CanFlareStar() => FlareStar,
+                Flare when IsInFirePhase && LevelChecked(Flare) => Flare,
+                Flare when IsInIcePhase && ActionReady(Freeze) => Freeze,
                 var _ => actionID
             };
         }
@@ -444,12 +444,12 @@ internal partial class BLM : Caster
             return actionID switch
             {
                 Blizzard when BLM_B1to3 == 0 && LevelChecked(Blizzard3) &&
-                              (FirePhase ||
+                              (IsInFirePhase ||
                                UmbralIceStacks is 1 ||
                                UmbralIceStacks is 2) => Blizzard3,
 
-                Blizzard3 when BLM_B1to3 == 1 && LevelChecked(Blizzard3) && IcePhase && UmbralIceStacks is 3 => OriginalHook(Blizzard),
-                Blizzard3 when BLM_Blizzard3_Despair && FirePhase && LevelChecked(Despair) && MP.Cur >= 800 => Despair,
+                Blizzard3 when BLM_B1to3 == 1 && LevelChecked(Blizzard3) && IsInIcePhase && UmbralIceStacks is 3 => OriginalHook(Blizzard),
+                Blizzard3 when BLM_Blizzard3_Despair && IsInFirePhase && LevelChecked(Despair) && MP.Cur >= 800 => Despair,
 
                 var _ => actionID
             };
@@ -464,7 +464,7 @@ internal partial class BLM : Caster
             if (actionID is not Blizzard)
                 return actionID;
 
-            return ActiveParadox && FirePhase
+            return IsParadoxActive && IsInFirePhase
                 ? OriginalHook(Fire)
                 : ActionReady(Blizzard4)
                     ? Blizzard4
@@ -480,7 +480,7 @@ internal partial class BLM : Caster
             if (actionID is not Blizzard4)
                 return actionID;
 
-            return FirePhase && LevelChecked(Despair) && MP.Cur >= 800
+            return IsInFirePhase && LevelChecked(Despair) && MP.Cur >= 800
                 ? Despair
                 : actionID;
         }
@@ -496,7 +496,7 @@ internal partial class BLM : Caster
 
             return actionID switch
             {
-                Freeze when HasMaxUmbralHeartStacks && LevelChecked(Paradox) && ActiveParadox && IcePhase => OriginalHook(Blizzard),
+                Freeze when IsUmbralHeartCapped && LevelChecked(Paradox) && IsParadoxActive && IsInIcePhase => OriginalHook(Blizzard),
                 Freeze when !LevelChecked(Freeze) => Blizzard2,
                 var _ => actionID
             };
@@ -511,7 +511,7 @@ internal partial class BLM : Caster
             if (actionID is not FlareStar)
                 return actionID;
 
-            return FirePhase && LevelChecked(FlareStar) && ActiveParadox && AstralSoulStacks < 6
+            return IsInFirePhase && LevelChecked(FlareStar) && IsParadoxActive && AstralSoulStacks < 6
                 ? OriginalHook(Fire)
                 : actionID;
         }
@@ -525,7 +525,7 @@ internal partial class BLM : Caster
             if (actionID is not Amplifier)
                 return actionID;
 
-            return BLM_AmplifierXenoCD && IsOnCooldown(Amplifier) && HasPolyglot || HasMaxPolyglotStacks
+            return BLM_AmplifierXenoCD && IsOnCooldown(Amplifier) && HasPolyglot || IsPolyglotCapped
                 ? Xenoglossy
                 : actionID;
         }
@@ -570,7 +570,7 @@ internal partial class BLM : Caster
             if (actionID is not Transpose)
                 return actionID;
 
-            return IcePhase && LevelChecked(UmbralSoul)
+            return IsInIcePhase && LevelChecked(UmbralSoul)
                 ? UmbralSoul
                 : actionID;
         }

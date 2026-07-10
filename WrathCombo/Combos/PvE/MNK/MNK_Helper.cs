@@ -170,15 +170,15 @@ internal partial class MNK
             : JustUsed(OriginalHook(Bootshine), window) ||
               JustUsed(DragonKick, window);
 
-    private static bool IsRoFCDInPerfectBalanceWindow() =>
+    private static bool IsRoFInPerfectBalanceWindow() =>
         GetCooldownRemainingTime(RiddleOfFire) is >= 2 and <= 7;
 
-    private static bool IsBrotherhoodCDInPerfectBalanceWindow() =>
+    private static bool IsBrotherhoodInPerfectBalanceWindow() =>
         GetCooldownRemainingTime(Brotherhood) is >= 2 and <= 7;
 
     private static bool IsEvenWindowApproaching() =>
-        IsRoFCDInPerfectBalanceWindow() &&
-        IsBrotherhoodCDInPerfectBalanceWindow();
+        IsRoFInPerfectBalanceWindow() &&
+        IsBrotherhoodInPerfectBalanceWindow();
 
     private static bool IsDoubleLunarOpener(bool useOpenerBalance) =>
         useOpenerBalance && (MNK_SelectedOpener == 0 || MNK_SelectedOpener == 2);
@@ -188,7 +188,7 @@ internal partial class MNK
         if (!useOpenerBalance)
             return ShouldUsePreRoFPerfectBalanceDefault();
 
-        if (!IsRoFCDInPerfectBalanceWindow())
+        if (!IsRoFInPerfectBalanceWindow())
             return false;
 
         if (IsEvenWindowApproaching())
@@ -201,7 +201,7 @@ internal partial class MNK
     }
 
     private static bool ShouldUsePreRoFPerfectBalanceDefault() =>
-        IsRoFCDInPerfectBalanceWindow();
+        IsRoFInPerfectBalanceWindow();
 
     private static bool ShouldUsePostRoFLunarOddPerfectBalance(bool useOpenerBalance) =>
         IsDoubleLunarOpener(useOpenerBalance) &&
@@ -306,7 +306,7 @@ internal partial class MNK
         if (HasStatusEffect(Buffs.Brotherhood) || HasStatusEffect(Buffs.RiddleOfFire))
             return false;
 
-        if (IsRoFCDInPerfectBalanceWindow())
+        if (IsRoFInPerfectBalanceWindow())
             return false;
 
         return true;
@@ -365,7 +365,7 @@ internal partial class MNK
         if (IsBurstHoldReleaseReady())
             return false;
 
-        if (IsRoFCDInPerfectBalanceWindow())
+        if (IsRoFInPerfectBalanceWindow())
             return false;
 
         return true;

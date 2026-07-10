@@ -29,7 +29,7 @@ internal partial class MCH : PhysicalRanged
                 if (OvercapGaussRicochetProtection(out uint gaussRico))
                     return gaussRico;
 
-                if (RobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
+                if (IsRobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
                     GetTargetHPPercent() <= 1)
                     return OriginalHook(RookOverdrive);
 
@@ -193,7 +193,7 @@ internal partial class MCH : PhysicalRanged
                     return gaussRico;
 
                 if (IsEnabled(Preset.MCH_ST_Adv_QueenOverdrive) &&
-                    RobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
+                    IsRobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
                     GetTargetHPPercent() <= MCH_ST_QueenOverDriveHPThreshold)
                     return OriginalHook(RookOverdrive);
 
@@ -328,7 +328,7 @@ internal partial class MCH : PhysicalRanged
                     return gaussRico;
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_QueenOverdrive) &&
-                    RobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
+                    IsRobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
                     GetTargetHPPercent() <= MCH_AoE_QueenOverDriveHPThreshold)
                     return OriginalHook(RookOverdrive);
 
@@ -517,7 +517,7 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (AutomatonQueen or RookAutoturret))
                 return actionID;
 
-            return RobotActive
+            return IsRobotActive
                 ? OriginalHook(QueenOverdrive)
                 : actionID;
         }
