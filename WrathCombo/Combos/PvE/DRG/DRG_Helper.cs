@@ -400,17 +400,22 @@ internal partial class DRG
             DRG_SelectedOpener == 1)
             return PiercingTalonOpener;
 
+        if (EarlyBuffOpener.LevelChecked &&
+            DRG_SelectedOpener == 2)
+            return EarlyBuffOpener;
+
         return WrathOpener.Dummy;
     }
 
     internal static DRGStandardOpener StandardOpener = new();
     internal static DRGPiercingTalonOpener PiercingTalonOpener = new();
+    internal static DRGEarlyBuffOpener EarlyBuffOpener = new();
 
     internal class DRGStandardOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -455,7 +460,7 @@ internal partial class DRG
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -494,6 +499,55 @@ internal partial class DRG
             IsOffCooldown(BattleLitany) &&
             IsOffCooldown(DragonfireDive) &&
             IsOffCooldown(LanceCharge);
+    }
+
+    internal class DRGEarlyBuffOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 100;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            LanceCharge,
+            BattleLitany,
+            TrueThrust,
+            DragonfireDive,
+            VorpalThrust,
+            LifeSurge,
+            Geirskogul,
+            HeavensThrust,
+            LifeSurge,
+            WyrmwindThrust,
+            Drakesbane,
+            HighJump,
+            MirageDive,
+            ChaoticSpring,
+            Nastrond,
+            RiseOfTheDragon,
+            WheelingThrust,
+            Nastrond,
+            FangAndClaw,
+            Stardiver,
+            Nastrond,
+            RaidenThrust,
+            Nastrond,
+            VorpalThrust,
+            HighJump,
+            HeavensThrust,
+            MirageDive
+        ];
+
+        public override Preset Preset => Preset.DRG_ST_Opener;
+
+        internal override UserData ContentCheckConfig => DRG_BalanceContent;
+
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(LifeSurge) is 2 &&
+            IsOffCooldown(BattleLitany) &&
+            IsOffCooldown(DragonfireDive) &&
+            IsOffCooldown(LanceCharge) &&
+            CountdownRemaining is >= 1.5f and <= 3f;
     }
 
     #endregion
