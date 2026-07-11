@@ -133,9 +133,16 @@ namespace WrathCombo.Data.BattleData
             }
         }
 
-        private static bool CheckForCast(uint baseID, uint actionID, float percentCast = 0)
+        /// <summary>
+        /// Checks to see if a target (based on it's BaseId) is casting
+        /// </summary>
+        /// <param name="baseId">BaseId of the IBattleChara</param>
+        /// <param name="actionID">Action ID of the cast we're looking for</param>
+        /// <param name="percentCast">Optional: Check for certain progress of the cast</param>
+        /// <returns></returns>
+        private static bool CheckForCast(uint baseId, uint actionID, float percentCast = 0)
         {
-            if (Svc.Objects.FirstOrDefault(x => x.BaseId == baseID) is IBattleChara target)
+            if (Svc.Objects.FirstOrDefault(x => x.BaseId == baseId) is IBattleChara target)
             {
                 if (target.IsCasting && target.CastActionId == actionID)
                     return (target.CurrentCastTime / target.TotalCastTime) >= percentCast;
