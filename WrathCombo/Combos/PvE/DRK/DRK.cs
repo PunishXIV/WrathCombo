@@ -65,7 +65,9 @@ internal partial class DRK : Tank
         protected override uint Invoke(uint actionID)
         {
             // Bail if not looking at the replaced action
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HardSlash)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID,
+                    CustomActionType.SingleTargetDPS, HardSlash))
+                return actionID;
 
             const Combo comboFlags = Combo.ST | Combo.Adv;
             var newAction = HardSlash;

@@ -236,12 +236,27 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_ST_CD_Delirium:
-                    DrawSliderInt(0, 25, DRK_ST_DeliriumThreshold,
-                        Generics.StopEnemyHpPercent,
-                        itemWidth: little, sliderIncrement: SliderIncrements.Fives);
+                    DrawSliderInt(0, 25,
+                        DRK_ST_DeliriumThresholdBoss,
+                        Generics.BossOnlyHpPercent,
+                        itemWidth: little,
+                        sliderIncrement: SliderIncrements.Ones);
+                    DrawSliderInt(0, 50,
+                        DRK_ST_DeliriumThresholdBossAdds,
+                        Generics.BossEncounterNonBossHpPercent,
+                        itemWidth: little,
+                        sliderIncrement: SliderIncrements.Fives);
+                    DrawSliderInt(0, 100,
+                        DRK_ST_DeliriumThresholdTrash,
+                        Generics.NonBossHpPercent,
+                        itemWidth: little,
+                        sliderIncrement: SliderIncrements.Fives);
+
                     DrawDifficultyMultiChoice(
                         DRK_ST_DeliriumThresholdDifficulty,
-                        DRK_ST_DeliriumThresholdDifficultyListSet
+                        DRK_ST_DeliriumThresholdDifficultyListSet,
+                        overrideText: "Select what difficulty the above " +
+                                      "sliders should apply to:"
                     );
 
                     break;
@@ -660,16 +675,43 @@ internal partial class DRK
             new("DRK_ST_CDsBossRequirement", (int)BossRequirement.Off);
 
         /// <summary>
-        ///     Target HP% to use Delirium above for Single Target.
+        ///     Target HP% to use Delirium above for Single Target,
+        ///     on bosses.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: 0<br />
         ///     <b>Range</b>: 0 - 25 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
+        public static readonly UserInt DRK_ST_DeliriumThresholdBoss =
+            new("DRK_ST_DeliriumThresholdBoss", 10);
+
+        /// <summary>
+        ///     Target HP% to use Delirium above for Single Target,
+        ///     on boss adds.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 0<br />
+        ///     <b>Range</b>: 0 - 50 <br />
         ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
         /// </value>
         /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
-        public static readonly UserInt DRK_ST_DeliriumThreshold =
-            new("DRK_ST_DeliriumThreshold", 0);
+        public static readonly UserInt DRK_ST_DeliriumThresholdBossAdds =
+            new("DRK_ST_DeliriumThresholdBossAdds", 10);
+
+        /// <summary>
+        ///     Target HP% to use Delirium above for Single Target,
+        ///     on trash.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 0<br />
+        ///     <b>Range</b>: 0 - 100 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
+        public static readonly UserInt DRK_ST_DeliriumThresholdTrash =
+            new("DRK_ST_DeliriumThresholdTrash", 20);
 
         /// <summary>
         ///     Difficulty of Delirium Threshold for Single Target.
