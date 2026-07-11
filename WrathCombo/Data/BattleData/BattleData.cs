@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.Logging;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Frozen;
@@ -129,6 +130,10 @@ namespace WrathCombo.Data.BattleData
                     case 5: LoadDT(); break;
                     //case 6: LoadEC(); break;
                 }
+
+#if DEBUG
+                DuoLog.Debug($"{map.PlaceName.Value.Name} Battle Data Loaded");
+#endif
             }
         }
 
@@ -148,6 +153,18 @@ namespace WrathCombo.Data.BattleData
                 return false;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Same as other check for cast, except not checking for any particular target and using time remaining instead of a % of cast
+        /// </summary>
+        /// <param name="actionID"></param>
+        /// <param name="timeRemaining"></param>
+        /// <returns></returns>
+        private static bool CheckForCastTimeRemaining(uint actionID, float timeRemaining = 1.75f)
+        {
+            var battleChars = Svc.Objects.Where(x => x is IBattleChara).Cast<IBattleChara>();
+            return battleChars.Any(x => x.IsCasting && x.CastActionId == actionID && (x.TotalCastTime - x.CurrentCastTime) <= timeRemaining);
         }
     }
 }

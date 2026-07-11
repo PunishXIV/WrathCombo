@@ -18,6 +18,13 @@ namespace WrathCombo.Data.BattleData
                         return Invincible.False;
                     };
                     break;
+                case 1070: //The Fell Court of Troia - Beatrice
+
+                    _pauseActions = () =>
+                    {
+                        return CheckForCastTimeRemaining(29821) || CheckForCastTimeRemaining(29828);
+                    };
+                    break;
             }
         }
     }

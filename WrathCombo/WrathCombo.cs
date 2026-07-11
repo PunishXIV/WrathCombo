@@ -165,6 +165,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
                     EnteringInstancedContent = true;
                 else if (Content.InstanceContentRow?.RowId == 0)
                     EnteringInstancedContent = false;
+
+                BattleData.LoadCombatData(Content.TerritoryID);
             }
 
             return true;
@@ -319,10 +321,9 @@ public sealed partial class WrathCombo : IDalamudPlugin
         }
     }
 
-    private void ClientState_TerritoryChanged(uint obj)
+    private void ClientState_TerritoryChanged(uint territoryId)
     {
         UpdateCaches(false, true, false);
-        BattleData.LoadCombatData(obj);
         Task.Run(StancePartner.CheckForIPCControl);
     }
 
