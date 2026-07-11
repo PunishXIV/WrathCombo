@@ -247,6 +247,9 @@ public sealed unsafe class CustomActionManager : IDisposable
                 IconInjectEntry e = _pendingInjects[i];
                 AtkComponentIcon* icon = (AtkComponentIcon*)e.ComponentPtr;
 
+                if (icon == null)
+                    continue;
+
                 int framesLeft = e.FramesLeft - 1;
                 if (((uint)icon->Flags & 0x400u) != 0 && framesLeft > 0)
                 {
