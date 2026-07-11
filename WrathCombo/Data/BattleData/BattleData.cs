@@ -6,6 +6,7 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Services;
 using static ECommons.ExcelServices.ExcelTerritoryHelper;
 
 namespace WrathCombo.Data.BattleData
@@ -164,15 +165,15 @@ namespace WrathCombo.Data.BattleData
         }
 
         /// <summary>
-        /// Same as other check for cast, except not checking for any particular target and using time remaining instead of a % of cast
+        /// Used primarily to look for any gaze actions since it'll use a config to determine when to pause
         /// </summary>
         /// <param name="actionID"></param>
         /// <param name="timeRemaining"></param>
         /// <returns></returns>
-        private static bool CheckForCastTimeRemaining(uint actionID, float timeRemaining = 1.75f)
+        private static bool CheckForGazeCasts(uint actionID)
         {
             var battleChars = Svc.Objects.Where(x => x is IBattleChara).Cast<IBattleChara>();
-            return battleChars.Any(x => x.IsCasting && x.CastActionId == actionID && (x.TotalCastTime - x.CurrentCastTime) <= timeRemaining);
+            return battleChars.Any(x => x.IsCasting && x.CastActionId == actionID && (x.TotalCastTime - x.CurrentCastTime) <= Service.Configuration.PenaltyPause);
         }
     }
 }

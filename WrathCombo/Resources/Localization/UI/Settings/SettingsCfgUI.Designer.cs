@@ -943,6 +943,55 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 0.5.
+        /// </summary>
+        internal static string PenaltyPause_defaultValue {
+            get {
+                return ResourceManager.GetString("PenaltyPause_defaultValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will lockout combos on your hotbar with Savage Blade when detected mechanics that inflict a penalty for using an action is detected (e.g pyretics, acceleration bombs, gazes etc.) has this much time left before resolving.
+        ///
+        ///Some mechanics may override this value.
+        ///
+        ///Set to 0 to disable..
+        /// </summary>
+        internal static string PenaltyPause_helpMark {
+            get {
+                return ResourceManager.GetString("PenaltyPause_helpMark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Penalty Lockout Window.
+        /// </summary>
+        internal static string PenaltyPause_Name {
+            get {
+                return ResourceManager.GetString("PenaltyPause_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Increase with higher latency to the server.
+        /// </summary>
+        internal static string PenaltyPause_recommendedValue {
+            get {
+                return ResourceManager.GetString("PenaltyPause_recommendedValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to seconds.
+        /// </summary>
+        internal static string PenaltyPause_unitLabel {
+            get {
+                return ResourceManager.GetString("PenaltyPause_unitLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Off.
         /// </summary>
         internal static string QueueAdjust_defaultValue {

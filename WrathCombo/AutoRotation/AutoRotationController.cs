@@ -183,7 +183,7 @@ internal unsafe class AutoRotationController
             return;
 
         // Check for Pyretic / Reasons to stop
-        if (cfg.DPSSettings.UnTargetAndDisableForPenalty && PlayerHasActionPenalty())
+        if (cfg.DPSSettings.UnTargetAndDisableForPenalty && PlayerHasActionPenalty(true))
             return;
 
         // Healer logic

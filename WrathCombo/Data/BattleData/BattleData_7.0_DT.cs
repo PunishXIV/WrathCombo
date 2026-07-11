@@ -205,7 +205,7 @@ namespace WrathCombo.Data.BattleData
                     _pauseActions = () =>
                     {
                         // Medusa Swarmsinger
-                        if (CheckForCast(0x4DAB, 50102, 0.75f)) return true; //Petrification cast 75%
+                        if (CheckForGazeCasts(50102)) return true; //Petrification cast
 
                         // Shinryu Paradox / Hollow King
                         if (Svc.Objects.Any(x => x.BaseId == 0x4D92 || x.BaseId == 0x4D96))

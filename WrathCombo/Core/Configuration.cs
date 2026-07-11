@@ -243,6 +243,13 @@ public partial class Configuration : IPluginConfiguration
         maxInt: 500)]
     public int Throttle = 50;
 
+    /// <summary>
+    /// When pausing for gazes and other action penalty
+    /// </summary>
+    [SettingCategory(Rotation_Behavior_Options)]
+    [Setting(type: Setting.Type.Slider_Float, minFloat: 0, maxFloat: 2)]
+    public float PenaltyPause = 0.5f;
+
     /// Delay before recognizing movement. Default: 0.
     /// <seealso cref="CustomComboFunctions.IsMoving"/>
     [SettingCategory(Rotation_Behavior_Options)]

@@ -29,7 +29,7 @@ namespace WrathCombo.Data.BattleData
 
                     _pauseActions = () =>
                     {
-                        return CheckForCastTimeRemaining(29821) || CheckForCastTimeRemaining(29828);
+                        return CheckForGazeCasts(29821) || CheckForGazeCasts(29828);
                     };
                     break;
                 default:

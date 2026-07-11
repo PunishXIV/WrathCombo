@@ -174,7 +174,7 @@ internal abstract partial class CustomComboFunctions
     /// Checks to see if the player has a status that should stop all actions and unselect targets
     /// Acceleration bombs and Pyretics
     /// </summary>
-    public static unsafe bool PlayerHasActionPenalty()
+    public static unsafe bool PlayerHasActionPenalty(bool fromAutorot)
     {
         bool hasActionPenalty = false;
 
@@ -182,17 +182,19 @@ internal abstract partial class CustomComboFunctions
         hasActionPenalty = BattleData.PauseActions();
         if (!hasActionPenalty)
         {
+            float userSetting = fromAutorot ? 1.5f : Service.Configuration.PenaltyPause;
             hasActionPenalty =
                 Player.Status.Any(s =>
                     // Acceleration Bomb within Timeframe
-                    (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
-                        GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
+                    (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) ||
 
                     // Pyretic
                     StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
 
                     // Others
-                    StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
+                    StatusCache.PausingStatuses.Misc.Contains(s.StatusId))
+
+                    && GetStatusEffectRemainingTime(s) <= userSetting
 
                 ) == true;
         }
