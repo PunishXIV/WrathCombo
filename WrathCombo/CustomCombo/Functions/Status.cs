@@ -186,15 +186,14 @@ internal abstract partial class CustomComboFunctions
             hasActionPenalty =
                 Player.Status.Any(s =>
                     // Acceleration Bomb within Timeframe
-                    (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) ||
+                    (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
+                        GetStatusEffectRemainingTime(s) <= userSetting) ||
 
                     // Pyretic
                     StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
 
                     // Others
-                    StatusCache.PausingStatuses.Misc.Contains(s.StatusId))
-
-                    && GetStatusEffectRemainingTime(s) <= userSetting
+                    (StatusCache.PausingStatuses.Misc.Contains(s.StatusId) && GetStatusEffectRemainingTime(s) <= userSetting)
 
                 ) == true;
         }
