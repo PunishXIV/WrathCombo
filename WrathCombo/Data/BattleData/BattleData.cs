@@ -55,7 +55,7 @@ namespace WrathCombo.Data.BattleData
         /// Invincible result enum<br/>
         /// True: Is Invincible<br/>
         /// False: Is not Invincible<br/>
-        /// CheckStatus: Is not Invincible per BattleData, but should be checked master Invincibility status list
+        /// CheckStatus: Is not Invincible per BattleData, but should be checked against master Invincibility status list
         /// </summary>
         public enum Invincible
         {
@@ -113,14 +113,13 @@ namespace WrathCombo.Data.BattleData
             // Save the territory ID for later
             _territoryID = territoryID;
 
-            TerritoryType? map = Get(_territoryID);
-            if (map is not null)
+            if (Get(_territoryID) is TerritoryType map)
             {
                 // Using TerritoryType.ExVersion listed for the map to determine the splitup, not actual regions
                 // ExVersion is Expansion
                 // Please verify the expansion in the TerritoryType sheet https://exd.camora.dev/sheet/TerritoryType
                 // Example: Epic of Alexander is Shadowbringers (3) Content, even though the region says Dravania (1/Heavensward),
-                switch (map.Value.ExVersion.RowId)
+                switch (map.ExVersion.RowId)
                 {
                     case 0: LoadARR(); break;
                     case 1: LoadHW(); break;
