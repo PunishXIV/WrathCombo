@@ -284,6 +284,33 @@ internal partial class DRK
 
                     break;
 
+                case Preset.DRK_ST_CD_Darkness:
+                    ImGui.Dummy(new Vector2(10f, 0f).Scale());
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_ST_DarknessInstant,
+                        "Use Halfway",
+                        "Will use Salt and Darkness about halfway through " +
+                        "Salted Earth's duration, after more important oGCDs.\n" +
+                        "Recommended.",
+                        outputValue: (int)SaltAndDarknessInstant.Off,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_ST_DarknessInstant,
+                        "Use Instantly (for heavy movement)",
+                        "Will use Salt and Darkness as soon as possible " +
+                        "(outside of the opener).\n" +
+                        "Only Recommended for heavy movement fights, " +
+                        "and only if you know you can fit your other oGCDs in.",
+                        outputValue: (int)SaltAndDarknessInstant.On,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+
+                    UserConfig.DrawDifficultyMultiChoice(
+                        DRK_ST_DarknessInstantDifficulty,
+                        DRK_ST_DarknessInstantDifficultyListSet
+                    );
+
+                    break;
+
                 case Preset.DRK_ST_CD_Shadow:
                     UserConfig.DrawSliderInt(0, 30, DRK_ST_LivingShadowThreshold,
                         Generics.StopEnemyHpPercent,
@@ -560,6 +587,15 @@ internal partial class DRK
         }
 
         /// <summary>
+        ///     Whether Salt and Darkness should be used instantly or wait.
+        /// </summary>
+        internal enum SaltAndDarknessInstant
+        {
+            Off = 0,
+            On = 1,
+        }
+
+        /// <summary>
         ///     Whether Combos should include mitigation or not.
         /// </summary>
         internal enum SimpleMitigation
@@ -789,6 +825,39 @@ internal partial class DRK
         /// </summary>
         public static readonly ContentCheck.ListSet
             DRK_ST_LivingShadowThresholdDifficultyListSet =
+                ContentCheck.ListSet.Halved;
+
+        /// <summary>
+        ///     Whether Salt and Darkness should be used instantly.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="SaltAndDarknessInstant.Off"/> <br />
+        ///     <b>Options</b>: <see cref="SaltAndDarknessInstant.On"/>
+        ///     or <see cref="SaltAndDarknessInstant.Off"/>
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Darkness" />
+        public static readonly UserInt DRK_ST_DarknessInstant =
+            new("DRK_ST_DarknessInstant", (int)SaltAndDarknessInstant.Off);
+
+        /// <summary>
+        ///     Difficulty of Salt and Darkness Instant Usage for Single Target.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
+        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and/or <see cref="ContentCheck.TopHalfContent" />
+        /// </value>
+        /// <seealso cref="DRK_ST_DarknessInstant" />
+        public static readonly UserBoolArray DRK_ST_DarknessInstantDifficulty =
+            new("DRK_ST_DarknessInstantDifficulty", [true, false]);
+
+        /// <summary>
+        ///     What Difficulty List Set
+        ///     <see cref="DRK_ST_DarknessInstantDifficulty" /> is set to.
+        /// </summary>
+        /// <seealso cref="DRK_ST_DarknessInstantDifficulty" />
+        public static readonly ContentCheck.ListSet
+            DRK_ST_DarknessInstantDifficultyListSet =
                 ContentCheck.ListSet.Halved;
 
         /// <summary>
