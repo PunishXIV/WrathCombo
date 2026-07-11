@@ -234,7 +234,7 @@ internal abstract partial class CustomComboFunctions
             return true;
 
         // Are we to bother with checking statuses per Battle Data
-        if (!checkBattle.CheckGenerics)
+        if (!checkBattle.UseGenericCheck)
             return false;
 
         // General invincibility check

@@ -31,8 +31,15 @@ namespace WrathCombo.Data.BattleData
         // Invincible
         public readonly record struct InvincibleResult(
             bool Invincible,
-            bool CheckGenerics
-        );
+            bool UseGenericCheck)
+        {
+            public static readonly InvincibleResult False = new(false, false);
+            public static readonly InvincibleResult True = new(true, false);
+            public static readonly InvincibleResult CheckGeneric = new(false, true);
+        }
+
+        private static InvincibleResult Result(bool invincible)
+            => invincible ? InvincibleResult.True : InvincibleResult.False;
 
         public static InvincibleResult IsInvincible(IBattleChara target, uint targetId, HashSet<uint> targetStatuses)
         {

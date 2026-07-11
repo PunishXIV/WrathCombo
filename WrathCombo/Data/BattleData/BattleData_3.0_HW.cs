@@ -1,5 +1,5 @@
-﻿using ECommons.GameHelpers;
-using ECommons.ExcelServices;
+﻿using ECommons.ExcelServices;
+using ECommons.GameHelpers;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
@@ -15,23 +15,24 @@ namespace WrathCombo.Data.BattleData
                     {
                         // Sawtooth 5103
                         // Irminsul 5105
-                        bool inv1 = (targetID is 5105 or 5103) &&
+                        if ((targetID is 5105 or 5103) &&
                             ((Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(941)) ||
-                            (Player.Job.IsMagicalRangedDps() && targetStatuses.Contains(942)));
-
+                             (Player.Job.IsMagicalRangedDps() && targetStatuses.Contains(942))
+                            )
+                           ) return InvincibleResult.True;
                         // Cuchulainn 5139, Checking one of the Stoneskins
-                        bool inv2= targetID is 5139 && targetStatuses.Contains(152);
-
-                        return new(inv1 || inv2, false);
+                        if (targetID is 5139 && targetStatuses.Contains(152)) return InvincibleResult.True;
+                        return InvincibleResult.False;
                     };
                     break;
 
                 case 582: // Heart of the Creator
                     _invincibleCheck = (target, targetID, _) =>
-                        new(
-                            (targetID is 6101) && // Plasma Shield
-                            AngleToTarget(target) is not AttackAngle.Front,
-                            false);
+                    {
+                        if ((targetID is 6101) && // Plasma Shield
+                            AngleToTarget(target) is not AttackAngle.Front) return InvincibleResult.True;
+                        return InvincibleResult.False;
+                    };
                     break;
             }
         }

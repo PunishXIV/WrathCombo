@@ -1,5 +1,5 @@
-﻿using ECommons.GameHelpers;
-using ECommons.ExcelServices;
+﻿using ECommons.ExcelServices;
+using ECommons.GameHelpers;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
@@ -13,9 +13,11 @@ namespace WrathCombo.Data.BattleData
                 case 821: //Dohn Mheg Final Boss Lyre
                     //Unfooled means you can attack the Lyre
                     _invincibleCheck = (_, targetID, _) =>
-                        new(
-                            targetID is 3939 && !HasStatusEffect(386),
-                            false);
+                    {
+                        if (targetID is 3939 && !HasStatusEffect(386))
+                            return InvincibleResult.True; //Unfooled means you can attack the Lyre
+                        return InvincibleResult.False;
+                    };
                     break;
 
                 case 887: // The Epic of Alexander (Ultimate)
@@ -23,9 +25,11 @@ namespace WrathCombo.Data.BattleData
                           // Technically not invincible, but killing one wipes the raid;
                           // ignore them once below the 25% HP feed threshold
                     _invincibleCheck = (target, targetID, _) =>
-                        new(
-                            targetID is 11338 && GetTargetHPPercent(target) < 25,
-                            true);
+                    {
+                        if (targetID is 11338 && GetTargetHPPercent(target) < 25)
+                            return InvincibleResult.True;
+                        return InvincibleResult.CheckGeneric;
+                    };
                     break;
 
                 case 917: //Puppet's Bunker, Flight Mechs
@@ -36,11 +40,11 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 11792 or 11793 or 11794)
                         {
-                            if (HasStatusEffect(2288)) return new(targetID != 11792, false);
-                            if (HasStatusEffect(2289)) return new(targetID != 11793, false);
-                            if (HasStatusEffect(2290)) return new(targetID != 11794, false);
+                            if (HasStatusEffect(2288)) return Result(targetID != 11792);
+                            if (HasStatusEffect(2289)) return Result(targetID != 11793);
+                            if (HasStatusEffect(2290)) return Result(targetID != 11794);
                         }
-                        return new(false, false);
+                        return InvincibleResult.False;
                     };
                     break;
 
@@ -56,14 +60,14 @@ namespace WrathCombo.Data.BattleData
                         if (targetID is 12709 or 12708)
                         {
                             bool isTank = Player.Job.IsTank();
-                            bool bossHasParry = targetStatuses.Contains(680);
+                            bool bossHasParry = HasStatusEffect(680, target);
                             bool isFrontFacing = AngleToTarget(target) is AttackAngle.Front;
 
                             // Non Tanks should just ignore parrying boss(s)
                             // Tanks should only ignore their target if it has the buff and they aren't in front.
-                            if (bossHasParry && (!isTank || !isFrontFacing)) return new(true, false);
+                            if (bossHasParry && (!isTank || !isFrontFacing)) return InvincibleResult.True;
                         }
-                        return new(false, false);
+                        return InvincibleResult.False;
                     };
                     break;
 

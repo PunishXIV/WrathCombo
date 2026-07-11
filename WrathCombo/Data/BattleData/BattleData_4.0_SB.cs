@@ -1,4 +1,5 @@
-﻿using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+﻿using WrathCombo.Combos.PvE;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
 {
@@ -15,17 +16,17 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 9339 or 9340) //numbers are for Regular
                         {
-                            if (HasStatusEffect(1660)) return new(targetID == 9339,false); // Packet Filter M
-                            if (HasStatusEffect(1661)) return new(targetID == 9340,false); // Packet Filter F
-                            if (targetID is 9340) return new(targetStatuses.Contains(671), false); // F being covered by M
+                            if (HasStatusEffect(1660)) return Result(targetID == 9339); // Packet Filter M
+                            if (HasStatusEffect(1661)) return Result(targetID == 9340); // Packet Filter F
+                            if (targetID is 9340 && targetStatuses.Contains(671)) return InvincibleResult.True; // F being covered by M
                         }
 
                         //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500
                         if ((targetStatuses.Contains(3454) is true && HasStatusEffect(3499)) ||
                             (targetStatuses.Contains(1675) is true && HasStatusEffect(3500)))
-                            return new(true, false);
+                            return InvincibleResult.True;
 
-                        return new(false, true);
+                        return InvincibleResult.CheckGeneric;
                     };
                     break;
 
@@ -34,9 +35,10 @@ namespace WrathCombo.Data.BattleData
                     // Colossus Rubricatus = 9511
                     // No point attacking anymore when it begins to cast self-detonate = 14574
                     _invincibleCheck = (target, targetID, _) =>
-                        new(
-                            targetID is 9511 && target.CastActionId == 14574,
-                            false);
+                    {
+                        if (targetID is 9511 && target.IsCasting && target.CastActionId == 14574) return InvincibleResult.True;
+                        return InvincibleResult.True;
+                    };
                     break;
             }
         }
