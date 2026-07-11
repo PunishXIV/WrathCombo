@@ -17,15 +17,15 @@ namespace WrathCombo.Data.BattleData
                         {
                             if (HasStatusEffect(1660)) return Result(targetID == 9339); // Packet Filter M
                             if (HasStatusEffect(1661)) return Result(targetID == 9340); // Packet Filter F
-                            if (targetID is 9340 && targetStatuses.Contains(671)) return InvincibleResult.True; // F being covered by M
+                            if (targetID is 9340 && targetStatuses.Contains(671)) return Invincible.True; // F being covered by M
                         }
 
                         //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500
                         if ((targetStatuses.Contains(3454) is true && HasStatusEffect(3499)) ||
                             (targetStatuses.Contains(1675) is true && HasStatusEffect(3500)))
-                            return InvincibleResult.True;
+                            return Invincible.True;
 
-                        return InvincibleResult.CheckStatuses;
+                        return Invincible.CheckStatuses;
                     };
                     break;
 
@@ -35,8 +35,8 @@ namespace WrathCombo.Data.BattleData
                     // No point attacking anymore when it begins to cast self-detonate = 14574
                     _invincibleCheck = (target, targetID, _) =>
                     {
-                        if (targetID is 9511 && target.IsCasting && target.CastActionId == 14574) return InvincibleResult.True;
-                        return InvincibleResult.True;
+                        if (targetID is 9511 && target.IsCasting && target.CastActionId == 14574) return Invincible.True;
+                        return Invincible.True;
                     };
                     break;
             }

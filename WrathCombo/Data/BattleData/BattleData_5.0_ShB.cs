@@ -15,8 +15,8 @@ namespace WrathCombo.Data.BattleData
                     _invincibleCheck = (_, targetID, _) =>
                     {
                         if (targetID is 3939 && !HasStatusEffect(386))
-                            return InvincibleResult.True; //Unfooled means you can attack the Lyre
-                        return InvincibleResult.False;
+                            return Invincible.True; //Unfooled means you can attack the Lyre
+                        return Invincible.False;
                     };
                     break;
 
@@ -27,8 +27,8 @@ namespace WrathCombo.Data.BattleData
                     _invincibleCheck = (target, targetID, _) =>
                     {
                         if (targetID is 11338 && GetTargetHPPercent(target) < 25)
-                            return InvincibleResult.True;
-                        return InvincibleResult.CheckStatuses;
+                            return Invincible.True;
+                        return Invincible.CheckStatuses;
                     };
                     break;
 
@@ -44,7 +44,7 @@ namespace WrathCombo.Data.BattleData
                             if (HasStatusEffect(2289)) return Result(targetID != 11793);
                             if (HasStatusEffect(2290)) return Result(targetID != 11794);
                         }
-                        return InvincibleResult.False;
+                        return Invincible.False;
                     };
                     break;
 
@@ -65,9 +65,9 @@ namespace WrathCombo.Data.BattleData
 
                             // Non Tanks should just ignore parrying boss(s)
                             // Tanks should only ignore their target if it has the buff and they aren't in front.
-                            if (bossHasParry && (!isTank || !isFrontFacing)) return InvincibleResult.True;
+                            if (bossHasParry && (!isTank || !isFrontFacing)) return Invincible.True;
                         }
-                        return InvincibleResult.False;
+                        return Invincible.False;
                     };
                     break;
 

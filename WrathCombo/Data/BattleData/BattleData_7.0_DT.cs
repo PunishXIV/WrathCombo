@@ -29,10 +29,10 @@ namespace WrathCombo.Data.BattleData
                         // Atomos = 17952
                         // Inner Darkness = 4177
                         // Outer Darkness = 4178
-                        if (targetID is 17950 && HasStatusEffect(4178, null, true)) return InvincibleResult.True; // If on the platforms
-                        if (targetID is 17951 or 17952 && HasStatusEffect(4177, null, true)) return InvincibleResult.True; // If on tiles
+                        if (targetID is 17950 && HasStatusEffect(4178, null, true)) return Invincible.True; // If on the platforms
+                        if (targetID is 17951 or 17952 && HasStatusEffect(4177, null, true)) return Invincible.True; // If on tiles
 
-                        return InvincibleResult.False;
+                        return Invincible.False;
                     };
                     break;
 
@@ -43,7 +43,7 @@ namespace WrathCombo.Data.BattleData
                            // ArkAngel TT = 18052 (C)
                     _invincibleCheck = (_, targetID, targetStatuses) =>
                     {
-                        if (targetID is 18049 && targetStatuses.Contains(4410)) return InvincibleResult.True;
+                        if (targetID is 18049 && targetStatuses.Contains(4410)) return Invincible.True;
 
                         if (targetID is 18051 or 18052 or 18053)
                         {
@@ -51,7 +51,7 @@ namespace WrathCombo.Data.BattleData
                             if (HasStatusEffect(4194)) return Result(targetID != 18053); // Alliance B Yellow Fated
                             if (HasStatusEffect(4196)) return Result(targetID != 18052); // Alliance C Blue Vaunted
                         }
-                        return InvincibleResult.False;
+                        return Invincible.False;
                     };
                     break;
 
@@ -65,7 +65,7 @@ namespace WrathCombo.Data.BattleData
                             if (HasStatusEffect(4389)) return Result(targetID != 18225); // Target Wolf of Wind
                             if (HasStatusEffect(4390)) return Result(targetID != 18219); // Target Wolf of Stone
                         }
-                        return InvincibleResult.False;
+                        return Invincible.False;
                     };
                     break;
 
@@ -79,7 +79,7 @@ namespace WrathCombo.Data.BattleData
                             if (HasStatusEffect(4559)) return Result(targetID != 18667); // Target Eminent Grief
                             if (HasStatusEffect(4560)) return Result(targetID != 18666); // Target Devoured Eater
                         }
-                        return InvincibleResult.False;
+                        return Invincible.False;
                     };
                     break;
 
@@ -104,7 +104,7 @@ namespace WrathCombo.Data.BattleData
                             if (HasStatusEffect(4544)) return Result(targetID != 18578); // Gamma
                             if (HasStatusEffect(4545)) return Result(targetID != 18579); // Delta
                         }
-                        return InvincibleResult.False;
+                        return Invincible.False;
                     };
                     break;
 
@@ -191,7 +191,7 @@ namespace WrathCombo.Data.BattleData
                             if (HasStatusEffect(4192)) return Result(targetID != 19508); // Epic Hero (α) — Chaos
                             if (HasStatusEffect(4194)) return Result(targetID != 19509); // Fated Hero (β) — Exdeath
                         }
-                        return InvincibleResult.False;
+                        return Invincible.False;
                     };
                     break;
 

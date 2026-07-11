@@ -14,8 +14,8 @@ namespace WrathCombo.Data.BattleData
                     _invincibleCheck = (_, targetID, _) =>
                     {
                         if (targetID is (13298 or 13299) && Svc.Objects.Any(y => y.BaseId is 13297 && !y.IsDead))
-                            return InvincibleResult.True;
-                        return InvincibleResult.False;
+                            return Invincible.True;
+                        return Invincible.False;
                     };
                     break;
             }

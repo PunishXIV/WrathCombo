@@ -13,36 +13,70 @@ namespace WrathCombo.Data.BattleData
     {
         #region Private Vars
         /// <summary>
-        /// Current encounter-specific invincibility check.
+        /// Current encounter-specific invincibility check. <br/>
         ///
-        /// Parameters:
-        /// 1. Target battle character.
-        /// 2. Target BaseId.
-        /// 3. Cached status IDs on the target.
+        /// Parameters:<br/>
+        /// 1. Target battle character.<br/>
+        /// 2. Target BaseId.<br/>
+        /// 3. Cached status IDs on the target.<br/>
         /// </summary>
-        private static Func<IBattleChara, uint, HashSet<uint>, InvincibleResult> _invincibleCheck = (_, _, _) => InvincibleResult.CheckStatuses;
+        /// <returns>Enum flag for Invincibility (true/false/check statuses)</returns>
+        private static Func<IBattleChara, uint, HashSet<uint>, Invincible> _invincibleCheck = (_, _, _) => Invincible.CheckStatuses;
+
+        /// <summary>
+        /// Current encounter-specific pause actions check.
+        /// </summary>
         private static Func<bool> _pauseActions = () => false;
+
+        /// <summary>
+        /// Cached copy of territory ID for quick lookup <br/>
+        /// Set on territory change.
+        /// </summary>
         private static uint _territoryID;
+
+        /// <summary>
+        /// List of action IDs that are tankbusters
+        /// </summary>
         private static FrozenSet<uint> _tankbusterAIDs = [];
+
+        /// <summary>
+        /// List of action IDs that are raidwide damage
+        /// </summary>
         private static FrozenSet<uint> _raidwideAIDs = [];
+
+        /// <summary>
+        /// List of action IDs that are raidwides, but should be ignored (gazes for instance)
+        /// </summary>
         private static FrozenSet<uint> _ignoreRaidwideAIDs = [];
         #endregion
 
-        // Invincible
-        public enum InvincibleResult
+        #region Invincible Checks
+        /// <summary>
+        /// Invincible result enum<br/>
+        /// True: Is Invincible<br/>
+        /// False: Is not Invincible<br/>
+        /// CheckStatus: Is not Invincible per BattleData, but should be checked master Invincibility status list
+        /// </summary>
+        public enum Invincible
         {
             False,
             True,
             CheckStatuses,
         }
 
-        private static InvincibleResult Result(bool invincible)
-            => invincible ? InvincibleResult.True : InvincibleResult.False;
+        /// <summary>
+        /// Quickly takes a bool and selects Invincible.True or Invincible.False
+        /// </summary>
+        /// <param name="invincible">bool parameter / statement if invincible or not</param>
+        /// <returns></returns>
+        private static Invincible Result(bool invincible)
+            => invincible ? Invincible.True : Invincible.False;
 
-        public static InvincibleResult IsInvincible(IBattleChara target, uint targetId, HashSet<uint> targetStatuses)
+        public static Invincible IsInvincible(IBattleChara target, uint targetId, HashSet<uint> targetStatuses)
         {
             return _invincibleCheck(target, targetId, targetStatuses);
         }
+        #endregion
 
         // Pause Actions
         public static bool PauseActions() => _pauseActions();
@@ -69,8 +103,8 @@ namespace WrathCombo.Data.BattleData
             // Reset Combat Functions and FrozenSets
             _invincibleCheck = (_, _, _) =>
                 IsSanctuary(_territoryID)
-                    ? InvincibleResult.False
-                    : InvincibleResult.CheckStatuses;
+                    ? Invincible.False
+                    : Invincible.CheckStatuses;
             _pauseActions = () => false;
             _tankbusterAIDs = [];
             _raidwideAIDs = [];
@@ -82,9 +116,10 @@ namespace WrathCombo.Data.BattleData
             TerritoryType? map = Get(_territoryID);
             if (map is not null)
             {
-                // Using TerritoryType.ExVersion listed for the map to determine the splitup
+                // Using TerritoryType.ExVersion listed for the map to determine the splitup, not actual regions
                 // ExVersion is Expansion
                 // Please verify the expansion in the TerritoryType sheet https://exd.camora.dev/sheet/TerritoryType
+                // Example: Epic of Alexander is Shadowbringers (3) Content, even though the region says Dravania (1/Heavensward),
                 switch (map.Value.ExVersion.RowId)
                 {
                     case 0: LoadARR(); break;

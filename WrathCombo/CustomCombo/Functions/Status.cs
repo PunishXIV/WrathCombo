@@ -230,12 +230,12 @@ internal abstract partial class CustomComboFunctions
         return BattleData.IsInvincible(tar, targetID, targetStatuses) switch
         {
             // If target is invincible based on Battle Data
-            BattleData.InvincibleResult.True => true,
+            BattleData.Invincible.True => true,
             // Are we to bother with checking statuses per Battle Data
-            BattleData.InvincibleResult.False => false,
+            BattleData.Invincible.False => false,
             // General invincibility check
             // Due to large size of InvincibleStatuses, best to check process this way
-            BattleData.InvincibleResult.CheckStatuses => StatusCache.CompareLists(
+            BattleData.Invincible.CheckStatuses => StatusCache.CompareLists(
                                 StatusCache.InvincibleStatuses,
                                 targetStatuses),
             _ => false,
