@@ -1,4 +1,5 @@
 ﻿using ECommons.DalamudServices;
+using System.Collections.Frozen;
 using System.Linq;
 
 namespace WrathCombo.Data.BattleData
@@ -20,6 +21,11 @@ namespace WrathCombo.Data.BattleData
                     };
                     break;
                 case 1070: //The Fell Court of Troia - Beatrice
+
+                    _ignoreRaidwideAIDs = new uint[]
+                    {
+                        29821, 29828 //Gaze rings, triggers group damage warnings
+                    }.ToFrozenSet();
 
                     _pauseActions = () =>
                     {
