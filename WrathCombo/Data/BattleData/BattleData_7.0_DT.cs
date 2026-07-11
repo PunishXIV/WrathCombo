@@ -29,10 +29,10 @@ namespace WrathCombo.Data.BattleData
                         // Atomos = 17952
                         // Inner Darkness = 4177
                         // Outer Darkness = 4178
-                        if (targetID is 17950 && HasStatusEffect(4178, null, true)) return new InvincibleResult(true, false); // If on the platforms
-                        if (targetID is 17951 or 17952 && HasStatusEffect(4177, null, true)) return new InvincibleResult(true, false); // If on tiles
+                        if (targetID is 17950 && HasStatusEffect(4178, null, true)) return new(true, false); // If on the platforms
+                        if (targetID is 17951 or 17952 && HasStatusEffect(4177, null, true)) return new(true, false); // If on tiles
 
-                        return new InvincibleResult(false, false);
+                        return new(false, false);
                     };
                     break;
 
@@ -43,15 +43,15 @@ namespace WrathCombo.Data.BattleData
                            // ArkAngel TT = 18052 (C)
                     _invincibleCheck = (_, targetID, targetStatuses) =>
                     {
-                        if (targetID is 18049) return new InvincibleResult(targetStatuses.Contains(4410), true);
+                        if (targetID is 18049) return new(targetStatuses.Contains(4410), true);
 
                         if (targetID is 18051 or 18052 or 18053)
                         {
-                            if (HasStatusEffect(4192)) return new InvincibleResult(targetID != 18051, false); // Alliance A Red Epic
-                            if (HasStatusEffect(4194)) return new InvincibleResult(targetID != 18053, false); // Alliance B Yellow Fated
-                            if (HasStatusEffect(4196)) return new InvincibleResult(targetID != 18052, false); // Alliance C Blue Vaunted
+                            if (HasStatusEffect(4192)) return new(targetID != 18051, false); // Alliance A Red Epic
+                            if (HasStatusEffect(4194)) return new(targetID != 18053, false); // Alliance B Yellow Fated
+                            if (HasStatusEffect(4196)) return new(targetID != 18052, false); // Alliance C Blue Vaunted
                         }
-                        return new InvincibleResult(false, false);
+                        return new(false, false);
                     };
                     break;
 
@@ -62,10 +62,10 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 18219 or 18225)
                         {
-                            if (HasStatusEffect(4389)) return new InvincibleResult(targetID != 18225, false); // Target Wolf of Wind
-                            if (HasStatusEffect(4390)) return new InvincibleResult(targetID != 18219, false); // Target Wolf of Stone
+                            if (HasStatusEffect(4389)) return new(targetID != 18225, false); // Target Wolf of Wind
+                            if (HasStatusEffect(4390)) return new(targetID != 18219, false); // Target Wolf of Stone
                         }
-                        return new InvincibleResult(false, false);
+                        return new(false, false);
                     };
                     break;
 
@@ -76,10 +76,10 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 18666 or 18667)
                         {
-                            if (HasStatusEffect(4559)) return new InvincibleResult(targetID != 18667, false); // Target Eminent Grief
-                            if (HasStatusEffect(4560)) return new InvincibleResult(targetID != 18666, false); // Target Devoured Eater
+                            if (HasStatusEffect(4559)) return new(targetID != 18667, false); // Target Eminent Grief
+                            if (HasStatusEffect(4560)) return new(targetID != 18666, false); // Target Devoured Eater
                         }
-                        return new InvincibleResult(false, false);
+                        return new(false, false);
                     };
                     break;
 
@@ -98,13 +98,13 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 18576 or 18577 or 18578 or 18579 or 18642)
                         {
-                            if (HasStatusEffect(3065)) return new InvincibleResult(targetID != 18642 || GetTargetDistance(target) > 20, false);  // Hellmaker checking for fire floor debuff
-                            if (HasStatusEffect(4542)) return new InvincibleResult(targetID != 18576, false); // Alpha
-                            if (HasStatusEffect(4543)) return new InvincibleResult(targetID != 18577, false); // Beta
-                            if (HasStatusEffect(4544)) return new InvincibleResult(targetID != 18578, false); // Gamma
-                            if (HasStatusEffect(4545)) return new InvincibleResult(targetID != 18579, false); // Delta
+                            if (HasStatusEffect(3065)) return new(targetID != 18642 || GetTargetDistance(target) > 20, false);  // Hellmaker checking for fire floor debuff
+                            if (HasStatusEffect(4542)) return new(targetID != 18576, false); // Alpha
+                            if (HasStatusEffect(4543)) return new(targetID != 18577, false); // Beta
+                            if (HasStatusEffect(4544)) return new(targetID != 18578, false); // Gamma
+                            if (HasStatusEffect(4545)) return new(targetID != 18579, false); // Delta
                         }
-                        return new InvincibleResult(false, false);
+                        return new(false, false);
                     };
                     break;
 
@@ -118,7 +118,7 @@ namespace WrathCombo.Data.BattleData
                            // 19287 Red Hot
                            // 19288 Deep Blue
                     _invincibleCheck = (target, targetID, _) =>
-                        new InvincibleResult(targetID is 19287 or 19288 && GetTargetCurrentHP(target) <= 1, false);
+                        new(targetID is 19287 or 19288 && GetTargetCurrentHP(target) <= 1, false);
                     break;
 
                 case 1345: // The Clyteum
@@ -188,10 +188,10 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 19508 or 19509)
                         {
-                            if (HasStatusEffect(4192)) return new InvincibleResult(targetID != 19508, false); // Epic Hero (α) — Chaos
-                            if (HasStatusEffect(4194)) return new InvincibleResult(targetID != 19509, false); // Fated Hero (β) — Exdeath
+                            if (HasStatusEffect(4192)) return new(targetID != 19508, false); // Epic Hero (α) — Chaos
+                            if (HasStatusEffect(4194)) return new(targetID != 19509, false); // Fated Hero (β) — Exdeath
                         }
-                        return new InvincibleResult(false,false);
+                        return new(false,false);
                     };
                     break;
 
@@ -199,7 +199,7 @@ namespace WrathCombo.Data.BattleData
                            // Alexander Battle
                            // 19805 Gordius System's Perfect Defense
                     _invincibleCheck = (_, targetID, targetStatuses) =>
-                        new InvincibleResult(targetID is 19805 && targetStatuses.Contains(5377), false);
+                        new(targetID is 19805 && targetStatuses.Contains(5377), false);
 
                     _pauseActions = () =>
                     {
@@ -229,6 +229,7 @@ namespace WrathCombo.Data.BattleData
                         49134, // Shinryu Dark Nova
 
                     }.ToFrozenSet();
+
                     _raidwideAIDs = new uint[] {
                         50215, 50102, // Shantotto Flare Play & Final Exam
                         50103, // Medusa Bellowing Grunt

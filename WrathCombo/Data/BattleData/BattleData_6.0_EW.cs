@@ -12,7 +12,7 @@ namespace WrathCombo.Data.BattleData
                 case 952: // Tower of Zot final bosses
                           // Technically not invincible, just need to ignore
                     _invincibleCheck = (_, targetID, _) =>
-                        new InvincibleResult(
+                        new(
                             (targetID is (13298 or 13299) && Svc.Objects.Any(y => y.BaseId is 13297 && !y.IsDead)),
                             true);
                     break;

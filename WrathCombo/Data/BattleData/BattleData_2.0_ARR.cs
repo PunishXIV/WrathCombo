@@ -16,16 +16,16 @@ namespace WrathCombo.Data.BattleData
 					_invincibleCheck = (target, targetID, _) =>
 					{
 						// Thanatos, Spooky Ghosts Only
-						if (targetID is 2350) return new InvincibleResult(!HasStatusEffect(398), false);
+						if (targetID is 2350) return new(!HasStatusEffect(398), false);
 						// Allagan Bomb
 						if (targetID is 2407)
-							return new InvincibleResult(
+							return new(
 								(NumberOfObjectsInRange<SelfCircle>(30,
 									target, // 30 yalms radius range of Allagan Bomb
 									checkInvincible: false) > 1),
 								false);
 
-						return new InvincibleResult(false, false);
+						return new(false, false);
 					};
 					break;
 
@@ -35,8 +35,8 @@ namespace WrathCombo.Data.BattleData
 						if ((targetID is 3432) && (
 							// Stoneskins or multiple adds
 								targetStatuses.Contains(152) || NumberOfObjectsInRange<SelfCircle>(30, checkInvincible: false) > 1))
-							return new InvincibleResult(true, false);
-						return new InvincibleResult(true, false);
+							return new(true, false);
+						return new(true, false);
 					};
 					break;
 
@@ -45,18 +45,18 @@ namespace WrathCombo.Data.BattleData
 					{
 						bool inv = ((targetID is 2663 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478)) ||
 							(targetID is 2694 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477)));
-						return new InvincibleResult(inv, true);
+						return new(inv, true);
 					};
 					break;
 
 				case 292: // Ifrit Hard
 					_invincibleCheck = (_, targetID, _) =>
-						new InvincibleResult(targetID == 209 && Svc.Objects.Any(x => x.BaseId == 210 && !x.IsDead), true);
+						new(targetID == 209 && Svc.Objects.Any(x => x.BaseId == 210 && !x.IsDead), true);
 					break;
 
 				case 295: // Ifrit Extreme
 					_invincibleCheck = (_, targetID, _) =>
-						new InvincibleResult(targetID == 211 && Svc.Objects.Any(x => x.BaseId == 212 && !x.IsDead), true);
+						new(targetID == 211 && Svc.Objects.Any(x => x.BaseId == 212 && !x.IsDead), true);
 					break;
 
 				case 359: //Whorleater (Extreme)
@@ -64,18 +64,18 @@ namespace WrathCombo.Data.BattleData
 					{
 						bool inv = (targetID is 2802 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478) ||
 								targetID is 2803 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477));
-						return new InvincibleResult(inv, true);
+						return new(inv, true);
 					};
 					break;
 
 				case 1045: // Ifrit Normal
 					_invincibleCheck = (_, targetID, _) =>
-						new InvincibleResult(targetID == 207 && Svc.Objects.Any(x => x.BaseId == 208 && !x.IsDead), true);
+						new(targetID == 207 && Svc.Objects.Any(x => x.BaseId == 208 && !x.IsDead), true);
 					break;
 
 				case 1267: //Sunken Temple of Qarn Temple Guardian
 					_invincibleCheck = (_, targetID, targetStatuses) =>
-						new InvincibleResult(targetID is 18300 && targetStatuses.Contains(350), true);
+						new(targetID is 18300 && targetStatuses.Contains(350), true);
 					break;
 			}
 		}

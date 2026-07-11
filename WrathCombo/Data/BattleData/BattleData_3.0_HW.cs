@@ -22,13 +22,13 @@ namespace WrathCombo.Data.BattleData
                         // Cuchulainn 5139, Checking one of the Stoneskins
                         bool inv2= targetID is 5139 && targetStatuses.Contains(152);
 
-                        return new InvincibleResult(inv1 || inv2, false);
+                        return new(inv1 || inv2, false);
                     };
                     break;
 
                 case 582: // Heart of the Creator
                     _invincibleCheck = (target, targetID, _) =>
-                        new InvincibleResult(
+                        new(
                             (targetID is 6101) && // Plasma Shield
                             AngleToTarget(target) is not AttackAngle.Front,
                             false);

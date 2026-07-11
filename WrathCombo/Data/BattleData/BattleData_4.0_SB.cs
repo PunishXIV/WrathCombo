@@ -15,17 +15,17 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 9339 or 9340) //numbers are for Regular
                         {
-                            if (HasStatusEffect(1660)) return new InvincibleResult(targetID == 9339,false); // Packet Filter M
-                            if (HasStatusEffect(1661)) return new InvincibleResult(targetID == 9340,false); // Packet Filter F
-                            if (targetID is 9340) return new InvincibleResult(targetStatuses.Contains(671), false); // F being covered by M
+                            if (HasStatusEffect(1660)) return new(targetID == 9339,false); // Packet Filter M
+                            if (HasStatusEffect(1661)) return new(targetID == 9340,false); // Packet Filter F
+                            if (targetID is 9340) return new(targetStatuses.Contains(671), false); // F being covered by M
                         }
 
                         //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500
                         if ((targetStatuses.Contains(3454) is true && HasStatusEffect(3499)) ||
                             (targetStatuses.Contains(1675) is true && HasStatusEffect(3500)))
-                            return new InvincibleResult(true, false);
+                            return new(true, false);
 
-                        return new InvincibleResult(false, true);
+                        return new(false, true);
                     };
                     break;
 
@@ -34,7 +34,7 @@ namespace WrathCombo.Data.BattleData
                     // Colossus Rubricatus = 9511
                     // No point attacking anymore when it begins to cast self-detonate = 14574
                     _invincibleCheck = (target, targetID, _) =>
-                        new InvincibleResult(
+                        new(
                             targetID is 9511 && target.CastActionId == 14574,
                             false);
                     break;

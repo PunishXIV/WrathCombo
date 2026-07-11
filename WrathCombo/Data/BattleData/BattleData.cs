@@ -29,11 +29,10 @@ namespace WrathCombo.Data.BattleData
         #endregion
 
         // Invincible
-        public struct InvincibleResult(bool invincible, bool checkGenerics)
-        {
-            public bool Invincible = invincible;
-            public bool CheckGenerics = checkGenerics;
-        }
+        public readonly record struct InvincibleResult(
+            bool Invincible,
+            bool CheckGenerics
+        );
 
         public static InvincibleResult IsInvincible(IBattleChara target, uint targetId, HashSet<uint> targetStatuses)
         {

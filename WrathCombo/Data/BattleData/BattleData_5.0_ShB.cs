@@ -13,7 +13,7 @@ namespace WrathCombo.Data.BattleData
                 case 821: //Dohn Mheg Final Boss Lyre
                     //Unfooled means you can attack the Lyre
                     _invincibleCheck = (_, targetID, _) =>
-                        new InvincibleResult(
+                        new(
                             targetID is 3939 && !HasStatusEffect(386),
                             false);
                     break;
@@ -23,7 +23,7 @@ namespace WrathCombo.Data.BattleData
                           // Technically not invincible, but killing one wipes the raid;
                           // ignore them once below the 25% HP feed threshold
                     _invincibleCheck = (target, targetID, _) =>
-                        new InvincibleResult(
+                        new(
                             targetID is 11338 && GetTargetHPPercent(target) < 25,
                             true);
                     break;
@@ -36,11 +36,11 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 11792 or 11793 or 11794)
                         {
-                            if (HasStatusEffect(2288)) return new InvincibleResult(targetID != 11792, false);
-                            if (HasStatusEffect(2289)) return new InvincibleResult(targetID != 11793, false);
-                            if (HasStatusEffect(2290)) return new InvincibleResult(targetID != 11794, false);
+                            if (HasStatusEffect(2288)) return new(targetID != 11792, false);
+                            if (HasStatusEffect(2289)) return new(targetID != 11793, false);
+                            if (HasStatusEffect(2290)) return new(targetID != 11794, false);
                         }
-                        return new InvincibleResult(false, false);
+                        return new(false, false);
                     };
                     break;
 
@@ -61,9 +61,9 @@ namespace WrathCombo.Data.BattleData
 
                             // Non Tanks should just ignore parrying boss(s)
                             // Tanks should only ignore their target if it has the buff and they aren't in front.
-                            if (bossHasParry && (!isTank || !isFrontFacing)) return new InvincibleResult(true, false);
+                            if (bossHasParry && (!isTank || !isFrontFacing)) return new(true, false);
                         }
-                        return new InvincibleResult(false, false);
+                        return new(false, false);
                     };
                     break;
 
