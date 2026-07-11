@@ -1,8 +1,10 @@
 #region
 
 using System;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.DRK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
@@ -141,7 +143,10 @@ internal partial class DRK
                 flags.HasFlag(Combo.Adv) && ContentCheck.IsInConfiguredContent(
                     deliriumContentHPThreshold, ContentCheck.ListSet.Halved);
             var deliriumHPThreshold = flags.HasFlag(Combo.ST)
-                ? DRK_ST_DeliriumThreshold
+                ? GetHPSliderBasedOnTargetType(flags,
+                    DRK_ST_DeliriumThresholdBoss,
+                    DRK_ST_DeliriumThresholdBossAdds,
+                    DRK_ST_DeliriumThresholdTrash)
                 : DRK_AoE_DeliriumThreshold;
             var deliriumHPMatchesThreshold =
                 flags.HasFlag(Combo.Simple) || !deliriumInHPContent ||
@@ -1108,6 +1113,24 @@ internal partial class DRK
     /// </summary>
     private static bool IsAoEEnabled(Combo flags, Preset preset) =>
         flags.HasFlag(Combo.AoE) && IsEnabled(preset);
+
+    private static float GetHPSliderBasedOnTargetType
+    (Combo flags,
+        UserFloat bossSlider, UserFloat bossAddSlider, UserFloat trashSLider) =>
+        InBossEncounter()
+            ? (Target(flags, restrictToHostile: true)).IsBoss()
+                ? bossSlider
+                : bossAddSlider
+            : trashSLider;
+
+    private static int GetHPSliderBasedOnTargetType
+    (Combo flags,
+        UserInt bossSlider, UserInt bossAddSlider, UserInt trashSLider) =>
+        InBossEncounter()
+            ? (Target(flags, restrictToHostile: true)).IsBoss()
+                ? bossSlider
+                : bossAddSlider
+            : trashSLider;
 
     /// <summary>
     ///     Signature for the TryGetAction&lt;ActionType&gt; methods.
