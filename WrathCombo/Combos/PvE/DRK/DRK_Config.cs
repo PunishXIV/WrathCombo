@@ -748,6 +748,19 @@ internal partial class DRK
             new("DRK_ST_DeliriumThresholdTrash", 20);
 
         /// <summary>
+        ///     Whether Delirium should wait for Living Shadow on even-minute
+        ///     usages.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="LSTieIn.Off"/> <br />
+        ///     <b>Options</b>: <see cref="LSTieIn.On"/>
+        ///     or <see cref="LSTieIn.Off"/>
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
+        public static readonly UserInt DRK_ST_DeliriumTieToLS =
+            new("DRK_ST_DeliriumTieToLS", (int)LSTieIn.Off);
+
+        /// <summary>
         ///     Difficulty of Delirium Thresholds for Single Target.
         /// </summary>
         /// <value>
@@ -760,19 +773,6 @@ internal partial class DRK
         /// <seealso cref="DRK_ST_DeliriumThresholdTrash" />
         public static readonly UserBoolArray DRK_ST_DeliriumThresholdDifficulty =
             new("DRK_ST_DeliriumThresholdDifficulty", [true, false]);
-
-        /// <summary>
-        ///     Whether Delirium should wait for Living Shadow on even-minute
-        ///     usages.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: <see cref="LSTieIn.Off"/> <br />
-        ///     <b>Options</b>: <see cref="LSTieIn.On"/>
-        ///     or <see cref="LSTieIn.Off"/>
-        /// </value>
-        /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
-        public static readonly UserInt DRK_ST_DeliriumTieToLS =
-            new("DRK_ST_DeliriumTieToLS", (int)LSTieIn.Off);
 
         /// <summary>
         ///     What Difficulty List Set
