@@ -28,7 +28,7 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 11338 && GetTargetHPPercent(target) < 25)
                             return InvincibleResult.True;
-                        return InvincibleResult.CheckGeneric;
+                        return InvincibleResult.CheckStatuses;
                     };
                     break;
 

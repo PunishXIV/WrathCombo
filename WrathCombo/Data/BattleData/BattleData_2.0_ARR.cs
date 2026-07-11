@@ -2,9 +2,7 @@
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using System.Linq;
-using WrathCombo.Combos.PvE;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using static WrathCombo.Data.HiddenFeaturesData;
 
 namespace WrathCombo.Data.BattleData
 {
@@ -36,7 +34,7 @@ namespace WrathCombo.Data.BattleData
 							// Stoneskins or multiple adds
 								targetStatuses.Contains(152) || NumberOfObjectsInRange<SelfCircle>(30, checkInvincible: false) > 1))
 							return InvincibleResult.True;
-						return InvincibleResult.CheckGeneric;
+						return InvincibleResult.CheckStatuses;
 					};
 					break;
 
@@ -46,7 +44,7 @@ namespace WrathCombo.Data.BattleData
                         if ((targetID is 2663 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478)) ||
 							(targetID is 2694 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477)))
                             return InvincibleResult.True;
-						return InvincibleResult.CheckGeneric;
+						return InvincibleResult.CheckStatuses;
                     };
 					break;
 
@@ -54,7 +52,7 @@ namespace WrathCombo.Data.BattleData
 					_invincibleCheck = (_, targetID, _) =>
 					{
 						if (targetID == 209 && Svc.Objects.Any(x => x.BaseId == 210 && !x.IsDead)) return InvincibleResult.True;
-						return InvincibleResult.CheckGeneric;
+						return InvincibleResult.CheckStatuses;
 					};
 					break;
 
@@ -62,7 +60,7 @@ namespace WrathCombo.Data.BattleData
                     _invincibleCheck = (_, targetID, _) =>
                     {
                         if (targetID == 211 && Svc.Objects.Any(x => x.BaseId == 212 && !x.IsDead)) return InvincibleResult.True;
-                        return InvincibleResult.CheckGeneric;
+                        return InvincibleResult.CheckStatuses;
                     };
                     break;
 
@@ -72,7 +70,7 @@ namespace WrathCombo.Data.BattleData
                         if (targetID is 2802 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478) ||
 							targetID is 2803 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477))
                             return InvincibleResult.True;
-                        return InvincibleResult.CheckGeneric;
+                        return InvincibleResult.CheckStatuses;
                     };
 					break;
 
@@ -80,7 +78,7 @@ namespace WrathCombo.Data.BattleData
 					_invincibleCheck = (_, targetID, _) =>
                     {
                         if (targetID == 207 && Svc.Objects.Any(x => x.BaseId == 208 && !x.IsDead)) return InvincibleResult.True;
-                        return InvincibleResult.CheckGeneric;
+                        return InvincibleResult.CheckStatuses;
                     };
                     break;
 
@@ -88,7 +86,7 @@ namespace WrathCombo.Data.BattleData
 					_invincibleCheck = (_, targetID, targetStatuses) =>
 					{
 						if (targetID is 18300 && targetStatuses.Contains(350)) return InvincibleResult.True;
-						return InvincibleResult.False; ;
+						return InvincibleResult.False;
 					};
 					break;
 			}

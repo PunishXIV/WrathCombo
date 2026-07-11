@@ -20,7 +20,7 @@ namespace WrathCombo.Data.BattleData
         /// 2. Target BaseId.
         /// 3. Cached status IDs on the target.
         /// </summary>
-        private static Func<IBattleChara, uint, HashSet<uint>, InvincibleResult> _invincibleCheck = (_, _, _) => new InvincibleResult(false, false);
+        private static Func<IBattleChara, uint, HashSet<uint>, InvincibleResult> _invincibleCheck = (_, _, _) => InvincibleResult.CheckStatuses;
         private static Func<bool> _pauseActions = () => false;
         private static uint _territoryID;
         private static FrozenSet<uint> _tankbusterAIDs = [];
@@ -29,13 +29,11 @@ namespace WrathCombo.Data.BattleData
         #endregion
 
         // Invincible
-        public readonly record struct InvincibleResult(
-            bool Invincible,
-            bool UseGenericCheck)
+        public enum InvincibleResult
         {
-            public static readonly InvincibleResult False = new(false, false);
-            public static readonly InvincibleResult True = new(true, false);
-            public static readonly InvincibleResult CheckGeneric = new(false, true);
+            False,
+            True,
+            CheckStatuses,
         }
 
         private static InvincibleResult Result(bool invincible)
@@ -69,7 +67,10 @@ namespace WrathCombo.Data.BattleData
         public static void LoadCombatData(uint territoryID)
         {
             // Reset Combat Functions and FrozenSets
-            _invincibleCheck = (_, _, _) => new InvincibleResult(false, !IsSanctuary(_territoryID)); //Don't bother in Sanctuaries
+            _invincibleCheck = (_, _, _) =>
+                IsSanctuary(_territoryID)
+                    ? InvincibleResult.False
+                    : InvincibleResult.CheckStatuses;
             _pauseActions = () => false;
             _tankbusterAIDs = [];
             _raidwideAIDs = [];

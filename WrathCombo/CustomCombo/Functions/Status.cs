@@ -227,22 +227,19 @@ internal abstract partial class CustomComboFunctions
         // Returning False in each case because there should be no other General Invincibility Check needed
         // for specified areas
 
-        var checkBattle = BattleData.IsInvincible(tar, targetID, targetStatuses);
-
-        // If target is invincible based on Battle Data
-        if (checkBattle.Invincible)
-            return true;
-
-        // Are we to bother with checking statuses per Battle Data
-        if (!checkBattle.UseGenericCheck)
-            return false;
-
-        // General invincibility check
-        // Due to large size of InvincibleStatuses, best to check process this way
-        return StatusCache.CompareLists(
-            StatusCache.InvincibleStatuses,
-            targetStatuses
-        );
+        return BattleData.IsInvincible(tar, targetID, targetStatuses) switch
+        {
+            // If target is invincible based on Battle Data
+            BattleData.InvincibleResult.True => true,
+            // Are we to bother with checking statuses per Battle Data
+            BattleData.InvincibleResult.False => false,
+            // General invincibility check
+            // Due to large size of InvincibleStatuses, best to check process this way
+            BattleData.InvincibleResult.CheckStatuses => StatusCache.CompareLists(
+                                StatusCache.InvincibleStatuses,
+                                targetStatuses),
+            _ => false,
+        };
     }
 
     /// <summary>

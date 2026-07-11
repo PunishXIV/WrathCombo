@@ -1,5 +1,4 @@
-﻿using WrathCombo.Combos.PvE;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+﻿using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
 {
@@ -26,7 +25,7 @@ namespace WrathCombo.Data.BattleData
                             (targetStatuses.Contains(1675) is true && HasStatusEffect(3500)))
                             return InvincibleResult.True;
 
-                        return InvincibleResult.CheckGeneric;
+                        return InvincibleResult.CheckStatuses;
                     };
                     break;
 
