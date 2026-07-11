@@ -100,9 +100,9 @@ internal partial class MCH
 
     private static bool ShouldUseHyperchargeST(int wildfireBossOnlyOption) =>
         ActionReady(Wildfire) ||
-        JustUsed(FullMetalField, GCDTotal / 2) ||
+        JustUsed(FullMetalField, GCD / 2) ||
         wildfireBossOnlyOption == 1 && !TargetIsBoss() ||
-        GetCooldownRemainingTime(Wildfire) > GCDTotal * 15 ||
+        GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
         Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10 ||
         !LevelChecked(Wildfire);
 
@@ -167,7 +167,7 @@ internal partial class MCH
         !IsOverheated &&
         (ActionReady(Wildfire) ||
          GetCooldownRemainingTime(Wildfire) > 90 ||
-         GetCooldownRemainingTime(Wildfire) <= GCDTotal ||
+         GetCooldownRemainingTime(Wildfire) <= GCD ||
          GetStatusEffectRemainingTime(Buffs.FullMetalMachinist) <= 6);
 
     private static bool JustUsedOverheatGCD(float window, bool onAoE) =>
@@ -212,7 +212,7 @@ internal partial class MCH
         float? hyperchargeWindow = null) =>
         CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
         ActionReady(Wildfire) &&
-        JustUsed(Hypercharge, hyperchargeWindow ?? GCDTotal + 0.9f) &&
+        JustUsed(Hypercharge, hyperchargeWindow ?? GCD + 0.9f) &&
         !HasStatusEffect(Buffs.Wildfire) &&
         (requireBoss
             ? TargetIsBoss()
@@ -268,7 +268,7 @@ internal partial class MCH
     {
         int numberOfReadyTools = 0;
 
-        if (ToolsReady(Drill))
+        if (ActionReady(Drill))
             numberOfReadyTools += (int)GetRemainingCharges(Drill);
 
         if (ToolReadyForReassembleWeave(Chainsaw))
@@ -312,7 +312,7 @@ internal partial class MCH
             return true;
 
         if (ToolReadyForReassemble(AirAnchor, forPrepull) &&
-            (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2))
+            (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2))
             return true;
 
         if (CanUseDrill(true) && ToolReadyForReassemble(Drill, forPrepull))
@@ -361,8 +361,8 @@ internal partial class MCH
 
             case 1 when ToolReadyForReassemble(Excavator, forPrepull) && HasStatusEffect(Buffs.ExcavatorReady):
             case 1 when ToolReadyForReassemble(Chainsaw, forPrepull) && !HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolReadyForReassemble(AirAnchor, forPrepull) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2):
-            case 1 when ToolReadyForReassemble(Drill, forPrepull) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2):
+            case 1 when ToolReadyForReassemble(AirAnchor, forPrepull) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2):
+            case 1 when ToolReadyForReassemble(Drill, forPrepull) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2):
             case 1 when !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot):
             case 1 when !LevelChecked(CleanShot) && ToolReadyForReassemble(HotShot, forPrepull):
                 return true;
@@ -502,18 +502,12 @@ internal partial class MCH
             ? GetCooldownChargeRemainingTime(actionId)
             : GetCooldownRemainingTime(actionId);
 
-    private static bool ToolsReady(uint actionId, float window) =>
-        LevelChecked(actionId) &&
-        (HasCharges(actionId) || GetToolCDRemaining(actionId) <= window);
-
-    private static bool ToolsReady(uint actionId) =>
-        ToolsReady(actionId, GCDTotal);
-
     private static bool ToolReadyForReassembleWeave(uint actionId) =>
-        ToolsReady(actionId, GCDTotal * 0.5f);
+        LevelChecked(actionId) &&
+        (HasCharges(actionId) || GetToolCDRemaining(actionId) <= GCD * 0.5f);
 
     private static bool ToolReadyForReassemble(uint actionId, bool forPrepull) =>
-        forPrepull ? ToolsReady(actionId) : ToolReadyForReassembleWeave(actionId);
+        forPrepull ? ActionReady(actionId) : ToolReadyForReassembleWeave(actionId);
 
     private static bool CanUseDrill(bool onAoE) =>
         !onAoE || !LevelChecked(BioBlaster);
@@ -549,28 +543,28 @@ internal partial class MCH
 
     private static bool CanUseTools(ref uint actionID, bool onAoE, bool useAirAnchor = true, bool holdExcavatorForWildfire = false)
     {
-        if (ToolsReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
         {
             actionID = Chainsaw;
             return true;
         }
 
-        if (ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
+        if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
             (onAoE || !holdExcavatorForWildfire ||
-             GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCDTotal * 3))
+             GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCD * 3))
         {
             actionID = Excavator;
             return true;
         }
 
-        if ((!onAoE || useAirAnchor) && ToolsReady(AirAnchor))
+        if ((!onAoE || useAirAnchor) && ActionReady(AirAnchor))
         {
             actionID = AirAnchor;
             return true;
         }
 
         if (onAoE &&
-            ToolsReady(BioBlaster) &&
+            ActionReady(BioBlaster) &&
             !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
             CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
         {
@@ -578,7 +572,7 @@ internal partial class MCH
             return true;
         }
 
-        if (CanUseDrill(onAoE) && ToolsReady(Drill))
+        if (CanUseDrill(onAoE) && ActionReady(Drill))
         {
             actionID = Drill;
             return true;
@@ -586,14 +580,14 @@ internal partial class MCH
 
         if (onAoE &&
             HasStatusEffect(Buffs.Reassembled) &&
-            ToolsReady(OriginalHook(SpreadShot)))
+            ActionReady(OriginalHook(SpreadShot)))
         {
             actionID = OriginalHook(SpreadShot);
             return true;
         }
 
-        if (!onAoE && !LevelChecked(AirAnchor) && ToolsReady(HotShot) &&
-            (!LevelChecked(CleanShot) || !HasStatusEffect(Buffs.Reassembled) && ActionReady(HotShot)))
+        if (!onAoE && !LevelChecked(AirAnchor) && ActionReady(HotShot) &&
+            (!LevelChecked(CleanShot) || !HasStatusEffect(Buffs.Reassembled)))
         {
             actionID = HotShot;
             return true;
@@ -606,9 +600,11 @@ internal partial class MCH
 
     #region Combos
 
+    private static float GCD => GetCooldown(OriginalHook(SplitShot)).CooldownTotal;
+
     private static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GCDTotal * times;
+        float gcd = GCD * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }

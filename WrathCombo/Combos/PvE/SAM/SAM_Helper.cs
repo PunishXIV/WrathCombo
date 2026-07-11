@@ -214,7 +214,7 @@ internal partial class SAM
         if (!HasEnhancedSenei || HasStatusEffect(Buffs.ZanshinReady))
             return false;
 
-        float gcd = GetCooldown(OriginalHook(Hakaze)).CooldownTotal;
+        float gcd = GCD;
 
         return GetCooldownRemainingTime(Senei) < gcd * 2 && Kenki >= 90 ||
                JustUsed(Senei, 20f) && !JustUsed(Ikishoten) ||
@@ -242,6 +242,9 @@ internal partial class SAM
                ShouldUseSenei(kenkiOvercapAmount) ||
                ShouldSpendKenkiPreEnhanced(kenkiOvercapAmount);
     }
+
+    private static float GCD =>
+        GetCooldown(OriginalHook(Hakaze)).CooldownTotal;
 
     #endregion
 
@@ -371,7 +374,7 @@ internal partial class SAM
                     SenCount is 3 && GetCooldownRemainingTime(Senei) <= 5)
                     return true;
             }
-            else if (GetCooldownRemainingTime(Senei) <= GCDTotal ||
+            else if (GetCooldownRemainingTime(Senei) <= GCD ||
                      GetCooldownRemainingTime(Senei) is > 50 and < 65)
                 return true;
         }
@@ -519,7 +522,7 @@ internal partial class SAM
 
         if (useShinten &&
             ActionReady(Shinten) && InActionRange(Shinten) &&
-            GetCooldownRemainingTime(Senei) >= GCDTotal * 5 &&
+            GetCooldownRemainingTime(Senei) >= GCD * 5 &&
             !JustUsed(Ikishoten))
             return Shinten;
 

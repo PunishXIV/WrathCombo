@@ -215,7 +215,7 @@ internal partial class MNK
         JustUsed(CelestialRevolution, window);
 
     private static bool HasElapsedSinceBlitz(float minGcds) =>
-        HasUsedBlitzRecently(GCDTotal * 12) && !HasUsedBlitzRecently(GCDTotal * minGcds);
+        HasUsedBlitzRecently(GCD * 12) && !HasUsedBlitzRecently(GCD * minGcds);
 
     private static uint ForcedOpoGCD(bool onAoE)
     {
@@ -241,17 +241,17 @@ internal partial class MNK
         if (!IsOriginal(MasterfulBlitz) || GetRemainingCharges(PerfectBalance) >= GetMaxCharges(PerfectBalance))
             return false;
 
-        if (!HasUsedBlitzRecently(GCDTotal * 12))
+        if (!HasUsedBlitzRecently(GCD * 12))
             return false;
 
         if (HasStatusEffect(Buffs.FiresRumination) ||
-            JustUsed(FiresReply, GCDTotal * 12))
+            JustUsed(FiresReply, GCD * 12))
             return false;
 
         if (!HasElapsedSinceBlitz(1f) || HasElapsedSinceBlitz(4f))
             return false;
 
-        if (JustUsedOpoGCD(GCDTotal, onAoE) && HasElapsedSinceBlitz(2f))
+        if (JustUsedOpoGCD(GCD, onAoE) && HasElapsedSinceBlitz(2f))
             return false;
 
         return true;
@@ -268,11 +268,11 @@ internal partial class MNK
         if (GetRemainingCharges(PerfectBalance) >= GetMaxCharges(PerfectBalance))
             return false;
 
-        if (!HasUsedBlitzRecently(GCDTotal * 12))
+        if (!HasUsedBlitzRecently(GCD * 12))
             return false;
 
         if (useFiresReply && LevelChecked(FiresReply))
-            return JustUsed(FiresReply, GCDTotal * 6) && !HasStatusEffect(Buffs.FiresRumination);
+            return JustUsed(FiresReply, GCD * 6) && !HasStatusEffect(Buffs.FiresRumination);
 
         return HasElapsedSinceBlitz(2.5f);
     }
@@ -282,13 +282,13 @@ internal partial class MNK
         if (!IsBurstHoldReleaseReady())
             return false;
 
-        if (!HasBattleTarget() || !JustUsedOpoGCD(GCDTotal, onAoE))
+        if (!HasBattleTarget() || !JustUsedOpoGCD(GCD, onAoE))
             return false;
 
         if (onAoE && perfectBalanceHpThreshold > 0 && GetTargetHPPercent() < perfectBalanceHpThreshold)
             return false;
 
-        if (JustUsed(PerfectBalance, 20 + GCDTotal * 5))
+        if (JustUsed(PerfectBalance, 20 + GCD * 5))
             return false;
 
         return true;
@@ -324,13 +324,13 @@ internal partial class MNK
 
         if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
             HasStatusEffect(Buffs.FormlessFist) || !IsOriginal(MasterfulBlitz) ||
-            !HasBattleTarget() || JustUsed(PerfectBalance) || !JustUsedOpoGCD(GCDTotal, onAoE))
+            !HasBattleTarget() || JustUsed(PerfectBalance) || !JustUsedOpoGCD(GCD, onAoE))
             return false;
 
         if (onAoE && perfectBalanceHpThreshold > 0 && GetTargetHPPercent() < perfectBalanceHpThreshold)
             return false;
 
-        if (!JustUsed(PerfectBalance, 20 + GCDTotal * 5))
+        if (!JustUsed(PerfectBalance, 20 + GCD * 5))
         {
             if (onAoE)
             {
@@ -352,7 +352,7 @@ internal partial class MNK
 
         if (!LevelChecked(RiddleOfFire) ||
             HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood))
-            return JustUsedOpoGCD(GCDTotal * 3, onAoE);
+            return JustUsedOpoGCD(GCD * 3, onAoE);
 
         return onAoE && CanPerfectBalanceMaxChargeAoE();
     }
@@ -374,6 +374,9 @@ internal partial class MNK
     #endregion
 
     #region Misc
+
+    private static float GCD =>
+        GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
 
     private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
         hpBossOption == 1 || !isBoss ? hpOption : 0;
@@ -409,7 +412,7 @@ internal partial class MNK
 
     private static bool ShouldSpendMasterfulBlitz(bool onAoE)
     {
-        if (BlitzTimer <= GCDTotal * 3)
+        if (BlitzTimer <= GCD * 3)
             return true;
 
         if (IsBurstHoldReleaseReady())
@@ -474,7 +477,7 @@ internal partial class MNK
 
         if (!HasStatusEffect(Buffs.Brotherhood) &&
             ActionReady(RiddleOfFire) && LevelChecked(Brotherhood) &&
-            GetCooldownRemainingTime(Brotherhood) <= GCDTotal)
+            GetCooldownRemainingTime(Brotherhood) <= GCD)
             return false;
 
         uint meditation = onAoE ? InspiritedMeditation : SteeledMeditation;
@@ -496,7 +499,7 @@ internal partial class MNK
         !HasStatusEffect(Buffs.FiresRumination) &&
         !HasStatusEffect(Buffs.RiddleOfFire) &&
         (!LevelChecked(Brotherhood) ||
-         JustUsed(Brotherhood, GCDTotal * 5) ||
+         JustUsed(Brotherhood, GCD * 5) ||
          HasStatusEffect(Buffs.Brotherhood) ||
          GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 ||
          !LevelChecked(Brotherhood));
@@ -507,10 +510,10 @@ internal partial class MNK
         !HasStatusEffect(Buffs.FormlessFist) &&
         IsOriginal(MasterfulBlitz) &&
         InActionRange(FiresReply) &&
-        !JustUsed(RiddleOfFire, GCDTotal) &&
+        !JustUsed(RiddleOfFire, GCD) &&
         !HasStatusEffect(Buffs.PerfectBalance) &&
-        (JustUsedOpoGCD(GCDTotal * 1.5f, onAoE) ||
-         GetStatusEffectRemainingTime(Buffs.FiresRumination) < GCDTotal * 2 ||
+        (JustUsedOpoGCD(GCD * 1.5f, onAoE) ||
+         GetStatusEffectRemainingTime(Buffs.FiresRumination) < GCD * 2 ||
          !InMeleeRange());
 
     private static bool CanBrotherhood() =>
@@ -531,7 +534,7 @@ internal partial class MNK
          !HasStatusEffect(Buffs.FiresRumination) &&
          (GetCooldownRemainingTime(RiddleOfFire) > 10 ||
           HasStatusEffect(Buffs.RiddleOfFire) ||
-          GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCDTotal * 2 ||
+          GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
           !InMeleeRange()));
 
     #endregion

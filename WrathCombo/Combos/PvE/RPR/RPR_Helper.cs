@@ -35,14 +35,14 @@ internal partial class RPR
 
                 //Double enshroud
                 if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                    AcCD <= GCDTotal && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32 &&
+                    AcCD <= GCD && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32 &&
                     (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
                 //lvl 88+ general use
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
                     GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh &&
-                    (AcCD > GCDTotal * 8 || IsOffCooldown(ArcaneCircle)))
+                    (AcCD > GCD * 8 || IsOffCooldown(ArcaneCircle)))
                     return true;
 
                 //below lvl 88 use
@@ -151,7 +151,7 @@ internal partial class RPR
                 return true;
 
             if (LevelChecked(PlentifulHarvest) &&
-                AcCD <= GCDTotal + 1.5f)
+                AcCD <= GCD + 1.5f)
                 return true;
 
             if (LevelChecked(PlentifulHarvest) &&
@@ -192,7 +192,7 @@ internal partial class RPR
 
     private static bool CanTrueNorthForGluttony(bool advanced = false, int tnChargePool = 0) =>
         !InPostBurstSequence &&
-        LevelChecked(Gluttony) && GetCooldownRemainingTime(Gluttony) <= GCDTotal && Role.CanTrueNorth() &&
+        LevelChecked(Gluttony) && GetCooldownRemainingTime(Gluttony) <= GCD && Role.CanTrueNorth() &&
         (!advanced || GetRemainingCharges(Role.TrueNorth) > tnChargePool);
 
     private static bool CanSoulOverflowWeave() =>
@@ -211,13 +211,13 @@ internal partial class RPR
         if (!gluttonyEnabled)
             return false;
 
-        return IsOnCooldown(Gluttony) && GetCooldownRemainingTime(Gluttony) > GCDTotal * 4;
+        return IsOnCooldown(Gluttony) && GetCooldownRemainingTime(Gluttony) > GCD * 4;
     }
 
     private static bool ShouldSpendSoulOvercapAoE() =>
         !LevelChecked(Gluttony) ||
         Soul is 100 ||
-        GetCooldownRemainingTime(Gluttony) > GCDTotal * 5;
+        GetCooldownRemainingTime(Gluttony) > GCD * 5;
 
     private static bool CanBloodstalkWeave(bool gluttonyEnabled = true, bool enshroudEnabled = true) =>
         !IsShroudOvercapping(enshroudEnabled) &&
@@ -242,7 +242,7 @@ internal partial class RPR
             ? Lemure is 2 && Void is 1
             : Lemure <= 4) &&
         (!useArcaneCircleBoss || onAoE ||
-         GetCooldownRemainingTime(ArcaneCircle) > GCDTotal * 3 && !JustUsed(ArcaneCircle, 2) &&
+         GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
          (arcaneCircleBossOption == 0 ||
           InBossEncounter() ||
           arcaneCircleBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)) ||
@@ -281,7 +281,7 @@ internal partial class RPR
     #region GCD Burst
 
     private static bool WithinGCD(uint actionId) =>
-        LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
+        LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCD);
 
     private static bool IsPerfectioReady =>
         HasStatusEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio);
@@ -296,8 +296,8 @@ internal partial class RPR
         IsPerfectioReady && ShouldSpendPerfectioNow() && InActionRange(PerfectioAction);
 
     private static bool InPostBurstSequence =>
-        JustUsed(Perfectio, GCDTotal * 8) ||
-        JustUsed(OriginalHook(Communio), GCDTotal * 2) && !IsPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
+        JustUsed(Perfectio, GCD * 8) ||
+        JustUsed(OriginalHook(Communio), GCD * 2) && !IsPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
 
     private static bool HasBurstComboContinue() =>
         InPostBurstSequence &&
@@ -322,13 +322,13 @@ internal partial class RPR
             return true;
 
         return GetRemainingCharges(action) >= 1 &&
-               GetCooldownChargeRemainingTime(action) <= GCDTotal * 2;
+               GetCooldownChargeRemainingTime(action) <= GCD * 2;
     }
 
     private static bool CanBurstSoulSliceScythe(bool onAoE = false) =>
         InPostBurstSequence &&
         !HasBurstComboContinue() &&
-        !JustUsed(onAoE ? SoulScythe : SoulSlice, GCDTotal) &&
+        !JustUsed(onAoE ? SoulScythe : SoulSlice, GCD) &&
         (Soul <= 50 || OvercapSoulSliceProtection(onAoE)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
@@ -336,7 +336,7 @@ internal partial class RPR
 
     private static bool ShouldHoldSoulOverflowWeave =>
         Soul < 100 &&
-        InPostBurstSequence && !JustUsed(Gluttony, GCDTotal * 8);
+        InPostBurstSequence && !JustUsed(Gluttony, GCD * 8);
 
     private static uint PostBurstGCD(bool onAoE, bool soulSliceEnabled = true)
     {
@@ -590,16 +590,18 @@ internal partial class RPR
 
     #region Combos
 
+    private static float GCD => GetCooldown(Slice).CooldownTotal;
+
     private static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GCDTotal * times;
+        float gcd = GCD * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
     private static bool IsDebuffExpiring(float times)
     {
-        float gcd = GCDTotal * times;
+        float gcd = GCD * times;
 
         return HasStatusEffect(Debuffs.DeathsDesign, CurrentTarget) && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < gcd;
     }
