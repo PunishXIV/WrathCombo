@@ -1,5 +1,6 @@
 #region
 
+using System.Numerics;
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
@@ -256,6 +257,30 @@ internal partial class DRK
                         overrideText: "Select what difficulty the above " +
                                       "sliders should apply to:"
                     );
+
+                    ImGuiEx.Spacing(new Vector2(0f, 10f));
+
+                    ImGui.Indent();
+                    ImGui.Text("Usage options:");
+                    ImGui.Unindent();
+                    ImGui.Dummy(new Vector2(20f, 0f).Scale());
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_ST_DeliriumTieToLS,
+                        "Send on Cooldown",
+                        "Will use Delirium usages on cooldown. Recommended.",
+                        outputValue: (int)LSTieIn.Off,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_ST_DeliriumTieToLS,
+                        "Tie to Living Shadow " +
+                        "(for manual control)",
+                        "Will require Living Shadow to have been recently used " +
+                        "before using even-minute Deliriums.\n" +
+                        "(Odd-minute Delirium usage will proceed on cooldown)\n\n" +
+                        "ONLY recommended if you want more manual control.\n" +
+                        "(Does not apply to Blood Weapon)",
+                        outputValue: (int)LSTieIn.On,
+                        descriptionColor: ImGuiColors.DalamudWhite);
 
                     break;
 
@@ -523,6 +548,16 @@ internal partial class DRK
             Off = 1,
             On = 2,
         }
+        
+        /// <summary>
+        ///     Whether Delirium should wait for Living Shadow on
+        ///     even-minute usages.
+        /// </summary>
+        internal enum LSTieIn
+        {
+            Off = 0,
+            On  = 1,
+        }
 
         /// <summary>
         ///     Whether Combos should include mitigation or not.
@@ -689,16 +724,31 @@ internal partial class DRK
             new("DRK_ST_DeliriumThresholdTrash", 20);
 
         /// <summary>
-        ///     Difficulty of Delirium Threshold for Single Target.
+        ///     Difficulty of Delirium Thresholds for Single Target.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
         ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
         ///     and/or <see cref="ContentCheck.TopHalfContent" />
         /// </value>
-        /// <seealso cref="DRK_ST_DeliriumThreshold" />
+        /// <seealso cref="DRK_ST_DeliriumThresholdBoss" />
+        /// <seealso cref="DRK_ST_DeliriumThresholdBossAdds" />
+        /// <seealso cref="DRK_ST_DeliriumThresholdTrash" />
         public static readonly UserBoolArray DRK_ST_DeliriumThresholdDifficulty =
             new("DRK_ST_DeliriumThresholdDifficulty", [true, false]);
+
+        /// <summary>
+        ///     Whether Delirium should wait for Living Shadow on even-minute
+        ///     usages.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="LSTieIn.Off"/> <br />
+        ///     <b>Options</b>: <see cref="LSTieIn.On"/>
+        ///     or <see cref="LSTieIn.Off"/>
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
+        public static readonly UserInt DRK_ST_DeliriumTieToLS =
+            new("DRK_ST_DeliriumTieToLS", (int)LSTieIn.Off);
 
         /// <summary>
         ///     What Difficulty List Set

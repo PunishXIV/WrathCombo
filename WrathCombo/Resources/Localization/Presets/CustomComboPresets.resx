@@ -3314,7 +3314,7 @@ Requirements:
  Will also spend 50 blood gauge if Delirium is nearly ready to protect from overcap.</value>
   </data>
   <data name="DRK_ST_CD_Delirium_Name" xml:space="preserve">
-    <value>Delirium on Cooldown</value>
+      <value>Delirium Option</value>
   </data>
   <data name="DRK_ST_CD_Disesteem_Desc" xml:space="preserve">
     <value>Adds Disesteem to the rotation when available.</value>

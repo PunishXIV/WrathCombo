@@ -142,6 +142,7 @@ internal partial class DRK
             var deliriumInHPContent =
                 flags.HasFlag(Combo.Adv) && ContentCheck.IsInConfiguredContent(
                     deliriumContentHPThreshold, ContentCheck.ListSet.Halved);
+
             var deliriumHPThreshold = flags.HasFlag(Combo.ST)
                 ? GetHPSliderBasedOnTargetType(flags,
                     DRK_ST_DeliriumThresholdBoss,
@@ -153,12 +154,24 @@ internal partial class DRK
                 (deliriumInHPContent &&
                  GetTargetHPPercent(Target(flags)) > deliriumHPThreshold);
 
+            var deliriumIsOddMinute =
+                GetCooldownRemainingTime(LivingShadow) > 30;
+            var deliriumTieToShadowSatisfied =
+                // ReSharper disable once SimplifyConditionalTernaryExpression
+                flags.HasFlag(Combo.ST) && flags.HasFlag(Combo.Adv) &&
+                TraitLevelChecked(Traits.BloodWeaponMastery) &&
+                DRK_ST_DeliriumTieToLS == (int)LSTieIn.On
+                    ? deliriumIsOddMinute ||
+                      JustUsed(LivingShadow, (float) (GCD * 5))
+                    : true;
+
             #endregion
 
             if ((flags.HasFlag(Combo.Simple) ||
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Delirium) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Delirium)) &&
                 deliriumHPMatchesThreshold &&
+                deliriumTieToShadowSatisfied &&
                 LevelChecked(BloodWeapon) &&
                 GetCooldownRemainingTime(BloodWeapon) < GCD * 1.5)
                 ShouldDeliriumNext = true;
