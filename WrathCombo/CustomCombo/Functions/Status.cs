@@ -194,7 +194,7 @@ internal abstract partial class CustomComboFunctions
                     // Others
                     StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
 
-                ) == true || BattleData.PauseActions();
+                ) == true;
         }
 
         if (hasActionPenalty)
