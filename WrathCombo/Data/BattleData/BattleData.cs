@@ -120,19 +120,20 @@ namespace WrathCombo.Data.BattleData
                 // ExVersion is Expansion
                 // Please verify the expansion in the TerritoryType sheet https://exd.camora.dev/sheet/TerritoryType
                 // Example: Epic of Alexander is Shadowbringers (3) Content, even though the region says Dravania (1/Heavensward),
-                switch (map.ExVersion.RowId)
+                bool battleDataLoaded = map.ExVersion.RowId switch
                 {
-                    case 0: LoadARR(); break;
-                    case 1: LoadHW(); break;
-                    case 2: LoadSB(); break;
-                    case 3: LoadShB(); break;
-                    case 4: LoadEW(); break;
-                    case 5: LoadDT(); break;
-                    //case 6: LoadEC(); break;
-                }
+                    0 => LoadARR(),
+                    1 => LoadHW(),
+                    2 => LoadSB(),
+                    3 => LoadShB(),
+                    4 => LoadEW(),
+                    5 => LoadDT(),
+                    //6 => LoadEC(),
+                };
 
 #if DEBUG
-                DuoLog.Debug($"{map.PlaceName.Value.Name} Battle Data Loaded");
+                if (battleDataLoaded)
+                    DuoLog.Debug($"{map.PlaceName.Value.Name} Battle Data Loaded");
 #endif
             }
         }

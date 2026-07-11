@@ -6,8 +6,9 @@ namespace WrathCombo.Data.BattleData
 {
     internal static partial class BattleData
     {
-        private static void LoadShB()
+        private static bool LoadShB()
         {
+            bool dataLoaded = true;
             switch (_territoryID)
             {
                 case 821: //Dohn Mheg Final Boss Lyre
@@ -70,8 +71,12 @@ namespace WrathCombo.Data.BattleData
                         return Invincible.False;
                     };
                     break;
+                default:
+                    dataLoaded = false;
+                    break;
 
             }
+            return dataLoaded;
         }
     }
 }

@@ -12,8 +12,9 @@ namespace WrathCombo.Data.BattleData
 {
     internal static partial class BattleData
     {
-        private static void LoadDT()
+        private static bool LoadDT()
         {
+            bool dataLoaded = true;
             switch (_territoryID)
             {
                 case 1241: // Cloud of Darkness Chaotic - Sphere of Naught
@@ -240,7 +241,11 @@ namespace WrathCombo.Data.BattleData
                     }.ToFrozenSet();
 
                     break;
+                default:
+                    dataLoaded = false;
+                    break;
             }
+            return dataLoaded;
         }
 
         private static unsafe IGameObject? GetClyteumMotionScanner()

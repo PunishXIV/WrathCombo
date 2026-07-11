@@ -5,8 +5,9 @@ namespace WrathCombo.Data.BattleData
 {
     internal static partial class BattleData
     {
-        private static void LoadEW()
+        private static bool LoadEW()
         {
+            bool dataLoaded = true;
             switch (_territoryID)
             {
                 case 952: // Tower of Zot final bosses
@@ -25,7 +26,11 @@ namespace WrathCombo.Data.BattleData
                         return CheckForCastTimeRemaining(29821) || CheckForCastTimeRemaining(29828);
                     };
                     break;
+                default:
+                    dataLoaded = false;
+                    break;
             }
+            return dataLoaded;
         }
     }
 }

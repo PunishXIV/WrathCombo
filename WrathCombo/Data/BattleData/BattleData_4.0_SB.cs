@@ -4,8 +4,9 @@ namespace WrathCombo.Data.BattleData
 {
     internal static partial class BattleData
     {
-        private static void LoadSB()
+        private static bool LoadSB()
         {
+            bool dataLoaded = true;
             switch (_territoryID)
             {
                 case 801 or 805 or 1122: // Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
@@ -39,7 +40,11 @@ namespace WrathCombo.Data.BattleData
                         return Invincible.True;
                     };
                     break;
+                default:
+                    dataLoaded = false;
+                    break;
             }
+            return dataLoaded;
         }
     }
 }

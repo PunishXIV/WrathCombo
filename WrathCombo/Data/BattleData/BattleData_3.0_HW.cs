@@ -6,8 +6,9 @@ namespace WrathCombo.Data.BattleData
 {
     internal partial class BattleData
     {
-        private static void LoadHW()
+        private static bool LoadHW()
         {
+            bool dataLoaded = true;
             switch (_territoryID)
             {
                 case 508: // The Void Ark
@@ -34,7 +35,12 @@ namespace WrathCombo.Data.BattleData
                         return Invincible.False;
                     };
                     break;
+                default:
+                    dataLoaded = false;
+                    break;
             }
+
+            return dataLoaded;
         }
     }
 }
