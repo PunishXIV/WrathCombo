@@ -240,50 +240,57 @@ public sealed unsafe class CustomActionManager : IDisposable
 
     private void OnFrameworkUpdate(IFramework fw)
     {
-        for (int i = _pendingInjects.Count - 1; i >= 0; i--)
+        try
         {
-            IconInjectEntry e = _pendingInjects[i];
-            AtkComponentIcon* icon = (AtkComponentIcon*)e.ComponentPtr;
-
-            int framesLeft = e.FramesLeft - 1;
-            if (((uint)icon->Flags & 0x400u) != 0 && framesLeft > 0)
+            for (int i = _pendingInjects.Count - 1; i >= 0; i--)
             {
-                _pendingInjects[i] = e with { FramesLeft = framesLeft };
-                continue;
-            }
+                IconInjectEntry e = _pendingInjects[i];
+                AtkComponentIcon* icon = (AtkComponentIcon*)e.ComponentPtr;
 
-            IDalamudTextureWrap? wrap = e.Tex.GetWrapOrDefault();
-            if (wrap == null)
-            {
-                _pendingInjects[i] = e with { FramesLeft = framesLeft };
-                continue;
-            }
+                int framesLeft = e.FramesLeft - 1;
+                if (((uint)icon->Flags & 0x400u) != 0 && framesLeft > 0)
+                {
+                    _pendingInjects[i] = e with { FramesLeft = framesLeft };
+                    continue;
+                }
 
-            AtkImageNode* imgNode = icon->IconImage;
-            if (imgNode == null)
-            {
+                IDalamudTextureWrap? wrap = e.Tex.GetWrapOrDefault();
+                if (wrap == null)
+                {
+                    _pendingInjects[i] = e with { FramesLeft = framesLeft };
+                    continue;
+                }
+
+                AtkImageNode* imgNode = icon->IconImage;
+                if (imgNode == null)
+                {
+                    _pendingInjects.RemoveAt(i);
+                    continue;
+                }
+
+                AtkUldPartsList* partsList = imgNode->PartsList;
+                if (partsList == null || partsList->PartCount == 0)
+                {
+                    _pendingInjects.RemoveAt(i);
+                    continue;
+                }
+
+                AtkUldPart* part = partsList->Parts;
+                if (part == null)
+                {
+                    _pendingInjects.RemoveAt(i);
+                    continue;
+                }
+
+                (*part).LoadTexture(wrap);
+
+                _loadIconHook.Original(icon, icon->IconId);
                 _pendingInjects.RemoveAt(i);
-                continue;
             }
-
-            AtkUldPartsList* partsList = imgNode->PartsList;
-            if (partsList == null || partsList->PartCount == 0)
-            {
-                _pendingInjects.RemoveAt(i);
-                continue;
-            }
-
-            AtkUldPart* part = partsList->Parts;
-            if (part == null)
-            {
-                _pendingInjects.RemoveAt(i);
-                continue;
-            }
-
-            (*part).LoadTexture(wrap);
-
-            _loadIconHook.Original(icon, icon->IconId);
-            _pendingInjects.RemoveAt(i);
+        }
+        catch(Exception ex)
+        {
+            ex.Log("Error with icon injection");
         }
     }
 
