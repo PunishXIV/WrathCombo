@@ -35,6 +35,7 @@ namespace WrathCombo.Data.BattleData
         /// </summary>
         private static uint _territoryID;
 
+
         /// <summary>
         /// List of action IDs that are tankbusters
         /// </summary>
@@ -49,6 +50,11 @@ namespace WrathCombo.Data.BattleData
         /// List of action IDs that are raidwides, but should be ignored (gazes for instance)
         /// </summary>
         private static FrozenSet<uint> _ignoreRaidwideAIDs = [];
+
+        /// <summary>
+        /// Set if any given territory has loaded battle data
+        /// </summary>
+        public static bool BattleDataLoaded;
         #endregion
 
         #region Invincible Checks
@@ -120,7 +126,7 @@ namespace WrathCombo.Data.BattleData
                 // ExVersion is Expansion
                 // Please verify the expansion in the TerritoryType sheet https://exd.camora.dev/sheet/TerritoryType
                 // Example: Epic of Alexander is Shadowbringers (3) Content, even though the region says Dravania (1/Heavensward),
-                bool battleDataLoaded = map.ExVersion.RowId switch
+                BattleDataLoaded = map.ExVersion.RowId switch
                 {
                     0 => LoadARR(),
                     1 => LoadHW(),
@@ -128,11 +134,12 @@ namespace WrathCombo.Data.BattleData
                     3 => LoadShB(),
                     4 => LoadEW(),
                     5 => LoadDT(),
+                    _ => false,
                     //6 => LoadEC(),
                 };
 
 #if DEBUG
-                if (battleDataLoaded)
+                if (BattleDataLoaded)
                     DuoLog.Debug($"{map.PlaceName.Value.Name} Battle Data Loaded");
 #endif
             }

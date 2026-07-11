@@ -1095,6 +1095,7 @@ internal class Debug : ConfigWindow, IDisposable
 
         if (ImGui.CollapsingHeader("Battle Data"))
         {
+            CustomStyleText($"Battle Data Loaded", $"{BattleData.BattleDataLoaded}");
             CustomStyleText($"Pausing Actions:", $"{BattleData.PauseActions()}");
             CustomStyleText($"Tankbusters:", $"{BattleData.TankbusterAIDs.Count}");
             CustomStyleText($"Raidwides:", $"{BattleData.RaidwideAIDs.Count}");
