@@ -380,6 +380,30 @@ internal partial class DRK
 
                     break;
 
+                case Preset.DRK_AoE_CD_Darkness:
+                    ImGui.Dummy(new Vector2(10f, 0f).Scale());
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_AoE_DarknessInstant,
+                        "Use Halfway",
+                        "Will use Salt and Darkness about halfway through " +
+                        "Salted Earth's duration, after more important oGCDs.\n" +
+                        "Recommended.",
+                        outputValue: (int)SaltAndDarknessInstant.Off,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_AoE_DarknessInstant,
+                        "Use Instantly (for heavy movement)",
+                        "Will use Salt and Darkness as soon as possible.",
+                        outputValue: (int)SaltAndDarknessInstant.On,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+
+                    UserConfig.DrawDifficultyMultiChoice(
+                        DRK_AoE_DarknessInstantDifficulty,
+                        DRK_AoE_DarknessInstantDifficultyListSet
+                    );
+
+                    break;
+
                 case Preset.DRK_AoE_CD_Drain:
                     UserConfig.DrawSliderInt(20, 100, DRK_AoE_DrainThreshold,
                         Generics.StopFriendlyHpPercent100,
@@ -1000,6 +1024,39 @@ internal partial class DRK
         /// <seealso cref="Preset.DRK_AoE_CD_Salt" />
         public static readonly UserInt DRK_AoE_SaltThreshold =
             new("DRK_AoE_SaltThreshold", 30);
+
+        /// <summary>
+        ///     Whether Salt and Darkness should be used instantly in AoE.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="SaltAndDarknessInstant.Off"/> <br />
+        ///     <b>Options</b>: <see cref="SaltAndDarknessInstant.On"/>
+        ///     or <see cref="SaltAndDarknessInstant.Off"/>
+        /// </value>
+        /// <seealso cref="Preset.DRK_AoE_CD_Darkness" />
+        public static readonly UserInt DRK_AoE_DarknessInstant =
+            new("DRK_AoE_DarknessInstant", (int)SaltAndDarknessInstant.Off);
+
+        /// <summary>
+        ///     Difficulty of Salt and Darkness Instant Usage for Single Target.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
+        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and/or <see cref="ContentCheck.TopHalfContent" />
+        /// </value>
+        /// <seealso cref="DRK_ST_DarknessInstant" />
+        public static readonly UserBoolArray DRK_AoE_DarknessInstantDifficulty =
+            new("DRK_AoE_DarknessInstantDifficulty", [true, false]);
+
+        /// <summary>
+        ///     What Difficulty List Set
+        ///     <see cref="DRK_AoE_DarknessInstantDifficulty" /> is set to.
+        /// </summary>
+        /// <seealso cref="DRK_AoE_DarknessInstantDifficulty" />
+        public static readonly ContentCheck.ListSet
+            DRK_AoE_DarknessInstantDifficultyListSet =
+                ContentCheck.ListSet.Halved;
 
         /// <summary>
         ///     Target HP% to use Drain above for AoE.
