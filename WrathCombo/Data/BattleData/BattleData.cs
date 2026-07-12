@@ -1,11 +1,13 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.GameHelpers;
 using ECommons.Logging;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.CustomComboNS;
 using WrathCombo.Services;
 using static ECommons.ExcelServices.ExcelTerritoryHelper;
 
@@ -95,6 +97,17 @@ namespace WrathCombo.Data.BattleData
 
         public static bool IsTankbuster(uint actionId)
             => _tankbusterAIDs.Contains(actionId);
+
+        public static bool IsCastingTankbuster(IGameObject? targetObject = null)
+        {
+            var target = targetObject as IBattleChara
+                         ?? SimpleTarget.HardTarget as IBattleChara;
+
+            return target is not null
+                && target.IsCasting
+                && IsTankbuster(target.CastActionId)
+                && target.TargetObject == Player.Object;
+        }
 
         // Raidwides
         public static FrozenSet<uint> RaidwideAIDs => _raidwideAIDs;
