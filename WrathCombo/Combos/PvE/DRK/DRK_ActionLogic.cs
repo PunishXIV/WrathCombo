@@ -219,13 +219,32 @@ internal partial class DRK
 
             #region Salt and Darkness
 
+            #region Variables
+
+            var darknessContent = flags.HasFlag(Combo.ST)
+                ? DRK_ST_DarknessInstantDifficulty
+                : DRK_AoE_DarknessInstantDifficulty;
+            var darknessInContent =
+                flags.HasFlag(Combo.Adv) && ContentCheck.IsInConfiguredContent(
+                    darknessContent, ContentCheck.ListSet.Halved);
+
+            var darknessUseInstantly = flags.HasFlag(Combo.ST)
+                ? DRK_ST_DarknessInstant
+                : DRK_AoE_DarknessInstant;
+            var darknessTimeSatisfied =
+                flags.HasFlag(Combo.Simple) || !darknessInContent ||
+                darknessUseInstantly == (int)SaltAndDarknessInstant.On ||
+                GetStatusEffectRemainingTime(Buffs.SaltedEarth) < 7;
+            
+            #endregion
+
             if ((flags.HasFlag(Combo.Simple) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Darkness) ||
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Darkness)) &&
                 LevelChecked(SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
                 HasStatusEffect(Buffs.SaltedEarth) &&
-                GetStatusEffectRemainingTime(Buffs.SaltedEarth) < 7)
+                darknessTimeSatisfied)
                 return (action = OriginalHook(SaltAndDarkness)) != 0;
 
             #endregion
