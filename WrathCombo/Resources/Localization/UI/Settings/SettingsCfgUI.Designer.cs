@@ -943,7 +943,7 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0.5.
+        ///   Looks up a localized string similar to 1.5.
         /// </summary>
         internal static string PenaltyPause_defaultValue {
             get {

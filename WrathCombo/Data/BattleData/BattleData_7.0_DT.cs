@@ -205,21 +205,18 @@ namespace WrathCombo.Data.BattleData
                     _pauseActions = () =>
                     {
                         // Medusa Swarmsinger
-                        if (CheckForGazeCasts(50102)) return true; //Petrification cast
+                        if (CheckForGazeCasts(0x4DAB, 50102)) return true; //Petrification cast
 
-                        // Shinryu Paradox / Hollow King
-                        if (Svc.Objects.Any(x => x.BaseId == 0x4D92 || x.BaseId == 0x4D96))
+                        if (CheckForGazeCasts(0x4D92, 49121) || // Shinryu Paradox - Cataclysmic Vortex
+                            CheckForGazeCasts(0x4D96, 49161))   // Hollow King - Cataclysmic Blade
                         {
-                            // Find VFX
-                            var effects = VfxManager.TrackedEffects
+                            return VfxManager.TrackedEffects
                                 .FilterToTarget(Player.Object.GameObjectId)
-                                .Where(x =>
-                                    x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_mv_7s_c0k2.avfx" ||  // Don't Move
-                                    x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_lk_7s_c0k2.avfx")    // Don't Look
-                                .ToList();
-
-                            if (effects.Count == 1) return MathHelper.InRange(effects[0].AgeSeconds, 4, 8);
+                                .Any(x =>
+                                    x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_mv_7s_c0k2.avfx" || // Don't Move
+                                    x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_lk_7s_c0k2.avfx");  // Don't Look
                         }
+
                         return false;
                     };
 

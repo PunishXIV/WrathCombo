@@ -73,7 +73,8 @@ namespace WrathCombo.Data.BattleData
         }
 
         /// <summary>
-        /// Quickly takes a bool and selects Invincible.True or Invincible.False
+        /// Quickly takes a bool and selects Invincible.True or Invincible.False<br/>
+        /// Will not fall back to check basic Invincibility Statuses
         /// </summary>
         /// <param name="invincible">bool parameter / statement if invincible or not</param>
         /// <returns></returns>
@@ -147,24 +148,6 @@ namespace WrathCombo.Data.BattleData
         }
 
         /// <summary>
-        /// Checks to see if a target (based on it's BaseId) is casting
-        /// </summary>
-        /// <param name="baseId">BaseId of the IBattleChara</param>
-        /// <param name="actionID">Action ID of the cast we're looking for</param>
-        /// <param name="percentCast">Optional: Check for certain progress of the cast</param>
-        /// <returns></returns>
-        private static bool CheckForCast(uint baseId, uint actionID, float percentCast = 0)
-        {
-            if (Svc.Objects.FirstOrDefault(x => x.BaseId == baseId) is IBattleChara target)
-            {
-                if (target.IsCasting && target.CastActionId == actionID)
-                    return (target.CurrentCastTime / target.TotalCastTime) >= percentCast;
-                return false;
-            }
-            return false;
-        }
-
-        /// <summary>
         /// Used primarily to look for any gaze actions since it'll use a config to determine when to pause
         /// </summary>
         /// <param name="actionID"></param>
@@ -174,6 +157,23 @@ namespace WrathCombo.Data.BattleData
         {
             var battleChars = Svc.Objects.Where(x => x is IBattleChara).Cast<IBattleChara>();
             return battleChars.Any(x => x.IsCasting && x.CastActionId == actionID && (x.TotalCastTime - x.CurrentCastTime) <= Service.Configuration.PenaltyPause);
+        }
+
+        /// <summary>
+        /// Used primarily to look for any gaze like actions since it'll use a config to determine when to pause
+        /// </summary>
+        /// <param name="baseId">BaseID of the NPC to look for</param>
+        /// <param name="actionID">action ID of the cast</param>
+        /// <returns></returns>
+        public static bool CheckForGazeCasts(uint baseId, uint actionID)
+        {
+            return Svc.Objects
+                .OfType<IBattleChara>()
+                .Any(x =>
+                    x.BaseId == baseId &&
+                    x.IsCasting &&
+                    x.CastActionId == actionID &&
+                    (x.TotalCastTime - x.CurrentCastTime) <= Service.Configuration.PenaltyPause);
         }
     }
 }
