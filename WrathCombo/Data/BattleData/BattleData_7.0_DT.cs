@@ -128,9 +128,18 @@ namespace WrathCombo.Data.BattleData
                     _pauseActions = () =>
                     {
                         bool pause = false;
-                        var MotionScannerHelper = GetClyteumMotionScanner(); // There can be two of these objects, only one appears to be active.
 
-                        if (MotionScannerHelper is IGameObject scanner)
+                        // There can be two of these objects, only one appears to be active.
+                        IGameObject? motionScannerHelper;
+                        unsafe
+                        {
+                            motionScannerHelper = Svc.Objects.FirstOrDefault(x =>
+                                x.BaseId == 0x4C2D &&
+                                x.Address != 0 &&
+                                (int)x.Struct()->RenderFlags == 0);
+                        }
+
+                        if (motionScannerHelper is IGameObject scanner)
                         {
                             var facingdirection = MathHelper.GetCardinalDirection(MathHelper.RadToDeg(scanner.Rotation));
 
@@ -243,15 +252,6 @@ namespace WrathCombo.Data.BattleData
                     break;
             }
             return dataLoaded;
-        }
-
-        private static unsafe IGameObject? GetClyteumMotionScanner()
-        {
-            return Svc.Objects.FirstOrDefault(x =>
-                x.BaseId == 0x4C2D &&
-                x.Address != 0 &&
-                (int)(x.Struct()->RenderFlags) == 0
-            );
         }
     }
 }
