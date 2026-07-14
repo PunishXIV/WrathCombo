@@ -95,5 +95,23 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
                 return ResourceManager.GetString("BurstMirageDuringLoTD", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Early Buff Opener.
+        /// </summary>
+        internal static string EarlyBuffOpener {
+            get {
+                return ResourceManager.GetString("EarlyBuffOpener", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use early buff opener..
+        /// </summary>
+        internal static string UseEarlyBuffOpener {
+            get {
+                return ResourceManager.GetString("UseEarlyBuffOpener", resourceCulture);
+            }
+        }
     }
 }
