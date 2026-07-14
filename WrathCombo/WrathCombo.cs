@@ -147,12 +147,12 @@ public sealed partial class WrathCombo : IDalamudPlugin
             if (!Player.Available)
                 return false;
 
-            WrathOpener.SelectOpener();
             P.ActionRetargeting.ClearCachedRetargets();
             if (onJobChange)
                 PvEFeatures.OpenToCurrentJob(true);
             if (onJobChange || firstRun)
             {
+                WrathOpener.SelectOpener();
                 Service.ActionReplacer.UpdateFilteredCombos();
                 Svc.Framework.RunOnTick(Provider.BuildCachesAction());
                 P.IPCSearch.UpdateActiveJobPresets();
