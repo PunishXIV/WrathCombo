@@ -28,8 +28,8 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Data.BattleData;
 using WrathCombo.Data.Conflicts;
-using WrathCombo.Extensions;
 using WrathCombo.Native;
 using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Services;
@@ -37,7 +37,6 @@ using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window;
-using WrathCombo.Window.Functions;
 using WrathCombo.Window.Tabs;
 using GenericHelpers = ECommons.GenericHelpers;
 
@@ -166,6 +165,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
                     EnteringInstancedContent = true;
                 else if (Content.InstanceContentRow?.RowId == 0)
                     EnteringInstancedContent = false;
+
+                BattleData.LoadCombatData(Content.TerritoryID);
             }
 
             return true;
@@ -320,10 +321,9 @@ public sealed partial class WrathCombo : IDalamudPlugin
         }
     }
 
-    private void ClientState_TerritoryChanged(uint obj)
+    private void ClientState_TerritoryChanged(uint territoryId)
     {
         UpdateCaches(false, true, false);
-
         Task.Run(StancePartner.CheckForIPCControl);
     }
 

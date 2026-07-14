@@ -32,6 +32,7 @@ using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Data.BattleData;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
@@ -1092,6 +1093,14 @@ internal class Debug : ConfigWindow, IDisposable
             ImGui.Unindent();
         }
 
+        if (ImGui.CollapsingHeader("Battle Data"))
+        {
+            CustomStyleText($"Battle Data Loaded", $"{BattleData.BattleDataLoaded}");
+            CustomStyleText($"Pausing Actions:", $"{BattleData.PauseActions()}");
+            CustomStyleText($"Tankbusters:", $"{BattleData.TankbusterAIDs.Count}");
+            CustomStyleText($"Raidwides:", $"{BattleData.RaidwideAIDs.Count}");
+            CustomStyleText($"Ignored Raidwides:", $"{BattleData.IgnoreRaidwideAIDs.Count}");
+        }
 
         #endregion
 

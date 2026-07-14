@@ -17,6 +17,7 @@ using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Data.BattleData;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
@@ -158,9 +159,9 @@ internal sealed class ActionReplacer : IDisposable
             {
                 if (combo.TryInvoke(actionID, out uint newActionID))
                 {
-                    if (Service.Configuration.BlockSpellOnMove &&
+                    if ((Service.Configuration.BlockSpellOnMove &&
                         ActionManager.GetAdjustedCastTime(ActionType.Action, newActionID) > 0 &&
-                        CustomComboFunctions.TimeMoving.Ticks > 0)
+                        CustomComboFunctions.TimeMoving.Ticks > 0) || (Service.Configuration.PenaltyPause > 0 && CustomComboFunctions.PlayerHasActionPenalty(false)))
                     {
                         return All.SavageBlade;
                     }
