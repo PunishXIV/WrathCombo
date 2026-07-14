@@ -62,7 +62,7 @@ internal partial class AST : Healer
                     return OriginalHook(Play1).Retarget(replacedActions, CardResolver);
 
                 //Minor Arcana / Lord of Crowns
-                if (HasLord && HasBattleTarget())
+                if (HasLord && HasBattleTarget() && LevelChecked(MinorArcana))
                     return OriginalHook(MinorArcana);
 
                 //Card Draw
@@ -139,7 +139,7 @@ internal partial class AST : Healer
                     return OriginalHook(Play1).Retarget(actions, CardResolver);
 
                 //Minor Arcana / Lord of Crowns
-                if (HasLord && HasBattleTarget())
+                if (HasLord && HasBattleTarget() && LevelChecked(MinorArcana))
                     return OriginalHook(MinorArcana);
 
                 //Card Draw
@@ -274,7 +274,7 @@ internal partial class AST : Healer
 
                 //Minor Arcana / Lord of Crowns
                 if (IsEnabled(Preset.AST_DPS_LazyLord) && HasLord &&
-                    HasBattleTarget() &&
+                    HasBattleTarget() && LevelChecked(MinorArcana) &&
                     (HasDivination || !lordPooling || !LevelChecked(Divination)))
                     return OriginalHook(MinorArcana);
 
@@ -407,7 +407,7 @@ internal partial class AST : Healer
 
                 //Minor Arcana / Lord of Crowns
                 if (IsEnabled(Preset.AST_AOE_LazyLord) && HasLord &&
-                    HasBattleTarget() &&
+                    HasBattleTarget() && LevelChecked(MinorArcana) &&
                     (HasDivination || !lordPooling || !LevelChecked(Divination)))
                     return OriginalHook(MinorArcana);
 
@@ -572,7 +572,7 @@ internal partial class AST : Healer
             if (ActionReady(OriginalHook(CelestialOpposition)))
                 return OriginalHook(CelestialOpposition);
 
-            if (HasLady)
+            if (HasLady && LevelChecked(MinorArcana))
                 return OriginalHook(LadyOfCrown);
 
             if (ActionReady(OriginalHook(CollectiveUnconscious)))

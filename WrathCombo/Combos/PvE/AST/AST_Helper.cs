@@ -40,12 +40,12 @@ internal partial class AST
     internal static bool HasNoCards => Gauge.DrawnCards.All(x => x is CardType.None);
     internal static bool HasNoDPSCard => DrawnDPSCard == CardType.None;
     internal static bool HasDPSCard => Gauge.DrawnCards[0] is not CardType.None;
-    internal static bool HasLord => Gauge.DrawnCrownCard is CardType.Lord && LevelChecked(MinorArcana);
-    internal static bool HasLady => Gauge.DrawnCrownCard is CardType.Lady && LevelChecked(MinorArcana);
-    internal static bool HasSpire => Gauge.DrawnCards[2] == CardType.Spire && LevelChecked(AstralDraw);
-    internal static bool HasEwer => Gauge.DrawnCards[2] == CardType.Ewer && LevelChecked(AstralDraw);
-    internal static bool HasArrow => Gauge.DrawnCards[1] == CardType.Arrow && LevelChecked(AstralDraw);
-    internal static bool HasBole => Gauge.DrawnCards[1] == CardType.Bole && LevelChecked(AstralDraw);
+    internal static bool HasLord => Gauge.DrawnCrownCard is CardType.Lord;
+    internal static bool HasLady => Gauge.DrawnCrownCard is CardType.Lady;
+    internal static bool HasSpire => Gauge.DrawnCards[2] == CardType.Spire;
+    internal static bool HasEwer => Gauge.DrawnCards[2] == CardType.Ewer;
+    internal static bool HasArrow => Gauge.DrawnCards[1] == CardType.Arrow;
+    internal static bool HasBole => Gauge.DrawnCards[1] == CardType.Bole;
     internal static bool HasDivination => HasStatusEffect(Buffs.Divination, anyOwner: true) || JustUsed(Divination);
     internal static bool StandStill => TimeStoodStill >= TimeSpan.FromSeconds(3);
     internal static bool WaitGCDs => ActionWatching.NumberOfGcdsUsed >= 10;
