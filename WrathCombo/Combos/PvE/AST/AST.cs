@@ -62,7 +62,7 @@ internal partial class AST : Healer
                     return OriginalHook(Play1).Retarget(replacedActions, CardResolver);
 
                 //Minor Arcana / Lord of Crowns
-                if (HasLord && HasBattleTarget() && LevelChecked(MinorArcana))
+                if (HasLord && HasBattleTarget())
                     return OriginalHook(MinorArcana);
 
                 //Card Draw
@@ -139,7 +139,7 @@ internal partial class AST : Healer
                     return OriginalHook(Play1).Retarget(actions, CardResolver);
 
                 //Minor Arcana / Lord of Crowns
-                if (HasLord && HasBattleTarget() && LevelChecked(MinorArcana))
+                if (HasLord && HasBattleTarget())
                     return OriginalHook(MinorArcana);
 
                 //Card Draw
@@ -274,7 +274,7 @@ internal partial class AST : Healer
 
                 //Minor Arcana / Lord of Crowns
                 if (IsEnabled(Preset.AST_DPS_LazyLord) && HasLord &&
-                    HasBattleTarget() && LevelChecked(MinorArcana) &&
+                    HasBattleTarget() &&
                     (HasDivination || !lordPooling || !LevelChecked(Divination)))
                     return OriginalHook(MinorArcana);
 
@@ -407,7 +407,7 @@ internal partial class AST : Healer
 
                 //Minor Arcana / Lord of Crowns
                 if (IsEnabled(Preset.AST_AOE_LazyLord) && HasLord &&
-                    HasBattleTarget() && LevelChecked(MinorArcana) &&
+                    HasBattleTarget() &&
                     (HasDivination || !lordPooling || !LevelChecked(Divination)))
                     return OriginalHook(MinorArcana);
 
@@ -517,7 +517,7 @@ internal partial class AST : Healer
                 if (ActionReady(OriginalHook(NeutralSect)))
                     return OriginalHook(NeutralSect);
 
-                if (HasLady && LevelChecked(MinorArcana))
+                if (HasLady)
                     return OriginalHook(LadyOfCrown);
 
                 if (ActionReady(OriginalHook(CollectiveUnconscious)))
@@ -572,7 +572,7 @@ internal partial class AST : Healer
             if (ActionReady(OriginalHook(CelestialOpposition)))
                 return OriginalHook(CelestialOpposition);
 
-            if (HasLady && LevelChecked(MinorArcana))
+            if (HasLady)
                 return OriginalHook(LadyOfCrown);
 
             if (ActionReady(OriginalHook(CollectiveUnconscious)))
