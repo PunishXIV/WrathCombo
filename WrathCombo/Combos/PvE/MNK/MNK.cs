@@ -75,7 +75,7 @@ internal partial class MNK : Melee
             // Perfect Balance or Standard Beast Chakra's
             return DoPerfectBalanceCombo(ref actionID)
                 ? actionID
-                : DoBasicCombo(actionID);
+                : DoBasicCombo();
         }
     }
 
@@ -143,7 +143,7 @@ internal partial class MNK : Melee
                 return actionID;
 
             // Monk Rotation
-            return DoBasicCombo(actionID, onAoE: true);
+            return DoBasicCombo(onAoE: true);
         }
     }
 
@@ -261,7 +261,7 @@ internal partial class MNK : Melee
             // Perfect Balance or Standard Beast Chakra's
             return DoPerfectBalanceCombo(ref actionID)
                 ? actionID
-                : DoBasicCombo(actionID, IsEnabled(Preset.MNK_STUseTrueNorth), trueNorthCharges: MNK_ManualTN);
+                : DoBasicCombo(IsEnabled(Preset.MNK_STUseTrueNorth), trueNorthCharges: MNK_ManualTN);
         }
     }
 
@@ -359,7 +359,7 @@ internal partial class MNK : Melee
                 return actionID;
 
             // Monk Rotation
-            return DoBasicCombo(actionID, onAoE: true);
+            return DoBasicCombo(onAoE: true);
         }
     }
 

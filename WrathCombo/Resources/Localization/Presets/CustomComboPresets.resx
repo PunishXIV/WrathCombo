@@ -3258,6 +3258,12 @@ NOTE: Will not use unless there is a target within range to prevent waste.</valu
   <data name="DRK_Retarget_TBN_TT_Name" xml:space="preserve">
     <value>Include Target's Target</value>
   </data>
+  <data name="DRK_Retarget_Unmend_Desc" xml:space="preserve">
+    <value>Will retarget Unmend according to below settings.</value>
+  </data>
+  <data name="DRK_Retarget_Unmend_Name" xml:space="preserve">
+    <value>Retarget Unmend Option</value>
+  </data>
   <data name="DRK_ST_Adv_Desc" xml:space="preserve">
     <value>Replaces Hard Slash with a full one-button single target rotation.
 These features are ideal if you want to customize the rotation.</value>
@@ -4029,6 +4035,12 @@ This feature is ideal for any fresh newcomers to the job.</value>
   </data>
   <data name="GNB_NM_Zone_Name" xml:space="preserve">
     <value>Zone Option</value>
+  </data>
+  <data name="GNB_RetargetLightningShot_Desc" xml:space="preserve">
+    <value>Will retarget Lighting Shot according to below settings.</value>
+  </data>
+  <data name="GNB_RetargetLightningShot_Name" xml:space="preserve">
+    <value>Retarget Lightning Shot Option</value>
   </data>
   <data name="GNB_RetargetTrajectory_Desc" xml:space="preserve">
     <value>Retargets Trajectory to your Field or UI Mouseover target (if Hostile) or the nearest hostile target to your Mouseover target (if Friendly).</value>
@@ -6656,11 +6668,10 @@ NOTE: Will not use unless there is a target within range to prevent waste</value
     <value>Retarget Shield Bash</value>
   </data>
   <data name="PLD_ShieldLob_Feature_Desc" xml:space="preserve">
-    <value>Replaces Shield Lob with Holy Spirit when available.
-- Must be under the effect of Divine Might or not moving.</value>
+    <value>Replacement and Retargeting Features for Shield Lob </value>
   </data>
   <data name="PLD_ShieldLob_Feature_Name" xml:space="preserve">
-    <value>Shield Lob / Holy Spirit Feature</value>
+    <value>Shield Lob/Holy Spirit Retarget Feature</value>
   </data>
   <data name="PLD_SpiritsWithin_Desc" xml:space="preserve">
     <value>Replaces Spirits Within with Circle of Scorn when available.</value>
@@ -10809,6 +10820,12 @@ NOTE: even if disabled, will still try to use Thrill Of Battle as the lowest pri
   </data>
   <data name="WAR_RetargetOnslaught_Name" xml:space="preserve">
     <value>Mouseover Onslaught Option</value>
+  </data>
+  <data name="WAR_RetargetTomahawk_Desc" xml:space="preserve">
+    <value>Will retarget Tomahawk to according to below settings.</value>
+  </data>
+  <data name="WAR_RetargetTomahawk_Name" xml:space="preserve">
+    <value>Retarget Tomahawk Option</value>
   </data>
   <data name="WAR_ST_Advanced_Desc" xml:space="preserve">
     <value>Replaces Heavy Swing with a full one-button single target rotation.

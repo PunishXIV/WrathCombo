@@ -9075,6 +9075,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Will retarget Unmend according to below settings..
+        /// </summary>
+        internal static string DRK_Retarget_Unmend_Desc {
+            get {
+                return ResourceManager.GetString("DRK_Retarget_Unmend_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retarget Unmend Option.
+        /// </summary>
+        internal static string DRK_Retarget_Unmend_Name {
+            get {
+                return ResourceManager.GetString("DRK_Retarget_Unmend_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Will retarget Shadowstride to your field or UI mouseover target (If Hostile) or the nearest hostile target to your mouseover target (If friendly)..
         /// </summary>
         internal static string DRK_RetargetShadowstride_Desc {
@@ -11371,6 +11389,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Will retarget Lighting Shot according to below settings..
+        /// </summary>
+        internal static string GNB_RetargetLightningShot_Desc {
+            get {
+                return ResourceManager.GetString("GNB_RetargetLightningShot_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retarget Lightning Shot Option.
+        /// </summary>
+        internal static string GNB_RetargetLightningShot_Name {
+            get {
+                return ResourceManager.GetString("GNB_RetargetLightningShot_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retargets Trajectory to your Field or UI Mouseover target (if Hostile) or the nearest hostile target to your Mouseover target (if Friendly)..
         /// </summary>
         internal static string GNB_RetargetTrajectory_Desc {
@@ -11914,7 +11950,7 @@ namespace WrathCombo.Resources.Localization.Presets {
                 return ResourceManager.GetString("MCH_AoE_Adv_Hypercharge_Name", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to s, wait to Hypercharge until Tool cooldowns are at least this value.
         /// </summary>
@@ -11923,7 +11959,7 @@ namespace WrathCombo.Resources.Localization.Presets {
                 return ResourceManager.GetString("MCH_AoE_Adv_HyperchargeToolHold", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Uses Head Graze to interrupt during the rotation, where applicable..
         /// </summary>
@@ -19054,8 +19090,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replaces Shield Lob with Holy Spirit when available.
-        ///- Must be under the effect of Divine Might or not moving..
+        ///   Looks up a localized string similar to Replacement and Retargeting Features for Shield Lob .
         /// </summary>
         internal static string PLD_ShieldLob_Feature_Desc {
             get {
@@ -19064,7 +19099,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shield Lob / Holy Spirit Feature.
+        ///   Looks up a localized string similar to Shield Lob/Holy Spirit Retarget Feature.
         /// </summary>
         internal static string PLD_ShieldLob_Feature_Name {
             get {
@@ -21703,6 +21738,61 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adds (Executioner&apos;s) Gibbet and Gallows on Blood Stalk.
+        ///Adds (Executioner&apos;s) Guillotine on Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature.
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Gibbet/Gallows and Enshroud combo on Blood Stalk and Grim Swathe without replacing them with Gluttony. Conflicts with Gluttony on Blood Stalk/Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure&apos;s Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe..
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Enshroud_Desc {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Enshroud_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enshroud Combo Option.
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Enshroud_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Enshroud_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blood Stalk/Grim Swathe Combos (No Gluttony).
+        /// </summary>
+        internal static string RPR_BloodStalkEnshroudCombo_Name {
+            get {
+                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds Communio to Gibbet/Gallows and Guillotine..
         /// </summary>
         internal static string RPR_CommunioOnGGG_Desc {
@@ -21847,61 +21937,6 @@ namespace WrathCombo.Resources.Localization.Presets {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Blood Stalk/Grim Swathe Combos (No Gluttony).
-        /// </summary>
-        internal static string RPR_BloodStalkEnshroudCombo_Name {
-            get {
-                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Gibbet/Gallows and Enshroud combo on Blood Stalk and Grim Swathe without replacing them with Gluttony. Conflicts with Gluttony on Blood Stalk/Grim Swathe..
-        /// </summary>
-        internal static string RPR_BloodStalkEnshroudCombo_Desc {
-            get {
-                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature.
-        /// </summary>
-        internal static string RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name {
-            get {
-                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds (Executioner&apos;s) Gibbet and Gallows on Blood Stalk.
-        ///Adds (Executioner&apos;s) Guillotine on Grim Swathe..
-        /// </summary>
-        internal static string RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc {
-            get {
-                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_BloodSwatheCombo_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enshroud Combo Option.
-        /// </summary>
-        internal static string RPR_BloodStalkEnshroudCombo_Enshroud_Name {
-            get {
-                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Enshroud_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure&apos;s Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe..
-        /// </summary>
-        internal static string RPR_BloodStalkEnshroudCombo_Enshroud_Desc {
-            get {
-                return ResourceManager.GetString("RPR_BloodStalkEnshroudCombo_Enshroud_Desc", resourceCulture);
-            }
-        }
-
         /// <summary>
         ///   Looks up a localized string similar to Adds Lemure&apos;s Slice to Gibbet/Gallows and Lemure&apos;s Scythe to Guillotine..
         /// </summary>
@@ -31227,6 +31262,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string WAR_RetargetOnslaught_Name {
             get {
                 return ResourceManager.GetString("WAR_RetargetOnslaught_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will retarget Tomahawk to according to below settings..
+        /// </summary>
+        internal static string WAR_RetargetTomahawk_Desc {
+            get {
+                return ResourceManager.GetString("WAR_RetargetTomahawk_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retarget Tomahawk Option.
+        /// </summary>
+        internal static string WAR_RetargetTomahawk_Name {
+            get {
+                return ResourceManager.GetString("WAR_RetargetTomahawk_Name", resourceCulture);
             }
         }
         

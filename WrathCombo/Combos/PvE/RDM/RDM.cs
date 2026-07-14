@@ -76,7 +76,7 @@ internal partial class RDM : Caster
 
             #region Melee Combo and Finishers 
             if (ComboAction is Scorch && LevelChecked(Resolution) || ComboAction is Verholy or Verflare && LevelChecked(Scorch))
-                return actionID;
+                return OriginalHook(Jolt);
 
             if (HasManaStacks)
                 return UseHolyFlare(actionID);
@@ -172,7 +172,7 @@ internal partial class RDM : Caster
 
             #region Melee Combo and Finishers 
             if (ComboAction is Scorch && LevelChecked(Resolution) || ComboAction is Verholy or Verflare && LevelChecked(Scorch))
-                return actionID;
+                return OriginalHook(Scatter);
 
             if (HasManaStacks)
                 return UseHolyFlare(actionID);
@@ -305,7 +305,7 @@ internal partial class RDM : Caster
 
             #region Melee Combo and Finishers 
             if (ComboAction is Scorch && LevelChecked(Resolution) || ComboAction is Verholy or Verflare && LevelChecked(Scorch))
-                return actionID;
+                return OriginalHook(Jolt);
 
             if (IsEnabled(Preset.RDM_ST_HolyFlare) && HasManaStacks)
                 return UseHolyFlare(actionID);
@@ -436,7 +436,7 @@ internal partial class RDM : Caster
 
             #region Melee Combo and Finishers 
             if (ComboAction is Scorch && LevelChecked(Resolution) || ComboAction is Verholy or Verflare && LevelChecked(Scorch))
-                return actionID;
+                return OriginalHook(Scatter);
 
             if (IsEnabled(Preset.RDM_AoE_HolyFlare) && HasManaStacks)
                 return UseHolyFlare(actionID);

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ internal partial class MCH
 
         if (!HasStatusEffect(Buffs.Wildfire) &&
             ActionReady(OriginalHook(RookAutoturret)) &&
-            !RobotActive &&
+            !IsRobotActive &&
             GetTargetHPPercent() > hpThreshold)
         {
             if (LevelChecked(Wildfire))
@@ -100,9 +100,9 @@ internal partial class MCH
 
     private static bool ShouldUseHyperchargeST(int wildfireBossOnlyOption) =>
         ActionReady(Wildfire) ||
-        JustUsed(FullMetalField, GCDTotal / 2) ||
+        JustUsed(FullMetalField, GCD / 2) ||
         wildfireBossOnlyOption == 1 && !TargetIsBoss() ||
-        GetCooldownRemainingTime(Wildfire) > GCDTotal * 15 ||
+        GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
         Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10 ||
         !LevelChecked(Wildfire);
 
@@ -139,7 +139,6 @@ internal partial class MCH
         if (!IsHyperchargeReady())
             return false;
 
-        // Pre-Bio Blaster: spend Drill. After: spend Bio Blaster (DoT counts as spent).
         if (LevelChecked(BioBlaster))
         {
             if (!UsedBioBlaster(toolHoldThreshold))
@@ -168,7 +167,7 @@ internal partial class MCH
         !IsOverheated &&
         (ActionReady(Wildfire) ||
          GetCooldownRemainingTime(Wildfire) > 90 ||
-         GetCooldownRemainingTime(Wildfire) <= GCDTotal ||
+         GetCooldownRemainingTime(Wildfire) <= GCD ||
          GetStatusEffectRemainingTime(Buffs.FullMetalMachinist) <= 6);
 
     private static bool JustUsedOverheatGCD(float window, bool onAoE) =>
@@ -213,7 +212,7 @@ internal partial class MCH
         float? hyperchargeWindow = null) =>
         CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
         ActionReady(Wildfire) &&
-        JustUsed(Hypercharge, hyperchargeWindow ?? GCDTotal + 0.9f) &&
+        JustUsed(Hypercharge, hyperchargeWindow ?? GCD + 0.9f) &&
         !HasStatusEffect(Buffs.Wildfire) &&
         (requireBoss
             ? TargetIsBoss()
@@ -269,10 +268,10 @@ internal partial class MCH
     {
         int numberOfReadyTools = 0;
 
-        if (ToolsReady(Drill))
+        if (ActionReady(Drill))
             numberOfReadyTools += (int)GetRemainingCharges(Drill);
 
-        if (ToolsReady(Chainsaw))
+        if (ToolReadyForReassembleWeave(Chainsaw))
         {
             numberOfReadyTools++;
             if (LevelChecked(Excavator))
@@ -284,7 +283,7 @@ internal partial class MCH
             numberOfReadyTools++;
         }
 
-        if (ToolsReady(OriginalHook(AirAnchor)))
+        if (ToolReadyForReassembleWeave(AirAnchor))
             numberOfReadyTools++;
 
         if (!LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot &&
@@ -294,7 +293,7 @@ internal partial class MCH
         return numberOfReadyTools;
     }
 
-    private static bool CanReassembleAoE(int chargePool = 0, int hpThreshold = 25)
+    private static bool CanReassembleAoE(int chargePool = 0, int hpThreshold = 25, bool forPrepull = false)
     {
         uint remainingCharges = GetRemainingCharges(Reassemble);
 
@@ -306,17 +305,17 @@ internal partial class MCH
         if (remainingCharges == 0 || remainingCharges <= chargePool)
             return false;
 
-        if (ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+        if (ToolReadyForReassemble(Excavator, forPrepull) && HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
-        if (ToolsReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ToolReadyForReassemble(Chainsaw, forPrepull) && !HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
-        if (ToolsReady(AirAnchor) &&
-            (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2))
+        if (ToolReadyForReassemble(AirAnchor, forPrepull) &&
+            (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2))
             return true;
 
-        if (CanUseDrill(true) && ToolsReady(Drill))
+        if (CanUseDrill(true) && ToolReadyForReassemble(Drill, forPrepull))
             return true;
 
         if (LevelChecked(Scattergun) && ActionReady(Scattergun))
@@ -332,10 +331,10 @@ internal partial class MCH
         LevelChecked(Scattergun) && InActionRange(OriginalHook(SpreadShot)) ||
         !LevelChecked(Drill) && InActionRange(OriginalHook(SpreadShot));
 
-    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25) =>
-        onAoE ? CanReassembleAoE(chargePool, hpThreshold) : CanReassembleST(reassembleChoice, chargePool, hpThreshold);
+    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25, bool forPrepull = false) =>
+        onAoE ? CanReassembleAoE(chargePool, hpThreshold, forPrepull) : CanReassembleST(reassembleChoice, chargePool, hpThreshold, forPrepull);
 
-    private static bool CanReassembleST(int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
+    private static bool CanReassembleST(int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25, bool forPrepull = false)
     {
         UpdateReassembleChargeTracking();
 
@@ -360,12 +359,12 @@ internal partial class MCH
                 return numberOfReadyTools >= remainingCharges;
             }
 
-            case 1 when ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolsReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolsReady(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCDTotal * 2):
-            case 1 when ToolsReady(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCDTotal * 2):
+            case 1 when ToolReadyForReassemble(Excavator, forPrepull) && HasStatusEffect(Buffs.ExcavatorReady):
+            case 1 when ToolReadyForReassemble(Chainsaw, forPrepull) && !HasStatusEffect(Buffs.ExcavatorReady):
+            case 1 when ToolReadyForReassemble(AirAnchor, forPrepull) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2):
+            case 1 when ToolReadyForReassemble(Drill, forPrepull) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2):
             case 1 when !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot):
-            case 1 when !LevelChecked(CleanShot) && ToolsReady(HotShot):
+            case 1 when !LevelChecked(CleanShot) && ToolReadyForReassemble(HotShot, forPrepull):
                 return true;
 
             default:
@@ -495,21 +494,38 @@ internal partial class MCH
 
     #region Tools
 
-    private static bool ToolsReady(uint actionId) =>
-        LevelChecked(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCDTotal);
+    private static bool IsBelowMaxCharges(uint actionId) =>
+        GetMaxCharges(actionId) > 1 && GetRemainingCharges(actionId) < GetMaxCharges(actionId);
+
+    private static float GetToolCDRemaining(uint actionId) =>
+        IsBelowMaxCharges(actionId)
+            ? GetCooldownChargeRemainingTime(actionId)
+            : GetCooldownRemainingTime(actionId);
+
+    private static bool ToolReadyForReassembleWeave(uint actionId) =>
+        LevelChecked(actionId) &&
+        (HasCharges(actionId) || GetToolCDRemaining(actionId) <= GCD * 0.5f);
+
+    private static bool ToolReadyForReassemble(uint actionId, bool forPrepull) =>
+        forPrepull ? ActionReady(actionId) : ToolReadyForReassembleWeave(actionId);
 
     private static bool CanUseDrill(bool onAoE) =>
         !onAoE || !LevelChecked(BioBlaster);
 
-    private static bool IsDrillCD(float time = 9f) =>
-        !LevelChecked(Drill) ||
-        !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= time ||
-        TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(Drill) < GetMaxCharges(Drill) && GetCooldownChargeRemainingTime(Drill) >= time;
+    private static bool IsChargedToolCD(uint actionId, float time = 9f)
+    {
+        if (!LevelChecked(actionId))
+            return true;
 
-    private static bool IsBioBlasterCD(float time = 9f) =>
-        !LevelChecked(BioBlaster) ||
-        !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(BioBlaster) >= time ||
-        TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(BioBlaster) < GetMaxCharges(BioBlaster) && GetCooldownChargeRemainingTime(BioBlaster) >= time;
+        if (HasCharges(actionId) && !IsBelowMaxCharges(actionId))
+            return false;
+
+        return GetToolCDRemaining(actionId) >= time;
+    }
+
+    private static bool IsDrillCD(float time = 9f) => IsChargedToolCD(Drill, time);
+
+    private static bool IsBioBlasterCD(float time = 9f) => IsChargedToolCD(BioBlaster, time);
 
     private static bool IsAirAnchorCD(float time = 9f) =>
         !LevelChecked(OriginalHook(HotShot)) ||
@@ -527,28 +543,28 @@ internal partial class MCH
 
     private static bool CanUseTools(ref uint actionID, bool onAoE, bool useAirAnchor = true, bool holdExcavatorForWildfire = false)
     {
-        if (ToolsReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
         {
             actionID = Chainsaw;
             return true;
         }
 
-        if (ToolsReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
+        if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
             (onAoE || !holdExcavatorForWildfire ||
-             GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCDTotal * 3))
+             GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCD * 3))
         {
             actionID = Excavator;
             return true;
         }
 
-        if ((!onAoE || useAirAnchor) && ToolsReady(AirAnchor))
+        if ((!onAoE || useAirAnchor) && ActionReady(AirAnchor))
         {
             actionID = AirAnchor;
             return true;
         }
 
         if (onAoE &&
-            ToolsReady(BioBlaster) &&
+            ActionReady(BioBlaster) &&
             !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
             CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
         {
@@ -556,7 +572,7 @@ internal partial class MCH
             return true;
         }
 
-        if (CanUseDrill(onAoE) && ToolsReady(Drill))
+        if (CanUseDrill(onAoE) && ActionReady(Drill))
         {
             actionID = Drill;
             return true;
@@ -564,14 +580,14 @@ internal partial class MCH
 
         if (onAoE &&
             HasStatusEffect(Buffs.Reassembled) &&
-            ToolsReady(OriginalHook(SpreadShot)))
+            ActionReady(OriginalHook(SpreadShot)))
         {
             actionID = OriginalHook(SpreadShot);
             return true;
         }
 
-        if (!onAoE && !LevelChecked(AirAnchor) && ToolsReady(HotShot) &&
-            (!LevelChecked(CleanShot) || !HasStatusEffect(Buffs.Reassembled) && ActionReady(HotShot)))
+        if (!onAoE && !LevelChecked(AirAnchor) && ActionReady(HotShot) &&
+            (!LevelChecked(CleanShot) || !HasStatusEffect(Buffs.Reassembled)))
         {
             actionID = HotShot;
             return true;
@@ -584,15 +600,25 @@ internal partial class MCH
 
     #region Combos
 
+    private static float GCD => GetCooldown(OriginalHook(SplitShot)).CooldownTotal;
+
     private static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GCDTotal * times;
+        float gcd = GCD * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
-    private static uint DoBasicCombo(uint actionId, bool allowReassembleOnClean = false, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
+    private static uint ContinueBasicCombo(
+        bool onAoE = false,
+        bool allowReassembleOnClean = false,
+        int reassembleChoice = 1,
+        int chargePool = 0,
+        int hpThreshold = 25)
     {
+        if (onAoE)
+            return OriginalHook(SpreadShot);
+
         if (ComboTimer > 0)
         {
             if (ComboAction is SplitShot && ActionReady(OriginalHook(SlugShot)))
@@ -609,6 +635,14 @@ internal partial class MCH
 
         return OriginalHook(SplitShot);
     }
+
+    private static uint DoBasicCombo(
+        bool onAoE = false,
+        bool allowReassembleOnClean = false,
+        int reassembleChoice = 1,
+        int chargePool = 0,
+        int hpThreshold = 25) =>
+        ContinueBasicCombo(onAoE, allowReassembleOnClean, reassembleChoice, chargePool, hpThreshold);
 
     #endregion
 
@@ -677,14 +711,14 @@ internal partial class MCH
             HeatedCleanShot
         ];
 
+        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
             ([2], () => 4)
         ];
-
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
@@ -740,13 +774,15 @@ internal partial class MCH
             HeatedCleanShot
         ];
 
+        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
             ([2], () => 4)
         ];
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
@@ -796,6 +832,8 @@ internal partial class MCH
             Drill
         ];
 
+        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
@@ -807,7 +845,7 @@ internal partial class MCH
         [
             14
         ];
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
         public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
@@ -825,7 +863,7 @@ internal partial class MCH
 
     private static bool IsOverheated => Gauge.IsOverheated;
 
-    private static bool RobotActive => Gauge.IsRobotActive;
+    private static bool IsRobotActive => Gauge.IsRobotActive;
 
     private static byte Heat => Gauge.Heat;
 

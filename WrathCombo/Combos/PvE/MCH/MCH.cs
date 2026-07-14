@@ -16,7 +16,7 @@ internal partial class MCH : PhysicalRanged
                 return actionID;
 
             //Reassemble to start before combat/after downtime
-            if (CanReassemble(false) && !IsOverheated && !HasWeaved())
+            if (CanReassemble(false, forPrepull: true) && !IsOverheated && !HasWeaved())
                 return Reassemble;
 
             if (!IsOverheated &&
@@ -29,7 +29,7 @@ internal partial class MCH : PhysicalRanged
                 if (OvercapGaussRicochetProtection(out uint gaussRico))
                     return gaussRico;
 
-                if (RobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
+                if (IsRobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
                     GetTargetHPPercent() <= 1)
                     return OriginalHook(RookOverdrive);
 
@@ -84,7 +84,7 @@ internal partial class MCH : PhysicalRanged
             if (IsOverheated && ActionReady(OriginalHook(Heatblast)))
                 return OverheatGCD(onAoE: false);
 
-            return DoBasicCombo(actionID, true);
+            return DoBasicCombo(allowReassembleOnClean: true);
         }
     }
 
@@ -97,7 +97,7 @@ internal partial class MCH : PhysicalRanged
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpreadShot, Scattergun))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCDTotal))
+            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
                 return All.SavageBlade;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -155,7 +155,7 @@ internal partial class MCH : PhysicalRanged
             if (ActionReady(OriginalHook(Heatblast)) && IsOverheated)
                 return OverheatGCD(onAoE: true);
 
-            return OriginalHook(SpreadShot);
+            return DoBasicCombo(onAoE: true);
         }
     }
 
@@ -176,7 +176,7 @@ internal partial class MCH : PhysicalRanged
 
             //Reassemble to start before combat/after downtime
             if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold) &&
+                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold, true) &&
                 !IsOverheated && !HasWeaved())
                 return Reassemble;
 
@@ -193,7 +193,7 @@ internal partial class MCH : PhysicalRanged
                     return gaussRico;
 
                 if (IsEnabled(Preset.MCH_ST_Adv_QueenOverdrive) &&
-                    RobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
+                    IsRobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
                     GetTargetHPPercent() <= MCH_ST_QueenOverDriveHPThreshold)
                     return OriginalHook(RookOverdrive);
 
@@ -297,8 +297,11 @@ internal partial class MCH : PhysicalRanged
                 ActionReady(OriginalHook(Heatblast)) && IsOverheated)
                 return OverheatGCD(onAoE: false);
 
-            return DoBasicCombo(actionID, IsEnabled(Preset.MCH_ST_Adv_Reassemble),
-                MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold);
+            return DoBasicCombo(
+                allowReassembleOnClean: IsEnabled(Preset.MCH_ST_Adv_Reassemble),
+                reassembleChoice: MCH_ST_Adv_ReassembleChoice,
+                chargePool: MCH_ST_ReassemblePool,
+                hpThreshold: ReassembleHPThreshold);
         }
     }
 
@@ -311,7 +314,7 @@ internal partial class MCH : PhysicalRanged
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpreadShot, Scattergun))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCDTotal))
+            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
                 return All.SavageBlade;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -325,7 +328,7 @@ internal partial class MCH : PhysicalRanged
                     return gaussRico;
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_QueenOverdrive) &&
-                    RobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
+                    IsRobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
                     GetTargetHPPercent() <= MCH_AoE_QueenOverDriveHPThreshold)
                     return OriginalHook(RookOverdrive);
 
@@ -391,7 +394,7 @@ internal partial class MCH : PhysicalRanged
             if (ActionReady(OriginalHook(Heatblast)) && IsOverheated)
                 return OverheatGCD(true, IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet));
 
-            return OriginalHook(SpreadShot);
+            return DoBasicCombo(onAoE: true);
         }
     }
 
@@ -404,7 +407,7 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (CleanShot or HeatedCleanShot))
                 return actionID;
 
-            return DoBasicCombo(OriginalHook(SplitShot));
+            return DoBasicCombo();
         }
     }
 
@@ -514,7 +517,7 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (AutomatonQueen or RookAutoturret))
                 return actionID;
 
-            return RobotActive
+            return IsRobotActive
                 ? OriginalHook(QueenOverdrive)
                 : actionID;
         }

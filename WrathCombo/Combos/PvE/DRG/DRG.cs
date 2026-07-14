@@ -12,7 +12,7 @@ internal partial class DRG : Melee
         protected override uint Invoke(uint actionID)
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, TrueThrust))
-            return actionID;
+                return actionID;
 
             ReportDRGPositionalHints();
 
@@ -78,7 +78,7 @@ internal partial class DRG : Melee
 
             return !InMeleeRange() && HasBattleTarget()
                 ? OutsideOfMelee(actionID, OutsideOfMeleeOptions.SimpleSt)
-                : DoBasicCombo(actionID, true);
+                : DoBasicCombo(useTrueNorth: true);
         }
     }
 
@@ -110,7 +110,7 @@ internal partial class DRG : Melee
                     if (CanMirageDive(true, true))
                         return MirageDive;
 
-                    if (CanUseGeirskogul(true))
+                    if (CanUseGeirskogul())
                         return Geirskogul;
 
                     if (CanUseWyrmwind())
@@ -150,7 +150,7 @@ internal partial class DRG : Melee
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
                 ? OutsideOfMelee(actionID, OutsideOfMeleeOptions.SimpleAoE)
-                : DoBasicCombo(actionID, onAoE: true, includeDisembowel: true);
+                : DoBasicCombo(onAoE: true, includeDisembowel: true);
         }
     }
 
@@ -275,7 +275,7 @@ internal partial class DRG : Melee
 
             return !InMeleeRange() && HasBattleTarget()
                 ? OutsideOfMelee(actionID, stRanged)
-                : DoBasicCombo(actionID, IsEnabled(Preset.DRG_TrueNorthDynamic), trueNorthCharges: DRG_ManualTN);
+                : DoBasicCombo(IsEnabled(Preset.DRG_TrueNorthDynamic), trueNorthCharges: DRG_ManualTN);
         }
     }
 
@@ -317,7 +317,7 @@ internal partial class DRG : Melee
                             return MirageDive;
 
                         if (IsEnabled(Preset.DRG_AoE_Geirskogul) &&
-                            CanUseGeirskogul(true, DRG_AoE_GeirskogulHPThreshold))
+                            CanUseGeirskogul(DRG_AoE_GeirskogulHPThreshold))
                             return Geirskogul;
 
                         if (IsEnabled(Preset.DRG_AoE_Wyrmwind) &&
@@ -388,7 +388,7 @@ internal partial class DRG : Melee
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
                 ? OutsideOfMelee(actionID, aoeRanged)
-                : DoBasicCombo(actionID, onAoE: true, includeDisembowel: IsEnabled(Preset.DRG_AoE_Disembowel));
+                : DoBasicCombo(onAoE: true, includeDisembowel: IsEnabled(Preset.DRG_AoE_Disembowel));
         }
     }
 

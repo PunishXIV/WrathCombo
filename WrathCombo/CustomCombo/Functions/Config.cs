@@ -34,6 +34,7 @@ internal class UserFloat : UserData
 
     public float Value
     {
+        get => Configuration.GetCustomFloatValue(ConfigName);
         set => Configuration.SetCustomFloatValue(ConfigName, value);
     }
 

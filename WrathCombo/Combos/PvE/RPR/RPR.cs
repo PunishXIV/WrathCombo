@@ -1,4 +1,3 @@
-using Dalamud.Bindings.ImPlot;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.RPR.Config;
@@ -45,7 +44,7 @@ internal partial class RPR : Melee
                 if (CanGluttonyWeave())
                     return Gluttony;
 
-                if (CanBloodstalkOverflow())
+                if (CanBloodstalkWeave())
                     return OriginalHook(BloodStalk);
 
                 if (UseEnshroudWeaves(out uint weave, false))
@@ -95,7 +94,7 @@ internal partial class RPR : Melee
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
                 ? RangedAttack(actionID, true, true)
-                : DoBasicCombo(actionID);
+                : DoBasicCombo();
         }
     }
 
@@ -129,7 +128,7 @@ internal partial class RPR : Melee
                 if (CanGluttonyWeave())
                     return Gluttony;
 
-                if (CanGrimSwatheOverflow(true))
+                if (CanGrimSwatheWeave(true))
                     return GrimSwathe;
 
                 if (UseEnshroudWeaves(out uint weave, true))
@@ -163,7 +162,7 @@ internal partial class RPR : Melee
             if (CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return DoBasicCombo(actionID, true);
+            return DoBasicCombo(onAoE: true);
         }
     }
 
@@ -212,11 +211,13 @@ internal partial class RPR : Melee
                     return Role.TrueNorth;
 
                 if (IsEnabled(Preset.RPR_ST_Gluttony) &&
-                    CanGluttonyWeave())
+                    CanGluttonyWeave(enshroudEnabled: IsEnabled(Preset.RPR_ST_Enshroud)))
                     return Gluttony;
 
                 if (IsEnabled(Preset.RPR_ST_Bloodstalk) &&
-                    CanBloodstalkOverflow(gluttonyEnabled: IsEnabled(Preset.RPR_ST_Gluttony)))
+                    CanBloodstalkWeave(
+                        IsEnabled(Preset.RPR_ST_Gluttony),
+                        IsEnabled(Preset.RPR_ST_Enshroud)))
                     return OriginalHook(BloodStalk);
 
                 if (UseEnshroudWeaves(out uint weave, false,
@@ -265,7 +266,7 @@ internal partial class RPR : Melee
 
             //Gibbet/Gallows
             if (IsEnabled(Preset.RPR_ST_GibbetGallows) &&
-                CanGibbetGallowsGCD())
+                CanGibbetGallowsGCD(enshroudEnabled: IsEnabled(Preset.RPR_ST_Enshroud)))
             {
                 uint gg = GibbetGallowsAction(positionalChoice,
                     false,
@@ -296,7 +297,7 @@ internal partial class RPR : Melee
                     IsEnabled(Preset.RPR_ST_RangedFiller),
                     RPR_ST_EnhancedHarpe,
                     !RPR_ST_EnhancedHarpe)
-                : DoBasicCombo(actionID);
+                : DoBasicCombo();
         }
     }
 
@@ -328,11 +329,11 @@ internal partial class RPR : Melee
                     return Enshroud;
 
                 if (IsEnabled(Preset.RPR_AoE_Gluttony) &&
-                    CanGluttonyWeave())
+                    CanGluttonyWeave(enshroudEnabled: IsEnabled(Preset.RPR_AoE_Enshroud)))
                     return Gluttony;
 
                 if (IsEnabled(Preset.RPR_AoE_GrimSwathe) &&
-                    CanGrimSwatheOverflow(true))
+                    CanGrimSwatheWeave(true, IsEnabled(Preset.RPR_AoE_Enshroud)))
                     return GrimSwathe;
 
                 if (UseEnshroudWeaves(out uint weave, true,
@@ -372,7 +373,7 @@ internal partial class RPR : Melee
                 return PlentifulHarvest;
 
             if (IsEnabled(Preset.RPR_AoE_Guillotine) &&
-                CanGuillotineGCD())
+                CanGuillotineGCD(enshroudEnabled: IsEnabled(Preset.RPR_AoE_Enshroud)))
                 return OriginalHook(Guillotine);
 
             if (EnshroudComboGCD(true,
@@ -384,7 +385,7 @@ internal partial class RPR : Melee
                 CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return DoBasicCombo(actionID, true);
+            return DoBasicCombo(onAoE: true);
         }
     }
 
@@ -590,8 +591,7 @@ internal partial class RPR : Melee
             if (actionID is not ArcaneCircle)
                 return actionID;
 
-            return HasStatusEffect(Buffs.ImmortalSacrifice) &&
-                   LevelChecked(PlentifulHarvest)
+            return HasImmortalSacrificeStacks && LevelChecked(PlentifulHarvest)
                 ? PlentifulHarvest
                 : actionID;
         }

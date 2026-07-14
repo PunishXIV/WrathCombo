@@ -263,6 +263,12 @@ Set to Zero to disable this check.</value>
   <data name="FocusTarget" xml:space="preserve">
     <value>Focus Target</value>
   </data>
+  <data name="FurthestOOR" xml:space="preserve">
+    <value>Furthest outside of 5y</value>
+  </data>
+  <data name="FurthestOORRetarget" xml:space="preserve">
+    <value>Will {0} at the furthest hostile outside of 5 Yalms.</value>
+  </data>
   <data name="GapcloserUse" xml:space="preserve">
     <value>Use {0} in Opener</value>
   </data>
@@ -345,6 +351,12 @@ Set to Zero to disable this check.</value>
   <data name="MinimumNumberOfEnemies" xml:space="preserve">
     <value>Minimum Number of enemies in range to use. </value>
   </data>
+  <data name="Mouseover" xml:space="preserve">
+    <value>Mouseover</value>
+  </data>
+  <data name="MouseoverRetargetHostile" xml:space="preserve">
+    <value>Will retarget {0} at your mouseover target (if Hostile). Highest Priority.</value>
+  </data>
   <data name="MovementOption" xml:space="preserve">
     <value>Movement Option</value>
   </data>
@@ -356,6 +368,12 @@ Set to Zero to disable this check.</value>
   </data>
   <data name="NoMovement" xml:space="preserve">
     <value>No Movement</value>
+  </data>
+  <data name="NearestOOR" xml:space="preserve">
+    <value>Nearest outside of 5y</value>
+  </data>
+  <data name="NearestOORRetarget" xml:space="preserve">
+    <value>Will {0} at the nearest hostile outside of 5 Yalms.</value>
   </data>
   <data name="NonBossEncountersOnly" xml:space="preserve">
     <value>Non-boss Encounters Only</value>
@@ -378,7 +396,13 @@ Set to Zero to disable this check.</value>
   <data name="NotInBossEncounters" xml:space="preserve">
     <value>Not In Boss Encounters</value>
   </data>
-  <data name="On0" xml:space="preserve">
+  <data name="RangeBasedTargeting" xml:space="preserve">
+    <value>Range Based Targeting</value>
+  </data>
+  <data name="RangeBasedTargetingDesc" xml:space="preserve">
+    <value>Choose to retarget to the nearest of furthest enemy outside of 5y.</value>
+  </data>
+    <data name="On0" xml:space="preserve">
     <value>On {0}</value>
     <comment>Used for simple "On {Action}" strings</comment>
   </data>
@@ -464,6 +488,12 @@ Set to 100 to disable this check.</value>
   </data>
   <data name="ShieldCheckPartyMemberNeedPercent" xml:space="preserve">
     <value>Shield Check: Percentage of Party Members without shields to check for.</value>
+  </data>
+  <data name="SmartTargeting" xml:space="preserve">
+    <value>Smart Targeting</value>
+  </data>
+  <data name="SmartTargetingNotTargetingPlayer" xml:space="preserve">
+    <value>Nearest and Farthest Options will only target enemies not targeting the player.</value>
   </data>
   <data name="SoftTarget" xml:space="preserve">
     <value>Soft Target</value>

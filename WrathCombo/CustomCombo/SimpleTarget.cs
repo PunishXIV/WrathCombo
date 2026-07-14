@@ -347,6 +347,36 @@ internal static class SimpleTarget
             .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsInCombat() && x.IsNotInvincible())
             .OrderBy(x => GetTargetDistance(x))
             .FirstOrDefault();
+    
+    public static IGameObject? NearestEnemyOver5YalmsAway  =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway())
+            .OrderBy(x => GetTargetDistance(x))
+            .FirstOrDefault();
+    
+    public static IGameObject? NearestEnemyOver5YalmsAwayNotTargetingPlayer  =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway() && 
+                        x.TargetObjectId != LocalPlayer?.GameObjectId)
+            .OrderBy(x => GetTargetDistance(x))
+            .FirstOrDefault();
+    
+    public static IGameObject? FurthestEnemyOver5YalmsAway  =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway())
+            .OrderByDescending(x => GetTargetDistance(x))
+            .FirstOrDefault();
+    
+    public static IGameObject? FurthestEnemyOver5YalmsAwayNotTargetingPlayer  =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway() && 
+                        x.TargetObjectId != LocalPlayer?.GameObjectId)
+            .OrderByDescending(x => GetTargetDistance(x))
+            .FirstOrDefault();
 
     public static IGameObject? NearestEnemyToTarget
         (IGameObject? target, float maximumRangeFromPlayer = 35f) =>

@@ -266,6 +266,13 @@ public static class GameObjectExtensions
         /// </summary>
         public bool IsWithinRange(float range = 25) =>
             obj != null && IsInRange(obj, range);
+        
+        /// <summary>
+        ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+        ///     boolean check for if the target is outside of range.
+        /// </summary>
+        public bool IsAtLeastFiveYalmsAway(float range = 5) =>
+            obj != null && !IsInRange(obj, range);
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
@@ -408,6 +415,7 @@ public static class GameObjectExtensions
     /// <param name="id">The GameObjectID to convert.</param>
     /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
     public static IGameObject? GetObject(this ulong id) =>
+        id == 0xE0000000 ? Player.Object :
         GetObjectFrom(id);
 
     /// <summary>

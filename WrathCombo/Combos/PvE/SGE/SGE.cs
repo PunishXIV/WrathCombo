@@ -148,7 +148,7 @@ internal partial class SGE : Healer
 
             //Eukrasia for DoT
             if (hasDotTarget &&
-                IsOffCooldown(Eukrasia) &&
+                ActionReady(Eukrasia) &&
                 !JustUsed(EukrasianDyskrasia) && //AoE DoT can be slow to take affect, doesn't apply to target first before others
                 TraitLevelChecked(Traits.OffensiveMagicMasteryII))
                 return Eukrasia;

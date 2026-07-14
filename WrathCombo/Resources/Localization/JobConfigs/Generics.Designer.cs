@@ -202,18 +202,16 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
                 return ResourceManager.GetString("Align0With1", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Keep {0} aligned with manual use of {1}..
         /// </summary>
-        internal static string Align0WithManual1
-        {
-            get
-            {
+        internal static string Align0WithManual1 {
+            get {
                 return ResourceManager.GetString("Align0WithManual1", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to All Content.
         /// </summary>
@@ -499,6 +497,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Furthest outside of 5y.
+        /// </summary>
+        internal static string FurthestOOR {
+            get {
+                return ResourceManager.GetString("FurthestOOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will {0} at the furthest hostile outside of 5 Yalms..
+        /// </summary>
+        internal static string FurthestOORRetarget {
+            get {
+                return ResourceManager.GetString("FurthestOORRetarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use {0} in Opener.
         /// </summary>
         internal static string GapcloserUse {
@@ -743,6 +759,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mouseover.
+        /// </summary>
+        internal static string Mouseover {
+            get {
+                return ResourceManager.GetString("Mouseover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will retarget {0} at your mouseover target (if Hostile). Highest Priority..
+        /// </summary>
+        internal static string MouseoverRetargetHostile {
+            get {
+                return ResourceManager.GetString("MouseoverRetargetHostile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Movement Option.
         /// </summary>
         internal static string MovementOption {
@@ -766,6 +800,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         internal static string MPLessOrEqual {
             get {
                 return ResourceManager.GetString("MPLessOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nearest outside of 5y.
+        /// </summary>
+        internal static string NearestOOR {
+            get {
+                return ResourceManager.GetString("NearestOOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will {0} at the nearest hostile outside of 5 Yalms..
+        /// </summary>
+        internal static string NearestOORRetarget {
+            get {
+                return ResourceManager.GetString("NearestOORRetarget", resourceCulture);
             }
         }
         
@@ -1009,6 +1061,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Range Based Targeting.
+        /// </summary>
+        internal static string RangeBasedTargeting {
+            get {
+                return ResourceManager.GetString("RangeBasedTargeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose to retarget to the nearest of furthest enemy outside of 5y..
+        /// </summary>
+        internal static string RangeBasedTargetingDesc {
+            get {
+                return ResourceManager.GetString("RangeBasedTargetingDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replace {0} with {1} / {2}..
         /// </summary>
         internal static string Replace0With1Or2 {
@@ -1086,6 +1156,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         internal static string ShieldCheckPartyMemberNeedPercent {
             get {
                 return ResourceManager.GetString("ShieldCheckPartyMemberNeedPercent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smart Targeting.
+        /// </summary>
+        internal static string SmartTargeting {
+            get {
+                return ResourceManager.GetString("SmartTargeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nearest and Farthest Options will only target enemies not targeting the player..
+        /// </summary>
+        internal static string SmartTargetingNotTargetingPlayer {
+            get {
+                return ResourceManager.GetString("SmartTargetingNotTargetingPlayer", resourceCulture);
             }
         }
         

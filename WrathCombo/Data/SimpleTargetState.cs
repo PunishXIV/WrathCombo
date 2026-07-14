@@ -54,8 +54,12 @@ namespace WrathCombo.Data
             {
                 if (o.GameObjectID.GetObject() is IBattleChara t)
                 {
-                    var totalDiff = ActionWatching.PendingHPChanges.Where(x => x.gameObjectId == o.GameObjectID).Sum(x => x.positiveChange ? x.value : -x.value);
-                    o.CurrentHP = Math.Clamp((uint)(t.CurrentHp + totalDiff), 0, t.MaxHp);
+                    int hpDelta = ActionWatching.PendingHPChanges
+                                .Where(x => x.gameObjectId == o.GameObjectID)
+                                .Sum(x => x.positiveChange ? x.value : -x.value);
+
+                    long currentHp = t.CurrentHp;
+                    o.CurrentHP = (uint)Math.Clamp(currentHp + hpDelta, 0L, (long)t.MaxHp);
                 }
             }
         }

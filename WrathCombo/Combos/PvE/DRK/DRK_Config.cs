@@ -1,5 +1,6 @@
 #region
 
+using System.Numerics;
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
@@ -7,6 +8,7 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
 using WrathCombo.Window.Functions;
+using static WrathCombo.Window.Functions.UserConfig;
 using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 using static WrathCombo.Window.Text;
@@ -38,48 +40,48 @@ internal partial class DRK
                 #region Simple
 
                 case Preset.DRK_ST_Simple:
-                    UserConfig.DrawHorizontalRadioButton(DRK_ST_SimpleMitigation,
+                    DrawHorizontalRadioButton(DRK_ST_SimpleMitigation,
                         "Include Mitigations",
                         "Enables the use of mitigations in Simple Mode.",
                         (int)SimpleMitigation.On);
 
-                    UserConfig.DrawHorizontalRadioButton(DRK_ST_SimpleMitigation,
+                    DrawHorizontalRadioButton(DRK_ST_SimpleMitigation,
                         "Exclude Mitigations",
                         "Disables the use of mitigations in Simple Mode.",
                         (int)SimpleMitigation.Off);
                     break;
 
                 case Preset.DRK_AoE_Simple:
-                    UserConfig.DrawHorizontalRadioButton(DRK_AoE_SimpleMitigation,
+                    DrawHorizontalRadioButton(DRK_AoE_SimpleMitigation,
                         "Include Mitigations",
                         "Enables the use of mitigations in Simple Mode.",
                         (int)SimpleMitigation.On);
 
-                    UserConfig.DrawHorizontalRadioButton(DRK_AoE_SimpleMitigation,
+                    DrawHorizontalRadioButton(DRK_AoE_SimpleMitigation,
                         "Exclude Mitigations",
                         "Disables the use of mitigations in Simple Mode.",
                         (int)SimpleMitigation.Off);
                     break;
 
                 case Preset.DRK_ST_Adv:
-                    UserConfig.DrawHorizontalRadioButton(DRK_ST_AdvancedMitigation,
+                    DrawHorizontalRadioButton(DRK_ST_AdvancedMitigation,
                         "Include Mitigations",
                         "Enables the use of advanced mitigations",
                         (int)SimpleMitigation.On);
 
-                    UserConfig.DrawHorizontalRadioButton(DRK_ST_AdvancedMitigation,
+                    DrawHorizontalRadioButton(DRK_ST_AdvancedMitigation,
                         "Exclude Mitigations",
                         "Disables the use of advanced mitigations",
                         (int)SimpleMitigation.Off);
                     break;
 
                 case Preset.DRK_AoE_Adv:
-                    UserConfig.DrawHorizontalRadioButton(DRK_AoE_AdvancedMitigation,
+                    DrawHorizontalRadioButton(DRK_AoE_AdvancedMitigation,
                         "Include Mitigations",
                         "Enables the use of advanced mitigations",
                         (int)SimpleMitigation.On);
 
-                    UserConfig.DrawHorizontalRadioButton(DRK_AoE_AdvancedMitigation,
+                    DrawHorizontalRadioButton(DRK_AoE_AdvancedMitigation,
                         "Exclude Mitigations",
                         "Disables the use of advanced mitigations ",
                         (int)SimpleMitigation.Off);
@@ -91,7 +93,7 @@ internal partial class DRK
 
                 case Preset.DRK_Mitigation_NonBoss:
                     ImGui.Indent();
-                    UserConfig.DrawSliderFloat(0, 100,
+                    DrawSliderFloat(0, 100,
                         DRK_Mit_NonBoss_Threshold,
                         Generics.StopEnemyHpPercent,
                         itemWidth: medium, decimals: 0);
@@ -99,46 +101,46 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_Mitigation_NonBoss_LivingDead:
-                    UserConfig.DrawSliderInt(1, 100,
+                    DrawSliderInt(1, 100,
                         DRK_Mit_NonBoss_LivingDead_Health,
                         startUsingAtDescription,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
                     break;
 
                 case Preset.DRK_Mitigation_Boss_BlackestNight_OnCD:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_Boss_BlackestNight_OnCD_Difficulty,
                         DRK_Boss_Mit_DifficultyListSet,
                         "Select what difficulties TBN should be used on CD:");
-                    UserConfig.DrawSliderInt(1, 100,
+                    DrawSliderInt(1, 100,
                         DRK_Mit_Boss_BlackestNight_Health,
                         Generics.StopFriendlyHpPercent100,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
                     break;
 
                 case Preset.DRK_Mitigation_Boss_BlackestNight_TB:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_Boss_BlackestNight_TankBuster_Difficulty,
                         DRK_Boss_Mit_DifficultyListSet,
                         Generics.SelectWhatKindOfContentThisOptionAppliesTo);
-                    UserConfig.DrawSliderInt(
+                    DrawSliderInt(
                         0, 4, DRK_Mitigation_Boss_BlackestNightDelay, 
                         FormatAndCache(Generics.DelayMit, BlackestNight.ActionName()), sliderIncrement: 1);
                     break;
 
                 case Preset.DRK_Mitigation_Boss_Rampart:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_Boss_Rampart_Difficulty,
                         DRK_Boss_Mit_DifficultyListSet,
                         Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     break;
 
                 case Preset.DRK_Mitigation_Boss_ShadowWall:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_Boss_ShadowWall_Difficulty,
                         DRK_Boss_Mit_DifficultyListSet,
                         Generics.SelectWhatKindOfContentThisOptionAppliesTo);
-                    UserConfig.DrawAdditionalBoolChoice(
+                    DrawAdditionalBoolChoice(
                         DRK_Mit_Boss_ShadowWall_First,
                         "Use ShadowWall/Shadowed Vigil First",
                         "Uses ShadowWall/Shadowed Vigil before Rampart",
@@ -146,17 +148,17 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_Mitigation_Boss_DarkMind:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_Boss_DarkMind_Difficulty,
                         DRK_Boss_Mit_DifficultyListSet,
                         Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     ImGui.Indent();
-                    UserConfig.DrawSliderFloat(1, 100,
+                    DrawSliderFloat(1, 100,
                         DRK_Mit_Boss_DarkMind_Threshold,
                         Generics.StopFriendlyHpPercent100,
                         decimals: 0);
                     ImGui.Unindent();
-                    UserConfig.DrawAdditionalBoolChoice(DRK_Mit_Boss_DarkMind_Align,
+                    DrawAdditionalBoolChoice(DRK_Mit_Boss_DarkMind_Align,
                         "Align Dark Mind",
                         "Tries to align Dark Mind with Rampart for tankbusters.\n" +
                         "(as it is lesser than Shadow Wall/Shadowed Vigil)",
@@ -164,21 +166,21 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_Mitigation_Boss_Oblation:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_Boss_Oblation_TankBuster_Difficulty,
                         DRK_Boss_Mit_DifficultyListSet,
                         Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     break;
 
                 case Preset.DRK_Mitigation_Boss_DarkMissionary:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_Boss_DarkMissionary_Difficulty,
                         DRK_Boss_Mit_DifficultyListSet,
                         Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     break;
 
                 case Preset.DRK_Mitigation_Boss_Reprisal:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_Boss_Reprisal_Difficulty,
                         DRK_Boss_Mit_DifficultyListSet,
                         Generics.SelectWhatKindOfContentThisOptionAppliesTo);
@@ -190,28 +192,28 @@ internal partial class DRK
 
                 case Preset.DRK_ST_BalanceOpener:
                     ImGui.Indent();
-                    UserConfig.DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
+                    DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
                     ImGui.Unindent();
                     ImGui.NewLine();
                     ImGui.Indent();
                     ImGui.Text("Choose the action to pull with:     (hover each for more info)");
                     ImGui.Unindent();
                     ImGui.NewLine();
-                    UserConfig.DrawRadioButton(DRK_ST_OpenerAction,
+                    DrawRadioButton(DRK_ST_OpenerAction,
                         "Unmend (Standard)",
                         "Will use Unmend to pull, if selected.\n" +
                         "Should start at -1.0 seconds.\n\n" +
                         "Recommended by The Balance.",
                         outputValue: (int)PullAction.Unmend,
                         descriptionAsTooltip: true);
-                    UserConfig.DrawRadioButton(DRK_ST_OpenerAction,
+                    DrawRadioButton(DRK_ST_OpenerAction,
                         "Shadowstride",
                         "Will use Shadowstride to pull, if selected.\n" +
                         "Will use an extra Hard Slash before Disesteem.\n" +
                         "Should start at -0.7 seconds.",
                         outputValue: (int)PullAction.Shadowstride,
                         descriptionAsTooltip: true);
-                    UserConfig.DrawRadioButton(DRK_ST_OpenerAction,
+                    DrawRadioButton(DRK_ST_OpenerAction,
                         "Hard Slash (Face or Manual Pulling)",
                         "Will use nothing to pull, if selected, just going straight to Hard Slash.\n" +
                         "Will use an extra Hard Slash before Disesteem.\n" +
@@ -221,11 +223,11 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_ST_CDs:
-                    UserConfig.DrawHorizontalRadioButton(
+                    DrawHorizontalRadioButton(
                         DRK_ST_CDsBossRequirement, Generics.AllEnemies,
                         "Will use Cooldowns regardless of the type of enemy.",
                         outputValue: (int)BossRequirement.Off, itemWidth: 125f);
-                    UserConfig.DrawHorizontalRadioButton(
+                    DrawHorizontalRadioButton(
                         DRK_ST_CDsBossRequirement, "Only Bosses",
                         "Will try to use Cooldowns only when you're in a boss fight.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
@@ -234,10 +236,10 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_ST_CD_Delirium:
-                    UserConfig.DrawSliderInt(0, 25, DRK_ST_DeliriumThreshold,
+                    DrawSliderInt(0, 25, DRK_ST_DeliriumThreshold,
                         Generics.StopEnemyHpPercent,
                         itemWidth: little, sliderIncrement: SliderIncrements.Fives);
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_ST_DeliriumThresholdDifficulty,
                         DRK_ST_DeliriumThresholdDifficultyListSet
                     );
@@ -245,10 +247,10 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_ST_CD_Shadow:
-                    UserConfig.DrawSliderInt(0, 30, DRK_ST_LivingShadowThreshold,
+                    DrawSliderInt(0, 30, DRK_ST_LivingShadowThreshold,
                         Generics.StopEnemyHpPercent,
                         itemWidth: little, sliderIncrement: SliderIncrements.Fives);
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_ST_LivingShadowThresholdDifficulty,
                         DRK_ST_LivingShadowThresholdDifficultyListSet
                     );
@@ -256,17 +258,17 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_ST_Sp_BloodOvercap:
-                    UserConfig.DrawSliderInt(50, 100, DRK_ST_BloodOvercapThreshold,
+                    DrawSliderInt(50, 100, DRK_ST_BloodOvercapThreshold,
                         startUsingAboveDescription,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
                     break;
 
                 case Preset.DRK_ST_Sp_Edge:
-                    UserConfig.DrawSliderInt(0, 3000, DRK_ST_ManaSpenderPooling,
+                    DrawSliderInt(0, 3000, DRK_ST_ManaSpenderPooling,
                         "Mana to always save for TBN (0 = Use All)",
                         itemWidth: biggest,
                         sliderIncrement: SliderIncrements.Thousands);
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_ST_ManaSpenderPoolingDifficulty,
                         DRK_ST_ManaSpenderPoolingDifficultyListSet
                     );
@@ -274,7 +276,7 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_ST_Sp_ManaOvercap:
-                    UserConfig.DrawSliderInt(0, 30, DRK_ST_BurstSoonThreshold,
+                    DrawSliderInt(0, 30, DRK_ST_BurstSoonThreshold,
                         "Seconds before Burst to save (allowing capping)",
                         itemWidth: little, sliderIncrement: SliderIncrements.Fives);
 
@@ -285,10 +287,10 @@ internal partial class DRK
                 #region Adv AoE
 
                 case Preset.DRK_AoE_CD_Delirium:
-                    UserConfig.DrawSliderInt(0, 60, DRK_AoE_DeliriumThreshold,
+                    DrawSliderInt(0, 60, DRK_AoE_DeliriumThreshold,
                         Generics.StopEnemyHpPercent,
                         itemWidth: bigger, sliderIncrement: SliderIncrements.Fives);
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_AoE_DeliriumThresholdDifficulty,
                         DRK_AoE_DeliriumThresholdDifficultyListSet
                     );
@@ -296,10 +298,10 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_AoE_CD_Shadow:
-                    UserConfig.DrawSliderInt(0, 60, DRK_AoE_LivingShadowThreshold,
+                    DrawSliderInt(0, 60, DRK_AoE_LivingShadowThreshold,
                         Generics.StopEnemyHpPercent,
                         itemWidth: bigger, sliderIncrement: SliderIncrements.Fives);
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_AoE_LivingShadowThresholdDifficulty,
                         DRK_AoE_LivingShadowThresholdDifficultyListSet
                     );
@@ -307,28 +309,28 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_AoE_CD_Salt:
-                    UserConfig.DrawSliderInt(0, 60, DRK_AoE_SaltThreshold,
+                    DrawSliderInt(0, 60, DRK_AoE_SaltThreshold,
                         Generics.StopEnemyHpPercent,
                         itemWidth: bigger, sliderIncrement: SliderIncrements.Fives);
 
                     break;
 
                 case Preset.DRK_AoE_CD_Drain:
-                    UserConfig.DrawSliderInt(20, 100, DRK_AoE_DrainThreshold,
+                    DrawSliderInt(20, 100, DRK_AoE_DrainThreshold,
                         Generics.StopFriendlyHpPercent100,
                         itemWidth: bigger, sliderIncrement: SliderIncrements.Fives);
 
                     break;
 
                 case Preset.DRK_AoE_Sp_BloodOvercap:
-                    UserConfig.DrawSliderInt(50, 100, DRK_AoE_BloodOvercapThreshold,
+                    DrawSliderInt(50, 100, DRK_AoE_BloodOvercapThreshold,
                         startUsingAboveDescription,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
 
                     break;
 
                 case Preset.DRK_AoE_Sp_Flood:
-                    UserConfig.DrawSliderInt(0, 3000, DRK_AoE_ManaSpenderPooling,
+                    DrawSliderInt(0, 3000, DRK_AoE_ManaSpenderPooling,
                         "Mana to save for TBN (0 = Use All)",
                         itemWidth: biggest,
                         sliderIncrement: SliderIncrements.Thousands);
@@ -340,38 +342,38 @@ internal partial class DRK
                 #region One-Button Mitigation
 
                 case Preset.DRK_Mit_LivingDead_Max:
-                    UserConfig.DrawDifficultyMultiChoice(
+                    DrawDifficultyMultiChoice(
                         DRK_Mit_EmergencyLivingDead_Difficulty,
                         DRK_Mit_EmergencyLivingDead_DifficultyListSet,
                         "Select what difficulties Emergency Living Dead should be used in:"
                     );
 
-                    UserConfig.DrawSliderInt(1, 100, DRK_Mit_LivingDead_Health,
+                    DrawSliderInt(1, 100, DRK_Mit_LivingDead_Health,
                         startUsingAtDescription,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Ones);
 
                     break;
 
                 case Preset.DRK_Mit_TheBlackestNight:
-                    UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
+                    DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 0,
                         "The Blackest Night Priority:");
 
                     break;
 
                 case Preset.DRK_Mit_Oblation:
-                    UserConfig.DrawSliderInt(0, 1, DRK_Mit_Oblation_Charges,
+                    DrawSliderInt(0, 1, DRK_Mit_Oblation_Charges,
                         Generics.HowManyChargesToKeepReady,
                         itemWidth: little, sliderIncrement: SliderIncrements.Ones);
 
-                    UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
+                    DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 1,
                         "Oblation Priority:");
 
                     break;
 
                 case Preset.DRK_Mit_Reprisal:
-                    UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
+                    DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 2,
                         "Reprisal Priority:");
 
@@ -379,33 +381,33 @@ internal partial class DRK
 
                 case Preset.DRK_Mit_DarkMissionary:
                     ImGui.Indent();
-                    UserConfig.DrawHorizontalRadioButton(
+                    DrawHorizontalRadioButton(
                         DRK_Mit_DarkMissionary_PartyRequirement,
                         "Require party",
                         "Will not use Dark Missionary unless there are 2 or more party members.",
                         outputValue: (int)PartyRequirement.Yes, itemWidth: medium);
-                    UserConfig.DrawHorizontalRadioButton(
+                    DrawHorizontalRadioButton(
                         DRK_Mit_DarkMissionary_PartyRequirement,
                         "Use Always",
                         "Will not require a party for Dark Missionary.",
                         outputValue: (int)PartyRequirement.No, itemWidth: medium);
                     ImGui.Unindent();
 
-                    UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
+                    DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 3,
                         "Dark Missionary Priority:");
 
                     break;
 
                 case Preset.DRK_Mit_Rampart:
-                    UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
+                    DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 4,
                         "Rampart Priority:");
 
                     break;
 
                 case Preset.DRK_Mit_DarkMind:
-                    UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
+                    DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 5,
                         "Dark Mind Priority:");
 
@@ -413,32 +415,32 @@ internal partial class DRK
 
                 case Preset.DRK_Mit_ArmsLength:
                     ImGui.Indent();
-                    UserConfig.DrawHorizontalRadioButton(
+                    DrawHorizontalRadioButton(
                         DRK_Mit_ArmsLength_Boss, Generics.AllEnemies,
                         "Will use Arm's Length regardless of the type of enemy.",
                         outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
-                    UserConfig.DrawHorizontalRadioButton(
+                    DrawHorizontalRadioButton(
                         DRK_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
                         outputValue: (int)BossAvoidance.On, itemWidth: 125f);
                     ImGui.Unindent();
 
-                    UserConfig.DrawSliderInt(0, 5, DRK_Mit_ArmsLength_EnemyCount,
+                    DrawSliderInt(0, 5, DRK_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)",
                         itemWidth: little, sliderIncrement: SliderIncrements.Ones);
 
-                    UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
+                    DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 6,
                         "Arm's Length Priority:");
 
                     break;
 
                 case Preset.DRK_Mit_ShadowWall:
-                    UserConfig.DrawSliderInt(1, 100, DRK_Mit_ShadowWall_Health,
+                    DrawSliderInt(1, 100, DRK_Mit_ShadowWall_Health,
                         Generics.StopFriendlyHpPercent100,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Ones);
 
-                    UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
+                    DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 7,
                         "Shadow Wall / Vigil Priority:");
 
@@ -467,10 +469,33 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_Retarget_Oblation_DoubleProtection:
-                    UserConfig.DrawSliderInt(0, 5, DRK_RetargetOblationDuration,
+                    DrawSliderInt(0, 5, DRK_RetargetOblationDuration,
                         "Time Remaining on Oblation to allow within\n(0 = Oblation must not be on the target)");
                     break;
-
+                
+                case Preset.DRK_Retarget_Unmend:
+                    DrawAdditionalBoolChoice(DRK_Retarget_Unmend_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, Unmend.ActionName()));
+                    DrawAdditionalBoolChoice(DRK_Retarget_Unmend_RangeBasedTargeting, Generics.RangeBasedTargeting, Generics.RangeBasedTargetingDesc);
+                    if (DRK_Retarget_Unmend_RangeBasedTargeting)
+                    {
+                        ImGui.Indent();
+                        ImGui.NewLine();
+                        DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
+                            Generics.FurthestOOR, 
+                            FormatAndCache(Generics.FurthestOORRetarget, Unmend.ActionName()), 0, 
+                            descriptionColor:ImGuiColors.DalamudWhite);
+                        DrawHorizontalRadioButton(DRK_Retarget_Unmend_SmartTargeting,
+                            Generics.NearestOOR, 
+                            FormatAndCache(Generics.NearestOORRetarget, Unmend.ActionName()), 1, 
+                            descriptionColor:ImGuiColors.DalamudWhite);
+                        ImGuiEx.Spacing(new Vector2(0, 5));
+                        ImGui.Unindent();
+                        
+                        ImGui.Indent(10f.Scale());
+                        DrawAdditionalBoolChoice(DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer, Generics.SmartTargeting, Generics.SmartTargetingNotTargetingPlayer);
+                        ImGui.Unindent();
+                    }
+                    break;
                     #endregion
             }
         }
@@ -985,7 +1010,13 @@ internal partial class DRK
         #region Standalones
 
         public static readonly UserInt
-            DRK_RetargetOblationDuration = new("DRK_RetargetOblationDuration");
+            DRK_RetargetOblationDuration = new("DRK_RetargetOblationDuration"),
+            DRK_Retarget_Unmend_SmartTargeting = new("DRK_Retarget_Unmend_SmartTargeting");
+        
+        public static readonly UserBool
+            DRK_Retarget_Unmend_FieldMO = new("DRK_Retarget_Unmend_FieldMO"),
+            DRK_Retarget_Unmend_RangeBasedTargeting = new("DRK_Retarget_Unmend_RangeBasedTargeting"),
+            DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer  = new("DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer");
 
         #endregion
 
