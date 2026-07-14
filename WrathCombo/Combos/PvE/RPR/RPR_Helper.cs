@@ -21,33 +21,36 @@ internal partial class RPR
             CanApplyStatus(CurrentTarget, Debuffs.DeathsDesign) &&
             !JustUsed(ShadowOfDeath) && InActionRange(ShadowOfDeath))
         {
+            float ddRemaining = GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget);
+            bool deathsDesignMissing = !HasStatusEffect(Debuffs.DeathsDesign, CurrentTarget);
+
             if (trashOnly && !InBossEncounter() &&
                 !HasStatusEffect(Buffs.Enshrouded) &&
-                GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
+                ddRemaining <= dotRefresh)
                 return true;
 
             if (!trashOnly || InBossEncounter() || !arcaneCircleEnabled)
             {
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
                     UsesBurstAlignment && (AcCD.InRange(58f, 62f) || AcCD.InRange(28f, 32f)) &&
-                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32)
+                    ddRemaining < 32)
                     return true;
 
                 //Double enshroud
                 if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                    AcCD <= GCD && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 32 &&
+                    AcCD <= GCD && ddRemaining < 32 &&
                     (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
                 //lvl 88+ general use
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
-                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh &&
-                    (AcCD > GCD * 8 || IsOffCooldown(ArcaneCircle)))
+                    ddRemaining <= dotRefresh &&
+                    (deathsDesignMissing || AcCD > GCD * 8 || IsOffCooldown(ArcaneCircle)))
                     return true;
 
                 //below lvl 88 use
                 if (!LevelChecked(PlentifulHarvest) &&
-                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
+                    ddRemaining <= dotRefresh)
                     return true;
             }
         }
@@ -184,9 +187,9 @@ internal partial class RPR
         ActionReady(ArcaneCircle) && GetTargetHPPercent() > hpThreshold &&
         (onAoE || LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) || !LevelChecked(Enshroud));
 
-    private static bool CanGluttonyWeave(bool enshroudEnabled = true) =>
-        CanBurstGluttonyWeave(enshroudEnabled) ||
-        !IsShroudOvercapping(enshroudEnabled) &&
+    private static bool CanGluttonyWeave(bool enshroudEnabled = true, bool onAoE = false) =>
+        CanBurstGluttonyWeave(enshroudEnabled, onAoE) ||
+        !IsShroudOvercapping(enshroudEnabled, onAoE) &&
         ActionReady(Gluttony) && InNormalRotation && !IsComboExpiring(3) &&
         !(InPostBurstSequence && Soul < 50);
 
@@ -296,18 +299,52 @@ internal partial class RPR
         IsPerfectioReady && ShouldSpendPerfectioNow() && InActionRange(PerfectioAction);
 
     private static bool InPostBurstSequence =>
-        JustUsed(Perfectio, GCD * 8) ||
-        JustUsed(OriginalHook(Communio), GCD * 2) && !IsPerfectioReady && !HasStatusEffect(Buffs.Enshrouded);
+        JustUsed(Perfectio, GCD * 8);
 
     private static bool HasBurstComboContinue() =>
         InPostBurstSequence &&
         !IsComboExpiring(2) &&
         ComboTimer > 0;
 
-    private static bool CanBurstGluttonyWeave(bool enshroudEnabled = true) =>
+    private static bool JustUsedBasicComboStep(bool onAoE) =>
+        onAoE
+            ? JustUsed(OriginalHook(SpinningScythe), GCD) || JustUsed(OriginalHook(NightmareScythe), GCD)
+            : JustUsed(OriginalHook(Slice), GCD) || JustUsed(OriginalHook(WaxingSlice), GCD) ||
+              JustUsed(OriginalHook(InfernalSlice), GCD);
+
+    private static bool ShouldSpendSoulSliceBeforeGluttony(bool onAoE) =>
+        InPostBurstSequence &&
+        Soul < 50 &&
+        (onAoE
+            ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
+            : ActionReady(SoulSlice) && InActionRange(SoulSlice));
+
+    private static bool ShouldUseSoulSliceOverCombo(bool onAoE)
+    {
+        uint soulSlice = onAoE ? SoulScythe : SoulSlice;
+
+        if (!InPostBurstSequence || JustUsed(soulSlice, GCD))
+            return false;
+
+        if (OvercapSoulSliceProtection(onAoE))
+            return true;
+
+        if (Soul > 50)
+            return false;
+
+        if (onAoE
+            ? !ActionReady(SoulScythe) || !InActionRange(SoulScythe)
+            : !ActionReady(SoulSlice) || !InActionRange(SoulSlice) || IsComboExpiring(2))
+            return false;
+
+        return !HasBurstComboContinue() || JustUsedBasicComboStep(onAoE);
+    }
+
+    private static bool CanBurstGluttonyWeave(bool enshroudEnabled = true, bool onAoE = false) =>
         !IsShroudOvercapping(enshroudEnabled) &&
         InPostBurstSequence && Soul >= 50 && ActionReady(Gluttony) &&
-        !HasBurstComboContinue();
+        !HasBurstComboContinue() &&
+        !ShouldSpendSoulSliceBeforeGluttony(onAoE);
 
     private static bool OvercapSoulSliceProtection(bool onAoE)
     {
@@ -327,7 +364,6 @@ internal partial class RPR
 
     private static bool CanBurstSoulSliceScythe(bool onAoE = false) =>
         InPostBurstSequence &&
-        !HasBurstComboContinue() &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCD) &&
         (Soul <= 50 || OvercapSoulSliceProtection(onAoE)) &&
         (onAoE
@@ -346,6 +382,9 @@ internal partial class RPR
         if (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner) ||
             HasStatusEffect(Buffs.ImmortalSacrifice))
             return 0;
+
+        if (soulSliceEnabled && CanBurstSoulSliceScythe(onAoE) && ShouldUseSoulSliceOverCombo(onAoE))
+            return onAoE ? SoulScythe : SoulSlice;
 
         if (HasBurstComboContinue())
             return ContinueBasicCombo(onAoE);
