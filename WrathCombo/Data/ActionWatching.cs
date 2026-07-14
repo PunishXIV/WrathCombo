@@ -435,9 +435,6 @@ public static class ActionWatching
                 UpdateLastUsedAction(actionId, actionType, targetObjectId, Math.Max(castTime - 480, 0)),
                 TimeSpan.FromMilliseconds(Math.Max(castTime - 480, 0)), cancellationToken: token);
 
-                // Update Helpers
-                NIN.InMudra = NIN.MudraSigns.Contains(actionId);
-
                 if (castTime > 0)
                 {
                     TimeLastActionUsed = DateTime.Now;
@@ -544,6 +541,16 @@ public static class ActionWatching
             }
             if (actionType is ActionType.Action)
             {
+
+                if (actionManager->QueuedActionId > 0 && NIN.InMudra && !NIN.MudraSigns.Any(x => x == actionManager->QueuedActionId) && !NIN.NormalJutsus.Any(x => x == actionManager->QueuedActionId))
+                {
+#if DEBUG
+                    DuoLog.Debug($"Blocked NIN flub");
+#endif
+                    actionManager->QueuedActionId = 0;
+                    return false;
+                }
+
                 var disablingReplacingTemp = (mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding) && actionId < All.SingleTargetDPS;
                 if (disablingReplacingTemp) // This is so we can remove queue suppression
                     Service.ActionReplacer.DisableActionReplacingIfRequired(); // It gets re-enabled at the end of sending. 
@@ -555,7 +562,9 @@ public static class ActionWatching
                 var changed = CheckForChangedTarget(original, ref changedTargetId,
                     out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
 
-                if ((!Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) && actionId >= All.SingleTargetDPS) || (Service.ActionReplacer.LastActionInvokeFor.TryGetValue(actionId, out var p) && p >= All.SingleTargetDPS))
+                replacedWith = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
+
+                if (replacedWith >= All.SingleTargetDPS)
                 {
                     Svc.Toasts.ShowError("This is a custom action, it does nothing on its own.");
                     return false;
@@ -600,7 +609,6 @@ public static class ActionWatching
                 if ((areaTargeted && changed) || AutoRotationController.WouldLikeToGroundTarget)
                 {
                     var location = Player.Position;
-                    replacedWith = Service.ActionReplacer.LastActionInvokeFor.TryGetValue(actionId, out var replacedGT) ? replacedGT : replacedWith;
 
                     if (IsOverGround(targetObject) &&
                         Vector3.Distance(Player.Position, targetObject.Position) <= replacedWith.ActionRange()) // not GetTargetDistance or something, as hitboxes should not count here
@@ -637,7 +645,7 @@ public static class ActionWatching
 
                 Svc.Log.Verbose($"[QueuedTargetUpdate] A:{actionManager->QueuedActionId.ActionName()} Q:{Svc.Objects.SearchById(actionManager->QueuedTargetId)?.Name} T:{Svc.Objects.SearchById(targetId)?.Name} M:{mode} W:{willQueue}");
 
-                Svc.Log.Verbose($"[FinalUse] Target changed is {changed}. Using {replacedWith.ActionName()} on {(changed ? targetId.GetObject()?.Name : originalTargetId.GetObject()?.Name)}");
+                Svc.Log.Verbose($"[FinalUse] Target changed is {changed}. Using {actionId.ActionName()} ({actionId}) -> {replacedWith.ActionName()} ({replacedWith}) on {(changed ? targetId.GetObject()?.Name : originalTargetId.GetObject()?.Name)} ({(changed? targetId : originalTargetId):X})");
                 var hookResult = changed ? UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted) :
                     UseActionHook.Original(actionManager, actionType, actionId, originalTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 

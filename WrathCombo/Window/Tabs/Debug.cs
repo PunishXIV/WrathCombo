@@ -365,7 +365,7 @@ internal class Debug : ConfigWindow, IDisposable
 
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 
-            CustomStyleText("Job Gauge Data", string.Empty);
+            CustomStyleText("Job Specific Data", string.Empty);
             ImGui.Separator();
             switch (Player.Job)
             {
@@ -397,6 +397,12 @@ internal class Debug : ConfigWindow, IDisposable
                     Util.ShowStruct(&JobGaugeManager.Instance()->Scholar);
                     break;
                 case Job.NIN:
+                    CustomStyleText($"First Mudra:", $"{NIN.FirstMudra}");
+                    CustomStyleText($"Second Mudra:", $"{NIN.SecondMudra}");
+                    CustomStyleText($"Third Mudra:", $"{NIN.ThirdMudra}");
+                    CustomStyleText($"JutsuFromFlag:", $"{NIN.JutsuFromFlags.ActionName()}");
+                    CustomStyleText($"LastUsedMudra:", $"{NIN.LastMudra.ActionName()}");
+                    CustomStyleText($"UnusedJutsus:", $"{string.Join(", ", NIN.UnusedJutsus.Select(x => x.ActionName()))}");
                     Util.ShowStruct(&JobGaugeManager.Instance()->Ninja);
                     break;
                 case Job.MCH:
@@ -433,8 +439,6 @@ internal class Debug : ConfigWindow, IDisposable
                     Util.ShowStruct(&JobGaugeManager.Instance()->Pictomancer);
                     break;
             }
-
-            Util.ShowObject(player.Struct()->CastInfo);
 
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 
