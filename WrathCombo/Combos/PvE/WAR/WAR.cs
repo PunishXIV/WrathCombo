@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using System;
+using ECommons;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -403,6 +404,42 @@ internal partial class WAR
         protected internal override Preset Preset => Preset.WAR_RetargetHolmgang;
 
         protected override uint Invoke(uint actionID) => actionID != Holmgang ? actionID : actionID.Retarget(SimpleTarget.Self);
+    }
+    #endregion
+    
+    #region Tomahawk Retargeting
+    internal class WAR_RetargetTomahawk : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.WAR_RetargetTomahawk;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Tomahawk)
+                return actionID;
+            
+            IGameObject? target =
+                //Mouseover Retarget
+                (WAR_RetargetTomahawk_FieldMO 
+                    ? SimpleTarget.Stack.MouseOver.IfHostile().IfWithinRange(Tomahawk.ActionRange())
+                    : null) ??
+    
+                (WAR_RetargetTomahawk_SmartTargeting == 0 && WAR_RetargetTomahawk_RangeBasedTargeting
+                    ? WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer
+                        ? SimpleTarget.FurthestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(Tomahawk.ActionRange())
+                        : SimpleTarget.FurthestEnemyOver5YalmsAway.IfWithinRange(Tomahawk.ActionRange())
+                    : null) ??
+
+                (WAR_RetargetTomahawk_SmartTargeting == 1 && WAR_RetargetTomahawk_RangeBasedTargeting
+                    ? WAR_RetargetTomahawk_SmartTargeting_NotTargetingPlayer
+                        ? SimpleTarget.NearestEnemyOver5YalmsAwayNotTargetingPlayer.IfWithinRange(Tomahawk.ActionRange())
+                        : SimpleTarget.NearestEnemyOver5YalmsAway.IfWithinRange(Tomahawk.ActionRange())
+                    : null);
+                    
+            
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
+        }
     }
     #endregion
 

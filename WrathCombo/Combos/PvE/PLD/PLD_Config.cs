@@ -1,3 +1,4 @@
+using System.Numerics;
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
 using FFXIVClientStructs.FFXIV.Client.System.Input.SoftKeyboards;
@@ -217,6 +218,36 @@ internal partial class PLD
                 #endregion
 
                 #region Standalones
+                case Preset.PLD_ShieldLob_Feature:
+                    DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_HolySpirit, "Smart Holy Spirit", 
+                        "Replaces Shield Lob with Holy Spirit when available. " +
+                        "\nMust be under the effect of Divine Might or not moving." +
+                        "\nRetargeting features will also apply to Holy Spirit.");
+                    DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_FieldMO, Generics.Mouseover, FormatAndCache(Generics.MouseoverRetargetHostile, ShieldLob.ActionName()));
+                    
+                    DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_RangeBasedTargeting, Generics.RangeBasedTargeting, Generics.RangeBasedTargetingDesc);
+                    
+                    if (PLD_ShieldLob_Feature_RangeBasedTargeting)
+                    {
+                        ImGui.Indent();
+                        ImGui.NewLine();
+                        DrawHorizontalRadioButton(PLD_ShieldLob_Feature_SmartTargeting,
+                            Generics.FurthestOOR, 
+                            FormatAndCache(Generics.FurthestOORRetarget, ShieldLob.ActionName()), 0, 
+                            descriptionColor:ImGuiColors.DalamudWhite);
+                        DrawHorizontalRadioButton(PLD_ShieldLob_Feature_SmartTargeting,
+                            Generics.NearestOOR, 
+                            FormatAndCache(Generics.NearestOORRetarget, ShieldLob.ActionName()), 1, 
+                            descriptionColor:ImGuiColors.DalamudWhite);
+                        ImGuiEx.Spacing(new Vector2(0, 5));
+                        ImGui.Unindent();
+                        
+                        ImGui.Indent(10f.Scale());
+                        DrawAdditionalBoolChoice(PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer, Generics.SmartTargeting, Generics.SmartTargetingNotTargetingPlayer);
+                        ImGui.Unindent();
+                    }
+                    
+                    break;
 
                 case Preset.PLD_Requiescat_Options:
                     DrawHorizontalRadioButton(PLD_Requiescat_SubOption, FormatAndCache(Generics.DontUse0, FightOrFlight.ActionName()), "", 0);
@@ -358,6 +389,7 @@ internal partial class PLD
             PLD_RetargetClemency_Health = new("PLD_RetargetClemency_Health", 30),
             PLD_RetargetShieldBash_Strength = new("PLD_RetargetShieldBash_Strength", 3),
             PLD_RetargetCover_Health = new("PLD_RetargetCover_Health", 30),
+            PLD_ShieldLob_Feature_SmartTargeting =  new("PLD_ShieldLob_Feature_SmartTargeting"),
 
             //One-Button Mitigation
             PLD_Mit_HallowedGround_Max_Health = new("PLD_Mit_HallowedGround_Max_Health", 20),
@@ -373,19 +405,24 @@ internal partial class PLD
             PLD_AoE_InterveneTimeStill = new("PLD_AoE_InterveneTimeStill", 2.5f);
 
         public static UserBool
-            PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling = new ("PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling"),
-            PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling = new ("PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling"),
-            PLD_ST_AdvancedMode_Intervene_ManualPooling = new ("PLD_ST_AdvancedMode_Intervene_ManualPooling"),
-            PLD_AoE_AdvancedMode_CircleOfScorn_ManualPooling = new ("PLD_AoE_AdvancedMode_CircleOfScorn_ManualPooling"),
-            PLD_AoE_AdvancedMode_SpiritsWithin_ManualPooling = new ("PLD_AoE_AdvancedMode_SpiritsWithin_ManualPooling"),
-            PLD_AoE_AdvancedMode_Intervene_ManualPooling = new ("PLD_AoE_AdvancedMode_Intervene_ManualPooling"),
+            PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling = new("PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling"),
+            PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling = new("PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling"),
+            PLD_ST_AdvancedMode_Intervene_ManualPooling = new("PLD_ST_AdvancedMode_Intervene_ManualPooling"),
+            PLD_AoE_AdvancedMode_CircleOfScorn_ManualPooling = new("PLD_AoE_AdvancedMode_CircleOfScorn_ManualPooling"),
+            PLD_AoE_AdvancedMode_SpiritsWithin_ManualPooling = new("PLD_AoE_AdvancedMode_SpiritsWithin_ManualPooling"),
+            PLD_AoE_AdvancedMode_Intervene_ManualPooling = new("PLD_AoE_AdvancedMode_Intervene_ManualPooling"),
             PLD_RetargetStunLockout = new("PLD_RetargetStunLockout"),
             PLD_Mitigation_Boss_Bulwark_Align = new("PLD_Mitigation_Boss_Bulwark_Align"),
             PLD_Mitigation_Boss_Sentinel_First = new("PLD_Mitigation_Boss_Sentinel_First"),
             PLD_HolySpirit_Standalone = new("PLD_HolySpirit_Standalone"),
             PLD_HolyCircle_Standalone = new("PLD_HolyCircle_Standalone"),
             PLD_SpiritsWithin_SubOption = new("PLD_SpiritsWithin_SubOption"),
-            PLD_Requiescat_SubOption_GoringBlade = new("PLD_Requiescat_SubOption_GoringBlade");
+            PLD_Requiescat_SubOption_GoringBlade = new("PLD_Requiescat_SubOption_GoringBlade"),
+            PLD_ShieldLob_Feature_FieldMO = new("PLD_ShieldLob_Feature_FieldMO"),
+            PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer = new("PLD_ShieldLob_Feature_SmartTargeting_NotTargetingPlayer"),
+            PLD_ShieldLob_Feature_RangeBasedTargeting =  new("PLD_ShieldLob_Feature_RangeBasedTargeting"),
+            PLD_ShieldLob_Feature_HolySpirit = new("PLD_ShieldLob_Feature_HolySpirit");
+            
 
         public static UserIntArray
             PLD_Mit_Priorities = new("PLD_Mit_Priorities");
