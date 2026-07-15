@@ -471,7 +471,7 @@ public static class ActionWatching
 
     private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, ActionType actionType, uint actionID)
     {
-        if (NIN.InMudra && LastAction == actionID) return false;
+        if (NIN.InMudra && (LastAction == actionID || LastAction == NIN.MudraToBase(actionID))) return false;
 
         float threshold = Service.Configuration.QueueAdjust ? Service.Configuration.QueueAdjustThreshold : 0.5f;
 
@@ -547,9 +547,6 @@ public static class ActionWatching
                 var queuedAct = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionManager->QueuedActionId) ? Service.ActionReplacer.LastActionInvokeFor[actionManager->QueuedActionId] : actionManager->QueuedActionId;
                 if ((queuedAct > 0 && NIN.InMudra && ((queuedAct != NIN.Ninjutsu && !NIN.MudraSigns.Any(x => x == queuedAct) && !NIN.NormalJutsus.Any(x => x == queuedAct)) || queuedAct == LastAction)) || NIN.MudraUsed(actionId))
                 {
-#if DEBUG
-                    DuoLog.Debug($"Blocked NIN flub. Queued = Last? {queuedAct == LastAction}");
-#endif
                     actionManager->QueuedActionId = 0;
                     return false;
                 }

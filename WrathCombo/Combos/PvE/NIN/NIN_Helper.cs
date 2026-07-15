@@ -165,7 +165,13 @@ internal partial class NIN
 
     internal static bool MudraUsed(uint actionId)
     {
-        // Map combo actions to their base mudra and check if that mudra has already been used
+        var baseMudra = MudraToBase(actionId);
+
+        return baseMudra != 0 && !UnusedJutsus.Contains(baseMudra);
+    }
+
+    internal static uint MudraToBase(uint actionId)
+    {
         uint baseMudra = actionId switch
         {
             Ten or TenCombo => Ten,
@@ -174,9 +180,8 @@ internal partial class NIN
             _ => 0u
         };
 
-        return baseMudra != 0 && !UnusedJutsus.Contains(baseMudra);
+        return baseMudra == 0 ? actionId : baseMudra;
     }
-
     internal static bool Rabbitting => GetStatusEffect(Buffs.Mudra)?.Param == 255;
     internal static bool MudraPhase => WasLastAction(Ten) || WasLastAction(Chi) || WasLastAction(Jin) || WasLastAction(TenCombo) || WasLastAction(ChiCombo) || WasLastAction(JinCombo);
     internal static uint MudraCharges => GetRemainingCharges(Ten);
