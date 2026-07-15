@@ -180,7 +180,7 @@ internal partial class NIN
             _ => 0u
         };
 
-        return baseMudra == 0 ? actionId : baseMudra;
+        return baseMudra;
     }
     internal static bool Rabbitting => GetStatusEffect(Buffs.Mudra)?.Param == 255;
     internal static bool MudraPhase => WasLastAction(Ten) || WasLastAction(Chi) || WasLastAction(Jin) || WasLastAction(TenCombo) || WasLastAction(ChiCombo) || WasLastAction(JinCombo);

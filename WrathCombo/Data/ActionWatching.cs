@@ -471,7 +471,7 @@ public static class ActionWatching
 
     private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, ActionType actionType, uint actionID)
     {
-        if (NIN.InMudra && (LastAction == actionID || LastAction == NIN.MudraToBase(actionID))) return false;
+        //if (NIN.InMudra && NIN.MudraSigns.Any(x => x == actionID) && NIN.MudraToBase(LastAction) == NIN.MudraToBase(actionID)) return false;
 
         float threshold = Service.Configuration.QueueAdjust ? Service.Configuration.QueueAdjustThreshold : 0.5f;
 
@@ -544,8 +544,19 @@ public static class ActionWatching
             }
             if (actionType is ActionType.Action)
             {
+                var replacedWith = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
                 var queuedAct = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionManager->QueuedActionId) ? Service.ActionReplacer.LastActionInvokeFor[actionManager->QueuedActionId] : actionManager->QueuedActionId;
-                if ((queuedAct > 0 && NIN.InMudra && ((queuedAct != NIN.Ninjutsu && !NIN.MudraSigns.Any(x => x == queuedAct) && !NIN.NormalJutsus.Any(x => x == queuedAct)) || queuedAct == LastAction)) || NIN.MudraUsed(actionId))
+
+                // If the replaced action is a mudra and we're already in a mudra sequence
+                // where the base mudra matches, ignore the input.
+                if (NIN.MudraSigns.Contains(replacedWith) && NIN.InMudra && NIN.MudraToBase(LastAction) == NIN.MudraToBase(replacedWith))
+                    return false;
+
+
+                // Determine if the queued action conflicts with the current mudra state.
+                var queuedProblem = (queuedAct > 0 && queuedAct != NIN.Ninjutsu && !NIN.MudraSigns.Contains(queuedAct) && !NIN.NormalJutsus.Contains(queuedAct)) || queuedAct == LastAction;
+
+                if (NIN.InMudra && (queuedProblem || NIN.MudraUsed(replacedWith)))
                 {
                     actionManager->QueuedActionId = 0;
                     return false;
@@ -560,9 +571,7 @@ public static class ActionWatching
                 var changedTargetId = targetId; //This will get modified and used elsewhere
 
                 var changed = CheckForChangedTarget(original, ref changedTargetId,
-                    out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
-
-                replacedWith = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
+                    out var _); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
 
                 if (replacedWith >= All.SingleTargetDPS)
                 {
