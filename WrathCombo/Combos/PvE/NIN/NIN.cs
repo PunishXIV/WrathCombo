@@ -27,10 +27,10 @@ internal partial class NIN : Melee
             if (BlockDueToLag)
                 return All.SavageBlade;
 
-            if (InMudra && MudraState.ContinueCurrentMudra(ref actionID))
+            if (STTenChiJin(ref actionID))
                 return actionID;
 
-            if (STTenChiJin(ref actionID))
+            if (InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
 
             #region Special Content
@@ -264,11 +264,11 @@ internal partial class NIN : Melee
             if (BlockDueToLag)
                 return All.SavageBlade;
 
-            if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
-                return actionID;
-
             if (NIN_ST_AdvancedMode_TenChiJin_Auto &&
                 STTenChiJin(ref actionID))
+                return actionID;
+
+            if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
 
             #region Special Content
