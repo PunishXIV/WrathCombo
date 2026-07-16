@@ -136,8 +136,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
     public static void UpdateCaches
         (bool onJobChange, bool onTerritoryChange, bool firstRun)
     {
-        WrathOpener.CurrentOpener?.CacheReady = false;
-        WrathOpener.CurrentOpener?.ResetOpener(); //Clears opener values, just in case
         ActionRequestIPCProvider.ResetAllBlacklist();
         ActionRequestIPCProvider.ResetAllRequests();
         CustomComboFunctions.CleanupExpiredLineOfSightCache();
@@ -152,6 +150,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
                 PvEFeatures.OpenToCurrentJob(true);
             if (onJobChange || firstRun)
             {
+                WrathOpener.CurrentOpener?.CacheReady = false;
+                WrathOpener.CurrentOpener?.ResetOpener(); //Clears opener values, just in case
                 WrathOpener.SelectOpener();
                 Service.ActionReplacer.UpdateFilteredCombos();
                 Svc.Framework.RunOnTick(Provider.BuildCachesAction());
