@@ -371,7 +371,8 @@ internal partial class VPR
             return false;
         }
 
-        if (requireMelee && !InMeleeRange())
+        if (requireMelee && !InMeleeRange() &&
+            !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.SwiftskinsVenom))
             return false;
 
         if (HasStatusEffect(Buffs.HuntersVenom))
@@ -427,7 +428,9 @@ internal partial class VPR
         if (!ActionReady(UncoiledFury) || !InActionRange(UncoiledFury))
             return false;
 
-        if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget())
+        // Ranged coil spend — don't steal mid Vicewinder / Reawaken follow-ups
+        if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget() &&
+            !InTwinbladeCombo && !HasStatusEffect(Buffs.Reawakened))
             return true;
 
         if (!CanUseUncoiledFuryInRotation(onAoE))
@@ -509,8 +512,10 @@ internal partial class VPR
 
     private static bool CanVicewinderCombo(ref uint actionId, bool vicewinderBuffPrio = false)
     {
+        // No range check — mid-combo must still surface Coil follow-ups when briefly OOR
+        // (boss gap / disengage). Starting Vicewinder stays gated in CanUseVicewinder.
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
-            LevelChecked(Vicewinder) && InActionRange(Vicewinder) &&
+            LevelChecked(Vicewinder) &&
             !HasStatusEffect(Buffs.Reawakened))
         {
             if (UsedVicewinder &&
