@@ -13,7 +13,7 @@ internal partial class RPR
 {
     #region SoD
 
-    private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool trashOnly = true, bool arcaneCircleEnabled = true)
+   private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool trashOnly = true, bool arcaneCircleEnabled = true)
     {
         if (LevelChecked(ShadowOfDeath) && !HasStatusEffect(Buffs.SoulReaver) &&
             !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.PerfectioParata) &&
@@ -31,9 +31,10 @@ internal partial class RPR
 
             if (!trashOnly || InBossEncounter() || !arcaneCircleEnabled)
             {
+                //Pre-burst
                 if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
-                    UsesBurstAlignment && (AcCD.InRange(58f, 62f) || AcCD.InRange(28f, 32f)) &&
-                    ddRemaining < 32)
+                    UsesBurstAlignment && AcCD <= 9f + GCD * 2 &&
+                    ddRemaining < 30)
                     return true;
 
                 //Double enshroud
@@ -57,6 +58,7 @@ internal partial class RPR
 
         return false;
     }
+
 
     #endregion
 
