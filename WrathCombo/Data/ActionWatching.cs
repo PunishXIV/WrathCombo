@@ -534,14 +534,16 @@ public static class ActionWatching
     {
         try
         {
-            if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == actionId, out var customAct))
-            {
-                if (customAct.OnClick != null)
-                    customAct.OnClick();
-
-            }
             if (actionType is ActionType.Action)
             {
+                if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == actionManager->GetAdjustedActionId(actionId), out var customAct))
+                {
+                    if (customAct.OnClick != null)
+                    {
+                        customAct.OnClick();
+                        return false;
+                    }
+                }
 
                 if (actionManager->QueuedActionId > 0 && NIN.InMudra && !NIN.MudraSigns.Any(x => x == actionManager->QueuedActionId) && !NIN.NormalJutsus.Any(x => x == actionManager->QueuedActionId))
                 {
