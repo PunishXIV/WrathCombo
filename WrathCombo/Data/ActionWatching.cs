@@ -66,7 +66,7 @@ public static class ActionWatching
     private readonly static Hook<ActionManager.Delegates.UseAction>? UseActionHook;
     private readonly static Hook<ActionManager.Delegates.UseActionLocation>? UseActionLocHook;
 
-    private delegate void SendActionDelegate(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
+    private delegate void SendActionDelegate(ulong targetObjectId, ActionType actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
     private static readonly Hook<SendActionDelegate>? SendActionHook;
     public static readonly Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction;
     public static readonly Hook<PacketDispatcher.Delegates.HandleActorControlPacket> ActorControlPacketHook;
@@ -338,7 +338,7 @@ public static class ActionWatching
 
             if (casterEntityId == Player.Object.EntityId && ActionSheet.TryGetValue(actionId, out var actionSheet) && actionSheet.TargetArea)
             {
-                UpdateLastUsedAction(actionId, 1, 0, 0);
+                UpdateLastUsedAction(actionId, ActionType.Action, 0, 0);
             }
 
         }
@@ -348,7 +348,7 @@ public static class ActionWatching
         }
     }
 
-    private static unsafe void UpdateLastUsedAction(uint actionId, byte actionType, ulong targetObjectId, int castTime)
+    private static unsafe void UpdateLastUsedAction(uint actionId, ActionType actionType, ulong targetObjectId, int castTime)
     {
         // Update Trackers
         LastAction = actionId;
@@ -384,7 +384,7 @@ public static class ActionWatching
                     break;
             }
 
-            if (actionType == 1)
+            if (actionType == ActionType.Action)
             {
                 ActionTimestamps[actionId] = currentTick;
                 UsedOnDict[(actionId, targetObjectId)] = currentTick;
@@ -411,15 +411,19 @@ public static class ActionWatching
     }
 
     /// <summary> Handles logic when an action is sent. </summary>
-    private unsafe static void SendActionDetour(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9)
+    private unsafe static void SendActionDetour(ulong targetObjectId, ActionType actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9)
     {
         try
         {
             if (P.IPC.OnActionUsedProvider.SubscriptionCount > 0)
             {
-                P.IPC.OnActionUsedProvider.SendMessage((ActionType)actionType, actionId);
+                P.IPC.OnActionUsedProvider.SendMessage(actionType, actionId);
             }
-            if (actionType is 1)
+
+            if (actionType is ActionType.Item)
+                WrathOpener.CurrentOpener?.ProgressOpener(actionId, true);
+
+            if (actionType is ActionType.Action)
             {
                 OnActionSend?.Invoke();
 
@@ -648,7 +652,7 @@ public static class ActionWatching
 
                 Svc.Log.Verbose($"[QueuedTargetUpdate] A:{actionManager->QueuedActionId.ActionName()} Q:{Svc.Objects.SearchById(actionManager->QueuedTargetId)?.Name} T:{Svc.Objects.SearchById(targetId)?.Name} M:{mode} W:{willQueue}");
 
-                Svc.Log.Verbose($"[FinalUse] Target changed is {changed}. Using {actionId.ActionName()} ({actionId}) -> {replacedWith.ActionName()} ({replacedWith}) on {(changed ? targetId.GetObject()?.Name : originalTargetId.GetObject()?.Name)} ({(changed? targetId : originalTargetId):X})");
+                Svc.Log.Verbose($"[FinalUse] Target changed is {changed}. Using {actionId.ActionName()} ({actionId}) -> {replacedWith.ActionName()} ({replacedWith}) on {(changed ? targetId.GetObject()?.Name : originalTargetId.GetObject()?.Name)} ({(changed ? targetId : originalTargetId):X})");
                 var hookResult = changed ? UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted) :
                     UseActionHook.Original(actionManager, actionType, actionId, originalTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 

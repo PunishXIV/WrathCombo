@@ -38,7 +38,7 @@ namespace WrathCombo.Window.Tabs
 
                 foreach (var act in P.CustomActions.Manager.Actions)
                 {
-                    if (act.Id == All.Items)
+                    if (act.Id >= All.Items)
                         continue;
 
                     DrawAction(act);

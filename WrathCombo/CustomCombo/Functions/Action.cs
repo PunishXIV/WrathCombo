@@ -8,6 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.Data;
 using WrathCombo.Data.BattleData;
@@ -162,6 +163,9 @@ internal abstract partial class CustomComboFunctions
     /// <param name="actionId"> The action ID. </param>
     public static unsafe bool ActionReady(uint actionId, bool recastCheck = false, bool castCheck = false)
     {
+        if (actionId >= All.SingleTargetDPS)
+            return true;
+
         if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, actionId) > 0)
         {
             return false;

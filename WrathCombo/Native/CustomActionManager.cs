@@ -163,20 +163,27 @@ public sealed unsafe class CustomActionManager : IDisposable
     {
         _framework.Update -= OnFrameworkUpdate;
 
-        _getActionRowHook.Dispose();
-        _isSlotUsableHook.Dispose();
-        _loadIconHook.Dispose();
-        _updateTooltipHook.Dispose();
-        _updateNameHook.Dispose();
-
-        foreach (CustomAction action in _actions.Values)
+        try
         {
-            action.Dispose();
-        }
+            _getActionRowHook.Dispose();
+            _isSlotUsableHook.Dispose();
+            _loadIconHook.Dispose();
+            _updateTooltipHook.Dispose();
+            _updateNameHook.Dispose();
 
-        _actions.Clear();
-        _iconTextures.Clear();
-        _pendingInjects.Clear();
+            foreach (CustomAction action in _actions.Values)
+            {
+                action.Dispose();
+            }
+
+            _actions.Clear();
+            _iconTextures.Clear();
+            _pendingInjects.Clear();
+        }
+        catch(Exception ex)
+        {
+            ex.Log();
+        }
     }
 
     public void Register(CustomAction action)
@@ -193,7 +200,7 @@ public sealed unsafe class CustomActionManager : IDisposable
         }
         else
         {
-            if (_texProv.TryGetFromGameIcon(new GameIconLookup() { IconId = action.IconId, ItemHq = false }, out var tex))
+            if (_texProv.TryGetFromGameIcon(new GameIconLookup() { IconId = action.IconId, HiRes = true }, out var tex))
                 _iconTextures[action.IconId] = tex;
         }
     }
@@ -366,6 +373,7 @@ public sealed unsafe class CustomActionSetup : IDisposable
     private readonly CustomAction _aoeDPS;
     private readonly CustomAction _singleTargeHeals;
     private readonly CustomAction _aoeHeals;
+    private readonly CustomAction _items;
 
     public (int Hotbar, int Slot)? HoveredSlot = null;
 
@@ -401,8 +409,9 @@ public sealed unsafe class CustomActionSetup : IDisposable
         _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos.", 1505, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/AoEDPS.png"));
         _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos.", 1508, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/SingleTargetHeals.png"));
         _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE Heal combos.", 1510, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/AoEHeals.png"));
+        _items = new(All.Items, "Item Not Found", "Users shouldn't see this", 1511);
 
-        Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals);
+        Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals, _items);
     }
     public void Dispose()
     {

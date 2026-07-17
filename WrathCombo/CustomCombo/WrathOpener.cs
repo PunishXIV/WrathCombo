@@ -21,19 +21,40 @@ public abstract class WrathOpener
     private int openerStep;
     private static WrathOpener? currentOpener;
 
-    public void ProgressOpener(uint actionId)
+    public void ProgressOpener(uint actionId, bool item = false)
     {
-        if (actionId == CurrentOpenerAction || (AllowUpgradeSteps.Any(x => x == OpenerStep) && OriginalHook(CurrentOpenerAction) == actionId))
+        if (item)
         {
-            OpenerStep++;
-            if (OpenerStep > OpenerActions.Count)
-            {
-                CurrentState = OpenerState.OpenerFinished;
-                return;
-            }
+            var normalisedAction = actionId >= 1_000_000 ? actionId -= 1_000_000 : actionId;
+            var normalisedCustom = CurrentOpenerAction >= All.Items ? CurrentOpenerAction -= All.Items : CurrentOpenerAction;
 
-            PreviousOpenerAction = CurrentOpenerAction;
-            CurrentOpenerAction = OpenerActions[OpenerStep - 1];
+            if (normalisedAction == normalisedCustom)
+            {
+                OpenerStep++;
+                if (OpenerStep > OpenerActions.Count)
+                {
+                    CurrentState = OpenerState.OpenerFinished;
+                    return;
+                }
+
+                PreviousOpenerAction = CurrentOpenerAction;
+                CurrentOpenerAction = OpenerActions[OpenerStep - 1];
+            }
+        }
+        else
+        {
+            if (actionId == CurrentOpenerAction || (AllowUpgradeSteps.Any(x => x == OpenerStep) && OriginalHook(CurrentOpenerAction) == actionId))
+            {
+                OpenerStep++;
+                if (OpenerStep > OpenerActions.Count)
+                {
+                    CurrentState = OpenerState.OpenerFinished;
+                    return;
+                }
+
+                PreviousOpenerAction = CurrentOpenerAction;
+                CurrentOpenerAction = OpenerActions[OpenerStep - 1];
+            }
         }
     }
 
@@ -136,6 +157,8 @@ public abstract class WrathOpener
 
     internal abstract UserData? ContentCheckConfig { get; }
 
+    internal abstract bool IncludePot { get; }
+
     public bool LevelChecked => Svc.PlayerState.EffectiveLevel >= MinOpenerLevel && Svc.PlayerState.EffectiveLevel <= MaxOpenerLevel;
 
     public abstract Preset Preset { get; }
@@ -194,6 +217,12 @@ public abstract class WrathOpener
 
             if (OpenerStep <= OpenerActions.Count)
             {
+                if (CurrentOpenerAction == All.Items || (!IncludePot & CurrentOpenerAction >= All.Items))
+                {
+                    OpenerStep++;
+                    CurrentOpenerAction = OpenerActions[OpenerStep - 1];
+                }
+
                 foreach (var (Step, Condition) in SkipSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
                 {
                     if (Condition())
@@ -250,6 +279,7 @@ public abstract class WrathOpener
                     OpenerStep++;
                     CurrentOpenerAction = OpenerActions[OpenerStep - 1];
                 }
+
 
                 while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) &&
                        !SkipSteps.Any(x => x.Steps.Any(y => y == OpenerStep)) &&
@@ -370,13 +400,14 @@ public abstract class WrathOpener
 
 public class DummyOpener : WrathOpener
 {
-    public override List<uint> OpenerActions { get; set; } = [];
+    public override List<uint> OpenerActions { get; set; } = new List<uint>();
     public override int MinOpenerLevel => 1;
     public override int MaxOpenerLevel => 10000;
 
-    public override Preset Preset { get; }
+    public override Preset Preset { get; } = default;
 
     internal override UserData? ContentCheckConfig => null;
+    internal override bool IncludePot => false;
 
     public override bool HasCooldowns() => false;
 }

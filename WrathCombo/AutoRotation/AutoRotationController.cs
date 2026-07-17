@@ -28,7 +28,9 @@ using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
 using static WrathCombo.Data.ActionWatching;
+using static WrathCombo.Data.HiddenFeaturesData;
 using ActionType = FFXIVClientStructs.FFXIV.Client.Game.ActionType;
+using Content = ECommons.GameHelpers.Content;
 
 #endregion
 
@@ -931,6 +933,12 @@ internal unsafe class AutoRotationController
 
             OverrideTarget = target ?? OverrideTarget;
             var outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, target));
+            if (outAct >= All.Items)
+            {
+                ActionManager.Instance()->UseAction(ActionType.Action, outAct, extraParam: 0xFFFF);
+                return true;
+            }
+
             if (!ActionReady(outAct))
             {
                 return false;

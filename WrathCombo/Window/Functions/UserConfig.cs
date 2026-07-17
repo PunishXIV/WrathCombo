@@ -834,6 +834,14 @@ public static class UserConfig
 
     }
 
+    internal static void DrawOpenerPotionChoice(UserBool config)
+    {
+        using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen))
+        {
+            DrawAdditionalBoolChoice(config, "Include Potion?", "Adds the strongest potion appropriate for your job to the opener.");
+        }
+    }
+
     internal static void DrawPriorityInput(UserIntArray config, int maxValues, int currentItem, string customLabel = "")
     {
         if (config.Count != maxValues || config.Any(x => x == 0))

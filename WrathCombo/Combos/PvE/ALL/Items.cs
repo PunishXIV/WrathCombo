@@ -1,4 +1,5 @@
-﻿using ECommons.DalamudServices;
+﻿using ECommons;
+using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +33,8 @@ namespace WrathCombo.Combos.PvE.ALL
         /// <returns></returns>
         public unsafe static uint UseItem(uint item)
         {
-            if (item == All.SavageBlade)
-                return All.SavageBlade;
+            if (item == All.Items)
+                return All.Items;
 
             if (Svc.Data.GetExcelSheet<Item>().TryGetRow(item, out var row))
             {
@@ -42,6 +43,14 @@ namespace WrathCombo.Combos.PvE.ALL
             }
 
             return 0;
+        }
+
+        public unsafe static bool ItemReady(uint itemId)
+        {
+            var res = ActionManager.Instance()->GetActionStatus(ActionType.Item, itemId, checkCastingActive: false);
+            var res2 = ActionManager.Instance()->GetActionStatus(ActionType.Item, itemId + 1_000_000, checkCastingActive: false);
+            //Svc.Log.Debug($"{res} {res2}");
+            return res is 0 || res2 is 0;
         }
 
         /// <summary>
@@ -68,7 +77,7 @@ namespace WrathCombo.Combos.PvE.ALL
         public unsafe static uint GetStrongestPotionRow(PotionType type, bool inInventory = true)
         {
             var rowId = GetStrongestPotion(type, inInventory)?.RowId ?? 0;
-            return rowId == 0 ? All.SavageBlade : rowId;
+            return rowId == 0 ? All.Items : rowId;
         }
 
         internal static ItemFood? GetItemConsumableProperties(Item item)
