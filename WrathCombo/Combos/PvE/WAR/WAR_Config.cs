@@ -1,6 +1,7 @@
 using System.Numerics;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Style;
+using Dalamud.Interface.Utility.Raii;
 using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -107,9 +108,20 @@ internal partial class WAR
                 #region Single-Target
                 case Preset.WAR_ST_BalanceOpener:
                     DrawBossOnlyChoice(WAR_BalanceOpener_Content);
-                    ImGui.NewLine();
-                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice, "No Gapclosers", "Skips Onslaughts use in opener.", 0);
-                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice, "Use Gapclosers", "Uses Onslaughts use in opener.", 1);
+
+                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
+                    {
+                        ImGui.TextUnformatted($"Select {Onslaught.ActionName()} usage in the opener:");
+                    }
+
+                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice,
+                        "No Gapclosers", "Skips Onslaughts use in opener.", 0,
+                        descriptionColor: ImGuiColors.DalamudYellow);
+                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice,
+                        "Use Gapclosers", "Uses Onslaughts use in opener.", 1,
+                        descriptionColor: ImGuiColors.DalamudYellow);
+
+                    DrawOpenerPotionChoice(WAR_Opener_Potion);
                     break;
 
                 case Preset.WAR_ST_StormsEye:
@@ -547,6 +559,7 @@ internal partial class WAR
             WAR_FC_PrimalRend_TimeStill = new("WAR_FC_PrimalRend_TimeStill");
 
         public static UserBool
+            WAR_Opener_Potion = new("WAR_Opener_Potion"),
             WAR_Mitigation_Boss_ThrillOfBattle_Align = new("WAR_Mitigation_Boss_ThrillOfBattle_Align", true),
             WAR_Mitigation_Boss_Vengeance_First = new("WAR_Mitigation_Boss_Vengeance_First", true),
 

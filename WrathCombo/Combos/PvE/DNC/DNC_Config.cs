@@ -1,6 +1,7 @@
 #region
 
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
 using ECommons.ImGuiMethods;
 using System.Linq;
 using System.Numerics;
@@ -175,14 +176,18 @@ internal partial class DNC
                 #region Advanced Single Target UI
 
                 case Preset.DNC_ST_BalanceOpener:
-                    ImGui.Indent();
-                    ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                    ImGui.TextWrapped(
-                        "Opener variations:     (hover each for more info)");
-                    ImGui.PopStyleColor();
-                    ImGui.Unindent();
+                    DrawBossOnlyChoice(DNC_ST_OpenerDifficulty, "Select what kind of content to use this opener in:");
 
-                    ImGui.NewLine();
+                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
+                    {
+                        DrawAdditionalBoolChoice(DNC_ST_OpenerOption_Peloton,
+                            $"Include {Peloton.ActionName()}", "");
+                    }
+
+                    DrawOpenerPotionChoice(DNC_Opener_Potion);
+
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
                     DrawRadioButton(DNC_ST_OpenerSelection,
                         "Standard: 15s Countdown",
                         "Requires at least a 15s cooldown\nand that you start Standard Step at 15s.",
@@ -203,18 +208,6 @@ internal partial class DNC
                         "Technical: 7s Countdown",
                         "Requires at least a 7s cooldown\nand that you start Technical Step at 7s.\nNOT recommended.",
                         (int)Openers.SevenSecondTech, descriptionAsTooltip: true);
-
-                    ImGui.Indent();
-                    ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                    ImGui.TextWrapped(
-                        "Opener options:");
-                    ImGui.PopStyleColor();
-
-                    DrawAdditionalBoolChoice(DNC_ST_OpenerOption_Peloton,
-                        $"Include {Peloton.ActionName()}", "");
-
-                    DrawBossOnlyChoice(DNC_ST_OpenerDifficulty, "Select what kind of content to use this opener in:");
-                    ImGui.Unindent();
 
                     break;
 
@@ -542,6 +535,9 @@ internal partial class DNC
         ///     <b>Options</b>: <see langword="true"/> or <see langword="false"/>
         /// </value>
         /// <seealso cref="Preset.DNC_ST_BalanceOpener" />
+        public static readonly UserBool DNC_Opener_Potion =
+            new("DNC_Opener_Potion");
+
         public static readonly UserBool DNC_ST_OpenerOption_Peloton =
             new("DNC_ST_OpenerOption_Peloton", true);
 

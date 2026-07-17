@@ -788,6 +788,7 @@ public static class UserConfig
             descriptionColor: ImGuiColors.DalamudYellow
         );
 
+        ImGui.NewLine();
     }
 
     /// <summary>

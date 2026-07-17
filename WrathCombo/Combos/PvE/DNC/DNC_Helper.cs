@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Game.ClientState.Conditions;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -612,22 +613,23 @@ internal partial class DNC
             Emboite,
             Emboite,
             Peloton,
-            StandardFinish2, //5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
+            StandardFinish2, //6
             TechnicalStep,
             Emboite,
             Emboite,
             Emboite,
-            Emboite, //10
+            Emboite, //11
             TechnicalFinish4,
             Devilment,
             Tillana,
             Flourish,
-            DanceOfTheDawn, //15
+            DanceOfTheDawn, //16
             FanDance4,
             LastDance,
             FanDance3,
             FinishingMove,
-            StarfallDance, //20
+            StarfallDance, //21
             ReverseCascade,
             ReverseCascade,
             ReverseCascade,
@@ -640,7 +642,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 7),
-            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 13 : 6)),
+            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 13 : 6)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -649,16 +651,16 @@ internal partial class DNC
             set;
         } =
         [
-            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([20], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 23], SaberDance, () => Gauge.Esprit > 80),
-            ([21, 22, 23], StarfallDance,
+            ([2, 3, 8, 9, 10, 11], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 8, 9, 10, 11], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 8, 9, 10, 11], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([21], SaberDance, () => Gauge.Esprit >= 50),
+            ([22, 23, 24], SaberDance, () => Gauge.Esprit > 80),
+            ([22, 23, 24], StarfallDance,
                 () => HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([21, 22, 23], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([21, 22, 23], Fountainfall, () =>
+            ([22, 23, 24], SaberDance, () => Gauge.Esprit >= 50),
+            ([22, 23, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([22, 23, 24], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
@@ -675,7 +677,7 @@ internal partial class DNC
 
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => false;
+            internal override bool IncludePot => DNC_Opener_Potion;
 
         public override bool HasCooldowns()
         {
@@ -715,22 +717,23 @@ internal partial class DNC
             Emboite,
             Emboite,
             Peloton,
-            StandardFinish2, //5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
+            StandardFinish2, //6
             TechnicalStep,
             Emboite,
             Emboite,
             Emboite,
-            Emboite, //10
+            Emboite, //11
             TechnicalFinish4,
             Devilment,
             Tillana,
             Flourish,
-            DanceOfTheDawn, //15
+            DanceOfTheDawn, //16
             FanDance4,
             LastDance,
             FanDance3,
             StarfallDance,
-            ReverseCascade, //20
+            ReverseCascade, //21
             ReverseCascade,
             FinishingMove,
             ReverseCascade,
@@ -743,7 +746,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 2),
-            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 5 : 3)),
+            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 5 : 3)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -752,16 +755,16 @@ internal partial class DNC
             set;
         } =
         [
-            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([22], SaberDance, () => Gauge.Esprit >= 50),
-            ([20, 21, 23], SaberDance, () => Gauge.Esprit > 80),
-            ([20, 21, 23], StarfallDance,
+            ([2, 3, 8, 9, 10, 11], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 8, 9, 10, 11], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 8, 9, 10, 11], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([23], SaberDance, () => Gauge.Esprit >= 50),
+            ([21, 22, 24], SaberDance, () => Gauge.Esprit > 80),
+            ([21, 22, 24], StarfallDance,
                 () => HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([20, 21, 23], SaberDance, () => Gauge.Esprit >= 50),
-            ([20, 21, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([20, 21, 23], Fountainfall, () =>
+            ([21, 22, 24], SaberDance, () => Gauge.Esprit >= 50),
+            ([21, 22, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([21, 22, 24], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
@@ -777,7 +780,7 @@ internal partial class DNC
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => false;
+            internal override bool IncludePot => DNC_Opener_Potion;
 
         public override bool HasCooldowns()
         {
@@ -822,21 +825,22 @@ internal partial class DNC
             Emboite,
             StandardFinish2,
             Peloton, //5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             TechnicalStep,
             Emboite,
             Emboite,
             Emboite,
-            Emboite, //10
+            Emboite, //11
             TechnicalFinish4,
             Devilment,
             LastDance,
             Flourish,
-            FinishingMove, //15
+            FinishingMove, //16
             Tillana,
             DanceOfTheDawn,
             FanDance4,
             StarfallDance,
-            FanDance3, //20
+            FanDance3, //21
             ReverseCascade,
             ReverseCascade,
             ReverseCascade,
@@ -849,7 +853,7 @@ internal partial class DNC
         } =
         [
             ([5], () => 1),
-            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 8 : 7)),
+            ([7], () => (!DNC_ST_OpenerOption_Peloton ? 8 : 7)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -858,16 +862,16 @@ internal partial class DNC
             set;
         } =
         [
-            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([19], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 23], SaberDance, () => Gauge.Esprit > 80),
-            ([21, 22, 23], StarfallDance,
+            ([2, 3, 8, 9, 10, 11], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 8, 9, 10, 11], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 8, 9, 10, 11], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([20], SaberDance, () => Gauge.Esprit >= 50),
+            ([22, 23, 24], SaberDance, () => Gauge.Esprit > 80),
+            ([22, 23, 24], StarfallDance,
                 () => HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([21, 22, 23], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([21, 22, 23], Fountainfall, () =>
+            ([22, 23, 24], SaberDance, () => Gauge.Esprit >= 50),
+            ([22, 23, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([22, 23, 24], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
@@ -883,7 +887,7 @@ internal partial class DNC
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => false;
+            internal override bool IncludePot => DNC_Opener_Potion;
 
         public override bool HasCooldowns()
         {
@@ -925,15 +929,16 @@ internal partial class DNC
             Emboite,
             Emboite, //5
             TechnicalFinish4,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             Devilment,
             LastDance,
             Flourish,
-            FinishingMove, //10
+            FinishingMove, //11
             Tillana,
             DanceOfTheDawn,
             FanDance4,
             StarfallDance,
-            FanDance3, //15
+            FanDance3, //16
             ReverseCascade,
             ReverseCascade,
             ReverseCascade,
@@ -954,20 +959,20 @@ internal partial class DNC
             ([2, 3, 4, 5], Entrechat, () => Gauge.NextStep == Entrechat),
             ([2, 3, 4, 5], Jete, () => Gauge.NextStep == Jete),
             ([2, 3, 4, 5], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([14], SaberDance, () => Gauge.Esprit >= 50),
-            ([16, 17, 18], SaberDance, () => Gauge.Esprit > 80),
-            ([16, 17, 18], StarfallDance, () =>
+            ([15], SaberDance, () => Gauge.Esprit >= 50),
+            ([17, 18, 19], SaberDance, () => Gauge.Esprit > 80),
+            ([17, 18, 19], StarfallDance, () =>
                 HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([16, 17, 18], SaberDance, () => Gauge.Esprit >= 50),
-            ([16, 17, 18], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([16, 17, 18], Fountainfall, () =>
+            ([17, 18, 19], SaberDance, () => Gauge.Esprit >= 50),
+            ([17, 18, 19], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([17, 18, 19], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => false;
+            internal override bool IncludePot => DNC_Opener_Potion;
 
         public override bool HasCooldowns()
         {
@@ -1009,15 +1014,16 @@ internal partial class DNC
             Emboite,
             Emboite, //5
             Peloton,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             TechnicalFinish4,
             Devilment,
             Tillana,
-            Flourish, //10
+            Flourish, //11
             FinishingMove,
             DanceOfTheDawn,
             FanDance4,
             StarfallDance,
-            FanDance3, //15
+            FanDance3, //16
             ReverseCascade,
             ReverseCascade,
             ReverseCascade,
@@ -1029,7 +1035,7 @@ internal partial class DNC
             set;
         } =
         [
-            ([7], () => (!DNC_ST_OpenerOption_Peloton ? 3 : 2)),
+            ([8], () => (!DNC_ST_OpenerOption_Peloton ? 3 : 2)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -1041,13 +1047,13 @@ internal partial class DNC
             ([2, 3, 4, 5], Entrechat, () => Gauge.NextStep == Entrechat),
             ([2, 3, 4, 5], Jete, () => Gauge.NextStep == Jete),
             ([2, 3, 4, 5], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([14], SaberDance, () => Gauge.Esprit >= 50),
-            ([16, 17, 18], SaberDance, () => Gauge.Esprit > 80),
-            ([16, 17, 18], StarfallDance, () =>
+            ([15], SaberDance, () => Gauge.Esprit >= 50),
+            ([17, 18, 19], SaberDance, () => Gauge.Esprit > 80),
+            ([17, 18, 19], StarfallDance, () =>
                 HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([16, 17, 18], SaberDance, () => Gauge.Esprit >= 50),
-            ([16, 17, 18], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([16, 17, 18], Fountainfall, () =>
+            ([17, 18, 19], SaberDance, () => Gauge.Esprit >= 50),
+            ([17, 18, 19], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([17, 18, 19], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
@@ -1063,7 +1069,7 @@ internal partial class DNC
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => false;
+            internal override bool IncludePot => DNC_Opener_Potion;
 
         public override bool HasCooldowns()
         {

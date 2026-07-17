@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -778,13 +779,14 @@ internal partial class PLD
     internal class PLDLvl100StandardOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
             HolySpirit,
             FastBlade,
             RiotBlade,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             RoyalAuthority,
             FightOrFlight,
             Imperator,
@@ -792,9 +794,9 @@ internal partial class PLD
             CircleOfScorn,
             Expiacion,
             BladeOfFaith,
-            Intervene, //11
+            Intervene, //12
             BladeOfTruth,
-            Intervene, //13
+            Intervene, //14
             BladeOfValor,
             BladeOfHonor,
             GoringBlade,
@@ -806,12 +808,12 @@ internal partial class PLD
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([11, 13], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
+            ([12, 14], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
         ];
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => PLD_Opener_Potion;
 
         public override bool HasCooldowns() =>
             IsOffCooldown(FightOrFlight) &&
@@ -824,7 +826,7 @@ internal partial class PLD
     internal class PLDLvl100EarlyBuffOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
