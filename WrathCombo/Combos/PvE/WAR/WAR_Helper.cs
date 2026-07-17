@@ -1,4 +1,4 @@
-﻿#region Dependencies
+#region Dependencies
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
@@ -76,6 +76,7 @@ internal partial class WAR : Tank
         ];
         public override Preset Preset => Preset.WAR_ST_BalanceOpener;
         internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
+        internal override bool IncludePot => false;
         public override bool HasCooldowns() => IsOffCooldown(InnerRelease) && IsOffCooldown(Upheaval) && GetRemainingCharges(Infuriate) >= 2 && GetRemainingCharges(Onslaught) >= 3;
     }
 

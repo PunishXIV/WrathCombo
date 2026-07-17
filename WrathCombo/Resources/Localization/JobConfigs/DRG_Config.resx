@@ -33,6 +33,6 @@ Works best on 2.50 GCD.</value>
     <value>Early Buff Opener</value>
   </data>
   <data name="UseEarlyBuffOpener" xml:space="preserve">
-    <value>Use early buff opener.</value>
+    <value>Uses the Early Buff Opener.</value>
   </data>
 </root>

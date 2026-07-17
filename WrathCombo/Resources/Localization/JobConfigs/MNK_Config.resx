@@ -136,7 +136,7 @@
     <value>Uses Solar/Lunar opener.</value>
   </data>
   <data name="BrotherhoodFirstOpener" xml:space="preserve">
-    <value>Brotherhood First</value>
+    <value>Early Buff Opener</value>
   </data>
   <data name="BrotherhoodFirstOpenerDesc" xml:space="preserve">
     <value>Double Lunar with BH → RoF weaved after the first DK; PB moves to after the second DK.</value>

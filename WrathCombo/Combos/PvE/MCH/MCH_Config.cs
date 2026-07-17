@@ -1,4 +1,6 @@
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -18,25 +20,33 @@ internal partial class MCH
                 #region ST
 
                 case Preset.MCH_ST_Adv_Opener:
-                    DrawHorizontalRadioButton(MCH_SelectedOpener,
-                        Generics.StandardOpener,
-                        Generics.UsesStandardOpener, 0);
+                    DrawBossOnlyChoice(MCH_Balance_Content);
 
-                    DrawHorizontalRadioButton(MCH_SelectedOpener,
-                        FormatAndCache(MCH_Config.Early0Opener, Wildfire.ActionName()),
-                        FormatAndCache(MCH_Config.UseEarly0Opener, Wildfire.ActionName()), 1);
-
-                    ImGui.NewLine();
+                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
+                    {
+                        ImGui.TextUnformatted("Select whether the opener requires a battle target:");
+                    }
 
                     DrawHorizontalRadioButton(MCH_HaveTarget,
                         Generics.HaveBattleTarget,
-                        Generics.RequireTarget, 0);
+                        Generics.RequireTarget, 0,
+                        descriptionColor: ImGuiColors.DalamudYellow);
 
                     DrawHorizontalRadioButton(MCH_HaveTarget,
                         Generics.NoTarget,
-                        Generics.NoRequireTarget, 1);
+                        Generics.NoRequireTarget, 1,
+                        descriptionColor: ImGuiColors.DalamudYellow);
 
-                    DrawBossOnlyChoice(MCH_Balance_Content);
+                    DrawOpenerPotionChoice(MCH_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(MCH_SelectedOpener,
+                        Generics.StandardOpener,
+                        Generics.UsesStandardOpener, 0, descriptionAsTooltip: true);
+
+                    DrawRadioButton(MCH_SelectedOpener,
+                        MCH_Config.Early0Opener,
+                        FormatAndCache(MCH_Config.UseEarly0Opener, Wildfire.ActionName()), 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.MCH_ST_Adv_WildFire:
@@ -368,6 +378,7 @@ internal partial class MCH
             MCH_ST_WildfireHyperchargeCutoffThreshold = new("MCH_ST_WildfireHyperchargeCutoffThreshold", 9f);
 
         public static UserBool
+            MCH_Opener_Potion = new("MCH_Opener_Potion"),
             MCH_AoE_AirAnchor = new("MCH_AoE_AirAnchor");
 
         #endregion

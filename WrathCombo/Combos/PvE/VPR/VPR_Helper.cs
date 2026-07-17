@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static FFXIVClientStructs.FFXIV.Client.Game.ActionManager;
@@ -567,6 +568,7 @@ internal partial class VPR
             SerpentsIre,
             SwiftskinsSting,
             Vicewinder,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             HuntersCoil,
             TwinfangBite,
             TwinbloodBite,
@@ -583,43 +585,46 @@ internal partial class VPR
             FourthGeneration,
             FourthLegacy,
             Ouroboros,
-            UncoiledFury, //21
-            UncoiledTwinfang, //22
-            UncoiledTwinblood, //23
-            UncoiledFury, //24
-            UncoiledTwinfang, //25
-            UncoiledTwinblood, //26
-            HindstingStrike, //27
-            DeathRattle, //28
-            Vicewinder, //29
-            HuntersCoil, //30
-            TwinfangBite, //31
-            TwinbloodBite, //32
-            SwiftskinsCoil, //33
-            TwinbloodBite, //34
-            TwinfangBite //35
+            UncoiledFury, //22
+            UncoiledTwinfang, //23
+            UncoiledTwinblood, //24
+            UncoiledFury, //25
+            UncoiledTwinfang, //26
+            UncoiledTwinblood, //27
+            HindstingStrike, //28
+            DeathRattle, //29
+            Vicewinder, //30
+            HuntersCoil, //31
+            TwinfangBite, //32
+            TwinbloodBite, //33
+            SwiftskinsCoil, //34
+            TwinbloodBite, //35
+            TwinfangBite //36
         ];
 
         public override Preset Preset => Preset.VPR_ST_Opener;
 
         internal override UserData ContentCheckConfig => VPR_Balance_Content;
+        internal override bool IncludePot => VPR_Opener_Potion;
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([30], SwiftskinsCoil, OnTargetsRear),
-            ([31], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom)),
-            ([32], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
-            ([33], HuntersCoil, () => UsedSwiftskinsCoil),
-            ([34], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
-            ([35], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom))
+            ([31], SwiftskinsCoil, OnTargetsRear),
+            ([32], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom)),
+            ([33], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
+            ([34], HuntersCoil, () => UsedSwiftskinsCoil),
+            ([35], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
+            ([36], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([21, 22, 23, 24, 25, 26], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)),
-            ([27], () => ComboAction is not SwiftskinsSting),
-            ([28], () => !IsDeathRattleWeave && !JustUsed(HindstingStrike))
+            ([22, 23, 24, 25, 26, 27], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)),
+            ([28], () => ComboAction is not SwiftskinsSting),
+            ([29], () => !IsDeathRattleWeave && !JustUsed(HindstingStrike))
         ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } = [5];
 
         public override bool HasCooldowns() =>
             IsOriginal(ReavingFangs) &&
@@ -674,6 +679,7 @@ internal partial class VPR
         public override Preset Preset => Preset.VPR_ST_Opener;
 
         internal override UserData ContentCheckConfig => VPR_Balance_Content;
+        internal override bool IncludePot => false;
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [

@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
@@ -316,6 +316,7 @@ internal partial class DRK
 
         internal override UserData? ContentCheckConfig =>
             DRK_ST_OpenerDifficulty;
+            internal override bool IncludePot => false;
 
         public override bool HasCooldowns() =>
             LocalPlayer.CurrentMp > 7000 && IsOffCooldown(LivingShadow) &&

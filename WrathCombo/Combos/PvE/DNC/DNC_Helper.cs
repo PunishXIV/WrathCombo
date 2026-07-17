@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
@@ -675,6 +675,7 @@ internal partial class DNC
 
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
+            internal override bool IncludePot => false;
 
         public override bool HasCooldowns()
         {
@@ -776,6 +777,7 @@ internal partial class DNC
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
+            internal override bool IncludePot => false;
 
         public override bool HasCooldowns()
         {
@@ -881,6 +883,7 @@ internal partial class DNC
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
+            internal override bool IncludePot => false;
 
         public override bool HasCooldowns()
         {
@@ -964,6 +967,7 @@ internal partial class DNC
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
+            internal override bool IncludePot => false;
 
         public override bool HasCooldowns()
         {
@@ -1059,6 +1063,7 @@ internal partial class DNC
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
+            internal override bool IncludePot => false;
 
         public override bool HasCooldowns()
         {

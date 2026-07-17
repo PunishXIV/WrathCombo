@@ -3,6 +3,7 @@ using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.RPR.Config;
@@ -636,17 +637,18 @@ internal partial class RPR
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
             Harpe,
             ShadowOfDeath,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             SoulSlice,
             ArcaneCircle,
             Gluttony,
-            ExecutionersGibbet, //6
-            ExecutionersGallows, //7
+            ExecutionersGibbet, //7
+            ExecutionersGallows, //8
             SoulSlice,
             PlentifulHarvest,
             Enshroud,
@@ -659,8 +661,8 @@ internal partial class RPR
             LemuresSlice,
             Communio,
             Perfectio,
-            UnveiledGibbet, //20
-            Gibbet, //21
+            UnveiledGibbet, //21
+            Gibbet, //22
             ShadowOfDeath,
             Slice
         ];
@@ -669,18 +671,23 @@ internal partial class RPR
 
         internal override UserData ContentCheckConfig => RPR_Balance_Content;
 
+        internal override bool IncludePot => RPR_Opener_Potion;
+
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([6], ExecutionersGallows, OnTargetsRear),
-            ([7], ExecutionersGibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
-            ([20], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
-            ([21], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
+            ([7], ExecutionersGallows, OnTargetsRear),
+            ([8], ExecutionersGibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
+            ([21], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
+            ([22], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => InMeleeRange())
         ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } = [3];
+
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(SoulSlice) is 2 &&
@@ -694,7 +701,7 @@ internal partial class RPR
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -725,6 +732,8 @@ internal partial class RPR
         public override Preset Preset => Preset.RPR_ST_Opener;
 
         internal override UserData ContentCheckConfig => RPR_Balance_Content;
+
+        internal override bool IncludePot => false;
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
@@ -775,6 +784,8 @@ internal partial class RPR
         public override Preset Preset => Preset.RPR_ST_Opener;
 
         internal override UserData ContentCheckConfig => RPR_Balance_Content;
+
+        internal override bool IncludePot => false;
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [

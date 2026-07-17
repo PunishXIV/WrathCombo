@@ -325,6 +325,7 @@ internal partial class RDM
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
+        internal override bool IncludePot => false;
         public override Preset Preset => Preset.RDM_Balance_Opener;
         public override bool HasCooldowns()
         {
@@ -393,6 +394,7 @@ internal partial class RDM
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
+        internal override bool IncludePot => false;
         public override Preset Preset => Preset.RDM_Balance_Opener;
         public override bool HasCooldowns()
         {
@@ -461,6 +463,7 @@ internal partial class RDM
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
+        internal override bool IncludePot => false;
         public override Preset Preset => Preset.RDM_Balance_Opener;
         public override bool HasCooldowns()
         {

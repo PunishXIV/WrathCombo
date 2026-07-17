@@ -105,7 +105,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Brotherhood First.
+        ///   Looks up a localized string similar to Early Buff Opener.
         /// </summary>
         internal static string BrotherhoodFirstOpener {
             get {

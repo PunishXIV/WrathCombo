@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -811,6 +811,7 @@ internal partial class PLD
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;
+        internal override bool IncludePot => false;
 
         public override bool HasCooldowns() =>
             IsOffCooldown(FightOrFlight) &&
@@ -863,6 +864,7 @@ internal partial class PLD
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;
+        internal override bool IncludePot => false;
 
         public override bool HasCooldowns() =>
             IsOffCooldown(FightOrFlight) &&

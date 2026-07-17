@@ -130,7 +130,7 @@
     <value>Changes to {0} / {1} depending on charges and what was used last</value>
   </data>
   <data name="Early0Opener" xml:space="preserve">
-    <value>Early {0} opener</value>
+    <value>Early Buff Opener</value>
   </data>
   <data name="NotRecommended" xml:space="preserve">
     <value>NOT RECOMMENDED!
@@ -152,7 +152,7 @@ THIS WILL CAUSE IT TO OVERCAP!</value>
     <value>Uses {0} every minute/whenever your highest level tool is off cooldown.</value>
   </data>
   <data name="UseEarly0Opener" xml:space="preserve">
-    <value>Uses Early {0} level 100 opener</value>
+    <value>Uses the Early Buff Opener (early {0}).</value>
   </data>
   <data name="UseEveryMinute" xml:space="preserve">
     <value>Use every minute</value>

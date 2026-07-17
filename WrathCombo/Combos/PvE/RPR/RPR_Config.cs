@@ -1,4 +1,5 @@
 using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -17,16 +18,17 @@ internal partial class RPR
                 #region ST
 
                 case Preset.RPR_ST_Opener:
-                    DrawHorizontalRadioButton(RPR_SelectedOpener,
-                        Generics.StandardOpener,
-                        Generics.UsesStandardOpener, 0);
-
-                    DrawHorizontalRadioButton(RPR_SelectedOpener,
-                        RPR_Config.FirstGcdBuffsOpener,
-                        FormatAndCache(RPR_Config.UseFirstGcdBuffsOpener), 1);
-
-                    ImGui.NewLine();
                     DrawBossOnlyChoice(RPR_Balance_Content);
+                    DrawOpenerPotionChoice(RPR_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(RPR_SelectedOpener,
+                        Generics.StandardOpener,
+                        Generics.UsesStandardOpener, 0, descriptionAsTooltip: true);
+
+                    DrawRadioButton(RPR_SelectedOpener,
+                        RPR_Config.FirstGcdBuffsOpener,
+                        FormatAndCache(RPR_Config.UseFirstGcdBuffsOpener), 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.RPR_ST_ArcaneCircle:
@@ -177,6 +179,7 @@ internal partial class RPR
             RPR_WoDRefreshRangeBasicCombo = new("RPR_WoDRefreshRangeBasicCombo", 6);
 
         public static UserBool
+            RPR_Opener_Potion = new("RPR_Opener_Potion"),
             RPR_ST_TrueNorthDynamicHoldCharge = new("RPR_ST_TrueNorthDynamicHoldCharge"),
             RPR_ST_EnhancedHarpe = new("RPR_ST_EnhancedHarpe");
 

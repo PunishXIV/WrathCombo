@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.GameFunctions;
@@ -383,6 +383,7 @@ internal partial class SGE
         ];
 
         internal override UserData ContentCheckConfig => SGE_Balance_Content;
+        internal override bool IncludePot => false;
         public override Preset Preset => Preset.SGE_ST_DPS_Opener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(Phlegma3) is 2 &&
@@ -424,6 +425,7 @@ internal partial class SGE
         ];
 
         internal override UserData ContentCheckConfig => SGE_Balance_Content;
+        internal override bool IncludePot => false;
         public override Preset Preset => Preset.SGE_ST_DPS_Opener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(Phlegma3) is 2 &&

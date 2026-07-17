@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
 using System;
 using System.Collections.Frozen;
@@ -772,6 +772,7 @@ internal partial class NIN
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData ContentCheckConfig => NIN_Balance_Content;
+        internal override bool IncludePot => false;
         public override bool HasCooldowns()
         {
             if (GetRemainingCharges(Ten) < 1) return false;

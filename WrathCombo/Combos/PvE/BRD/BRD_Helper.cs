@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
@@ -842,6 +842,7 @@ internal partial class BRD
         public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
 
         internal override UserData ContentCheckConfig => BRD_Balance_Content;
+        internal override bool IncludePot => false;
         public override bool HasCooldowns() =>
             IsOffCooldown(WanderersMinuet) &&
             IsOffCooldown(BattleVoice) &&
@@ -889,6 +890,7 @@ internal partial class BRD
         public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
 
         internal override UserData ContentCheckConfig => BRD_Balance_Content;
+        internal override bool IncludePot => false;
         public override bool HasCooldowns() =>
             IsOffCooldown(WanderersMinuet) &&
             IsOffCooldown(BattleVoice) &&
@@ -930,6 +932,7 @@ internal partial class BRD
         public override int MaxOpenerLevel => 109;
         public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
         internal override UserData ContentCheckConfig => BRD_Balance_Content;
+        internal override bool IncludePot => false;
         public override bool HasCooldowns() =>
             IsOffCooldown(WanderersMinuet) &&
             IsOffCooldown(BattleVoice) &&
@@ -970,6 +973,7 @@ internal partial class BRD
         public override int MaxOpenerLevel => 109;
         public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
         internal override UserData ContentCheckConfig => BRD_Balance_Content;
+        internal override bool IncludePot => false;
         public override bool HasCooldowns() =>
             IsOffCooldown(WanderersMinuet) &&
             IsOffCooldown(BattleVoice) &&

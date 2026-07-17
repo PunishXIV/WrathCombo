@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.MCH.Config;
@@ -672,11 +673,12 @@ internal partial class MCH
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
             Reassemble,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             AirAnchor,
             CheckMate,
             DoubleCheck,
@@ -714,10 +716,11 @@ internal partial class MCH
         public override Preset Preset => Preset.MCH_ST_Adv_Opener;
 
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
+        internal override bool IncludePot => MCH_Opener_Potion;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => 4)
+            ([2], () => 3)
         ];
 
         public override bool HasCooldowns() =>
@@ -735,11 +738,12 @@ internal partial class MCH
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
             Reassemble,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             AirAnchor,
             CheckMate,
             DoubleCheck,
@@ -777,10 +781,11 @@ internal partial class MCH
         public override Preset Preset => Preset.MCH_ST_Adv_Opener;
 
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
+        internal override bool IncludePot => MCH_Opener_Potion;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => 4)
+            ([2], () => 3)
         ];
 
         public override bool HasCooldowns() =>
@@ -835,6 +840,7 @@ internal partial class MCH
         public override Preset Preset => Preset.MCH_ST_Adv_Opener;
 
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
+        internal override bool IncludePot => false;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
