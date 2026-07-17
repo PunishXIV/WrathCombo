@@ -382,6 +382,10 @@ internal partial class RPR
         if (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner) ||
             HasStatusEffect(Buffs.ImmortalSacrifice))
             return 0;
+        
+        if (LevelChecked(onAoE ? WhorlOfDeath : ShadowOfDeath) &&
+            GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= GCD)
+            return 0;
 
         if (soulSliceEnabled && CanBurstSoulSliceScythe(onAoE) && ShouldUseSoulSliceOverCombo(onAoE))
             return onAoE ? SoulScythe : SoulSlice;
