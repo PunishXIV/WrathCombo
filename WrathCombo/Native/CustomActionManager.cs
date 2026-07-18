@@ -9,7 +9,6 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using InteropGenerator.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -166,14 +165,19 @@ public sealed unsafe class CustomActionManager : IDisposable
         _updateTooltipHook.Dispose();
         _updateNameHook.Dispose();
 
-        foreach (CustomAction action in _actions.Values)
+        Svc.Framework.RunOnTick(() =>
         {
-            action.Dispose();
-        }
+            foreach (CustomAction action in _actions.Values)
+            {
+                action.Dispose();
+            }
 
-        _actions.Clear();
-        _iconTextures.Clear();
-        _pendingInjects.Clear();
+            _actions.Clear();
+            _iconTextures.Clear();
+            _pendingInjects.Clear();
+
+            Svc.Log.Debug($"Cleared custom actions");
+        }, TimeSpan.FromTicks(100));
     }
 
     public void Register(CustomAction action)
@@ -299,13 +303,13 @@ public sealed unsafe class CustomActionManager : IDisposable
                 _pendingInjects.RemoveAt(i);
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             ex.Log("Error with icon injection");
         }
     }
 
-    [StructLayout(LayoutKind.Explicit, Size = 0x3E)]
+    [StructLayout(LayoutKind.Explicit, Size = 0x3F)]
     internal struct CustomActionRow
     {
         [FieldOffset(0x00)] public uint NameOffset;
