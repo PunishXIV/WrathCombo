@@ -13,7 +13,7 @@ internal partial class RPR
 {
     #region SoD
 
-   private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool trashOnly = true, bool arcaneCircleEnabled = true)
+    private static bool CanUseShadowOfDeath(int dotRefresh = 8, bool trashOnly = true, bool arcaneCircleEnabled = true)
     {
         if (LevelChecked(ShadowOfDeath) && !HasStatusEffect(Buffs.SoulReaver) &&
             !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.PerfectioParata) &&
@@ -39,7 +39,7 @@ internal partial class RPR
 
                 //Double enshroud
                 if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                    AcCD <= GCD && ddRemaining < 32 &&
+                    AcCD <= GCD && Lemure is 4 &&
                     (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
@@ -302,58 +302,27 @@ internal partial class RPR
 
     private static bool InPostBurstSequence =>
         JustUsed(Perfectio, GCD * 8);
-
-    private static bool HasBurstComboContinue() =>
+    
+    private static bool HasBurstComboContinue(bool onAoE = false) =>
         InPostBurstSequence &&
-        !IsComboExpiring(2) &&
-        ComboTimer > 0;
-
-    private static bool JustUsedBasicComboStep(bool onAoE) =>
-        onAoE
-            ? JustUsed(OriginalHook(SpinningScythe), GCD) || JustUsed(OriginalHook(NightmareScythe), GCD)
-            : JustUsed(OriginalHook(Slice), GCD) || JustUsed(OriginalHook(WaxingSlice), GCD) ||
-              JustUsed(OriginalHook(InfernalSlice), GCD);
-
-    private static bool ShouldSpendSoulSliceBeforeGluttony(bool onAoE) =>
-        InPostBurstSequence &&
-        Soul < 50 &&
+        IsComboExpiring(2) &&
+        ComboTimer > 0 &&
         (onAoE
-            ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
-            : ActionReady(SoulSlice) && InActionRange(SoulSlice));
-
-    private static bool ShouldUseSoulSliceOverCombo(bool onAoE)
-    {
-        uint soulSlice = onAoE ? SoulScythe : SoulSlice;
-
-        if (!InPostBurstSequence || JustUsed(soulSlice, GCD))
-            return false;
-
-        if (OvercapSoulSliceProtection(onAoE))
-            return true;
-
-        if (Soul > 50)
-            return false;
-
-        if (onAoE
-            ? !ActionReady(SoulScythe) || !InActionRange(SoulScythe)
-            : !ActionReady(SoulSlice) || !InActionRange(SoulSlice) || IsComboExpiring(2))
-            return false;
-
-        return !HasBurstComboContinue() || JustUsedBasicComboStep(onAoE);
-    }
+            ? ComboAction == OriginalHook(SpinningScythe)
+            : ComboAction == OriginalHook(Slice) || ComboAction == OriginalHook(WaxingSlice));
 
     private static bool CanBurstGluttonyWeave(bool enshroudEnabled = true, bool onAoE = false) =>
         !IsShroudOvercapping(enshroudEnabled) &&
         InPostBurstSequence && Soul >= 50 && ActionReady(Gluttony) &&
-        !HasBurstComboContinue() &&
-        !ShouldSpendSoulSliceBeforeGluttony(onAoE);
+        !HasBurstComboContinue(onAoE);
 
     private static bool OvercapSoulSliceProtection(bool onAoE)
     {
+        uint action = onAoE ? SoulScythe : SoulSlice;
+        
         if (Soul >= 100)
             return false;
-
-        uint action = onAoE ? SoulScythe : SoulSlice;
+        
         if (!ActionReady(action))
             return false;
 
@@ -366,11 +335,12 @@ internal partial class RPR
 
     private static bool CanBurstSoulSliceScythe(bool onAoE = false) =>
         InPostBurstSequence &&
+        !HasBurstComboContinue(onAoE) &&
         !JustUsed(onAoE ? SoulScythe : SoulSlice, GCD) &&
-        (Soul <= 50 || OvercapSoulSliceProtection(onAoE)) &&
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
-            : ActionReady(SoulSlice) && InActionRange(SoulSlice) && !IsComboExpiring(2));
+            : ActionReady(SoulSlice) && InActionRange(SoulSlice)) &&
+        (OvercapSoulSliceProtection(onAoE) || Soul < 50 && ActionReady(Gluttony));
 
     private static bool ShouldHoldSoulOverflowWeave =>
         Soul < 100 &&
@@ -380,7 +350,7 @@ internal partial class RPR
     {
         if (!InPostBurstSequence)
             return 0;
-
+        
         if (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner) ||
             HasStatusEffect(Buffs.ImmortalSacrifice))
             return 0;
@@ -388,17 +358,14 @@ internal partial class RPR
         if (LevelChecked(onAoE ? WhorlOfDeath : ShadowOfDeath) &&
             GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= GCD)
             return 0;
-
-        if (soulSliceEnabled && CanBurstSoulSliceScythe(onAoE) && ShouldUseSoulSliceOverCombo(onAoE))
-            return onAoE ? SoulScythe : SoulSlice;
-
-        if (HasBurstComboContinue())
+        
+        if (HasBurstComboContinue(onAoE))
             return ContinueBasicCombo(onAoE);
-
+        
         if (soulSliceEnabled && CanBurstSoulSliceScythe(onAoE))
             return onAoE ? SoulScythe : SoulSlice;
 
-        return ContinueBasicCombo(onAoE);
+        return 0;
     }
 
     private static bool HasImmortalSacrificeStacks =>
@@ -440,10 +407,7 @@ internal partial class RPR
             useSimpleTrueNorth && neitherEnhanced ||
             !useSimpleTrueNorth && positionalChoice is 1 && neitherEnhanced)
         {
-            if (useSimpleTrueNorth && Role.CanTrueNorth() && !OnTargetsFlank())
-                return Role.TrueNorth;
-
-            if (useDynamicTrueNorth &&
+            if (useSimpleTrueNorth && Role.CanTrueNorth() && !OnTargetsFlank() || useDynamicTrueNorth &&
                 (holdTnCharge && GetRemainingCharges(Role.TrueNorth) is 2 || !holdTnCharge) &&
                 Role.CanTrueNorth() && !OnTargetsFlank() &&
                 GetRemainingCharges(Role.TrueNorth) > tnChargePool)
@@ -456,10 +420,7 @@ internal partial class RPR
             useSimpleTrueNorth && neitherEnhanced ||
             !useSimpleTrueNorth && positionalChoice is 0 && neitherEnhanced)
         {
-            if (useSimpleTrueNorth && Role.CanTrueNorth() && !OnTargetsRear())
-                return Role.TrueNorth;
-
-            if (useDynamicTrueNorth &&
+            if (useSimpleTrueNorth && Role.CanTrueNorth() && !OnTargetsRear() || useDynamicTrueNorth &&
                 (holdTnCharge && GetRemainingCharges(Role.TrueNorth) is 2 || !holdTnCharge) &&
                 Role.CanTrueNorth() && !OnTargetsRear() &&
                 GetRemainingCharges(Role.TrueNorth) > tnChargePool)
@@ -490,68 +451,75 @@ internal partial class RPR
         if (communio && Lemure is 1 && LevelChecked(Communio))
             return Communio;
 
-        if (reaping && HasStatusEffect(Buffs.EnhancedVoidReaping))
-            return OriginalHook(Gibbet);
-
-        if (reaping &&
-            (HasStatusEffect(Buffs.EnhancedCrossReaping) ||
-             !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping)))
-            return OriginalHook(Gallows);
-
-        return 0;
+        switch (reaping)
+        {
+            case true when HasStatusEffect(Buffs.EnhancedVoidReaping):
+                return OriginalHook(Gibbet);
+            
+            case true when
+                HasStatusEffect(Buffs.EnhancedCrossReaping) ||
+                !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping):
+                return OriginalHook(Gallows);
+            
+            default:
+                return 0;
+        }
     }
 
     private static uint BloodStalkGrimSwatheEnshroudGCD(uint actionId)
     {
-        if (actionId is GrimSwathe)
+        switch (actionId)
         {
-            if (HasStatusEffect(Buffs.PerfectioParata))
+            case GrimSwathe when HasStatusEffect(Buffs.PerfectioParata):
                 return OriginalHook(Communio);
-
-            if (!HasStatusEffect(Buffs.Enshrouded))
+            case GrimSwathe when !HasStatusEffect(Buffs.Enshrouded):
                 return 0;
-
-            switch (Lemure)
+            case GrimSwathe:
             {
-                case 1 when Void == 0 && LevelChecked(Communio):
-                    return Communio;
+                switch (Lemure)
+                {
+                    case 1 when Void == 0 && LevelChecked(Communio):
+                        return Communio;
 
-                case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
-                    return OriginalHook(Gluttony);
+                    case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
+                        return OriginalHook(Gluttony);
+                }
+
+                if (Void >= 2 && LevelChecked(LemuresScythe))
+                    return OriginalHook(GrimSwathe);
+
+                if (Lemure > 1)
+                    return OriginalHook(Guillotine);
+                break;
             }
-
-            if (Void >= 2 && LevelChecked(LemuresScythe))
-                return OriginalHook(GrimSwathe);
-
-            if (Lemure > 1)
-                return OriginalHook(Guillotine);
-        }
-        else if (actionId is BloodStalk)
-        {
-            if (HasStatusEffect(Buffs.PerfectioParata))
+            case BloodStalk when HasStatusEffect(Buffs.PerfectioParata):
                 return OriginalHook(Communio);
-
-            if (!HasStatusEffect(Buffs.Enshrouded))
-                return 0;
-
-            switch (Lemure)
+            
+            case BloodStalk when !HasStatusEffect(Buffs.Enshrouded):
+                break;
+            
+            case BloodStalk:
             {
-                case 1 when Void == 0 && LevelChecked(Communio):
-                    return Communio;
+                switch (Lemure)
+                {
+                    case 1 when Void == 0 && LevelChecked(Communio):
+                        return Communio;
 
-                case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
-                    return OriginalHook(Gluttony);
+                    case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
+                        return OriginalHook(Gluttony);
+                }
+
+                if (Void >= 2 && LevelChecked(LemuresSlice))
+                    return OriginalHook(BloodStalk);
+
+                if (HasStatusEffect(Buffs.EnhancedVoidReaping))
+                    return OriginalHook(Gibbet);
+
+                if (HasStatusEffect(Buffs.EnhancedCrossReaping) ||
+                    !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping))
+                    return OriginalHook(Gallows);
+                break;
             }
-
-            if (Void >= 2 && LevelChecked(LemuresSlice))
-                return OriginalHook(BloodStalk);
-
-            if (HasStatusEffect(Buffs.EnhancedVoidReaping))
-                return OriginalHook(Gibbet);
-
-            if (HasStatusEffect(Buffs.EnhancedCrossReaping) ||
-                !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping))
-                return OriginalHook(Gallows);
         }
 
         return 0;
