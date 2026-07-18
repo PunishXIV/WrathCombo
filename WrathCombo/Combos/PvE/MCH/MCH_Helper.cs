@@ -236,26 +236,23 @@ internal partial class MCH
         if (charges == CurrentReassembleCharges)
             return;
 
-        switch (TwoChargesUnlocked)
+        if (!TwoChargesUnlocked)
         {
-            case true:
-                switch (charges)
-                {
-                    case 2 when CurrentReassembleCharges != 2:
-                        UseBothCharges = true;
-                        break;
+            UseBothCharges = false;
+        }
+        else
+        {
+            switch (charges)
+            {
+                case 2 when CurrentReassembleCharges != 2:
+                    UseBothCharges = true;
+                    break;
 
-                    case 0:
-
-                    case 1 when CurrentReassembleCharges == 0:
-                        UseBothCharges = false;
-                        break;
-                }
-                break;
-
-            default:
-                UseBothCharges = false;
-                break;
+                case 0:
+                case 1 when CurrentReassembleCharges == 0:
+                    UseBothCharges = false;
+                    break;
+            }
         }
 
         CurrentReassembleCharges = charges;
@@ -266,56 +263,69 @@ internal partial class MCH
 
     private static int ReadyTools()
     {
-        int numberOfReadyTools = 0;
+        int ready = 0;
 
         if (ActionReady(Drill))
-            numberOfReadyTools += (int)GetRemainingCharges(Drill);
+            ready += (int)GetRemainingCharges(Drill);
 
         if (ToolReadyForReassembleWeave(Chainsaw))
         {
-            numberOfReadyTools++;
+            ready++;
             if (LevelChecked(Excavator))
-                numberOfReadyTools++;
+                ready++;
         }
-
         else if (HasStatusEffect(Buffs.ExcavatorReady))
-        {
-            numberOfReadyTools++;
-        }
+            ready++;
 
         if (ToolReadyForReassembleWeave(AirAnchor))
-            numberOfReadyTools++;
+            ready++;
 
-        if (!LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot &&
-            LevelChecked(CleanShot))
-            numberOfReadyTools++;
+        if (!LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot))
+            ready++;
 
-        return numberOfReadyTools;
+        return ready;
     }
 
-    private static bool CanReassembleAoE(int chargePool = 0, int hpThreshold = 25, bool forPrepull = false)
-    {
-        uint remainingCharges = GetRemainingCharges(Reassemble);
+    private static bool HigherToolOnCooldown(uint higherTool) =>
+        !LevelChecked(higherTool) || GetCooldownRemainingTime(higherTool) > GCD * 2;
 
+    private static bool CanReassembleCharges(int chargePool, int hpThreshold, bool blockInWildfire = false)
+    {
         if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) ||
+            blockInWildfire && IsWildfireActive ||
             !HasBattleTarget() || GetTargetHPPercent() <= hpThreshold ||
             !InReassembleRange() || JustUsed(Reassemble, 2f))
             return false;
 
-        if (remainingCharges == 0 || remainingCharges <= chargePool)
-            return false;
+        uint remainingCharges = GetRemainingCharges(Reassemble);
+        return remainingCharges > 0 && remainingCharges > chargePool;
+    }
 
+    private static bool HasReassembleToolTarget(bool forPrepull, bool onAoE)
+    {
         if (ToolReadyForReassemble(Excavator, forPrepull) && HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
         if (ToolReadyForReassemble(Chainsaw, forPrepull) && !HasStatusEffect(Buffs.ExcavatorReady))
             return true;
 
-        if (ToolReadyForReassemble(AirAnchor, forPrepull) &&
-            (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2))
+        if (ToolReadyForReassemble(AirAnchor, forPrepull) && HigherToolOnCooldown(Chainsaw))
             return true;
 
-        if (CanUseDrill(true) && ToolReadyForReassemble(Drill, forPrepull))
+        if (onAoE)
+            return CanUseDrill(true) && ToolReadyForReassemble(Drill, forPrepull);
+
+        return ToolReadyForReassemble(Drill, forPrepull) && HigherToolOnCooldown(AirAnchor)
+               || !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot)
+               || !LevelChecked(CleanShot) && ToolReadyForReassemble(HotShot, forPrepull);
+    }
+
+    private static bool CanReassembleAoE(int chargePool = 0, int hpThreshold = 25, bool forPrepull = false)
+    {
+        if (!CanReassembleCharges(chargePool, hpThreshold))
+            return false;
+
+        if (HasReassembleToolTarget(forPrepull, onAoE: true))
             return true;
 
         if (LevelChecked(Scattergun) && ActionReady(Scattergun))
@@ -338,38 +348,13 @@ internal partial class MCH
     {
         UpdateReassembleChargeTracking();
 
-        uint remainingCharges = GetRemainingCharges(Reassemble);
-
-        if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) || IsWildfireActive || !HasBattleTarget() ||
-            GetTargetHPPercent() <= hpThreshold ||
-            !InReassembleRange() || JustUsed(Reassemble, 2f))
+        if (!CanReassembleCharges(chargePool, hpThreshold, blockInWildfire: true))
             return false;
 
-        if (remainingCharges == 0 || remainingCharges <= chargePool)
-            return false;
+        if (reassembleChoice == 0)
+            return ShouldReassemble() && ReadyTools() >= GetRemainingCharges(Reassemble);
 
-        if (reassembleChoice == 0 && !ShouldReassemble())
-            return false;
-
-        switch (reassembleChoice)
-        {
-            case 0:
-            {
-                int numberOfReadyTools = ReadyTools();
-                return numberOfReadyTools >= remainingCharges;
-            }
-
-            case 1 when ToolReadyForReassemble(Excavator, forPrepull) && HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolReadyForReassemble(Chainsaw, forPrepull) && !HasStatusEffect(Buffs.ExcavatorReady):
-            case 1 when ToolReadyForReassemble(AirAnchor, forPrepull) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2):
-            case 1 when ToolReadyForReassemble(Drill, forPrepull) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2):
-            case 1 when !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot):
-            case 1 when !LevelChecked(CleanShot) && ToolReadyForReassemble(HotShot, forPrepull):
-                return true;
-
-            default:
-                return false;
-        }
+        return reassembleChoice == 1 && HasReassembleToolTarget(forPrepull, onAoE: false);
     }
 
     #endregion
@@ -550,8 +535,7 @@ internal partial class MCH
         }
 
         if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
-            (onAoE || !holdExcavatorForWildfire ||
-             GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCD * 3))
+            (onAoE || !holdExcavatorForWildfire || GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCD * 3))
         {
             actionID = Excavator;
             return true;
@@ -563,8 +547,7 @@ internal partial class MCH
             return true;
         }
 
-        if (onAoE &&
-            ActionReady(BioBlaster) &&
+        if (onAoE && ActionReady(BioBlaster) &&
             !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
             CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
         {
@@ -578,9 +561,7 @@ internal partial class MCH
             return true;
         }
 
-        if (onAoE &&
-            HasStatusEffect(Buffs.Reassembled) &&
-            ActionReady(OriginalHook(SpreadShot)))
+        if (onAoE && HasStatusEffect(Buffs.Reassembled) && ActionReady(OriginalHook(SpreadShot)))
         {
             actionID = OriginalHook(SpreadShot);
             return true;
