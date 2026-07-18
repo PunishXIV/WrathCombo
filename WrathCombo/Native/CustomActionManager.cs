@@ -206,9 +206,16 @@ public sealed unsafe class CustomActionManager : IDisposable
 
     private CustomActionRow* GetActionRowDetour(uint rowId)
     {
-        if (_actions.TryGetValue(rowId, out CustomAction? action))
+        try
         {
-            return (CustomActionRow*)action.ActionRowPtr;
+            if (_actions.TryGetValue(rowId, out CustomAction? action))
+            {
+                return (CustomActionRow*)action.ActionRowPtr;
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Log();
         }
 
         return _getActionRowHook.Original(rowId);
