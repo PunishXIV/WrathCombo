@@ -159,15 +159,15 @@ internal partial class DRK : Tank
             var newAction = HardSlash;
             _ = IsBursting;
 
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
+            
             // Unmend Option
             if (ActionReady(Unmend) &&
                 !InMeleeRange() &&
                 HasBattleTarget())
                 return Unmend;
-
-            if (ContentSpecificActions.TryGet(out var contentAction))
-                return contentAction;
-
+            
             // Bail if not in combat
             if (!InCombat())
             {
