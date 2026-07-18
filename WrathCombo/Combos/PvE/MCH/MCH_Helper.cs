@@ -350,7 +350,7 @@ internal partial class MCH
     {
         UpdateReassembleChargeTracking();
 
-        if (!CanReassembleCharges(chargePool, hpThreshold, blockInWildfire: true))
+        if (!CanReassembleCharges(chargePool, hpThreshold, true))
             return false;
 
         if (reassembleChoice == 0)
