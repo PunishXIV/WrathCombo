@@ -239,7 +239,7 @@ namespace WrathCombo.Window
             private static readonly ConcurrentDictionary<uint, string> _statusNameCache = new();
 
             public static string GetActionName(uint actionId)
-                => _actionNameCache.GetOrAdd(actionId, Svc.Data.GetExcelSheet<Action>(LangFromCulture).GetRowOrDefault(actionId)?.Name.ToString() ?? P.CustomActions.Manager.Actions.FirstOrDefault(x => x.Id == actionId).Name ?? "Unknown Action");
+                => _actionNameCache.GetOrAdd(actionId, Svc.Data.GetExcelSheet<Action>(LangFromCulture).GetRowOrDefault(actionId)?.Name.ToString() ?? P.CustomActions.Manager.Actions.FirstOrDefault(x => x.Id == actionId)?.Name ?? "Unknown Action");
 
             public static string GetTraitName(uint traitId)
                 => _traitNameCache.GetOrAdd(traitId, Svc.Data.GetExcelSheet<Trait>(LangFromCulture).GetRowOrDefault(traitId)?.Name.ToString() ?? "Unknown Trait");
