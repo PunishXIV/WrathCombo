@@ -429,7 +429,7 @@ internal partial class NIN
 
             if (statusId == Buffs.Mudra)
             {
-                if (InMudra)
+                if (onPlayer)
                 {
                     Svc.Log.Debug($"{AssociatedPreset} -> {CurrentMudra} set");
                 }
