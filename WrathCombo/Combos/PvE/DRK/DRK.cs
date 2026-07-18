@@ -72,19 +72,7 @@ internal partial class DRK : Tank
             const Combo comboFlags = Combo.ST | Combo.Adv;
             var newAction = HardSlash;
             _ = IsBursting;
-
-            // Unmend Option for Pulling
-            var skipBecauseOpener =
-                IsEnabled(Preset.DRK_ST_BalanceOpener) &&
-                Opener().HasCooldowns() &&
-                NumberOfObjectsInRange<SelfCircle>(20) < 2; // don't skip if add-pulling
-            if (IsEnabled(Preset.DRK_ST_RangedUptime) &&
-                ActionReady(Unmend) &&
-                !InMeleeRange() &&
-                HasBattleTarget() &&
-                !skipBecauseOpener)
-                return Unmend;
-
+            
             // Opener
             if (IsEnabled(Preset.DRK_ST_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -102,6 +90,18 @@ internal partial class DRK : Tank
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
 
+            // Unmend Option for Pulling
+            var skipBecauseOpener =
+                IsEnabled(Preset.DRK_ST_BalanceOpener) &&
+                Opener().HasCooldowns() &&
+                NumberOfObjectsInRange<SelfCircle>(20) < 2; // don't skip if add-pulling
+            if (IsEnabled(Preset.DRK_ST_RangedUptime) &&
+                ActionReady(Unmend) &&
+                !InMeleeRange() &&
+                HasBattleTarget() &&
+                !skipBecauseOpener)
+                return Unmend;
+            
             // Bail if not in combat
             if (!InCombat())
             {
