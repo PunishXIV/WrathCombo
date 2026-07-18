@@ -56,6 +56,7 @@ public sealed unsafe class CustomAction : IDisposable
         row->Cast100ms = cast100ms;
         row->Recast100ms = recast100ms;
         row->CooldownGroup = cooldownGroup;
+        row->AdditionalRecastGroup = 0;
         row->MaxCharges = maxCharges;
         row->ClassJobCategory = 1;
         row->ClassJob = -1;
@@ -297,7 +298,7 @@ public sealed unsafe class CustomActionManager : IDisposable
         }
     }
 
-    [StructLayout(LayoutKind.Explicit, Size = 0x40)]
+    [StructLayout(LayoutKind.Explicit, Size = 0x3E)]
     internal struct CustomActionRow
     {
         [FieldOffset(0x00)] public uint NameOffset;
@@ -310,6 +311,7 @@ public sealed unsafe class CustomActionManager : IDisposable
         [FieldOffset(0x29)] public byte EffectRange;
         [FieldOffset(0x2B)] public byte PrimaryCostType;
         [FieldOffset(0x2E)] public byte CooldownGroup;
+        [FieldOffset(0x2F)] public byte AdditionalRecastGroup;
         [FieldOffset(0x30)] public byte MaxCharges;
         [FieldOffset(0x33)] public byte ClassJobCategory;
         [FieldOffset(0x37)] public sbyte ClassJob;
