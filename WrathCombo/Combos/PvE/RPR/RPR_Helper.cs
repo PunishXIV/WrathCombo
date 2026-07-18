@@ -59,7 +59,6 @@ internal partial class RPR
         return false;
     }
 
-
     #endregion
 
     #region Ranged Attack
@@ -302,7 +301,7 @@ internal partial class RPR
 
     private static bool InPostBurstSequence =>
         JustUsed(Perfectio, GCD * 8);
-    
+
     private static bool HasBurstComboContinue(bool onAoE = false) =>
         InPostBurstSequence &&
         IsComboExpiring(2) &&
@@ -319,10 +318,10 @@ internal partial class RPR
     private static bool OvercapSoulSliceProtection(bool onAoE)
     {
         uint action = onAoE ? SoulScythe : SoulSlice;
-        
+
         if (Soul >= 100)
             return false;
-        
+
         if (!ActionReady(action))
             return false;
 
@@ -350,7 +349,7 @@ internal partial class RPR
     {
         if (!InPostBurstSequence)
             return 0;
-        
+
         if (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner) ||
             HasStatusEffect(Buffs.ImmortalSacrifice))
             return 0;
@@ -358,10 +357,10 @@ internal partial class RPR
         if (LevelChecked(onAoE ? WhorlOfDeath : ShadowOfDeath) &&
             GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= GCD)
             return 0;
-        
+
         if (HasBurstComboContinue(onAoE))
             return ContinueBasicCombo(onAoE);
-        
+
         if (soulSliceEnabled && CanBurstSoulSliceScythe(onAoE))
             return onAoE ? SoulScythe : SoulSlice;
 
@@ -455,12 +454,12 @@ internal partial class RPR
         {
             case true when HasStatusEffect(Buffs.EnhancedVoidReaping):
                 return OriginalHook(Gibbet);
-            
+
             case true when
                 HasStatusEffect(Buffs.EnhancedCrossReaping) ||
                 !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping):
                 return OriginalHook(Gallows);
-            
+
             default:
                 return 0;
         }
@@ -494,10 +493,10 @@ internal partial class RPR
             }
             case BloodStalk when HasStatusEffect(Buffs.PerfectioParata):
                 return OriginalHook(Communio);
-            
+
             case BloodStalk when !HasStatusEffect(Buffs.Enshrouded):
                 break;
-            
+
             case BloodStalk:
             {
                 switch (Lemure)
