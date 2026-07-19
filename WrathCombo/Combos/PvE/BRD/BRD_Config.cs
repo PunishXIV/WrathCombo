@@ -1,4 +1,5 @@
 using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -15,7 +16,8 @@ internal partial class BRD
             BRD_AoE_Wardens_Auto = new("BRD_AoE_Wardens_Auto"),
             BRD_ST_Wardens_Auto = new("BRD_ST_Wardens_Auto"),
             BRD_IronJaws_Apex = new("BRD_IronJaws_Apex"),
-            BRD_IronJaws_Alternate = new("BRD_IronJaws_Alternate");
+            BRD_IronJaws_Alternate = new("BRD_IronJaws_Alternate"),
+            BRD_Opener_Potion = new("BRD_Opener_Potion");
 
         public static UserInt
             BRD_RagingJawsRenewTime = new("ragingJawsRenewTime", 5),
@@ -50,12 +52,15 @@ internal partial class BRD
             {
                 #region Single Target
                 case Preset.BRD_ST_Adv_Balance_Standard:
+                    DrawBossOnlyChoice(BRD_Balance_Content);
+                    DrawOpenerPotionChoice(BRD_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
                     DrawRadioButton(BRD_Adv_Opener_Selection, Generics.StandardOpener, "", 0);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "2.48 Adjusted Standard Opener", "", 1);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "2.49 Standard Comfy", "", 2);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "Early Buff Window Opener", "Moves buff window forward about 1 GCD. Prepot with this.", 3, descriptionAsTooltip: true);
                     ImGui.Indent();
-                    DrawBossOnlyChoice(BRD_Balance_Content);
                     ImGui.Unindent();
                     break;
 
