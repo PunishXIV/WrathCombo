@@ -11,14 +11,12 @@ using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
-using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using FFXIVClientStructs.FFXIV.Common.Lua;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System;
@@ -29,7 +27,6 @@ using System.Numerics;
 using System.Text;
 using WrathCombo.API.Enum;
 using WrathCombo.AutoRotation;
-using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -516,9 +513,13 @@ internal class Debug : ConfigWindow, IDisposable
                 if (p.ContentId == 0)
                     continue;
 
-                if (Svc.Objects.TryGetFirst(x => x.EntityId == p.EntityId, out var pt) && ImGui.TreeNode($"{p.NameString}###{p.EntityId}"))
+                if (Svc.Objects.TryGetFirst(x => x.EntityId == p.EntityId, out var pt))
                 {
-                    DrawTargetInfo(pt);
+                    if (ImGui.TreeNode($"{p.NameString}###{p.EntityId}"))
+                    {
+                        DrawTargetInfo(pt);
+                        ImGui.TreePop();
+                    }
                 }
             }
         }
@@ -1062,7 +1063,7 @@ internal class Debug : ConfigWindow, IDisposable
                 foreach (var t in AutoRotationController.HealerTargeting.HealTargets())
                 {
                     if (ImGui.CollapsingHeader($"{t.Name}###{t.SafeGameObjectId}"))
-                    DrawTargetInfo(t);
+                        DrawTargetInfo(t);
                 }
                 ImGui.Unindent();
             }
