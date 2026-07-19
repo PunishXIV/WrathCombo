@@ -9,19 +9,44 @@ using System.IO;
 using System.Linq;
 using WrathCombo.API.Enum;
 using WrathCombo.Attributes;
-using WrathCombo.Combos;
 using WrathCombo.Core;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Extensions;
-using WrathCombo.Window.Tabs;
-using EZ = ECommons.Throttlers.EzThrottler;
-using TS = System.TimeSpan;
-using System.Diagnostics;
 
 #endregion
 
 namespace WrathCombo.Services.IPC;
+
+/// <summary>
+///     Wraps a <see cref="PresetStorage.PresetData" /> reference together with
+///     its current, mutable runtime state (enabled / auto-mode) as seen
+///     through the IPC layer (i.e. accounting for lease overrides).
+/// </summary>
+/// <remarks>
+///     Callers that need attribute data (<see cref="PresetStorage.PresetData.AutoAction" />,
+///     <see cref="PresetStorage.PresetData.Parent" />, etc.) alongside runtime
+///     state can read <see cref="Data" /> directly, instead of re-deriving a
+///     <see cref="Preset" /> from a string and re-querying its attributes.
+/// </remarks>
+internal sealed class PresetRuntimeState(PresetStorage.PresetData data)
+{
+    /// <summary>
+    ///     The static, attribute-derived data for this preset.
+    /// </summary>
+    public PresetStorage.PresetData Data { get; } = data;
+
+    /// <summary>
+    ///     Whether the preset is currently enabled, including any lease
+    ///     override.
+    /// </summary>
+    public required bool Enabled { get; init; }
+
+    /// <summary>
+    ///     Whether the preset is currently in Auto-Mode, including any lease
+    ///     override.
+    /// </summary>
+    public required bool AutoMode { get; init; }
+}
 
 public class Search(Leasing leasing)
 {
@@ -216,99 +241,122 @@ public class Search(Leasing leasing)
     }
 
     /// <summary>
-    ///     When <see cref="PresetStates" /> was last built.
+    ///     Set to <c>true</c> to force <see cref="PresetRuntimeStates" />/
+    ///     <see cref="PresetStates" /> to rebuild on next access. Cleared
+    ///     automatically once the rebuild completes.
     /// </summary>
-    private DateTime _lastCacheUpdateForPresetStates = DateTime.MinValue;
+    internal bool UpdateDue = true;
+
+    private Dictionary<Preset, PresetRuntimeState>? _presetRuntimeStates;
+
+    private Dictionary<string, Dictionary<ComboStateKeys, bool>>?
+        _presetStatesByName;
 
     /// <summary>
-    ///     Cached list of <see cref="Preset">Presets</see>, and most of
-    ///     their attribute-based information.
+    ///     Rebuilds the preset-state caches if <see cref="UpdateDue" /> is
+    ///     set. Otherwise a no-op.
     /// </summary>
-    [field: AllowNull, MaybeNull]
-    // ReSharper disable once MemberCanBePrivate.Global
-    internal Dictionary<string, (Job Job, Preset ID,
-        PresetStorage.PresetData presetData, bool HasParentCombo, bool IsVariant, string
-        ParentComboName, ComboType ComboType)> Presets
+    /// <remarks>
+    ///     This is the single source of truth for preset runtime state:
+    ///     <see cref="PresetRuntimeStates" /> (keyed by <see cref="Preset" />,
+    ///     for internal use, carrying a direct <see cref="PresetStorage.PresetData" />
+    ///     reference) and <see cref="PresetStates" /> (keyed by internal name
+    ///     string, for the IPC boundary) are both projected from the same
+    ///     build, so nothing downstream needs to re-derive a <see cref="Preset" />
+    ///     from a string, or re-run this work per access.
+    /// </remarks>
+    private void EnsurePresetStatesCurrent()
+    {
+        if (_presetRuntimeStates != null && !UpdateDue)
+            return;
+
+        // Walk every lease once, keeping only the most-recently-updated
+        // combo override per Preset — avoids an O(leases) scan being
+        // repeated for every preset below.
+        var latestComboOverrides = _leasing.Registrations.Values
+            .SelectMany(registration => registration.CombosControlled
+                .Select(pair => new
+                {
+                    pair.Key,
+                    pair.Value.autoMode,
+                    registration.LastUpdated,
+                }))
+            .GroupBy(x => x.Key)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(x => x.LastUpdated).First().autoMode
+            );
+
+        _presetRuntimeStates = PresetStorage.AllPresets
+            .ToDictionary(
+                preset => preset.Key,
+                preset =>
+                {
+                    var isEnabled =
+                        CustomComboFunctions.IsEnabled(preset.Key);
+                    var ipcAutoMode =
+                        latestComboOverrides.GetValueOrDefault(preset.Key);
+                    var isAutoMode =
+                        Service.Configuration.AutoActions.TryGetValue(
+                            preset.Key, out var autoMode) &&
+                        autoMode && preset.Value.AutoAction != null;
+
+                    return new PresetRuntimeState(preset.Value)
+                    {
+                        Enabled = isEnabled,
+                        AutoMode = isAutoMode || ipcAutoMode,
+                    };
+                }
+            );
+
+        _presetStatesByName = _presetRuntimeStates.ToDictionary(
+            preset => preset.Value.Data.InternalName,
+            preset => new Dictionary<ComboStateKeys, bool>
+            {
+                { ComboStateKeys.Enabled, preset.Value.Enabled },
+                { ComboStateKeys.AutoMode, preset.Value.AutoMode },
+            }
+        );
+
+        UpdateDue = false;
+    }
+
+    /// <summary>
+    ///     Cached list of <see cref="Preset">Presets</see> and their current
+    ///     runtime state, keyed by <see cref="Preset" /> for internal
+    ///     (non-IPC) use. Each entry carries a direct reference to its
+    ///     <see cref="PresetStorage.PresetData" />, so callers never need to
+    ///     re-derive attribute data via string parsing.
+    /// </summary>
+    internal Dictionary<Preset, PresetRuntimeState> PresetRuntimeStates
     {
         get
         {
-            return field ??= PresetStorage.AllPresets!
-            .Select(preset => new
-            {
-                ID = preset.Key,
-                JobId = preset.Value.JobInfo!.Job,
-                InternalName = preset.Key.ToString(),
-                presetData = preset.Value,
-                HasParentCombo = preset.Value.Parent != null,
-                IsVariant = preset.Value.IsVariant,
-                ParentComboName = preset.Value.Parent != null
-                    ? preset.Value.RootParent.ToString()
-                    : string.Empty,
-                preset.Value.ComboType,
-            })
-            .Where(combo =>
-                !combo.InternalName.EndsWith("any", ToLower))
-            .ToDictionary(
-                combo => combo.InternalName,
-                combo => (
-                    combo.JobId,
-                    combo.ID,
-                    combo.presetData,
-                    combo.HasParentCombo,
-                    combo.IsVariant,
-                    combo.ParentComboName,
-                    combo.ComboType)
-            );
+            EnsurePresetStatesCurrent();
+            return _presetRuntimeStates!;
         }
     }
 
-    internal bool UpdateDue = true;
-
     /// <summary>
     ///     Cached list of <see cref="Preset">Presets</see>, and the
-    ///     state and Auto-Mode state of each.
+    ///     state and Auto-Mode state of each, keyed by internal name string.
     /// </summary>
     /// <remarks>
-    ///     Rebuilt if the <see cref="ConfigFilePath">Config File</see> has been
-    ///     updated since
-    ///     <see cref="_lastCacheUpdateForPresetStates">last cached</see>.
+    ///     This string-keyed shape exists for the IPC boundary
+    ///     (<see cref="Provider.GetComboState" />,
+    ///     <see cref="Provider.GetComboOptionState" />), since external
+    ///     plugins can only address presets by name/ID across the IPC
+    ///     boundary, not by the internal <see cref="Preset" /> enum type.
+    ///     Internal (non-IPC) callers should prefer
+    ///     <see cref="PresetRuntimeStates" /> instead.
     /// </remarks>
-    [field: AllowNull, MaybeNull]
     // ReSharper disable once MemberCanBePrivate.Global
     internal Dictionary<string, Dictionary<ComboStateKeys, bool>> PresetStates
     {
         get
         {
-            field ??= [];
-
-            if (UpdateDue)
-            {
-                field = Presets
-                    .ToDictionary(
-                        preset => preset.Key,
-                        preset =>
-                        {
-                            var isEnabled =
-                                CustomComboFunctions.IsEnabled(preset.Value.ID);
-                            var ipcAutoMode = _leasing.CheckComboControlled(
-                                preset.Value.ID.ToString())?.autoMode ?? false;
-                            var isAutoMode =
-                                Service.Configuration.AutoActions.TryGetValue(
-                                    preset.Value.ID, out var autoMode) &&
-                                autoMode && preset.Value.ID.Attributes().AutoAction !=
-                                null;
-                            return new Dictionary<ComboStateKeys, bool>
-                            {
-                            { ComboStateKeys.Enabled, isEnabled },
-                            { ComboStateKeys.AutoMode, isAutoMode || ipcAutoMode },
-                            };
-                        }
-                    );
-
-                UpdateDue = false;
-            }
-
-            return field;
+            EnsurePresetStatesCurrent();
+            return _presetStatesByName!;
         }
     }
 
@@ -332,14 +380,13 @@ public class Search(Leasing leasing)
     ///     Job -> <c>list</c> of combo internal names.
     /// </value>
     internal Dictionary<Job, List<string>> ComboNamesByJob =>
-        Presets
+        PresetRuntimeStates
             .Where(preset =>
-                preset.Value is { IsVariant: false, HasParentCombo: false } &&
-                !preset.Key.Contains("pvp", ToLower))
-            .GroupBy(preset => preset.Value.Job)
+                preset.Value.Data is { IsVariant: false, Parent: null, IsPvP: false })
+            .GroupBy(preset => preset.Value.Data.JobInfo!.Job)
             .ToDictionary(
                 g => g.Key,
-                g => g.Select(preset => preset.Key).ToList()
+                g => g.Select(preset => preset.Value.Data.InternalName).ToList()
             );
 
     /// <summary>
@@ -369,15 +416,21 @@ public class Search(Leasing leasing)
     /// <value>
     ///     Job -> <see cref="ComboTargetTypeKeys">Target Key</see> ->
     ///     <see cref="ComboSimplicityLevelKeys">Simplicity Key</see> ->
-    ///     Internal Name ->
+    ///     <see cref="Preset" /> ->
     ///     <see cref="ComboStateKeys">State Key</see> -><br />
     ///     <c>bool</c> - Whether the state is enabled or not.
     /// </value>
+    /// <remarks>
+    ///     Keyed by <see cref="Preset" /> (rather than internal name string)
+    ///     since this is internal-only — see <see cref="ComboNamesByJob" />/
+    ///     <see cref="OptionNamesByJob" /> for the string-keyed, IPC-facing
+    ///     equivalents.
+    /// </remarks>
     [field: AllowNull, MaybeNull]
     internal Dictionary<Job,
             Dictionary<ComboTargetTypeKeys,
                 Dictionary<ComboSimplicityLevelKeys,
-                    Dictionary<string, Dictionary<ComboStateKeys, bool>>>>>
+                    Dictionary<Preset, Dictionary<ComboStateKeys, bool>>>>>
         CurrentJobComboStatesCategorized
     {
         get
@@ -387,32 +440,19 @@ public class Search(Leasing leasing)
             if (field != null && field.ContainsKey(job))
                 return field;
 
-            field = Presets
+            field = PresetRuntimeStates
                 .Where(preset =>
-                    preset.Value is
-                        { IsVariant: false, HasParentCombo: false } &&
-                    preset.Value.Job == job &&
-                    !preset.Key.Contains("pvp", ToLower))
-                .SelectMany(preset => new[]
-                {
-                    new
-                    {
-                        Job = preset.Value.Job,
-                        Combo = preset.Key,
-                        preset.Value,
-                        preset.Value.ComboType,
-                    },
-                })
-                .GroupBy(x => x.Job)
+                    preset.Value.Data is
+                    { IsVariant: false, Parent: null, IsPvP: false } &&
+                    preset.Value.Data.JobInfo!.Job == job)
+                .GroupBy(preset => preset.Value.Data.JobInfo!.Job)
                 .ToDictionary(
                     g => g.Key,
-                    g => g.GroupBy(x =>
-                            x.Value.presetData.TargetType
-                        )
+                    g => g.GroupBy(x => x.Value.Data.TargetType)
                         .ToDictionary(
                             g2 => g2.Key,
                             g2 => g2.GroupBy(x =>
-                                    x.ComboType switch
+                                    x.Value.Data.ComboType switch
                                     {
                                         ComboType.Advanced =>
                                             ComboSimplicityLevelKeys.Advanced,
@@ -424,8 +464,18 @@ public class Search(Leasing leasing)
                                 .ToDictionary(
                                     g3 => g3.Key,
                                     g3 => g3.ToDictionary(
-                                        x => x.Combo,
-                                        x => ComboStatesByJob[x.Job][x.Combo]
+                                        x => x.Key,
+                                        x => new Dictionary<ComboStateKeys, bool>
+                                        {
+                                            {
+                                                ComboStateKeys.Enabled,
+                                                x.Value.Enabled
+                                            },
+                                            {
+                                                ComboStateKeys.AutoMode,
+                                                x.Value.AutoMode
+                                            },
+                                        }
                                     )
                                 )
                         )
@@ -452,17 +502,20 @@ public class Search(Leasing leasing)
             Dictionary<string,
                 List<string>>>
         OptionNamesByJob =>
-        Presets
+        PresetRuntimeStates
             .Where(preset =>
-                preset.Value is { IsVariant: false, HasParentCombo: true } &&
-                !preset.Key.Contains("pvp", ToLower))
-            .GroupBy(preset => preset.Value.Job)
+                preset.Value.Data is
+                { IsVariant: false, Parent: not null, IsPvP: false })
+            .GroupBy(preset => preset.Value.Data.JobInfo!.Job)
             .ToDictionary(
                 g => g.Key,
-                g => g.GroupBy(preset => preset.Value.ParentComboName)
+                g => g.GroupBy(preset =>
+                        PresetStorage.AllPresets[preset.Value.Data.RootParent]
+                            .InternalName)
                     .ToDictionary(
                         g2 => g2.Key,
-                        g2 => g2.Select(preset => preset.Key).ToList()
+                        g2 => g2.Select(preset => preset.Value.Data.InternalName)
+                            .ToList()
                     )
             );
 
@@ -528,11 +581,12 @@ public class Search(Leasing leasing)
         if (!VariantParentNames.TryGetValue(role, out var parent))
             return [];
 
-        return Presets
+        return PresetRuntimeStates
             .Where(preset =>
-                preset.Value is { IsVariant: true, HasParentCombo: true } &&
-                preset.Value.ParentComboName == parent)
-            .Select(preset => preset.Key)
+                preset.Value.Data is { IsVariant: true, Parent: not null } &&
+                PresetStorage.AllPresets[preset.Value.Data.RootParent]
+                    .InternalName == parent)
+            .Select(preset => preset.Value.Data.InternalName)
             .ToList();
     }
 
@@ -543,13 +597,11 @@ public class Search(Leasing leasing)
     ///     IPC settings on top.
     /// </summary>
     internal Dictionary<Preset, bool> AutoActions =>
-        PresetStates
-            .Where(x =>
-                Enum.Parse<Preset>(x.Key).Attributes()
-                    .AutoAction is not null)
+        PresetRuntimeStates
+            .Where(preset => preset.Value.Data.AutoAction is not null)
             .ToDictionary(
-                preset => Enum.Parse<Preset>(preset.Key),
-                preset => preset.Value[ComboStateKeys.AutoMode]
+                preset => preset.Key,
+                preset => preset.Value.AutoMode
             );
 
     /// <summary>
@@ -557,9 +609,9 @@ public class Search(Leasing leasing)
     ///     IPC settings on top.
     /// </summary>
     internal HashSet<Preset> EnabledActions =>
-        PresetStates
-            .Where(preset => preset.Value[ComboStateKeys.Enabled])
-            .Select(preset => Enum.Parse<Preset>(preset.Key))
+        PresetRuntimeStates
+            .Where(preset => preset.Value.Enabled)
+            .Select(preset => preset.Key)
             .ToHashSet();
 
     #endregion
