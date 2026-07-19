@@ -415,7 +415,7 @@ internal partial class AST
                 filter = filter
                     .OrderBy(x =>
                         _cardPriorities.GetValueOrDefault(
-                            (Job)x.RealJob!.Value.RowId, byte.MaxValue))
+                            x.RealJob!.Value.GetJob().GetUpgradedJob(), byte.MaxValue))
                     .ThenByDescending(x => x.BattleChara.MaxHp)
                     .ToList();
                 
