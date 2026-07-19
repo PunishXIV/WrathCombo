@@ -19,6 +19,7 @@ using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.AST.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Status = Dalamud.Game.ClientState.Statuses.IStatus;
+using WrathCombo.Combos.PvE.ALL;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class AST
@@ -498,6 +499,7 @@ internal partial class AST
         [
             EarthlyStar,
             FallMalefic,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
             Combust3,
             Lightspeed,
             FallMalefic,
@@ -524,7 +526,7 @@ internal partial class AST
         public override Preset Preset => Preset.AST_ST_DPS_Opener;
 
         internal override UserData? ContentCheckConfig => AST_ST_DPS_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => AST_Opener_Potion;
         
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
