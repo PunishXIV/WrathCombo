@@ -515,7 +515,7 @@ internal class Debug : ConfigWindow, IDisposable
 
                 if (Svc.Objects.TryGetFirst(x => x.EntityId == p.EntityId, out var pt))
                 {
-                    if (ImGui.TreeNode($"{p.NameString}###{p.EntityId}"))
+                    if (ImGui.TreeNode($"{p.NameString}###GroupManager{p.EntityId}"))
                     {
                         DrawTargetInfo(pt);
                         ImGui.TreePop();
@@ -528,7 +528,7 @@ internal class Debug : ConfigWindow, IDisposable
         {
             foreach (var member in GetPartyMembers())
             {
-                if (ImGui.TreeNode($"{member?.BattleChara?.Name}###{member.GameObjectId}"))
+                if (ImGui.TreeNode($"{member?.BattleChara?.Name}###MemberData{member.GameObjectId}"))
                 {
                     CustomStyleText("Health:", $"{GetTargetCurrentHP(member.BattleChara):N0} / {member.BattleChara.MaxHp:N0} ({GetTargetHPPercent(member.BattleChara)}%)");
                     CustomStyleText("Regen Tick:", $"{member.BattleChara.MaxHp / 100}");
