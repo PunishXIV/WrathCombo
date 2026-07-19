@@ -105,6 +105,7 @@ public partial class Configuration
         var trace = new StackTrace().ToString();
         var args = new ConfigChangeEventArgs(type, source, key,
             newValue, trace);
+        P.IPCSearch.UpdateDue = true;
         RaiseUserConfigChanged(args);
     }
 

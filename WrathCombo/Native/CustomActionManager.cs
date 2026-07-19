@@ -57,6 +57,7 @@ public sealed unsafe class CustomAction : IDisposable
         row->Cast100ms = 0;
         row->Recast100ms = 0;
         row->CooldownGroup = 58;
+        row->AdditionalRecastGroup = 0;
         row->MaxCharges = 1;
         row->ClassJobCategory = 1;
         row->ClassJob = -1;
@@ -163,14 +164,8 @@ public sealed unsafe class CustomActionManager : IDisposable
     {
         _framework.Update -= OnFrameworkUpdate;
 
-        try
+        Svc.Framework.RunOnTick(() =>
         {
-            _getActionRowHook.Dispose();
-            _isSlotUsableHook.Dispose();
-            _loadIconHook.Dispose();
-            _updateTooltipHook.Dispose();
-            _updateNameHook.Dispose();
-
             foreach (CustomAction action in _actions.Values)
             {
                 action.Dispose();
@@ -179,11 +174,9 @@ public sealed unsafe class CustomActionManager : IDisposable
             _actions.Clear();
             _iconTextures.Clear();
             _pendingInjects.Clear();
-        }
-        catch(Exception ex)
-        {
-            ex.Log();
-        }
+
+            Svc.Log.Debug($"Cleared custom actions");
+        }, TimeSpan.FromTicks(100));
     }
 
     public void Register(CustomAction action)
@@ -231,9 +224,16 @@ public sealed unsafe class CustomActionManager : IDisposable
 
     private CustomActionRow* GetActionRowDetour(uint rowId)
     {
-        if (_actions.TryGetValue(rowId, out CustomAction? action))
+        try
         {
-            return (CustomActionRow*)action.ActionRowPtr;
+            if (_actions.TryGetValue(rowId, out CustomAction? action))
+            {
+                return (CustomActionRow*)action.ActionRowPtr;
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Log();
         }
 
         return _getActionRowHook.Original(rowId);
@@ -323,7 +323,7 @@ public sealed unsafe class CustomActionManager : IDisposable
         }
     }
 
-    [StructLayout(LayoutKind.Explicit, Size = 0x40)]
+    [StructLayout(LayoutKind.Explicit, Size = 0x3F)]
     internal struct CustomActionRow
     {
         [FieldOffset(0x00)] public uint NameOffset;
@@ -336,6 +336,7 @@ public sealed unsafe class CustomActionManager : IDisposable
         [FieldOffset(0x29)] public byte EffectRange;
         [FieldOffset(0x2B)] public byte PrimaryCostType;
         [FieldOffset(0x2E)] public byte CooldownGroup;
+        [FieldOffset(0x2F)] public byte AdditionalRecastGroup;
         [FieldOffset(0x30)] public byte MaxCharges;
         [FieldOffset(0x33)] public byte ClassJobCategory;
         [FieldOffset(0x37)] public sbyte ClassJob;
