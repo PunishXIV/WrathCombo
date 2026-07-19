@@ -21,22 +21,6 @@ internal partial class MCH
 
                 case Preset.MCH_ST_Adv_Opener:
                     DrawBossOnlyChoice(MCH_Balance_Content);
-
-                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
-                    {
-                        ImGui.TextUnformatted("Select whether the opener requires a battle target:");
-                    }
-
-                    DrawHorizontalRadioButton(MCH_HaveTarget,
-                        Generics.HaveBattleTarget,
-                        Generics.RequireTarget, 0,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
-                    DrawHorizontalRadioButton(MCH_HaveTarget,
-                        Generics.NoTarget,
-                        Generics.NoRequireTarget, 1,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
                     DrawOpenerPotionChoice(MCH_Opener_Potion);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
@@ -47,6 +31,15 @@ internal partial class MCH
                     DrawRadioButton(MCH_SelectedOpener,
                         MCH_Config.Early0Opener,
                         FormatAndCache(MCH_Config.UseEarly0Opener, Wildfire.ActionName()), 1, descriptionAsTooltip: true);
+
+                    ImGuiEx.TextUnderlined("Target Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(MCH_HaveTarget,
+                        Generics.HaveBattleTarget,
+                        Generics.RequireTarget, 0, descriptionAsTooltip: true);
+                    DrawRadioButton(MCH_HaveTarget,
+                        Generics.NoTarget,
+                        Generics.NoRequireTarget, 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.MCH_ST_Adv_WildFire:

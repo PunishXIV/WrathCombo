@@ -20,22 +20,6 @@ internal partial class MNK
 
                 case Preset.MNK_STUseOpener:
                     DrawBossOnlyChoice(MNK_Balance_Content);
-
-                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
-                    {
-                        ImGui.TextUnformatted("Select when the opener is allowed to start:");
-                    }
-
-                    DrawHorizontalRadioButton(MNK_OpenerCountdown,
-                        Generics.OnlyWithCountdown,
-                        Generics.OnlyUseOpenerWhenCountdownActive, 0,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
-                    DrawHorizontalRadioButton(MNK_OpenerCountdown,
-                        Generics.Always,
-                        Generics.UseAlways, 1,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
                     DrawOpenerPotionChoice(MNK_Opener_Potion);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
@@ -50,6 +34,15 @@ internal partial class MNK
                     DrawRadioButton(MNK_SelectedOpener,
                         MNK_Config.BrotherhoodFirstOpener,
                         MNK_Config.BrotherhoodFirstOpenerDesc, 2, descriptionAsTooltip: true);
+
+                    ImGuiEx.TextUnderlined("Countdown Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(MNK_OpenerCountdown,
+                        Generics.OnlyWithCountdown,
+                        Generics.OnlyUseOpenerWhenCountdownActive, 0, descriptionAsTooltip: true);
+                    DrawRadioButton(MNK_OpenerCountdown,
+                        Generics.Always,
+                        Generics.UseAlways, 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.MNK_STUseBrotherhood:

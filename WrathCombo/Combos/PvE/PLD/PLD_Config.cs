@@ -95,27 +95,21 @@ internal partial class PLD
 
                 case Preset.PLD_ST_AdvancedMode_BalanceOpener:
                     DrawBossOnlyChoice(PLD_Balance_Content);
-
-                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
-                    {
-                        ImGui.TextUnformatted($"Select {Intervene.ActionName()} usage in the opener:");
-                    }
-
-                    DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
-                        FormatAndCache(Generics.Use0, Intervene.ActionName()),
-                        FormatAndCache(Generics.GapcloserUse, Intervene.ActionName()), 0,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-                    DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
-                        FormatAndCache(Generics.DontUse0, Intervene.ActionName()),
-                        FormatAndCache(Generics.GapcloseSkip, Intervene.ActionName()), 1,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
                     DrawOpenerPotionChoice(PLD_Opener_Potion);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(PLD_SelectedOpener, Generics.StandardOpener, "", 0, descriptionAsTooltip: true);
                     DrawRadioButton(PLD_SelectedOpener, "Early Buff Opener",
                         "Moves the buff window forward about 1 GCD.", 1, descriptionAsTooltip: true);
+
+                    ImGuiEx.TextUnderlined($"{Intervene.ActionName()} Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
+                        FormatAndCache(Generics.Use0, Intervene.ActionName()),
+                        FormatAndCache(Generics.GapcloserUse, Intervene.ActionName()), 0, descriptionAsTooltip: true);
+                    DrawRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
+                        FormatAndCache(Generics.DontUse0, Intervene.ActionName()),
+                        FormatAndCache(Generics.GapcloseSkip, Intervene.ActionName()), 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.PLD_ST_AdvancedMode_GoringBlade:

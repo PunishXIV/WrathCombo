@@ -108,20 +108,14 @@ internal partial class WAR
                 #region Single-Target
                 case Preset.WAR_ST_BalanceOpener:
                     DrawBossOnlyChoice(WAR_BalanceOpener_Content);
-
-                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
-                    {
-                        ImGui.TextUnformatted($"Select {Onslaught.ActionName()} usage in the opener:");
-                    }
-
-                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice,
-                        "No Gapclosers", "Skips Onslaughts use in opener.", 0,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice,
-                        "Use Gapclosers", "Uses Onslaughts use in opener.", 1,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
                     DrawOpenerPotionChoice(WAR_Opener_Potion);
+
+                    ImGuiEx.TextUnderlined($"{Onslaught.ActionName()} Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(WAR_ST_BalanceOpener_GapcloserChoice,
+                        "Use Gapclosers", "Uses Onslaughts use in opener.", 1, descriptionAsTooltip: true);
+                    DrawRadioButton(WAR_ST_BalanceOpener_GapcloserChoice,
+                        "No Gapclosers", "Skips Onslaughts use in opener.", 0, descriptionAsTooltip: true);
                     break;
 
                 case Preset.WAR_ST_StormsEye:

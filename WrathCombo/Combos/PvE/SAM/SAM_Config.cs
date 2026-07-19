@@ -22,6 +22,7 @@ internal partial class SAM
 
                 case Preset.SAM_ST_Opener:
                     DrawBossOnlyChoice(SAM_Balance_Content);
+                    DrawOpenerPotionChoice(SAM_Opener_Potion);
 
                     DrawSliderInt(0, 13, SAM_Opener_PrePullDelay,
                         FormatAndCache(SAM_Config.SecondsDelayFromFirstStep, MeikyoShisui.ActionName()), 75f.Scale());
@@ -30,33 +31,20 @@ internal partial class SAM
                         ImGui.SetTooltip(FormatAndCache(SAM_Config.DelaySavageBlade, All.SavageBlade.ActionName()));
 
                     ImGuiEx.Spacing(new Vector2(0, 10));
-
-                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
-                    {
-                        ImGui.TextUnformatted($"Select {Gyoten.ActionName()} usage in the opener:");
-                    }
-
-                    DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
+                    ImGuiEx.TextUnderlined($"{Gyoten.ActionName()} Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(SAM_Opener_IncludeGyoten,
                         FormatAndCache(SAM_Config.Include2x0, Gyoten.ActionName()),
-                        FormatAndCache(SAM_Config.IncludeBoth0, Gyoten.ActionName()), 0,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
-                    DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
+                        FormatAndCache(SAM_Config.IncludeBoth0, Gyoten.ActionName()), 0, descriptionAsTooltip: true);
+                    DrawRadioButton(SAM_Opener_IncludeGyoten,
                         SAM_Config.SkipBoth,
-                        FormatAndCache(SAM_Config.SkipBothUsageOf0, Gyoten.ActionName()), 1,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
-                    DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
+                        FormatAndCache(SAM_Config.SkipBothUsageOf0, Gyoten.ActionName()), 1, descriptionAsTooltip: true);
+                    DrawRadioButton(SAM_Opener_IncludeGyoten,
                         SAM_Config.SkipFirst,
-                        FormatAndCache(SAM_Config.SkipFirstUseOf0, Gyoten.ActionName()), 2,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
-                    DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
+                        FormatAndCache(SAM_Config.SkipFirstUseOf0, Gyoten.ActionName()), 2, descriptionAsTooltip: true);
+                    DrawRadioButton(SAM_Opener_IncludeGyoten,
                         SAM_Config.SkipSecond,
-                        FormatAndCache(SAM_Config.SkipSecondUseOf0, Gyoten.ActionName()), 3,
-                        descriptionColor: ImGuiColors.DalamudYellow);
-
-                    DrawOpenerPotionChoice(SAM_Opener_Potion);
+                        FormatAndCache(SAM_Config.SkipSecondUseOf0, Gyoten.ActionName()), 3, descriptionAsTooltip: true);
                     break;
 
                 case Preset.SAM_ST_CDs_UseHiganbana:

@@ -177,13 +177,6 @@ internal partial class DNC
 
                 case Preset.DNC_ST_BalanceOpener:
                     DrawBossOnlyChoice(DNC_ST_OpenerDifficulty, "Select what kind of content to use this opener in:");
-
-                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
-                    {
-                        DrawAdditionalBoolChoice(DNC_ST_OpenerOption_Peloton,
-                            $"Include {Peloton.ActionName()}", "");
-                    }
-
                     DrawOpenerPotionChoice(DNC_Opener_Potion);
 
                     ImGuiEx.TextUnderlined("Select Opener");
@@ -208,6 +201,9 @@ internal partial class DNC
                         "Technical: 7s Countdown",
                         "Requires at least a 7s cooldown\nand that you start Technical Step at 7s.\nNOT recommended.",
                         (int)Openers.SevenSecondTech, descriptionAsTooltip: true);
+
+                    DrawAdditionalBoolChoice(DNC_ST_OpenerOption_Peloton,
+                        $"Include {Peloton.ActionName()}", "");
 
                     break;
 

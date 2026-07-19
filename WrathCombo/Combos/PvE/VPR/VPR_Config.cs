@@ -19,9 +19,6 @@ internal partial class VPR
 
                 case Preset.VPR_ST_Opener:
                     DrawBossOnlyChoice(VPR_Balance_Content);
-                    DrawAdditionalBoolChoice(VPR_Opener_ExcludeUF,
-                        FormatAndCache(Generics.Exclude0, UncoiledFury.ActionName()),
-                        "");
                     DrawOpenerPotionChoice(VPR_Opener_Potion);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
@@ -29,6 +26,9 @@ internal partial class VPR
                         Generics.StandardOpener, 0, descriptionAsTooltip: true);
                     DrawRadioButton(VPR_OpenerSelection, VPR_Config.EarlyBuffOpener,
                         VPR_Config.UseEarlyBuffOpener, 1, descriptionAsTooltip: true);
+                    DrawAdditionalBoolChoice(VPR_Opener_ExcludeUF,
+                        FormatAndCache(Generics.Exclude0, UncoiledFury.ActionName()),
+                        "");
                     break;
 
                 case Preset.VPR_ST_SerpentsIre:
