@@ -1453,7 +1453,7 @@ internal class Debug : ConfigWindow, IDisposable
     {
         if (target is IBattleChara tar)
         {
-            foreach (Status? status in tar.StatusList)
+            foreach (Status? status in tar.SafeStatusList)
             {
                 // Set Status
                 string statusId = status.StatusId.ToString();
