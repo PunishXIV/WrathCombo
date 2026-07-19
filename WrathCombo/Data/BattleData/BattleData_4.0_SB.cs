@@ -1,4 +1,5 @@
-﻿using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+﻿using System.Linq;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
 {
@@ -9,6 +10,22 @@ namespace WrathCombo.Data.BattleData
             bool dataLoaded = true;
             switch (_territoryID)
             {
+                case 674: // Pool of Tribute
+                    _invincibleCheck = (target, targetID, targetStatuses) =>
+                    {
+                        var fettered = GetPartyMembers() // Svc.Objects if debugging via ARR
+                            .FirstOrDefault(x => HasStatusEffect(292, x.BattleChara, true));
+
+                        if (targetID == 7200 && fettered is not null)
+                        {
+                            var distance = GetTargetDistance(target, fettered.BattleChara);
+                            return Result(distance >= 1); // NPC Rock to kill is right on top, less than 1
+                        }
+                        return Invincible.False;
+                    };
+
+                    break;
+
                 case 801 or 805 or 1122: // Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
                                          // Omega-M = 9339
                                          // Omega-F = 9340
