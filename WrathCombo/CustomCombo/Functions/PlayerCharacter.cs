@@ -154,6 +154,7 @@ internal abstract partial class CustomComboFunctions
                || Svc.Condition[ConditionFlag.PreparingToCraft]
                || Svc.Condition[ConditionFlag.Fishing]
                || Svc.Condition[ConditionFlag.UsingHousingFunctions]
+               || Svc.Condition[ConditionFlag.DutyRecorderPlayback]
                || !Player.Interactable;
     }
 }

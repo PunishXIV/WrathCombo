@@ -1,5 +1,10 @@
-﻿using ECommons.ExcelServices;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons;
+using ECommons.DalamudServices;
+using ECommons.ExcelServices;
+using ECommons.GameFunctions;
 using ECommons.GameHelpers;
+using System.Linq;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
@@ -20,7 +25,18 @@ namespace WrathCombo.Data.BattleData
                         return Invincible.False;
                     };
                     break;
+                case 846: // Crown of the Immaculate (normal)
 
+                    _invincibleCheck = (tar, id, _) =>
+                    {
+                        if (Svc.Objects.OfType<IBattleChara>().TryGetFirst(y => y.BaseId == 11247, out var venery))
+                        {
+                            return venery.IsCasting && tar.ObjectId != venery.CastTargetObjectId ? Invincible.True : Invincible.False;
+                        }
+
+                        return Invincible.False;
+                    };
+                    break;
                 case 887: // The Epic of Alexander (Ultimate)
                           // Jagd Doll = NameId 3759
                           // Technically not invincible, but killing one wipes the raid;

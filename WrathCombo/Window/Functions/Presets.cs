@@ -33,15 +33,16 @@ internal class Presets : ConfigWindow
 {
 
     private static bool _animFrame = false;
-
+    public static bool UpdateDue = true;
     internal static Dictionary<Preset, bool> GetJobAutorots
     {
         get
         {
-            var autoActions = P.IPCSearch.AutoActions;
+            field ??= [];
 
-            return autoActions
-                .Where(kvp =>
+            if (UpdateDue)
+            {
+                field = P.IPCSearch.AutoActions.Where(kvp =>
                 {
                     var preset = kvp.Key;
                     var attrs = preset.Attributes();
@@ -66,6 +67,11 @@ internal class Presets : ConfigWindow
                     return true;
                 })
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+                UpdateDue = false;
+            }
+
+            return field;
         }
     }
 
@@ -90,7 +96,7 @@ internal class Presets : ConfigWindow
             bool autoOn = Service.Configuration.AutoActions[preset];
             if (P.UIHelper.ShowIPCControlledCheckboxIfNeeded
                 ($"###AutoAction{preset}", ref autoOn, preset, false))
-                PresetStorage.ToggleAutoModeForPreset(preset);
+                ToggleAutoModeForPreset(preset);
             ImGui.SameLine();
             ImGui.Text(label);
             ImGuiComponents.HelpMarker(FeaturesUI.Hover_AutoMode);

@@ -431,18 +431,14 @@ internal static class PresetStorage
         (Preset preset, ConfigChangeSource? source = null)
     {
         // If not already listed, enable it
-        if (!Service.Configuration.EnabledActions.Remove(preset))
+        if (!Service.Configuration.EnabledActions.Any(x => x == preset))
         {
             return EnablePreset(preset);
         }
-
-        // Notify of change and save (only if disabling, manually)
-        Service.Configuration.TriggerUserConfigChanged(
-            ConfigChangeType.Preset, source ?? ConfigChangeSource.UI,
-            preset.ToString(), false);
-        P.IPCSearch.UpdateActiveJobPresets();
-        Service.Configuration.Save();
-        return true;
+        else
+        {
+            return DisablePreset(preset);
+        }
     }
 
     public static bool TogglePreset
