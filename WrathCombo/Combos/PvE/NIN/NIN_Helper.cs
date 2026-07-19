@@ -44,7 +44,7 @@ internal partial class NIN
     }
 
     public static uint CurrentNinjutsu => OriginalHook(Ninjutsu);
-    internal static bool InMudra => JutsuFromFlags > 0;
+    internal static bool InMudra => JutsuFromFlags > 0 || JustUsed(Ten, 1) || JustUsed(Chi, 1) || JustUsed(Jin, 1) || JustUsed(TenCombo, 1) || JustUsed(ChiCombo, 1) || JustUsed(JinCombo, 1);
 
     internal static MudraFlags Flags => HasStatusEffect(Buffs.Mudra) ? (MudraFlags)(GetStatusEffect(Buffs.Mudra).Param) : HasStatusEffect(Buffs.TenChiJin) ? (MudraFlags)(GetStatusEffect(Buffs.TenChiJin).Param) : MudraFlags.None;
     internal static MudraFlags FirstMudra => Flags & MudraFlags.JinFirst;
@@ -163,6 +163,25 @@ internal partial class NIN
         }
     }
 
+    internal static bool MudraUsed(uint actionId)
+    {
+        var baseMudra = MudraToBase(actionId);
+
+        return baseMudra != 0 && !UnusedJutsus.Contains(baseMudra);
+    }
+
+    internal static uint MudraToBase(uint actionId)
+    {
+        uint baseMudra = actionId switch
+        {
+            Ten or TenCombo => Ten,
+            Chi or ChiCombo => Chi,
+            Jin or JinCombo => Jin,
+            _ => 0u
+        };
+
+        return baseMudra;
+    }
     internal static bool Rabbitting => GetStatusEffect(Buffs.Mudra)?.Param == 255;
     internal static bool MudraPhase => WasLastAction(Ten) || WasLastAction(Chi) || WasLastAction(Jin) || WasLastAction(TenCombo) || WasLastAction(ChiCombo) || WasLastAction(JinCombo);
     internal static uint MudraCharges => GetRemainingCharges(Ten);
@@ -410,7 +429,7 @@ internal partial class NIN
 
             if (statusId == Buffs.Mudra)
             {
-                if (InMudra)
+                if (onPlayer)
                 {
                     Svc.Log.Debug($"{AssociatedPreset} -> {CurrentMudra} set");
                 }

@@ -17,6 +17,7 @@ using WrathCombo.Extensions;
 using WrathCombo.Window.Tabs;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
+using System.Diagnostics;
 
 #endregion
 
@@ -261,6 +262,8 @@ public class Search(Leasing leasing)
         }
     }
 
+    internal bool UpdateDue = true;
+
     /// <summary>
     ///     Cached list of <see cref="Preset">Presets</see>, and the
     ///     state and Auto-Mode state of each.
@@ -276,57 +279,42 @@ public class Search(Leasing leasing)
     {
         get
         {
-            var presetsUpdated = (DateTime)
-                (_leasing.CombosUpdated > _leasing
-                    .OptionsUpdated
-                    ? _leasing.CombosUpdated
-                    : _leasing.OptionsUpdated ?? DateTime.MinValue);
+            field ??= [];
 
-            if (!Debug.DebugConfig)
+            if (UpdateDue)
             {
-                if (field != null &&
-                    File.GetLastWriteTime(ConfigFilePath) <=
-                    _lastCacheUpdateForPresetStates &&
-                    presetsUpdated <= _lastCacheUpdateForPresetStates)
-                    return field;
-            }
-            else
-            {
-                if (field != null &&
-                    !EZ.Throttle("ipcPresetStateCheck", TS.FromSeconds(1)) &&
-                    presetsUpdated <= _lastCacheUpdateForPresetStates)
-                    return field;
-            }
-
-            field = Presets
-                .ToDictionary(
-                    preset => preset.Key,
-                    preset =>
-                    {
-                        var isEnabled =
-                            CustomComboFunctions.IsEnabled(preset.Value.ID);
-                        var ipcAutoMode = _leasing.CheckComboControlled(
-                            preset.Value.ID.ToString())?.autoMode ?? false;
-                        var isAutoMode =
-                            Service.Configuration.AutoActions.TryGetValue(
-                                preset.Value.ID, out var autoMode) &&
-                            autoMode && preset.Value.ID.Attributes().AutoAction !=
-                            null;
-                        return new Dictionary<ComboStateKeys, bool>
+                field = Presets
+                    .ToDictionary(
+                        preset => preset.Key,
+                        preset =>
                         {
+                            var isEnabled =
+                                CustomComboFunctions.IsEnabled(preset.Value.ID);
+                            var ipcAutoMode = _leasing.CheckComboControlled(
+                                preset.Value.ID.ToString())?.autoMode ?? false;
+                            var isAutoMode =
+                                Service.Configuration.AutoActions.TryGetValue(
+                                    preset.Value.ID, out var autoMode) &&
+                                autoMode && preset.Value.ID.Attributes().AutoAction !=
+                                null;
+                            return new Dictionary<ComboStateKeys, bool>
+                            {
                             { ComboStateKeys.Enabled, isEnabled },
                             { ComboStateKeys.AutoMode, isAutoMode || ipcAutoMode },
-                        };
-                    }
-                );
-            _lastCacheUpdateForPresetStates = DateTime.Now;
-            UpdateActiveJobPresets();
+                            };
+                        }
+                    );
+
+                UpdateDue = false;
+            }
+
             return field;
         }
     }
 
     internal void UpdateActiveJobPresets()
     {
+        Window.Functions.Presets.UpdateDue = true;
         ActiveJobPresets = Window.Functions.Presets.GetJobAutorots.Count;
     }
 
