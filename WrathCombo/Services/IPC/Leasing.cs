@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using WrathCombo.API.Enum;
 using WrathCombo.Combos;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using CancellationReasonEnum = WrathCombo.API.Enum.CancellationReason;
@@ -467,7 +468,7 @@ public partial class Leasing
         else
         {
             locking = false;
-            stringKeys = combos.Select(k => k.ToString())
+            stringKeys = combos
                 .Concat(registration.CombosControlled.Keys
                     .Select(k => k.ToString()).ToArray())
                 .ToArray();
@@ -484,12 +485,8 @@ public partial class Leasing
 
             // Enable the option, or lock the option to its current state
             var state = true;
-            if (locking)
-            {
-                var ccpOption = (Preset)
-                    Enum.Parse(typeof(Preset), option);
+            if (locking && PresetStorage.GetPresetByName(option) is { } ccpOption)
                 state = CustomComboFunctions.IsEnabled(ccpOption);
-            }
 
             AddRegistrationForOption(lease, option, state);
         }
@@ -567,23 +564,15 @@ public partial class Leasing
     /// <seealso cref="Provider.GetComboState" />
     internal (bool enabled, bool autoMode)? CheckComboControlled(string combo)
     {
-        Preset Preset;
-        try
-        {
-            Preset = (Preset)
-                Enum.Parse(typeof(Preset), combo, true);
-        }
-        catch
-        {
+        if (PresetStorage.GetPresetByName(combo) is not { } preset)
             return null;
-        }
 
         var lease = Registrations.Values
-            .Where(l => l.CombosControlled.ContainsKey(Preset))
+            .Where(l => l.CombosControlled.ContainsKey(preset))
             .OrderByDescending(l => l.LastUpdated)
             .FirstOrDefault();
 
-        return lease?.CombosControlled[Preset];
+        return lease?.CombosControlled[preset];
     }
 
     /// <summary>
@@ -600,8 +589,13 @@ public partial class Leasing
         (Guid lease, string combo, bool newState, bool newAutoState)
     {
         var registration = Registrations[lease];
-        var preset = (Preset)
-            Enum.Parse(typeof(Preset), combo, true);
+
+        if (PresetStorage.GetPresetByName(combo) is not { } preset)
+        {
+            Logging.Warn($"{registration.PluginName}: Invalid combo name " +
+                         $"'{combo}'.");
+            return SetResult.InvalidConfiguration;
+        }
 
         // Disable the combo of the opposite type mode, if one exists
         var oppositeModeCombo = Helper.GetOppositeModeCombo(preset);
@@ -641,23 +635,15 @@ public partial class Leasing
     /// <seealso cref="Provider.GetComboOptionState" />
     internal bool? CheckComboOptionControlled(string option)
     {
-        Preset Preset;
-        try
-        {
-            Preset = (Preset)
-                Enum.Parse(typeof(Preset), option, true);
-        }
-        catch
-        {
+        if (PresetStorage.GetPresetByName(option) is not { } preset)
             return null;
-        }
 
         var lease = Registrations.Values
-            .Where(l => l.OptionsControlled.ContainsKey(Preset))
+            .Where(l => l.OptionsControlled.ContainsKey(preset))
             .OrderByDescending(l => l.LastUpdated)
             .FirstOrDefault();
 
-        return lease?.OptionsControlled[Preset];
+        return lease?.OptionsControlled[preset];
     }
 
     /// <summary>
@@ -673,8 +659,13 @@ public partial class Leasing
         (Guid lease, string option, bool newState)
     {
         var registration = Registrations[lease];
-        var preset = (Preset)
-            Enum.Parse(typeof(Preset), option, true);
+
+        if (PresetStorage.GetPresetByName(option) is not { } preset)
+        {
+            Logging.Warn($"{registration.PluginName}: Invalid option name " +
+                         $"'{option}'.");
+            return SetResult.InvalidConfiguration;
+        }
 
         registration.OptionsControlled[preset] = newState;
 
