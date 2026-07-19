@@ -6,6 +6,7 @@ using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
@@ -14,6 +15,7 @@ using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Common.Lua;
@@ -507,6 +509,18 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Alliance Group:", GetAllianceGroup());
 
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+
+            // Dumps the data of everyone in the current group manager (reacts dynamically to replays).
+            foreach (var p in GroupManager.Instance()->GetGroupWithCheck(true)->PartyMembers)
+            {
+                if (p.ContentId == 0)
+                    continue;
+
+                if (Svc.Objects.TryGetFirst(x => x.EntityId == p.EntityId, out var pt) && ImGui.TreeNode($"{p.NameString}###{p.EntityId}"))
+                {
+                    DrawTargetInfo(pt);
+                }
+            }
         }
 
         if (ImGui.CollapsingHeader("Member Data"))
@@ -1335,14 +1349,14 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Name:", target?.Name);
             CustomStyleText("Nameplate:", target?.GetNameplateKind().ToString());
             CustomStyleText("Rank:", $"{battleNPCRow?.Rank.ToString() ?? "null"} (found sheet: {(foundSheet is true ? "yes" : "no")})");
-            CustomStyleText("Health:", $"{GetTargetCurrentHP(forceUsePending: false):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(forceUsePending: false), 2)}%)");
-            CustomStyleText("Health (with pending):", $"{GetTargetCurrentHP(forceUsePending: true):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(forceUsePending: true), 2)}%)");
-            CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(), 2)}y");
+            CustomStyleText("Health:", $"{GetTargetCurrentHP(target, forceUsePending: false):N0} / {GetTargetMaxHP(target):N0} ({MathF.Round(GetTargetHPPercent(target, forceUsePending: false), 2)}%)");
+            CustomStyleText("Health (with pending):", $"{GetTargetCurrentHP(target, forceUsePending: true):N0} / {GetTargetMaxHP(target):N0} ({MathF.Round(GetTargetHPPercent(target, forceUsePending: true), 2)}%)");
+            CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(target), 2)}y");
             CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
             CustomStyleText("In Melee Range:", InMeleeRange());
-            CustomStyleText("Height Difference:", $"{MathF.Round(GetTargetHeightDifference(), 2)}y");
-            CustomStyleText("Relative Position:", AngleToTarget().ToString());
-            CustomStyleText("Requires Positionals:", TargetNeedsPositionals());
+            CustomStyleText("Height Difference:", $"{MathF.Round(GetTargetHeightDifference(target), 2)}y");
+            CustomStyleText("Relative Position:", AngleToTarget(target).ToString());
+            CustomStyleText("Requires Positionals:", TargetNeedsPositionals(target));
             CustomStyleText("Is Invincible:", TargetIsInvincible(target!));
             CustomStyleText("Is Hostile:", target?.IsHostile());
             CustomStyleText("Is Friendly:", target?.IsFriendly());
