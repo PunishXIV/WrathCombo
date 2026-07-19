@@ -471,6 +471,8 @@ public static class ActionWatching
 
     private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, ActionType actionType, uint actionID)
     {
+        //if (NIN.InMudra && NIN.MudraSigns.Any(x => x == actionID) && NIN.MudraToBase(LastAction) == NIN.MudraToBase(actionID)) return false;
+
         float threshold = Service.Configuration.QueueAdjust ? Service.Configuration.QueueAdjustThreshold : 0.5f;
 
         return GetRemainingActionRecast(actionManager, actionType, actionID) is { } remaining && remaining <= threshold;
@@ -542,12 +544,20 @@ public static class ActionWatching
             }
             if (actionType is ActionType.Action)
             {
+                var replacedWith = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
+                var queuedAct = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionManager->QueuedActionId) ? Service.ActionReplacer.LastActionInvokeFor[actionManager->QueuedActionId] : actionManager->QueuedActionId;
 
-                if (actionManager->QueuedActionId > 0 && NIN.InMudra && !NIN.MudraSigns.Any(x => x == actionManager->QueuedActionId) && !NIN.NormalJutsus.Any(x => x == actionManager->QueuedActionId))
+                // If the replaced action is a mudra and we're already in a mudra sequence
+                // where the base mudra matches, ignore the input.
+                if (NIN.MudraSigns.Contains(replacedWith) && NIN.InMudra && NIN.MudraToBase(LastAction) == NIN.MudraToBase(replacedWith))
+                    return false;
+
+
+                // Determine if the queued action conflicts with the current mudra state.
+                var queuedProblem = (queuedAct > 0 && queuedAct != NIN.Ninjutsu && !NIN.MudraSigns.Contains(queuedAct) && !NIN.NormalJutsus.Contains(queuedAct)) || queuedAct == LastAction;
+
+                if (NIN.InMudra && (queuedProblem || NIN.MudraUsed(replacedWith)))
                 {
-#if DEBUG
-                    DuoLog.Debug($"Blocked NIN flub");
-#endif
                     actionManager->QueuedActionId = 0;
                     return false;
                 }
@@ -561,9 +571,7 @@ public static class ActionWatching
                 var changedTargetId = targetId; //This will get modified and used elsewhere
 
                 var changed = CheckForChangedTarget(original, ref changedTargetId,
-                    out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
-
-                replacedWith = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
+                    out var _); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
 
                 if (replacedWith >= All.SingleTargetDPS)
                 {
@@ -646,7 +654,7 @@ public static class ActionWatching
 
                 Svc.Log.Verbose($"[QueuedTargetUpdate] A:{actionManager->QueuedActionId.ActionName()} Q:{Svc.Objects.SearchById(actionManager->QueuedTargetId)?.Name} T:{Svc.Objects.SearchById(targetId)?.Name} M:{mode} W:{willQueue}");
 
-                Svc.Log.Verbose($"[FinalUse] Target changed is {changed}. Using {actionId.ActionName()} ({actionId}) -> {replacedWith.ActionName()} ({replacedWith}) on {(changed ? targetId.GetObject()?.Name : originalTargetId.GetObject()?.Name)} ({(changed? targetId : originalTargetId):X})");
+                Svc.Log.Verbose($"[FinalUse] Target changed is {changed}. Using {actionId.ActionName()} ({actionId}) -> {replacedWith.ActionName()} ({replacedWith}) on {(changed ? targetId.GetObject()?.Name : originalTargetId.GetObject()?.Name)} ({(changed ? targetId : originalTargetId):X})");
                 var hookResult = changed ? UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted) :
                     UseActionHook.Original(actionManager, actionType, actionId, originalTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
