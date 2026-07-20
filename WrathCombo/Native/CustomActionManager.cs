@@ -113,7 +113,6 @@ public sealed unsafe class CustomActionManager : IDisposable
     private readonly Hook<LoadIconDelegate> _loadIconHook;
     private readonly Hook<GetActionRowTransientDelegate> _updateTooltipHook;
     private readonly Hook<FormatNameDelegate> _updateNameHook;
-    private readonly Hook<AgentActionDetail.Delegates.Update> _crashHook;
     private readonly List<IconInjectEntry> _pendingInjects = new();
 
     private readonly ITextureProvider _texProv;
@@ -131,7 +130,6 @@ public sealed unsafe class CustomActionManager : IDisposable
         _loadIconHook = hooks.HookFromAddress<LoadIconDelegate>(AtkComponentIcon.Addresses.LoadIcon.Value, LoadIconDetour);
         _updateTooltipHook = hooks.HookFromAddress<GetActionRowTransientDelegate>(sig.ScanText(SigGetActionTransient), UpdateTooltipDetour);
         _updateNameHook = hooks.HookFromAddress<FormatNameDelegate>(sig.ScanText(SigFormatName), FormatNameDetour);
-        _crashHook = hooks.HookFromAddress<AgentActionDetail.Delegates.Update>((nint)AgentActionDetail.StaticVirtualTablePointer->Update, HandleCrash);
 
         _getActionRowHook.Enable();
         _isSlotUsableHook.Enable();
@@ -140,13 +138,6 @@ public sealed unsafe class CustomActionManager : IDisposable
         _updateNameHook.Enable();
 
         framework.Update += OnFrameworkUpdate;
-    }
-
-    private void HandleCrash(AgentActionDetail* thisPtr, uint frameCount)
-    {
-        thisPtr->ActionId = 1;
-        thisPtr->AdjustedId = 0;
-        thisPtr->OriginalId = 1;
     }
 
     private byte* FormatNameDetour(int nameType, uint rowId, uint detailType, uint parameter)
@@ -181,17 +172,11 @@ public sealed unsafe class CustomActionManager : IDisposable
         _updateTooltipHook.Dispose();
         _updateNameHook.Dispose();
 
-        AgentActionDetail.Instance()->ActionId = 1;
-        AgentActionDetail.Instance()->AdjustedId = 0;
-        AgentActionDetail.Instance()->OriginalId = 1;
-
-        _crashHook.Enable();
         foreach (CustomAction action in _actions.Values)
         {
             action.Dispose();
         }
 
-        _crashHook.Dispose();
         _actions.Clear();
         _iconTextures.Clear();
         _pendingInjects.Clear();
