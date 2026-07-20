@@ -518,6 +518,7 @@ internal partial class DRG
             LanceCharge,
             BattleLitany,
             TrueThrust,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             DragonfireDive,
             VorpalThrust,
             LifeSurge,
@@ -547,7 +548,7 @@ internal partial class DRG
         public override Preset Preset => Preset.DRG_ST_Opener;
 
         internal override UserData ContentCheckConfig => DRG_BalanceContent;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => DRG_Opener_Potion;
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(LifeSurge) is 2 &&

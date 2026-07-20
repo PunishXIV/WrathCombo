@@ -708,9 +708,10 @@ internal partial class RPR
             SoulSlice,
             ArcaneCircle,
             ShadowOfDeath,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Gluttony,
-            ExecutionersGibbet, //5
-            ExecutionersGallows, //6
+            ExecutionersGibbet, //6
+            ExecutionersGallows, //7
             PlentifulHarvest,
             Enshroud,
             VoidReaping,
@@ -723,8 +724,8 @@ internal partial class RPR
             Communio,
             Perfectio,
             SoulSlice,
-            UnveiledGibbet, //19
-            Gibbet, //20
+            UnveiledGibbet, //20
+            Gibbet, //21
             ShadowOfDeath,
             Slice
         ];
@@ -737,11 +738,13 @@ internal partial class RPR
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([5], ExecutionersGallows, OnTargetsRear),
-            ([6], ExecutionersGibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
-            ([19], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
-            ([20], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
+            ([6], ExecutionersGallows, OnTargetsRear),
+            ([7], ExecutionersGibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
+            ([20], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
+            ([21], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } = [4];
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(SoulSlice) is 2 &&
@@ -761,6 +764,7 @@ internal partial class RPR
         [
             Harpe,
             ShadowOfDeath,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             ArcaneCircle,
             SoulSlice,
             SoulSlice,
@@ -775,10 +779,10 @@ internal partial class RPR
             Communio,
             HarvestMoon,
             Gluttony,
-            Gibbet, //16
-            Gallows, //17
-            UnveiledGibbet, //18
-            Gibbet //19
+            Gibbet, //17
+            Gallows, //18
+            UnveiledGibbet, //19
+            Gibbet //20
         ];
 
         public override Preset Preset => Preset.RPR_ST_Opener;
@@ -789,11 +793,13 @@ internal partial class RPR
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([16], Gallows, OnTargetsRear),
-            ([17], Gibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
-            ([18], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
-            ([19], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
+            ([17], Gallows, OnTargetsRear),
+            ([18], Gibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
+            ([19], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
+            ([20], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } = [3];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [

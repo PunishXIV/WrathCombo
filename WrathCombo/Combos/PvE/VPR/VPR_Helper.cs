@@ -643,6 +643,7 @@ internal partial class VPR
             Vicewinder,
             SerpentsIre,
             HuntersCoil,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             TwinfangBite,
             TwinbloodBite,
             SwiftskinsCoil,
@@ -658,22 +659,22 @@ internal partial class VPR
             FourthGeneration,
             FourthLegacy,
             Ouroboros,
-            UncoiledFury, //19
-            UncoiledTwinfang, //20
-            UncoiledTwinblood, //21
+            UncoiledFury, //20
+            UncoiledTwinfang, //21
+            UncoiledTwinblood, //22
             Vicewinder,
-            HuntersCoil, //23
-            TwinfangBite, //24
-            TwinbloodBite, //25
-            SwiftskinsCoil, //26
-            TwinbloodBite, //27
-            TwinfangBite, //28
-            UncoiledFury, //29
-            UncoiledTwinfang, //30
-            UncoiledTwinblood, //31
-            UncoiledFury, //32
-            UncoiledTwinfang, //33
-            UncoiledTwinblood //34
+            HuntersCoil, //24
+            TwinfangBite, //25
+            TwinbloodBite, //26
+            SwiftskinsCoil, //27
+            TwinbloodBite, //28
+            TwinfangBite, //29
+            UncoiledFury, //30
+            UncoiledTwinfang, //31
+            UncoiledTwinblood, //32
+            UncoiledFury, //33
+            UncoiledTwinfang, //34
+            UncoiledTwinblood //35
         ];
 
         public override Preset Preset => Preset.VPR_ST_Opener;
@@ -683,18 +684,20 @@ internal partial class VPR
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([23], SwiftskinsCoil, OnTargetsRear),
-            ([24], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom)),
-            ([25], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
-            ([26], HuntersCoil, () => UsedSwiftskinsCoil),
-            ([27], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
-            ([28], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom))
+            ([24], SwiftskinsCoil, OnTargetsRear),
+            ([25], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom)),
+            ([26], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
+            ([27], HuntersCoil, () => UsedSwiftskinsCoil),
+            ([28], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
+            ([29], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([19, 20, 21, 29, 30, 31, 32, 33, 34], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil))
+            ([20, 21, 22, 30, 31, 32, 33, 34, 35], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil))
         ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } = [4];
 
         public override bool HasCooldowns() =>
             IsOriginal(ReavingFangs) &&

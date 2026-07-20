@@ -832,15 +832,16 @@ internal partial class PLD
         [
             HolySpirit,
             FastBlade,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             FightOrFlight,
             Imperator,
             RiotBlade,
             CircleOfScorn,
             Expiacion,
             RoyalAuthority,
-            Intervene,
+            Intervene, //10
             GoringBlade,
-            Intervene,
+            Intervene, //12
             Confiteor,
             BladeOfFaith,
             BladeOfTruth,
@@ -860,8 +861,8 @@ internal partial class PLD
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([2], () => ComboAction == FastBlade),
-            ([9, 10], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0),
-            ([18, 19, 20], () => !InMeleeRange())
+            ([10, 12], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0),
+            ([19, 20, 21], () => !InMeleeRange())
         ];
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;

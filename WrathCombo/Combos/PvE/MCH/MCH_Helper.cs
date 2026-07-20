@@ -808,6 +808,7 @@ internal partial class MCH
         public override List<uint> OpenerActions { get; set; } =
         [
             Reassemble,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             AirAnchor,
             GaussRound,
             Ricochet,
@@ -849,7 +850,7 @@ internal partial class MCH
 
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
-            14
+            15
         ];
 
         public override bool HasCooldowns() =>

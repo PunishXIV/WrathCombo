@@ -559,6 +559,7 @@ internal partial class SAM
             MeikyoShisui,
             Role.TrueNorth, //2
             Gekko,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Kasha,
             Ikishoten,
             Yukikaze,
@@ -606,6 +607,7 @@ internal partial class SAM
             MeikyoShisui,
             Role.TrueNorth, //2
             Gekko,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Ikishoten,
             Kasha,
             Yukikaze,
@@ -658,6 +660,7 @@ internal partial class SAM
             MeikyoShisui,
             Role.TrueNorth, //2
             Gekko,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Ikishoten,
             Kasha,
             Yukikaze,
