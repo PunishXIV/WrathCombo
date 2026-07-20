@@ -643,7 +643,7 @@ public static class ActionWatching
                 }
 
                 if (Service.Configuration.OverwriteQueue && actionManager->QueuedActionId != 0 && CanQueueCS(replacedWith))
-                    actionManager->QueuedActionId = replacedWith;
+                    actionManager->QueuedActionId = Service.ActionReplacer.ActionReplacingEnabled ? actionId : replacedWith;
 
                 // Determine if the action will queue according to user settings
                 bool willQueue = CanQueueCS(replacedWith) && RemainingGCD > 0;
