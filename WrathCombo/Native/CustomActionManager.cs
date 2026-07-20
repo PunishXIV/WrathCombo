@@ -5,13 +5,16 @@ using Dalamud.Plugin.Services;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.EzHookManager;
+using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using WrathCombo.Attributes;
@@ -111,6 +114,7 @@ public sealed unsafe class CustomActionManager : IDisposable
     private readonly Hook<LoadIconDelegate> _loadIconHook;
     private readonly Hook<GetActionRowTransientDelegate> _updateTooltipHook;
     private readonly Hook<FormatNameDelegate> _updateNameHook;
+    private readonly Hook<AgentActionDetail.Delegates.Update> _handleActionHoverHook;
     private readonly List<IconInjectEntry> _pendingInjects = new();
 
     private readonly ITextureProvider _texProv;
@@ -128,14 +132,29 @@ public sealed unsafe class CustomActionManager : IDisposable
         _loadIconHook = hooks.HookFromAddress<LoadIconDelegate>(AtkComponentIcon.Addresses.LoadIcon.Value, LoadIconDetour);
         _updateTooltipHook = hooks.HookFromAddress<GetActionRowTransientDelegate>(sig.ScanText(SigGetActionTransient), UpdateTooltipDetour);
         _updateNameHook = hooks.HookFromAddress<FormatNameDelegate>(sig.ScanText(SigFormatName), FormatNameDetour);
+        _handleActionHoverHook = hooks.HookFromAddress<AgentActionDetail.Delegates.Update>((nint)AgentActionDetail.StaticVirtualTablePointer->Update, HandleCrash);
 
         _getActionRowHook.Enable();
         _isSlotUsableHook.Enable();
         _loadIconHook.Enable();
         _updateTooltipHook.Enable();
         _updateNameHook.Enable();
+        _handleActionHoverHook.Enable();
 
         framework.Update += OnFrameworkUpdate;
+    }
+
+    private void HandleCrash(AgentActionDetail* thisPtr, uint frameCount)
+    {
+        if (thisPtr->ActionId >= 1_000_000)
+        {
+            if (_actions.Any(x => x.Value.Id == thisPtr->ActionId))
+                _handleActionHoverHook.Original(thisPtr, frameCount);
+        }
+        else
+        {
+            _handleActionHoverHook.Original(thisPtr, frameCount);
+        }
     }
 
     private byte* FormatNameDetour(int nameType, uint rowId, uint detailType, uint parameter)
@@ -163,6 +182,11 @@ public sealed unsafe class CustomActionManager : IDisposable
     public void Dispose()
     {
         _framework.Update -= OnFrameworkUpdate;
+        _getActionRowHook.Dispose();
+        _isSlotUsableHook.Dispose();
+        _loadIconHook.Dispose();
+        _updateTooltipHook.Dispose();
+        _updateNameHook.Dispose();
 
         Svc.Framework.RunOnTick(() =>
         {
@@ -174,6 +198,7 @@ public sealed unsafe class CustomActionManager : IDisposable
             _actions.Clear();
             _iconTextures.Clear();
             _pendingInjects.Clear();
+            _handleActionHoverHook.Dispose();
 
             Svc.Log.Debug($"Cleared custom actions");
         }, TimeSpan.FromTicks(100));
