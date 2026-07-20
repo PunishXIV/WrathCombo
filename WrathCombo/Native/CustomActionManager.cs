@@ -5,7 +5,6 @@ using Dalamud.Plugin.Services;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.EzHookManager;
-using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -114,7 +113,7 @@ public sealed unsafe class CustomActionManager : IDisposable
     private readonly Hook<LoadIconDelegate> _loadIconHook;
     private readonly Hook<GetActionRowTransientDelegate> _updateTooltipHook;
     private readonly Hook<FormatNameDelegate> _updateNameHook;
-    private readonly Hook<AgentActionDetail.Delegates.Update> _handleActionHoverHook;
+    private readonly Hook<AgentActionDetail.Delegates.Update> _crashHook;
     private readonly List<IconInjectEntry> _pendingInjects = new();
 
     private readonly ITextureProvider _texProv;
@@ -132,29 +131,22 @@ public sealed unsafe class CustomActionManager : IDisposable
         _loadIconHook = hooks.HookFromAddress<LoadIconDelegate>(AtkComponentIcon.Addresses.LoadIcon.Value, LoadIconDetour);
         _updateTooltipHook = hooks.HookFromAddress<GetActionRowTransientDelegate>(sig.ScanText(SigGetActionTransient), UpdateTooltipDetour);
         _updateNameHook = hooks.HookFromAddress<FormatNameDelegate>(sig.ScanText(SigFormatName), FormatNameDetour);
-        _handleActionHoverHook = hooks.HookFromAddress<AgentActionDetail.Delegates.Update>((nint)AgentActionDetail.StaticVirtualTablePointer->Update, HandleCrash);
+        _crashHook = hooks.HookFromAddress<AgentActionDetail.Delegates.Update>((nint)AgentActionDetail.StaticVirtualTablePointer->Update, HandleCrash);
 
         _getActionRowHook.Enable();
         _isSlotUsableHook.Enable();
         _loadIconHook.Enable();
         _updateTooltipHook.Enable();
         _updateNameHook.Enable();
-        _handleActionHoverHook.Enable();
 
         framework.Update += OnFrameworkUpdate;
     }
 
     private void HandleCrash(AgentActionDetail* thisPtr, uint frameCount)
     {
-        if (thisPtr->ActionId >= 1_000_000)
-        {
-            if (_actions.Any(x => x.Value.Id == thisPtr->ActionId))
-                _handleActionHoverHook.Original(thisPtr, frameCount);
-        }
-        else
-        {
-            _handleActionHoverHook.Original(thisPtr, frameCount);
-        }
+        thisPtr->ActionId = 1;
+        thisPtr->AdjustedId = 0;
+        thisPtr->OriginalId = 1;
     }
 
     private byte* FormatNameDetour(int nameType, uint rowId, uint detailType, uint parameter)
@@ -182,26 +174,29 @@ public sealed unsafe class CustomActionManager : IDisposable
     public void Dispose()
     {
         _framework.Update -= OnFrameworkUpdate;
+
         _getActionRowHook.Dispose();
         _isSlotUsableHook.Dispose();
         _loadIconHook.Dispose();
         _updateTooltipHook.Dispose();
         _updateNameHook.Dispose();
 
-        Svc.Framework.RunOnTick(() =>
+        AgentActionDetail.Instance()->ActionId = 1;
+        AgentActionDetail.Instance()->AdjustedId = 0;
+        AgentActionDetail.Instance()->OriginalId = 1;
+
+        _crashHook.Enable();
+        foreach (CustomAction action in _actions.Values)
         {
-            foreach (CustomAction action in _actions.Values)
-            {
-                action.Dispose();
-            }
+            action.Dispose();
+        }
 
-            _actions.Clear();
-            _iconTextures.Clear();
-            _pendingInjects.Clear();
-            _handleActionHoverHook.Dispose();
+        _crashHook.Dispose();
+        _actions.Clear();
+        _iconTextures.Clear();
+        _pendingInjects.Clear();
 
-            Svc.Log.Debug($"Cleared custom actions");
-        }, TimeSpan.FromTicks(100));
+        Svc.Log.Debug($"Cleared custom actions");
     }
 
     public void Register(CustomAction action)
