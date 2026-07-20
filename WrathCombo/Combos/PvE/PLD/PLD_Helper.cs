@@ -866,7 +866,7 @@ internal partial class PLD
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => PLD_Opener_Potion;
 
         public override bool HasCooldowns() =>
             IsOffCooldown(FightOrFlight) &&

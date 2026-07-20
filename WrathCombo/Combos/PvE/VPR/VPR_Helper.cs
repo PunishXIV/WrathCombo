@@ -679,7 +679,7 @@ internal partial class VPR
         public override Preset Preset => Preset.VPR_ST_Opener;
 
         internal override UserData ContentCheckConfig => VPR_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => VPR_Opener_Potion;
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [

@@ -605,7 +605,7 @@ internal partial class MNK
         public override Preset Preset => Preset.MNK_STUseOpener;
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => MNK_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
@@ -655,7 +655,7 @@ internal partial class MNK
         public override Preset Preset => Preset.MNK_STUseOpener;
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => MNK_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
@@ -821,7 +821,7 @@ internal partial class MNK
         public override Preset Preset => Preset.MNK_STUseOpener;
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => MNK_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [

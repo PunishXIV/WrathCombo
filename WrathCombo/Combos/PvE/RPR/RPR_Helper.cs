@@ -733,7 +733,7 @@ internal partial class RPR
 
         internal override UserData ContentCheckConfig => RPR_Balance_Content;
 
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => RPR_Opener_Potion;
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
@@ -785,7 +785,7 @@ internal partial class RPR
 
         internal override UserData ContentCheckConfig => RPR_Balance_Content;
 
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => RPR_Opener_Potion;
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [

@@ -840,7 +840,7 @@ internal partial class MCH
         public override Preset Preset => Preset.MCH_ST_Adv_Opener;
 
         internal override UserData ContentCheckConfig => MCH_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => MCH_Opener_Potion;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [

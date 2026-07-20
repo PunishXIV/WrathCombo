@@ -575,7 +575,7 @@ internal partial class SAM
         public override Preset Preset => Preset.SAM_ST_Opener;
 
         internal override UserData ContentCheckConfig => SAM_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => SAM_Opener_Potion;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
@@ -627,7 +627,7 @@ internal partial class SAM
         public override Preset Preset => Preset.SAM_ST_Opener;
 
         internal override UserData ContentCheckConfig => SAM_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => SAM_Opener_Potion;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
@@ -681,7 +681,7 @@ internal partial class SAM
         public override Preset Preset => Preset.SAM_ST_Opener;
 
         internal override UserData ContentCheckConfig => SAM_Balance_Content;
-        internal override bool IncludePot => false;
+        internal override bool IncludePot => SAM_Opener_Potion;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
