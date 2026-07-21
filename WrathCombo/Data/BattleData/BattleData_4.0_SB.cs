@@ -11,17 +11,14 @@ namespace WrathCombo.Data.BattleData
             switch (_territoryID)
             {
                 case 674: // Pool of Tribute
-                    _invincibleCheck = (target, targetID, targetStatuses) =>
+                    _invincibleCheck = (target, targetID, _) =>
                     {
-                        var fettered = GetPartyMembers() // Svc.Objects if debugging via ARR
-                            .FirstOrDefault(x => HasStatusEffect(292, x.BattleChara, true));
-
-                        if (targetID == 7200 && fettered is not null)
-                        {
-                            var distance = GetTargetDistance(target, fettered.BattleChara);
-                            return Result(distance >= 1); // NPC Rock to kill is right on top, less than 1
-                        }
-                        return Invincible.False;
+                        return Result(
+                            targetID == 7200 && // if the rock
+                            GetPartyMembers()  // check party members
+                                .Select(x => x.BattleChara)
+                                .Any(x => HasStatusEffect(292, x, true) && //that are fettered
+                                          GetTargetDistance(target, x) >= 1)); //and are not ontop of the person to be freed
                     };
 
                     break;
