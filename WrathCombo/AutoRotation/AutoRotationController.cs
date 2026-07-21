@@ -28,7 +28,6 @@ using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
 using static WrathCombo.Data.ActionWatching;
-using static WrathCombo.Data.HiddenFeaturesData;
 using ActionType = FFXIVClientStructs.FFXIV.Client.Game.ActionType;
 using Content = ECommons.GameHelpers.Content;
 
@@ -173,7 +172,7 @@ internal unsafe class AutoRotationController
 
         if (cfg.HealerSettings.PreEmptiveHoT && Player.Job is Job.SGE or Job.SCH)
             PreEmptiveShield();
-        
+
         // Bypass buffs logic
         if (cfg.BypassBuffs && NotInCombat)
         {
@@ -807,8 +806,16 @@ internal unsafe class AutoRotationController
             if (ActionManager.Instance()->QueuedActionId != 0)
                 return true;
 
-            var target = !cfg.DPSSettings.AoEIgnoreManual && cfg.DPSRotationMode == DPSRotationMode.Manual ?
-    Svc.Targets.Target : DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
+            var autoTarget = DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
+            var manualTarget = Svc.Targets.Target;
+
+            IGameObject? target = null;
+            // Determine target according to rotation mode and AoE settings
+            if (cfg.DPSRotationMode == DPSRotationMode.Manual)
+            {
+                var useAutoTarget = cfg.DPSSettings.AoEIgnoreManual && (!cfg.DPSSettings.AoEOnlyWhenTargeting || manualTarget is not null);
+                target = useAutoTarget ? autoTarget : manualTarget;
+            }
 
             if ((target is not { } t || (!t.IsHostile() && !t.IsFriendly())) && cfg.PauseWhenNoTarget) return true;
 

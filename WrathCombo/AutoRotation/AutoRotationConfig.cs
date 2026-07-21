@@ -33,6 +33,7 @@ public class DPSSettings
     public float MaxDistance = 30;
     public bool IgnoreRangeInBoss = true;
     public bool AoEIgnoreManual = false;
+    public bool AoEOnlyWhenTargeting = false;
     public bool UnTargetAndDisableForPenalty = false;
 }
 
