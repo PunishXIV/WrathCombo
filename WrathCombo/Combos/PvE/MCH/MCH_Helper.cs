@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
+using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,20 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class MCH
 {
+    static MCH()
+    {
+        OnStatusChanged += MCH_OnStatusChanged;
+    }
+
+    private static void MCH_OnStatusChanged(uint statusId, bool onPlayer)
+    {
+        if (statusId == Buffs.Reassembled && !onPlayer)
+        {
+            UseBothCharges = GetRemainingCharges(Reassemble) > 0;
+            Svc.Log.Debug($"Set UseBothCharges to {UseBothCharges}");
+        }
+    }
+
     #region Queen
 
     private static bool ShouldUseQueenST()
@@ -223,43 +238,14 @@ internal partial class MCH
 
     #region Reassembled
 
-    private static uint CurrentReassembleCharges = uint.MaxValue;
-    private static bool UseBothCharges;
+    public static bool UseBothCharges;
 
-    private static bool TwoChargesUnlocked => GetMaxCharges(Reassemble) >= 2;
+    public static bool TwoChargesUnlocked => GetMaxCharges(Reassemble) >= 2;
 
-    private static bool IsWildfireActive => HasStatusEffect(Buffs.Wildfire);
+    public static bool IsWildfireActive => HasStatusEffect(Buffs.Wildfire);
 
-    private static void UpdateReassembleChargeTracking()
-    {
-        uint charges = GetRemainingCharges(Reassemble);
-        if (charges == CurrentReassembleCharges)
-            return;
-
-        if (!TwoChargesUnlocked)
-        {
-            UseBothCharges = false;
-        }
-        else
-        {
-            switch (charges)
-            {
-                case 2 when CurrentReassembleCharges != 2:
-                    UseBothCharges = true;
-                    break;
-
-                case 0:
-                case 1 when CurrentReassembleCharges == 0:
-                    UseBothCharges = false;
-                    break;
-            }
-        }
-
-        CurrentReassembleCharges = charges;
-    }
-
-    private static bool ShouldReassemble() =>
-        !TwoChargesUnlocked || UseBothCharges;
+    public static bool ShouldReassemble() =>
+        !TwoChargesUnlocked || UseBothCharges || (ActionReady(Reassemble) && GetCooldownRemainingTime(Reassemble) <= 10);
 
     private static int ReadyTools()
     {
@@ -341,22 +327,20 @@ internal partial class MCH
         LevelChecked(Scattergun) && InActionRange(OriginalHook(SpreadShot)) ||
         !LevelChecked(Drill) && InActionRange(OriginalHook(SpreadShot));
 
-    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25) =>
-        onAoE
+    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25) => ActionReady(Reassemble) &&
+        (onAoE
             ? CanReassembleAoE(chargePool, hpThreshold)
-            : CanReassembleST(reassembleChoice, chargePool, hpThreshold);
+            : CanReassembleST(reassembleChoice, chargePool, hpThreshold));
 
     private static bool CanReassembleST(int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
     {
-        UpdateReassembleChargeTracking();
-
         if (!CanReassembleCharges(chargePool, hpThreshold, true))
             return false;
 
         if (reassembleChoice == 0)
             return ShouldReassemble() && ReadyTools() >= GetRemainingCharges(Reassemble);
 
-        return reassembleChoice == 1 && HasReassembleToolTarget(onAoE: false);
+        return reassembleChoice == 1 && ShouldReassemble() && HasReassembleToolTarget(onAoE: false);
     }
 
     #endregion
