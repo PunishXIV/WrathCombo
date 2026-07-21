@@ -13,12 +13,19 @@ namespace WrathCombo.Data.BattleData
                 case 674: // Pool of Tribute
                     _invincibleCheck = (target, targetID, _) =>
                     {
-                        return Result(
-                            targetID == 7200 && // if the rock
-                            GetPartyMembers()  // check party members
+                        if (targetID == 7200) // Rocks
+                        {
+                            // If a player is trapped, determine the right rock
+                            if (GetPartyMembers() // Svc.Objects if debugging via ARR
                                 .Select(x => x.BattleChara)
-                                .Any(x => HasStatusEffect(292, x, true) && //that are fettered
-                                          GetTargetDistance(target, x) >= 1)); //and are not ontop of the person to be freed
+                                .FirstOrDefault(x => HasStatusEffect(292, x, true)) is { } fettered)
+                            {
+                                return Result(GetTargetDistance(target, fettered) > 1);
+                            }
+                            // No players trapped (freed), ignore rocks
+                            return Invincible.True;
+                        }
+                        return Invincible.False;
                     };
 
                     break;
