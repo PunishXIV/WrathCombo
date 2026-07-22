@@ -588,7 +588,10 @@ internal partial class RPR
     internal static void ReportRPRPositionalHints(bool simpleMode = false)
     {
         if (!TargetNeedsPositionals() || !HasBattleTarget())
+        {
+            ClearUpcomingPositional();
             return;
+        }
 
         if (HasStatusEffect(Buffs.EnhancedGibbet))
             ReportUpcomingPositional(PositionalDirection.Flank, OriginalHook(Gibbet), 1);
@@ -608,6 +611,8 @@ internal partial class RPR
                  !HasStatusEffect(Buffs.EnhancedCrossReaping) &&
                  !HasStatusEffect(Buffs.EnhancedVoidReaping))
             ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(Gallows), 1);
+        else
+            ClearUpcomingPositional();
     }
 
     #endregion

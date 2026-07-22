@@ -18,7 +18,10 @@ internal partial class SAM
     private static void ReportSAMPositionalHints(bool useGekko, bool useKasha)
     {
         if (!TargetNeedsPositionals() || !HasBattleTarget() || ComboTimer <= 0)
+        {
+            ClearUpcomingPositional();
             return;
+        }
 
         if (ComboAction is Jinpu && LevelChecked(Gekko))
             ReportUpcomingPositional(PositionalDirection.Rear, Gekko, 1);
@@ -40,7 +43,11 @@ internal partial class SAM
                       OnTargetsRear() && HasGetsu && LevelChecked(Kasha) ||
                       !HasStatusEffect(Buffs.Fuka)))
                 ReportUpcomingPositional(PositionalDirection.Flank, Kasha, 2);
+            else
+                ClearUpcomingPositional();
         }
+        else
+            ClearUpcomingPositional();
     }
 
     #endregion

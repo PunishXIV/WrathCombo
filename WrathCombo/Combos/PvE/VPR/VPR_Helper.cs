@@ -179,13 +179,13 @@ internal partial class VPR
 
         if (UsedHuntersCoil)
         {
-            ReportUpcomingPositional(PositionalDirection.Rear, SwiftskinsCoil, 2);
+            ReportUpcomingPositional(PositionalDirection.Rear, SwiftskinsCoil, 1);
             return true;
         }
 
         if (UsedSwiftskinsCoil)
         {
-            ReportUpcomingPositional(PositionalDirection.Flank, HuntersCoil, 2);
+            ReportUpcomingPositional(PositionalDirection.Flank, HuntersCoil, 1);
             return true;
         }
 

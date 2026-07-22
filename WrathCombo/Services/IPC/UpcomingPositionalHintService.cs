@@ -39,7 +39,12 @@ internal static class UpcomingPositionalHintService
         if (!CustomComboFunctions.HasBattleTarget() ||
             !CustomComboFunctions.TargetNeedsPositionals() ||
             IsExpired(_current))
+        {
             Reset();
+            return;
+        }
+
+        RefreshLiveFields(notifyOnChange: true);
     }
 
     internal static uint[]? GetWireSnapshot()
@@ -47,6 +52,7 @@ internal static class UpcomingPositionalHintService
         if (_current.Direction is PositionalDirection.None || IsExpired(_current))
             return null;
 
+        RefreshLiveFields(notifyOnChange: false);
         return RefreshExpiry(_current).ToWire();
     }
 
@@ -70,12 +76,7 @@ internal static class UpcomingPositionalHintService
             return;
 
         var currentAngle = (byte)CustomComboFunctions.AngleToTarget(target);
-        var requiredAngle = direction switch
-        {
-            PositionalDirection.Rear => (byte)CustomComboFunctions.AttackAngle.Rear,
-            PositionalDirection.Flank => (byte)CustomComboFunctions.AttackAngle.Flank,
-            _ => (byte)CustomComboFunctions.AttackAngle.Unknown,
-        };
+        var requiredAngle = RequiredAngle(direction);
 
         var snapshot = new PositionalHintSnapshot
         {
@@ -92,30 +93,79 @@ internal static class UpcomingPositionalHintService
             _current.IsActive &&
             !IsExpired(_current) &&
             !IsBetterHint(snapshot, _current))
+        {
+            // Same (or worse) urgency: still refresh TTL / facing so overlays stay live
+            if (IsSameHint(snapshot, _current))
+                ApplySnapshot(snapshot, notify: snapshot.CurrentAngle != _current.CurrentAngle ||
+                                               snapshot.IsSatisfied != _current.IsSatisfied);
             return;
+        }
 
-        if (SnapshotEquals(snapshot, _current) && !IsExpired(_current))
-            return;
+        var notify = !IsSameHint(snapshot, _current) ||
+                     snapshot.CurrentAngle != _current.CurrentAngle ||
+                     snapshot.IsSatisfied != _current.IsSatisfied ||
+                     IsExpired(_current);
 
-        _current = snapshot;
-        _lastReportTick = Environment.TickCount64;
-        NotifySubscribers();
+        ApplySnapshot(snapshot, notify);
     }
 
+    /// <summary>
+    ///     Prefer sooner hints. Same urgency may replace when action/direction changes.
+    /// </summary>
     private static bool IsBetterHint(PositionalHintSnapshot candidate, PositionalHintSnapshot existing)
     {
-        if (candidate.ActionId != existing.ActionId)
-            return candidate.GcdsUntil >= existing.GcdsUntil;
+        if (candidate.GcdsUntil != existing.GcdsUntil)
+            return candidate.GcdsUntil < existing.GcdsUntil;
 
-        return candidate.GcdsUntil > existing.GcdsUntil;
+        return candidate.ActionId != existing.ActionId ||
+               candidate.Direction != existing.Direction;
     }
 
-    private static bool SnapshotEquals(PositionalHintSnapshot a, PositionalHintSnapshot b) =>
+    private static bool IsSameHint(PositionalHintSnapshot a, PositionalHintSnapshot b) =>
         a.Direction == b.Direction &&
         a.ActionId == b.ActionId &&
         a.GcdsUntil == b.GcdsUntil &&
-        a.TargetObjectId == b.TargetObjectId &&
-        a.IsSatisfied == b.IsSatisfied;
+        a.TargetObjectId == b.TargetObjectId;
+
+    private static void ApplySnapshot(PositionalHintSnapshot snapshot, bool notify)
+    {
+        _current = snapshot;
+        _lastReportTick = Environment.TickCount64;
+        if (notify)
+            NotifySubscribers();
+    }
+
+    private static void RefreshLiveFields(bool notifyOnChange)
+    {
+        var target = CustomComboFunctions.CurrentTarget;
+        if (target is null || (uint)target.GameObjectId != _current.TargetObjectId)
+        {
+            Reset();
+            return;
+        }
+
+        var currentAngle = (byte)CustomComboFunctions.AngleToTarget(target);
+        var isSatisfied = currentAngle == RequiredAngle(_current.Direction);
+        if (currentAngle == _current.CurrentAngle && isSatisfied == _current.IsSatisfied)
+            return;
+
+        _current = _current with
+        {
+            CurrentAngle = currentAngle,
+            IsSatisfied = isSatisfied,
+        };
+
+        if (notifyOnChange)
+            NotifySubscribers();
+    }
+
+    private static byte RequiredAngle(PositionalDirection direction) =>
+        direction switch
+        {
+            PositionalDirection.Rear => (byte)CustomComboFunctions.AttackAngle.Rear,
+            PositionalDirection.Flank => (byte)CustomComboFunctions.AttackAngle.Flank,
+            _ => (byte)CustomComboFunctions.AttackAngle.Unknown,
+        };
 
     private static bool IsExpired(PositionalHintSnapshot snapshot)
     {

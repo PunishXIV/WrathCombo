@@ -245,7 +245,10 @@ internal partial class NIN
     internal static void ReportNINPositionalHints()
     {
         if (MudraPhase || !TargetNeedsPositionals() || !HasBattleTarget() || ComboTimer <= 1f)
+        {
+            ClearUpcomingPositional();
             return;
+        }
 
         switch (ComboAction)
         {
@@ -254,6 +257,8 @@ internal partial class NIN
                     ReportUpcomingPositional(PositionalDirection.Flank, ArmorCrush, 1);
                 else if (gauge.Kazematoi >= 4 && LevelChecked(AeolianEdge))
                     ReportUpcomingPositional(PositionalDirection.Rear, AeolianEdge, 1);
+                else
+                    ClearUpcomingPositional();
                 break;
 
             case SpinningEdge when LevelChecked(GustSlash) && LevelChecked(ArmorCrush) && gauge.Kazematoi is 0:
@@ -262,6 +267,10 @@ internal partial class NIN
 
             case SpinningEdge when LevelChecked(GustSlash) && !LevelChecked(ArmorCrush) && LevelChecked(AeolianEdge):
                 ReportUpcomingPositional(PositionalDirection.Rear, AeolianEdge, 2);
+                break;
+
+            default:
+                ClearUpcomingPositional();
                 break;
         }
     }
