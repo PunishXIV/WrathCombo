@@ -684,6 +684,9 @@ internal partial class NIN : Melee
             if (actionID is not (Ten or Chi or Jin) || !HasStatusEffect(Buffs.Mudra))
                 return actionID;
 
+            if (HasStatusEffect(Buffs.TenChiJin))
+                return actionID;
+
             int mudrapath = NIN_SimpleMudra_Choice;
 
             if (mudrapath == 1)
@@ -808,6 +811,10 @@ internal partial class NIN : Melee
         protected override uint Invoke(uint actionID)
         {
             if (!MudraSigns.Any(x => x == actionID))
+                return actionID;
+
+            // Let the game (or NIN_TCJ) resolve TCJ mudras — Alt paths remap Jin→Doton etc.
+            if (HasStatusEffect(Buffs.TenChiJin))
                 return actionID;
 
             if (JutsuFromFlags == Rabbit)
