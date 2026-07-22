@@ -236,12 +236,78 @@ internal partial class DRK
                     break;
 
                 case Preset.DRK_ST_CD_Delirium:
-                    DrawSliderInt(0, 25, DRK_ST_DeliriumThreshold,
-                        Generics.StopEnemyHpPercent,
-                        itemWidth: little, sliderIncrement: SliderIncrements.Fives);
+                    DrawSliderInt(0, 25,
+                        DRK_ST_DeliriumThresholdBoss,
+                        Generics.BossOnlyHpPercent,
+                        itemWidth: little,
+                        sliderIncrement: SliderIncrements.Ones);
+                    DrawSliderInt(0, 50,
+                        DRK_ST_DeliriumThresholdBossAdds,
+                        Generics.BossEncounterNonBossHpPercent,
+                        itemWidth: little,
+                        sliderIncrement: SliderIncrements.Fives);
+                    DrawSliderInt(0, 100,
+                        DRK_ST_DeliriumThresholdTrash,
+                        Generics.NonBossHpPercent,
+                        itemWidth: little,
+                        sliderIncrement: SliderIncrements.Fives);
+
                     DrawDifficultyMultiChoice(
                         DRK_ST_DeliriumThresholdDifficulty,
-                        DRK_ST_DeliriumThresholdDifficultyListSet
+                        DRK_ST_DeliriumThresholdDifficultyListSet,
+                        overrideText: "Select what difficulty the above " +
+                                      "sliders should apply to:"
+                    );
+
+                    ImGuiEx.Spacing(new Vector2(0f, 10f));
+
+                    ImGui.Indent();
+                    ImGui.Text("Usage options:");
+                    ImGui.Unindent();
+                    ImGui.Dummy(new Vector2(20f, 0f).Scale());
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_ST_DeliriumTieToLS,
+                        "Send on Cooldown",
+                        "Will use Delirium usages on cooldown. Recommended.",
+                        outputValue: (int)LSTieIn.Off,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_ST_DeliriumTieToLS,
+                        "Tie to Living Shadow " +
+                        "(for manual control)",
+                        "Will require Living Shadow to have been recently used " +
+                        "before using even-minute Deliriums.\n" +
+                        "(Odd-minute Delirium usage will proceed on cooldown)\n\n" +
+                        "ONLY recommended if you want more manual control.\n" +
+                        "(Does not apply to Blood Weapon)",
+                        outputValue: (int)LSTieIn.On,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+
+                    break;
+
+                case Preset.DRK_ST_CD_Darkness:
+                    ImGui.Dummy(new Vector2(10f, 0f).Scale());
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_ST_DarknessInstant,
+                        "Use Halfway",
+                        "Will use Salt and Darkness about halfway through " +
+                        "Salted Earth's duration, after more important oGCDs.\n" +
+                        "Recommended.",
+                        outputValue: (int)SaltAndDarknessInstant.Off,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_ST_DarknessInstant,
+                        "Use Instantly (for heavy movement)",
+                        "Will use Salt and Darkness as soon as possible " +
+                        "(outside of the opener).\n" +
+                        "Only Recommended for heavy movement fights, " +
+                        "and only if you know you can fit your other oGCDs in.",
+                        outputValue: (int)SaltAndDarknessInstant.On,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+
+                    UserConfig.DrawDifficultyMultiChoice(
+                        DRK_ST_DarknessInstantDifficulty,
+                        DRK_ST_DarknessInstantDifficultyListSet
                     );
 
                     break;
@@ -312,6 +378,30 @@ internal partial class DRK
                     DrawSliderInt(0, 60, DRK_AoE_SaltThreshold,
                         Generics.StopEnemyHpPercent,
                         itemWidth: bigger, sliderIncrement: SliderIncrements.Fives);
+
+                    break;
+
+                case Preset.DRK_AoE_CD_Darkness:
+                    ImGui.Dummy(new Vector2(10f, 0f).Scale());
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_AoE_DarknessInstant,
+                        "Use Halfway",
+                        "Will use Salt and Darkness about halfway through " +
+                        "Salted Earth's duration, after more important oGCDs.\n" +
+                        "Recommended.",
+                        outputValue: (int)SaltAndDarknessInstant.Off,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+                    UserConfig.DrawHorizontalRadioButton(
+                        DRK_AoE_DarknessInstant,
+                        "Use Instantly (for heavy movement)",
+                        "Will use Salt and Darkness as soon as possible.",
+                        outputValue: (int)SaltAndDarknessInstant.On,
+                        descriptionColor: ImGuiColors.DalamudWhite);
+
+                    UserConfig.DrawDifficultyMultiChoice(
+                        DRK_AoE_DarknessInstantDifficulty,
+                        DRK_AoE_DarknessInstantDifficultyListSet
+                    );
 
                     break;
 
@@ -533,6 +623,25 @@ internal partial class DRK
             Off = 1,
             On = 2,
         }
+        
+        /// <summary>
+        ///     Whether Delirium should wait for Living Shadow on
+        ///     even-minute usages.
+        /// </summary>
+        internal enum LSTieIn
+        {
+            Off = 0,
+            On  = 1,
+        }
+
+        /// <summary>
+        ///     Whether Salt and Darkness should be used instantly or wait.
+        /// </summary>
+        internal enum SaltAndDarknessInstant
+        {
+            Off = 0,
+            On = 1,
+        }
 
         /// <summary>
         ///     Whether Combos should include mitigation or not.
@@ -660,26 +769,68 @@ internal partial class DRK
             new("DRK_ST_CDsBossRequirement", (int)BossRequirement.Off);
 
         /// <summary>
-        ///     Target HP% to use Delirium above for Single Target.
+        ///     Target HP% to use Delirium above for Single Target,
+        ///     on bosses.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: 0<br />
         ///     <b>Range</b>: 0 - 25 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
+        public static readonly UserInt DRK_ST_DeliriumThresholdBoss =
+            new("DRK_ST_DeliriumThresholdBoss", 10);
+
+        /// <summary>
+        ///     Target HP% to use Delirium above for Single Target,
+        ///     on boss adds.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 0<br />
+        ///     <b>Range</b>: 0 - 50 <br />
         ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
         /// </value>
         /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
-        public static readonly UserInt DRK_ST_DeliriumThreshold =
-            new("DRK_ST_DeliriumThreshold", 0);
+        public static readonly UserInt DRK_ST_DeliriumThresholdBossAdds =
+            new("DRK_ST_DeliriumThresholdBossAdds", 10);
 
         /// <summary>
-        ///     Difficulty of Delirium Threshold for Single Target.
+        ///     Target HP% to use Delirium above for Single Target,
+        ///     on trash.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 0<br />
+        ///     <b>Range</b>: 0 - 100 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
+        public static readonly UserInt DRK_ST_DeliriumThresholdTrash =
+            new("DRK_ST_DeliriumThresholdTrash", 20);
+
+        /// <summary>
+        ///     Whether Delirium should wait for Living Shadow on even-minute
+        ///     usages.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="LSTieIn.Off"/> <br />
+        ///     <b>Options</b>: <see cref="LSTieIn.On"/>
+        ///     or <see cref="LSTieIn.Off"/>
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Delirium" />
+        public static readonly UserInt DRK_ST_DeliriumTieToLS =
+            new("DRK_ST_DeliriumTieToLS", (int)LSTieIn.Off);
+
+        /// <summary>
+        ///     Difficulty of Delirium Thresholds for Single Target.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
         ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
         ///     and/or <see cref="ContentCheck.TopHalfContent" />
         /// </value>
-        /// <seealso cref="DRK_ST_DeliriumThreshold" />
+        /// <seealso cref="DRK_ST_DeliriumThresholdBoss" />
+        /// <seealso cref="DRK_ST_DeliriumThresholdBossAdds" />
+        /// <seealso cref="DRK_ST_DeliriumThresholdTrash" />
         public static readonly UserBoolArray DRK_ST_DeliriumThresholdDifficulty =
             new("DRK_ST_DeliriumThresholdDifficulty", [true, false]);
 
@@ -722,6 +873,39 @@ internal partial class DRK
         /// </summary>
         public static readonly ContentCheck.ListSet
             DRK_ST_LivingShadowThresholdDifficultyListSet =
+                ContentCheck.ListSet.Halved;
+
+        /// <summary>
+        ///     Whether Salt and Darkness should be used instantly.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="SaltAndDarknessInstant.Off"/> <br />
+        ///     <b>Options</b>: <see cref="SaltAndDarknessInstant.On"/>
+        ///     or <see cref="SaltAndDarknessInstant.Off"/>
+        /// </value>
+        /// <seealso cref="Preset.DRK_ST_CD_Darkness" />
+        public static readonly UserInt DRK_ST_DarknessInstant =
+            new("DRK_ST_DarknessInstant", (int)SaltAndDarknessInstant.Off);
+
+        /// <summary>
+        ///     Difficulty of Salt and Darkness Instant Usage for Single Target.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
+        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and/or <see cref="ContentCheck.TopHalfContent" />
+        /// </value>
+        /// <seealso cref="DRK_ST_DarknessInstant" />
+        public static readonly UserBoolArray DRK_ST_DarknessInstantDifficulty =
+            new("DRK_ST_DarknessInstantDifficulty", [true, false]);
+
+        /// <summary>
+        ///     What Difficulty List Set
+        ///     <see cref="DRK_ST_DarknessInstantDifficulty" /> is set to.
+        /// </summary>
+        /// <seealso cref="DRK_ST_DarknessInstantDifficulty" />
+        public static readonly ContentCheck.ListSet
+            DRK_ST_DarknessInstantDifficultyListSet =
                 ContentCheck.ListSet.Halved;
 
         /// <summary>
@@ -864,6 +1048,39 @@ internal partial class DRK
         /// <seealso cref="Preset.DRK_AoE_CD_Salt" />
         public static readonly UserInt DRK_AoE_SaltThreshold =
             new("DRK_AoE_SaltThreshold", 30);
+
+        /// <summary>
+        ///     Whether Salt and Darkness should be used instantly in AoE.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="SaltAndDarknessInstant.Off"/> <br />
+        ///     <b>Options</b>: <see cref="SaltAndDarknessInstant.On"/>
+        ///     or <see cref="SaltAndDarknessInstant.Off"/>
+        /// </value>
+        /// <seealso cref="Preset.DRK_AoE_CD_Darkness" />
+        public static readonly UserInt DRK_AoE_DarknessInstant =
+            new("DRK_AoE_DarknessInstant", (int)SaltAndDarknessInstant.Off);
+
+        /// <summary>
+        ///     Difficulty of Salt and Darkness Instant Usage for Single Target.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
+        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and/or <see cref="ContentCheck.TopHalfContent" />
+        /// </value>
+        /// <seealso cref="DRK_ST_DarknessInstant" />
+        public static readonly UserBoolArray DRK_AoE_DarknessInstantDifficulty =
+            new("DRK_AoE_DarknessInstantDifficulty", [true, false]);
+
+        /// <summary>
+        ///     What Difficulty List Set
+        ///     <see cref="DRK_AoE_DarknessInstantDifficulty" /> is set to.
+        /// </summary>
+        /// <seealso cref="DRK_AoE_DarknessInstantDifficulty" />
+        public static readonly ContentCheck.ListSet
+            DRK_AoE_DarknessInstantDifficultyListSet =
+                ContentCheck.ListSet.Halved;
 
         /// <summary>
         ///     Target HP% to use Drain above for AoE.

@@ -65,24 +65,14 @@ internal partial class DRK : Tank
         protected override uint Invoke(uint actionID)
         {
             // Bail if not looking at the replaced action
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HardSlash)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID,
+                    CustomActionType.SingleTargetDPS, HardSlash))
+                return actionID;
 
             const Combo comboFlags = Combo.ST | Combo.Adv;
             var newAction = HardSlash;
             _ = IsBursting;
-
-            // Unmend Option for Pulling
-            var skipBecauseOpener =
-                IsEnabled(Preset.DRK_ST_BalanceOpener) &&
-                Opener().HasCooldowns() &&
-                NumberOfObjectsInRange<SelfCircle>(20) < 2; // don't skip if add-pulling
-            if (IsEnabled(Preset.DRK_ST_RangedUptime) &&
-                ActionReady(Unmend) &&
-                !InMeleeRange() &&
-                HasBattleTarget() &&
-                !skipBecauseOpener)
-                return Unmend;
-
+            
             // Opener
             if (IsEnabled(Preset.DRK_ST_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -100,6 +90,18 @@ internal partial class DRK : Tank
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
 
+            // Unmend Option for Pulling
+            var skipBecauseOpener =
+                IsEnabled(Preset.DRK_ST_BalanceOpener) &&
+                Opener().HasCooldowns() &&
+                NumberOfObjectsInRange<SelfCircle>(20) < 2; // don't skip if add-pulling
+            if (IsEnabled(Preset.DRK_ST_RangedUptime) &&
+                ActionReady(Unmend) &&
+                !InMeleeRange() &&
+                HasBattleTarget() &&
+                !skipBecauseOpener)
+                return Unmend;
+            
             // Bail if not in combat
             if (!InCombat())
             {
@@ -157,15 +159,15 @@ internal partial class DRK : Tank
             var newAction = HardSlash;
             _ = IsBursting;
 
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
+            
             // Unmend Option
             if (ActionReady(Unmend) &&
                 !InMeleeRange() &&
                 HasBattleTarget())
                 return Unmend;
-
-            if (ContentSpecificActions.TryGet(out var contentAction))
-                return contentAction;
-
+            
             // Bail if not in combat
             if (!InCombat())
             {

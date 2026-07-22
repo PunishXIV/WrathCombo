@@ -9238,7 +9238,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delirium on Cooldown.
+        ///   Looks up a localized string similar to Delirium Option.
         /// </summary>
         internal static string DRK_ST_CD_Delirium_Name {
             get {

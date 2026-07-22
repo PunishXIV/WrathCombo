@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using Dalamud.Plugin.Ipc;
 using ECommons.DalamudServices;
@@ -258,9 +258,8 @@ public partial class Provider : IDisposable
     ///     The <see cref="CancellationReason" /> (cast as an int) and a string with
     ///     any additional info will be passed to your method.<br />
     ///     The method should be of the form
-    ///     <c>void WrathComboCallback(int, string)</c>.<br />
-    ///     See <see cref="LeaseeIPC.WrathComboCallback" /> for the exact signature that
-    ///     will be called.
+    ///     <c>void WrathComboCallback(int, string)</c>, provided as the IPC gate
+    ///     <c>{yourPrefix}.WrathComboCallback</c>.
     /// </remarks>
     /// <seealso cref="RegisterForLease(string,string)" />
     [EzIPC]

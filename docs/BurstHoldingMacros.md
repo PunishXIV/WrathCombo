@@ -20,6 +20,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 11016
 /wrath toggle 11010
 /wrath toggle 11019
+/wrath toggle 11005
+/wrath toggle 11018
+/wrath toggle 11011
+/wrath toggle 11037
 ```
 
 </details>
@@ -31,6 +35,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 18019
 /wrath toggle 18007
 /wrath toggle 18018
+/wrath toggle 18008
+/wrath toggle 18071
+/wrath toggle 18009
+/wrath toggle 18012
 ```
 
 </details>
@@ -44,6 +52,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 5055
 /wrath toggle 5018
 /wrath toggle 5057
+/wrath toggle 5020
+/wrath toggle 5058
+/wrath toggle 5022
+/wrath toggle 5060
 ```
 
 </details>
@@ -67,6 +79,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 ```
 /wrath toggle 19008
 /wrath toggle 19195
+/wrath toggle 19009
+/wrath toggle 19192
+/wrath toggle 19017
+/wrath toggle 19194
 ```
 
 </details>
@@ -85,6 +101,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 ```
 /wrath toggle 1043
 /wrath toggle 1016
+/wrath toggle 1051
+/wrath toggle 1052
+/wrath toggle 1020
+/wrath toggle 1048
 ```
 
 </details>
@@ -113,6 +133,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 6207
 /wrath toggle 6106
 /wrath toggle 6206
+/wrath toggle 6113
+/wrath toggle 6213
+/wrath toggle 6116
+/wrath toggle 6216
 ```
 
 </details>
@@ -139,6 +163,16 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 10007
 /wrath toggle 10022
 /wrath toggle 10023
+/wrath toggle 10008
+/wrath toggle 10024
+/wrath toggle 10010
+/wrath toggle 10026
+/wrath toggle 10011
+/wrath toggle 10027
+/wrath toggle 10012
+/wrath toggle 10028
+/wrath toggle 10013
+/wrath toggle 10029
 ```
 
 </details>
@@ -150,6 +184,8 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 15108
 /wrath toggle 15018
 /wrath toggle 15114
+/wrath toggle 15019
+/wrath toggle 15111
 ```
 
 </details>
@@ -161,6 +197,8 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 12108
 /wrath toggle 12006
 /wrath toggle 12105
+/wrath toggle 12010
+/wrath toggle 12109
 ```
 
 </details>
@@ -232,6 +270,12 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 2202
 /wrath toggle 2102
 /wrath toggle 2201
+/wrath toggle 2108
+/wrath toggle 2207
+/wrath toggle 2115
+/wrath toggle 2208
+/wrath toggle 2104
+/wrath toggle 2203
 ```
 
 </details>
@@ -243,6 +287,8 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 17017
 /wrath toggle 17020
 /wrath toggle 17061
+/wrath toggle 17002
+/wrath toggle 17055
 ```
 
 </details>
@@ -254,6 +300,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 13207
 /wrath toggle 13011
 /wrath toggle 13208
+/wrath toggle 13014
+/wrath toggle 13015
+/wrath toggle 13211
+/wrath toggle 13212
 ```
 
 </details>

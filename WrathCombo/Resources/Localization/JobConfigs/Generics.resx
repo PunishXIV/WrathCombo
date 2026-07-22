@@ -200,20 +200,20 @@
     <value>Block {0} when with Savage Blade when no stunnable targets are found.</value>
   </data>
   <data name="BossEncounterNonBossHpPercent" xml:space="preserve">
-    <value>Boss Encounter Non Bosses. Stop using at Enemy HP %.</value>
+      <value>Boss Encounter Non-Bosses: Stop using at Enemy HP %</value>
   </data>
   <data name="BossOnlyContent" xml:space="preserve">
-    <value>Boss Only Content</value>
+    <value>Boss-Only Content</value>
   </data>
   <data name="BossOnlyDescription" xml:space="preserve">
     <value>Only applies in instances where you directly fight a boss.
 Excludes many A Realm Reborn &amp; Heavensward raids that include trash.</value>
   </data>
   <data name="BossOnlyHpPercent" xml:space="preserve">
-    <value>Bosses Only. Stop using at Enemy HP %.</value>
+      <value>Bosses: Stop using at Enemy HP %</value>
   </data>
   <data name="BurstOption" xml:space="preserve">
-    <value>BurstOption</value>
+    <value>Burst Option</value>
   </data>
   <data name="Change0Or1" xml:space="preserve">
     <value>Change {0} / {1}</value>
@@ -382,7 +382,7 @@ Set to Zero to disable this check.</value>
     <value>Non-Bosses</value>
   </data>
   <data name="NonBossHpPercent" xml:space="preserve">
-    <value>Non boss encounter. Stop using at Enemy HP %.</value>
+      <value>Non-Bosses: Stop using at Enemy HP %</value>
   </data>
   <data name="NoRequireTarget" xml:space="preserve">
     <value>Will start the opener regardless of having a target.</value>

@@ -1,8 +1,10 @@
 #region
 
 using System;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.DRK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
@@ -140,13 +142,28 @@ internal partial class DRK
             var deliriumInHPContent =
                 flags.HasFlag(Combo.Adv) && ContentCheck.IsInConfiguredContent(
                     deliriumContentHPThreshold, ContentCheck.ListSet.Halved);
+
             var deliriumHPThreshold = flags.HasFlag(Combo.ST)
-                ? DRK_ST_DeliriumThreshold
+                ? GetHPSliderBasedOnTargetType(flags,
+                    DRK_ST_DeliriumThresholdBoss,
+                    DRK_ST_DeliriumThresholdBossAdds,
+                    DRK_ST_DeliriumThresholdTrash)
                 : DRK_AoE_DeliriumThreshold;
             var deliriumHPMatchesThreshold =
                 flags.HasFlag(Combo.Simple) || !deliriumInHPContent ||
                 (deliriumInHPContent &&
                  GetTargetHPPercent(Target(flags)) > deliriumHPThreshold);
+
+            var deliriumIsOddMinute =
+                GetCooldownRemainingTime(LivingShadow) > 30;
+            var deliriumTieToShadowSatisfied =
+                // ReSharper disable once SimplifyConditionalTernaryExpression
+                flags.HasFlag(Combo.ST) && flags.HasFlag(Combo.Adv) &&
+                TraitLevelChecked(Traits.BloodWeaponMastery) &&
+                DRK_ST_DeliriumTieToLS == (int)LSTieIn.On
+                    ? deliriumIsOddMinute ||
+                      JustUsed(LivingShadow, (float) (GCD * 5))
+                    : true;
 
             #endregion
 
@@ -154,6 +171,7 @@ internal partial class DRK
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Delirium) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Delirium)) &&
                 deliriumHPMatchesThreshold &&
+                deliriumTieToShadowSatisfied &&
                 LevelChecked(BloodWeapon) &&
                 GetCooldownRemainingTime(BloodWeapon) < GCD * 1.5)
                 ShouldDeliriumNext = true;
@@ -201,13 +219,32 @@ internal partial class DRK
 
             #region Salt and Darkness
 
+            #region Variables
+
+            var darknessContent = flags.HasFlag(Combo.ST)
+                ? DRK_ST_DarknessInstantDifficulty
+                : DRK_AoE_DarknessInstantDifficulty;
+            var darknessInContent =
+                flags.HasFlag(Combo.Adv) && ContentCheck.IsInConfiguredContent(
+                    darknessContent, ContentCheck.ListSet.Halved);
+
+            var darknessUseInstantly = flags.HasFlag(Combo.ST)
+                ? DRK_ST_DarknessInstant
+                : DRK_AoE_DarknessInstant;
+            var darknessTimeSatisfied =
+                flags.HasFlag(Combo.Simple) || !darknessInContent ||
+                darknessUseInstantly == (int)SaltAndDarknessInstant.On ||
+                GetStatusEffectRemainingTime(Buffs.SaltedEarth) < 7;
+            
+            #endregion
+
             if ((flags.HasFlag(Combo.Simple) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Darkness) ||
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Darkness)) &&
                 LevelChecked(SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
                 HasStatusEffect(Buffs.SaltedEarth) &&
-                GetStatusEffectRemainingTime(Buffs.SaltedEarth) < 7)
+                darknessTimeSatisfied)
                 return (action = OriginalHook(SaltAndDarkness)) != 0;
 
             #endregion
@@ -1108,6 +1145,24 @@ internal partial class DRK
     /// </summary>
     private static bool IsAoEEnabled(Combo flags, Preset preset) =>
         flags.HasFlag(Combo.AoE) && IsEnabled(preset);
+
+    private static float GetHPSliderBasedOnTargetType
+    (Combo flags,
+        UserFloat bossSlider, UserFloat bossAddSlider, UserFloat trashSLider) =>
+        InBossEncounter()
+            ? (Target(flags, restrictToHostile: true)).IsBoss()
+                ? bossSlider
+                : bossAddSlider
+            : trashSLider;
+
+    private static int GetHPSliderBasedOnTargetType
+    (Combo flags,
+        UserInt bossSlider, UserInt bossAddSlider, UserInt trashSLider) =>
+        InBossEncounter()
+            ? (Target(flags, restrictToHostile: true)).IsBoss()
+                ? bossSlider
+                : bossAddSlider
+            : trashSLider;
 
     /// <summary>
     ///     Signature for the TryGetAction&lt;ActionType&gt; methods.

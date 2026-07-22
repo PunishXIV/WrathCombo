@@ -806,7 +806,8 @@ internal partial class PLD
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([11, 13], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
+            ([1], () => InMeleeRange()),
+            ([12, 14], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
         ];
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;

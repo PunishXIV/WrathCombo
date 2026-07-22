@@ -62,7 +62,8 @@ internal partial class VPR : Melee
 
             if (ActionReady(WrithingSnap) &&
                 !InMeleeRange() && HasBattleTarget() &&
-                !HasRattlingCoilStacks)
+                !HasRattlingCoilStacks &&
+                !InTwinbladeCombo && !HasStatusEffect(Buffs.Reawakened))
                 return WrithingSnap;
 
             return UseCombo(actionID, false, true, true);
@@ -196,6 +197,7 @@ internal partial class VPR : Melee
             if (!InMeleeRange() && HasBattleTarget() &&
                 IsEnabled(Preset.VPR_ST_RangedUptime) &&
                 ActionReady(WrithingSnap) &&
+                !InTwinbladeCombo && !HasStatusEffect(Buffs.Reawakened) &&
                 (IsEnabled(Preset.VPR_ST_UncoiledFury) && !HasRattlingCoilStacks ||
                  IsNotEnabled(Preset.VPR_ST_UncoiledFury)))
                 return WrithingSnap;

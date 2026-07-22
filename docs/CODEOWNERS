@@ -2,32 +2,31 @@
 *
 
 # PvE Combos
-/WrathCombo/Combos/PvE/AST/                           @edewen
+/WrathCombo/Combos/PvE/AST/                           
 /WrathCombo/Combos/PvE/BLM/                           @Kagekazu
-/WrathCombo/Combos/PvE/BLU/                           @zbee
-/WrathCombo/Combos/PvE/BRD/                           @edewen
-/WrathCombo/Combos/PvE/DNC/                           @zbee
+/WrathCombo/Combos/PvE/BLU/                           
+/WrathCombo/Combos/PvE/BRD/                           
+/WrathCombo/Combos/PvE/DNC/                           
 /WrathCombo/Combos/PvE/DRG/                           @Kagekazu
-/WrathCombo/Combos/PvE/DRK/                           @zbee
+/WrathCombo/Combos/PvE/DRK/                           
 /WrathCombo/Combos/PvE/GNB/                           @Akechi-kun
 /WrathCombo/Combos/PvE/MCH/                           @Kagekazu
 /WrathCombo/Combos/PvE/MNK/                           @Kagekazu
-/WrathCombo/Combos/PvE/NIN/                           @edewen
-/WrathCombo/Combos/PvE/PCT/                           @edewen
-/WrathCombo/Combos/PvE/PLD/                           @Kaeris-Tempest @edewen
-/WrathCombo/Combos/PvE/RDM/                           @edewen
+/WrathCombo/Combos/PvE/NIN/                           
+/WrathCombo/Combos/PvE/PCT/                           
+/WrathCombo/Combos/PvE/PLD/                           @Kaeris-Tempest 
+/WrathCombo/Combos/PvE/RDM/                           
 /WrathCombo/Combos/PvE/RPR/                           @Kagekazu
 /WrathCombo/Combos/PvE/SAM/                           @Kagekazu
-/WrathCombo/Combos/PvE/SCH/                           @edewen
-/WrathCombo/Combos/PvE/SGE/                           @Kagekazu @edewen
-/WrathCombo/Combos/PvE/SMN/                           @edewen
+/WrathCombo/Combos/PvE/SCH/                           
+/WrathCombo/Combos/PvE/SGE/                           @Kagekazu 
+/WrathCombo/Combos/PvE/SMN/                           
 /WrathCombo/Combos/PvE/VPR/                           @Kagekazu
-/WrathCombo/Combos/PvE/WAR/                           @edewen
-/WrathCombo/Combos/PvE/WHM/                           @edewen
+/WrathCombo/Combos/PvE/WAR/                           
+/WrathCombo/Combos/PvE/WHM/                           
 
 # PvP Combos
-/WrathCombo/Combos/PvP/                               @Kaeris-Tempest @edewen
-/WrathCombo/Combos/PvP/BRDPVP.cs                      @edewen
+/WrathCombo/Combos/PvP/                               @Kaeris-Tempest 
 /WrathCombo/Combos/PvP/BLMPVP.cs                      @Kaeris-Tempest
 /WrathCombo/Combos/PvP/RDMPVP.cs                      @Kaeris-Tempest
 /WrathCombo/Combos/PvP/SAMPVP.cs                      @Kaeris-Tempest
@@ -41,18 +40,8 @@
 /WrathCombo/CustomCombo/Functions/                    @Taurenkey
 /WrathCombo/Core/                                     @Taurenkey
 /WrathCombo/Services/IPC_Subscriber/Orbwalker.cs      @Taurenkey
-/WrathCombo/CustomCombo/Functions/Target.cs           @Taurenkey @Kaeris-Tempest
-/WrathCombo/Core/ActionRetargeting.cs                 @zbee
-/WrathCombo/CustomCombo/SimpleTarget.cs               @zbee
-/docs/                                                @zbee
-/CONTRIBUTING.md                                      @zbee
-/WrathCombo/Services/IPC/                             @zbee
-/res/ipc_status.txt                                   @zbee
-/WrathCombo/Data/ContentCheck.cs                      @zbee
-/WrathCombo/Data/Conflicts                            @zbee
-/WrathCombo/Services/IPC_Subscriber/                  @zbee
-/WrathCombo/Combos/PvE/Content/Bozja.cs               @zbee @Akechi-kun
-/WrathCombo/CustomCombo/StancePartner.cs              @zbee
+/WrathCombo/CustomCombo/Functions/Target.cs           @Taurenkey @Kaeris-Tempest              
+/WrathCombo/Combos/PvE/Content/Bozja.cs               @Akechi-kun
 
 # Protect the owners file
-/docs/CODEOWNERS                                      @Taurenkey @zbee
+/docs/CODEOWNERS                                      @Taurenkey

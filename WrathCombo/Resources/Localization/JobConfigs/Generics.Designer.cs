@@ -313,7 +313,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Boss Encounter Non Bosses. Stop using at Enemy HP %..
+        ///   Looks up a localized string similar to Boss Encounter Non-Bosses: Stop using at Enemy HP %.
         /// </summary>
         internal static string BossEncounterNonBossHpPercent {
             get {
@@ -322,7 +322,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Boss Only Content.
+        ///   Looks up a localized string similar to Boss-Only Content.
         /// </summary>
         internal static string BossOnlyContent {
             get {
@@ -341,7 +341,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bosses Only. Stop using at Enemy HP %..
+        ///   Looks up a localized string similar to Bosses: Stop using at Enemy HP %.
         /// </summary>
         internal static string BossOnlyHpPercent {
             get {
@@ -350,7 +350,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BurstOption.
+        ///   Looks up a localized string similar to Burst Option.
         /// </summary>
         internal static string BurstOption {
             get {
@@ -849,7 +849,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Non boss encounter. Stop using at Enemy HP %..
+        ///   Looks up a localized string similar to Non-Bosses: Stop using at Enemy HP %.
         /// </summary>
         internal static string NonBossHpPercent {
             get {
