@@ -237,6 +237,7 @@ namespace WrathCombo.Window
             private static readonly ConcurrentDictionary<uint, string> _actionNameCache = new();
             private static readonly ConcurrentDictionary<uint, string> _traitNameCache = new();
             private static readonly ConcurrentDictionary<uint, string> _statusNameCache = new();
+            private static readonly ConcurrentDictionary<uint, string> _itemNameCache = new();
 
             public static string GetActionName(uint actionId)
                 => _actionNameCache.GetOrAdd(actionId, Svc.Data.GetExcelSheet<Action>(LangFromCulture).GetRowOrDefault(actionId)?.Name.ToString() ?? P.CustomActions.Manager.Actions.FirstOrDefault(x => x.Id == actionId)?.Name ?? "Unknown Action");
@@ -246,6 +247,9 @@ namespace WrathCombo.Window
 
             public static string GetStatusName(uint statusId)
                 => _statusNameCache.GetOrAdd(statusId, Svc.Data.GetExcelSheet<Status>(LangFromCulture).GetRowOrDefault(statusId)?.Name.ToString() ?? "Unknown Status");
+
+            public static string GetItemName(uint itemId)
+                => _itemNameCache.GetOrAdd(itemId, Svc.Data.GetExcelSheet<Item>(LangFromCulture).GetRowOrDefault(itemId)?.Name.ToString() ?? "Unknown Item");
 
             public static void Clear()
             {

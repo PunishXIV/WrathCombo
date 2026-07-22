@@ -14,6 +14,8 @@ internal static class UIntExtensions
 
     internal static string ActionName(this uint value) => ActionAndStatusLocalization.GetActionName(value);
 
+    internal static string ItemName(this uint value) => ActionAndStatusLocalization.GetItemName(value);
+
     internal static ActionAttackType ActionAttackType(this uint value) => (ActionAttackType)ActionSheet[value].ActionCategory.RowId;
 
     internal static float ActionRange(this uint value) =>
