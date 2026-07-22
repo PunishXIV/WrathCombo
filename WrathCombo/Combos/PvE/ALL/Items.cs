@@ -11,6 +11,9 @@ namespace WrathCombo.Combos.PvE.ALL
 {
     internal class Items
     {
+        internal const uint
+            Potion = 4551; //Primarily for testing without using good pots
+
         /// <summary>
         /// Only for use by the custom action, please use the other version of this method in combos which passes an item ID.
         /// </summary>
