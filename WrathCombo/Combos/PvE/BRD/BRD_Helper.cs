@@ -851,11 +851,11 @@ internal partial class BRD
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([6, 9, 16, 17, 19], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
+            ([7, 9, 16, 17, 19], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
-            5
+            6
         ];
     }
     internal class BRDAdjusted : BRDOpenerBase
