@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.SAM.Config;
@@ -129,15 +130,7 @@ internal partial class SAM
 
         return OriginalHook(Hakaze);
     }
-
-    private static uint DoBasicCombo(
-        bool useTrueNorth = true,
-        bool useYukikaze = true,
-        bool useKasha = true,
-        bool useGekko = true,
-        int trueNorthCharges = 0) =>
-        ContinueBasicCombo(false, useTrueNorth, useYukikaze, useKasha, useGekko, trueNorthCharges: trueNorthCharges);
-
+    
     #endregion
 
     #region Higanbana
@@ -566,6 +559,7 @@ internal partial class SAM
             MeikyoShisui,
             Role.TrueNorth, //2
             Gekko,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Kasha,
             Ikishoten,
             Yukikaze,
@@ -582,6 +576,7 @@ internal partial class SAM
         public override Preset Preset => Preset.SAM_ST_Opener;
 
         internal override UserData ContentCheckConfig => SAM_Balance_Content;
+        internal override bool IncludePot => SAM_Opener_Potion;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
@@ -612,6 +607,7 @@ internal partial class SAM
             MeikyoShisui,
             Role.TrueNorth, //2
             Gekko,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Ikishoten,
             Kasha,
             Yukikaze,
@@ -633,6 +629,7 @@ internal partial class SAM
         public override Preset Preset => Preset.SAM_ST_Opener;
 
         internal override UserData ContentCheckConfig => SAM_Balance_Content;
+        internal override bool IncludePot => SAM_Opener_Potion;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
@@ -663,6 +660,7 @@ internal partial class SAM
             MeikyoShisui,
             Role.TrueNorth, //2
             Gekko,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Ikishoten,
             Kasha,
             Yukikaze,
@@ -686,6 +684,7 @@ internal partial class SAM
         public override Preset Preset => Preset.SAM_ST_Opener;
 
         internal override UserData ContentCheckConfig => SAM_Balance_Content;
+        internal override bool IncludePot => SAM_Opener_Potion;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
@@ -716,34 +715,36 @@ internal partial class SAM
             MeikyoShisui,
             Role.TrueNorth, //2
             Gekko,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Kasha,
             Ikishoten,
             Yukikaze,
-            TendoSetsugekka, //7
+            TendoSetsugekka, //8
             Senei,
-            TendoKaeshiSetsugekka, //9
+            TendoKaeshiSetsugekka, //10
             MeikyoShisui,
             Gekko,
             Zanshin,
-            Higanbana, //13
+            Higanbana, //14
             OgiNamikiri,
             Shoha,
             KaeshiNamikiri,
             Kasha,
-            Shinten, //18
+            Shinten, //19
             Gekko,
-            Gyoten, //20
+            Gyoten, //21
             Gyofu,
             Yukikaze,
-            Shinten, //23
-            TendoSetsugekka, //24
-            Gyoten, //25
-            TendoKaeshiSetsugekka //26
+            Shinten, //24
+            TendoSetsugekka, //25
+            Gyoten, //26
+            TendoKaeshiSetsugekka //27
         ];
 
         public override Preset Preset => Preset.SAM_ST_Opener;
 
         internal override UserData ContentCheckConfig => SAM_Balance_Content;
+        internal override bool IncludePot => SAM_Opener_Potion;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
@@ -752,12 +753,12 @@ internal partial class SAM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([18, 23], () => !ActionReady(Shinten)),
-            ([20], () => !ActionReady(Gyoten) || (int)SAM_Opener_IncludeGyoten is 1 or 2),
-            ([25], () => !ActionReady(Gyoten) || (int)SAM_Opener_IncludeGyoten is 1 or 3),
-            ([7, 24], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))),
-            ([9, 26], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)),
-            ([13], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko)))
+            ([19, 24], () => !ActionReady(Shinten)),
+            ([21], () => !ActionReady(Gyoten) || (int)SAM_Opener_IncludeGyoten is 1 or 2),
+            ([26], () => !ActionReady(Gyoten) || (int)SAM_Opener_IncludeGyoten is 1 or 3),
+            ([8, 25], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))),
+            ([10, 27], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)),
+            ([14], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko)))
         ];
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =

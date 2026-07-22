@@ -17,7 +17,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FirstGcdBuffsOpener" xml:space="preserve">
-    <value>1st GCD Buffs opener.</value>
+    <value>Early Buff Opener</value>
   </data>
   <data name="FirstPositional0" xml:space="preserve">
     <value>First positional: {0}.</value>
@@ -39,7 +39,7 @@
 Recommended is 6.</value>
   </data>
   <data name="UseFirstGcdBuffsOpener" xml:space="preserve">
-    <value>Uses the 1st GCD buffs opener.</value>
+    <value>Uses the Early Buff Opener.</value>
   </data>
   <data name="WillHoldTNforGluttony" xml:space="preserve">
     <value>Will hold the last charge of {0} for use with {1}, even when out of position for {2}/{3}.

@@ -1,9 +1,10 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -786,6 +787,7 @@ internal partial class SMN
         [
             Ruin3,
             SummonSolarBahamut,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
             UmbralImpulse,
             SearingLight,
             UmbralImpulse,
@@ -823,6 +825,7 @@ internal partial class SMN
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData? ContentCheckConfig => SMN_Balance_Content;
+        internal override bool IncludePot => SMN_Opener_Potion;
         public override Preset Preset => Preset.SMN_ST_Advanced_Combo_Balance_Opener;
         public override bool HasCooldowns()
         {

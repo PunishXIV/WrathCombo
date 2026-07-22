@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.PCT.Config;
@@ -675,6 +676,7 @@ internal partial class PCT
         public override List<uint> OpenerActions { get; set; } =
         [
             RainbowDrip,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
             PomMuse,
             StrikingMuse,
             WingMotif,
@@ -695,18 +697,19 @@ internal partial class PCT
             ClawMotif,
             ClawedMuse,//20
         ];
+        internal override bool IncludePot => PCT_Opener_Potion;
         internal override UserData? ContentCheckConfig => PCT_Balance_Content;
         public override Preset Preset => Preset.PCT_ST_Advanced_Openers;
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
-            5
+            6
         ];
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
 [
-            ([8, 9, 10], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
-            ([8, 9, 10], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
-            ([8, 9, 10], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([11], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+            ([11, 9, 10], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
+            ([11, 9, 10], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
+            ([11, 9, 10], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
+            ([12], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
         ];
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([17], () => !HasStatusEffect(Buffs.RainbowBright))];
 
@@ -742,6 +745,7 @@ internal partial class PCT
         public override List<uint> OpenerActions { get; set; } =
         [
             RainbowDrip,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
             StrikingMuse,
             HolyInWhite,
             PomMuse,
@@ -764,21 +768,22 @@ internal partial class PCT
             ClawMotif,
             ClawedMuse
         ];
+        internal override bool IncludePot => PCT_Opener_Potion;
         internal override UserData? ContentCheckConfig => PCT_Balance_Content;
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
-            6
+            7
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([18], () => !HasStatusEffect(Buffs.RainbowBright))];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
-            ([3], CometinBlack, () => HasStatusEffect(Buffs.MonochromeTones)),
-            ([9, 10, 11], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
-             ([9, 10, 11], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
-            ([9, 10, 11], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([12], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+            ([4], CometinBlack, () => HasStatusEffect(Buffs.MonochromeTones)),
+            ([10, 11, 12], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
+             ([10, 11, 12], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
+            ([10, 11, 12], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
+            ([13], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
         ];
         public override Preset Preset => Preset.PCT_ST_Advanced_Openers;
         public override bool HasCooldowns()
@@ -814,6 +819,7 @@ internal partial class PCT
         public override List<uint> OpenerActions { get; set; } =
         [
             FireInRed,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
             StrikingMuse,
             AeroInGreen,
             StarryMuse,
@@ -832,14 +838,15 @@ internal partial class PCT
             WaterInBlue,
             FireInRed//20
         ];
+        internal override bool IncludePot => PCT_Opener_Potion;
         internal override UserData? ContentCheckConfig => PCT_Balance_Content;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
 [
-            ([13, 14, 15], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
-            ([13, 14, 15], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
-            ([13, 14, 15], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([16], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+            ([14, 15, 16], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
+            ([14, 15, 16], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
+            ([14, 15, 17], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
+            ([17], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
         ];
         public override Preset Preset => Preset.PCT_ST_Advanced_Openers;
         public override bool HasCooldowns()
@@ -871,6 +878,7 @@ internal partial class PCT
         public override List<uint> OpenerActions { get; set; } =
         [
             FireInRed,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
             StrikingMuse,
             AeroInGreen,
             WaterInBlue,
@@ -892,14 +900,15 @@ internal partial class PCT
             Role.Swiftcast, //20
             WaterInBlue
         ];
+        internal override bool IncludePot => PCT_Opener_Potion;
         internal override UserData? ContentCheckConfig => PCT_Balance_Content;
         
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
-            ([14, 15, 16], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
-             ([14, 15, 16], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
-            ([14,15,16], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([17], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+            ([15, 16, 17], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
+             ([15, 16, 17], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
+            ([15, 16, 17], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
+            ([18], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
         ];
         public override Preset Preset => Preset.PCT_ST_Advanced_Openers;
         public override bool HasCooldowns()

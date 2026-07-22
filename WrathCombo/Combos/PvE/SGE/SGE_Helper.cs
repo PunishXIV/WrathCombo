@@ -1,10 +1,11 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.GameFunctions;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -358,6 +359,7 @@ internal partial class SGE
         public override List<uint> OpenerActions { get; set; } =
         [
             Toxikon2,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
             Eukrasia,
             EukrasianDosis3,
             Dosis3,
@@ -379,10 +381,11 @@ internal partial class SGE
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([2], () => HasStatusEffect(Buffs.Eukrasia))
+            ([3], () => HasStatusEffect(Buffs.Eukrasia))
         ];
 
         internal override UserData ContentCheckConfig => SGE_Balance_Content;
+        internal override bool IncludePot => SGE_Opener_Potion;
         public override Preset Preset => Preset.SGE_ST_DPS_Opener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(Phlegma3) is 2 &&
@@ -399,6 +402,7 @@ internal partial class SGE
         public override List<uint> OpenerActions { get; set; } =
         [
             Pneuma,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
             Eukrasia,
             EukrasianDosis3,
             Dosis3,
@@ -420,10 +424,11 @@ internal partial class SGE
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([2], () => HasStatusEffect(Buffs.Eukrasia))
+            ([3], () => HasStatusEffect(Buffs.Eukrasia))
         ];
 
         internal override UserData ContentCheckConfig => SGE_Balance_Content;
+        internal override bool IncludePot => SGE_Opener_Potion;
         public override Preset Preset => Preset.SGE_ST_DPS_Opener;
         public override bool HasCooldowns() =>
             GetRemainingCharges(Phlegma3) is 2 &&

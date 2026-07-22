@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.MNK.Config;
@@ -586,6 +587,7 @@ internal partial class MNK
             FormShift,
             DragonKick,
             PerfectBalance,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Bootshine,
             DragonKick,
             Bootshine,
@@ -604,6 +606,7 @@ internal partial class MNK
         public override Preset Preset => Preset.MNK_STUseOpener;
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
+        internal override bool IncludePot => MNK_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
@@ -635,6 +638,7 @@ internal partial class MNK
             FormShift,
             DragonKick,
             PerfectBalance,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Bootshine,
             DragonKick,
             Bootshine,
@@ -653,6 +657,7 @@ internal partial class MNK
         public override Preset Preset => Preset.MNK_STUseOpener;
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
+        internal override bool IncludePot => MNK_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
@@ -684,6 +689,7 @@ internal partial class MNK
             FormShift,
             DragonKick,
             PerfectBalance,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             LeapingOpo,
             DragonKick,
             Brotherhood,
@@ -707,6 +713,7 @@ internal partial class MNK
         public override Preset Preset => Preset.MNK_STUseOpener;
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
+        internal override bool IncludePot => MNK_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
@@ -739,6 +746,7 @@ internal partial class MNK
             DragonKick,
             PerfectBalance,
             TwinSnakes,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Demolish,
             Brotherhood,
             RiddleOfFire,
@@ -761,6 +769,7 @@ internal partial class MNK
         public override Preset Preset => Preset.MNK_STUseOpener;
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
+        internal override bool IncludePot => MNK_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
@@ -792,6 +801,7 @@ internal partial class MNK
             FormShift,
             RiddleOfWind,
             DragonKick,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             Brotherhood,
             RiddleOfFire,
             FiresReply,
@@ -814,6 +824,7 @@ internal partial class MNK
         public override Preset Preset => Preset.MNK_STUseOpener;
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
+        internal override bool IncludePot => MNK_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [

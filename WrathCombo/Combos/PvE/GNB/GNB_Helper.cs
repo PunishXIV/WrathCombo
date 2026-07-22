@@ -1,8 +1,9 @@
-﻿#region Dependencies
+#region Dependencies
 using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -388,6 +389,7 @@ internal partial class GNB : Tank
         public override int MinOpenerLevel => 90;
         public override int MaxOpenerLevel => 99;
         internal override UserData ContentCheckConfig => GNB_ST_Balance_Content;
+        internal override bool IncludePot => GNB_Opener_Potion;
         public override bool HasCooldowns() => IsOffCooldown(NoMercy) && IsOffCooldown(GnashingFang) && IsOffCooldown(BowShock) && IsOffCooldown(Bloodfest) && IsOffCooldown(DoubleDown) && Ammo == 0;
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => InMeleeRange())];
     }
@@ -400,6 +402,7 @@ internal partial class GNB : Tank
             KeenEdge,
             BrutalShell,
             NoMercy, //LateWeave
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             GnashingFang, //-1 (2)
             JugularRip,
             DoubleDown, //-1 (0)
@@ -431,6 +434,7 @@ internal partial class GNB : Tank
             KeenEdge,
             BrutalShell,
             NoMercy,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             GnashingFang, //-1 (2)
             JugularRip,
             DoubleDown, //-1 (0)
@@ -459,6 +463,7 @@ internal partial class GNB : Tank
             Bloodfest, //+3 (3)
             KeenEdge,
             NoMercy, //LateWeave
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             GnashingFang, //-1 (2)
             JugularRip,
             DoubleDown, //-1 (0)
@@ -489,6 +494,7 @@ internal partial class GNB : Tank
             Bloodfest, //+3 (3)
             KeenEdge,
             NoMercy,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             GnashingFang, //-1 (2)
             JugularRip,
             DoubleDown, //-1 (0)
@@ -518,6 +524,7 @@ internal partial class GNB : Tank
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData ContentCheckConfig => GNB_ST_Balance_Content;
+        internal override bool IncludePot => GNB_Opener_Potion;
         public override bool HasCooldowns() => IsOffCooldown(Bloodfest) && IsOffCooldown(NoMercy) && IsOffCooldown(GnashingFang) && IsOffCooldown(DoubleDown) && IsOffCooldown(BowShock) && Ammo == 0;
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => HasBattleTarget() && InMeleeRange())];
     }
@@ -530,6 +537,7 @@ internal partial class GNB : Tank
             KeenEdge,
             BrutalShell,
             NoMercy, //LateWeave
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             GnashingFang, //-1 (2)
             JugularRip,
             DoubleDown, //-1 (0)
@@ -563,6 +571,7 @@ internal partial class GNB : Tank
             KeenEdge,
             BrutalShell,
             NoMercy,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             GnashingFang, //-1 (2)
             JugularRip,
             BowShock,
@@ -593,6 +602,7 @@ internal partial class GNB : Tank
             LightningShot,
             Bloodfest, //+3 (3)
             NoMercy, //LateWeave
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             GnashingFang, //-1 (2)
             JugularRip,
             DoubleDown, //-1 (0)
@@ -626,6 +636,7 @@ internal partial class GNB : Tank
             LightningShot,
             Bloodfest, //+3 (3)
             NoMercy,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             GnashingFang, //-1 (2)
             JugularRip,
             BowShock,

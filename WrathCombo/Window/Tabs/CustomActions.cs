@@ -5,6 +5,7 @@ using ECommons.DalamudServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Native;
 using WrathCombo.Services;
 
@@ -37,6 +38,9 @@ namespace WrathCombo.Window.Tabs
 
                 foreach (var act in P.CustomActions.Manager.Actions)
                 {
+                    if (act.Id >= All.Items)
+                        continue;
+
                     DrawAction(act);
                 }
             }

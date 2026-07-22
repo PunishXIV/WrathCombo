@@ -1,5 +1,6 @@
 ﻿using Dalamud.Interface.Colors;
 using ECommons.ExcelServices;
+using ECommons.ImGuiMethods;
 using WrathCombo.Extensions;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -19,9 +20,12 @@ internal partial class SCH
             {
                 #region DPS
                 case Preset.SCH_ST_ADV_DPS_Balance_Opener:
-                    DrawHorizontalRadioButton(SCH_ST_DPS_OpenerOption, "Dissipation First", "Uses Dissipation first, then Aetherflow", 0);
-                    DrawHorizontalRadioButton(SCH_ST_DPS_OpenerOption, "Aetherflow First", "Uses Aetherflow first, then Dissipation", 1);
                     DrawBossOnlyChoice(SCH_ST_DPS_OpenerContent);
+                    DrawOpenerPotionChoice(SCH_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(SCH_ST_DPS_OpenerOption, "Dissipation First", "Uses Dissipation first, then Aetherflow", 0, descriptionAsTooltip: true);
+                    DrawRadioButton(SCH_ST_DPS_OpenerOption, "Aetherflow First", "Uses Aetherflow first, then Dissipation", 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.SCH_ST_ADV_DPS:
@@ -375,6 +379,7 @@ internal partial class SCH
 
 
         internal static UserBool
+            SCH_Opener_Potion = new("SCH_Opener_Potion"),
             SCH_ST_ADV_DPS_Bio_TwoTarget = new("SCH_ST_ADV_DPS_Bio_TwoTarget"),
             SCH_ST_DPS_EnergyDrain_Burst = new("SCH_ST_DPS_EnergyDrain_Burst"),
             SCH_AoE_DPS_EnergyDrain_Burst = new("SCH_AoE_DPS_EnergyDrain_Burst"),

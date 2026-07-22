@@ -1,4 +1,5 @@
 ﻿using ECommons.ExcelServices;
+using ECommons.ImGuiMethods;
 using System.Linq;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Extensions.UIntExtensions;
@@ -21,15 +22,17 @@ internal partial class SGE
                 #region DPS
 
                 case Preset.SGE_ST_DPS_Opener:
-                    DrawHorizontalRadioButton(SGE_SelectedOpener,
-                        FormatAndCache(Generics.Action_Opener, Toxikon.ActionName()),
-                        FormatAndCache(Generics.Use_0_Opener, Toxikon.ActionName()), 0);
-
-                    DrawHorizontalRadioButton(SGE_SelectedOpener,
-                        FormatAndCache(Generics.Action_Opener, Pneuma.ActionName()),
-                        FormatAndCache(Generics.Use_0_Opener, Pneuma.ActionName()), 1);
-
                     DrawBossOnlyChoice(SGE_Balance_Content);
+                    DrawOpenerPotionChoice(SGE_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(SGE_SelectedOpener,
+                        FormatAndCache(Generics.Action_Opener, Toxikon.ActionName()),
+                        FormatAndCache(Generics.Use_0_Opener, Toxikon.ActionName()), 0, descriptionAsTooltip: true);
+
+                    DrawRadioButton(SGE_SelectedOpener,
+                        FormatAndCache(Generics.Action_Opener, Pneuma.ActionName()),
+                        FormatAndCache(Generics.Use_0_Opener, Pneuma.ActionName()), 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.SGE_ST_DPS:
@@ -421,6 +424,7 @@ internal partial class SGE
         #region DPS
 
         public static UserBool
+            SGE_Opener_Potion = new("SGE_Opener_Potion"),
             SGE_ST_DPS_EDosis_TwoTarget = new("SGE_ST_DPS_EDosis_TwoTarget", true),
             SGE_ST_DPS_Phlegma_Burst = new("SGE_ST_DPS_Phlegma_Burst", true);
 

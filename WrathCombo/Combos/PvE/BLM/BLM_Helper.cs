@@ -5,6 +5,7 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -663,7 +664,8 @@ internal partial class BLM
             Role.Swiftcast,
             Amplifier,
             Fire4,
-            LeyLines, //6
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
+            LeyLines, //7
             Fire4,
             Fire4,
             Fire4,
@@ -694,13 +696,14 @@ internal partial class BLM
         public override Preset Preset => Preset.BLM_ST_Opener;
 
         internal override UserData ContentCheckConfig => BLM_Balance_Content;
+        internal override bool IncludePot => BLM_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([6], () => HasStatusEffect(Buffs.LeyLines))
+            ([7], () => HasStatusEffect(Buffs.LeyLines))
         ];
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [6];
+        public override List<int> DelayedWeaveSteps { get; set; } = [7];
 
         public override bool HasCooldowns() =>
             MP.Full &&
@@ -724,7 +727,8 @@ internal partial class BLM
             Role.Swiftcast,
             Amplifier,
             Fire4,
-            LeyLines,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
+            LeyLines, //7
             Fire4,
             Xenoglossy,
             Fire4,
@@ -754,13 +758,14 @@ internal partial class BLM
         public override Preset Preset => Preset.BLM_ST_Opener;
 
         internal override UserData ContentCheckConfig => BLM_Balance_Content;
+        internal override bool IncludePot => BLM_Opener_Potion;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([6], () => HasStatusEffect(Buffs.LeyLines))
+            ([7], () => HasStatusEffect(Buffs.LeyLines))
         ];
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [6];
+        public override List<int> DelayedWeaveSteps { get; set; } = [7];
 
         public override bool HasCooldowns() =>
             MP.Full &&

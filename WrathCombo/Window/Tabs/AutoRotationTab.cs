@@ -38,7 +38,7 @@ internal class AutoRotationTab : ConfigWindow
         else
             changed |= ImGui.Checkbox(AutoRotationUI.Checkbox_EnableAutoRotation, ref cfg.Enabled);
 
-        ImGuiEx.TextUnderlined("Combat Settings");
+        ImGuiEx.TextUnderlined(AutoRotationUI.CombatSettingHeader);
 
         var inCombatOnly = (bool)P.IPC.GetAutoRotationConfigState(
             Enum.Parse<AutoRotationConfigOption>("InCombatOnly"))!;
@@ -88,11 +88,11 @@ internal class AutoRotationTab : ConfigWindow
         ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_UnTargetAndDisableForPenalty);
 
         changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-            "Pause Actions from Combos When No Target Selected", ref cfg.PauseWhenNoTarget);
+            AutoRotationUI.PauseNoTarget, ref cfg.PauseWhenNoTarget);
 
-        ImGuiComponents.HelpMarker($"Pauses all actions that would come from combos if there is no target selected with the selected targeting mode. Ideal for blocking self-use actions if no target is available.");
+        ImGuiComponents.HelpMarker(AutoRotationUI.PauseNoTargetHelp);
 
-        ImGuiEx.TextUnderlined("Automatic Activation Settings");
+        ImGuiEx.TextUnderlined(AutoRotationUI.AutomaticActivationHeader);
 
         changed |= ImGui.Checkbox(AutoRotationUI.Checkbox_EnableInstancedEnter, ref cfg.EnableInInstance);
         changed |= ImGui.Checkbox(AutoRotationUI.Checkbox_DisableInstanceExit, ref cfg.DisableAfterInstance);
@@ -111,9 +111,19 @@ internal class AutoRotationTab : ConfigWindow
 
             if (cfg.DPSRotationMode is DPSRotationMode.Manual)
             {
+                ImGuiExtensions.Prefix(!cfg.DPSSettings.AoEIgnoreManual);
                 changed |= ImGui.Checkbox(AutoRotationUI.Checkbox_EnforceBestAoETarget, ref cfg.DPSSettings.AoEIgnoreManual);
 
                 ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_EnforceBestAoETarget);
+
+                if (cfg.DPSSettings.AoEIgnoreManual)
+                {
+                    ImGuiExtensions.Prefix(true);
+                    changed |= ImGui.Checkbox(AutoRotationUI.OnlyAoEManualTargetSet, ref cfg.DPSSettings.AoEOnlyWhenTargeting);
+
+                    ImGuiComponents.HelpMarker(AutoRotationUI.OnlyAoEManualTargetSetHelp);
+                }
+
             }
 
 

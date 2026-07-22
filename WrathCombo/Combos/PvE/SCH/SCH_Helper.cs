@@ -1,4 +1,4 @@
-﻿#region Dependencies
+#region Dependencies
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
@@ -7,6 +7,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using ECommons.GameFunctions;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -274,6 +275,7 @@ internal partial class SCH
         public override List<uint> OpenerActions { get; set; } =
         [
             Broil4,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
             Biolysis,
             Dissipation,
             Broil4,
@@ -312,6 +314,7 @@ internal partial class SCH
         public override int MaxOpenerLevel => 109;
         public override Preset Preset => Preset.SCH_ST_ADV_DPS_Balance_Opener;
         internal override UserData ContentCheckConfig => SCH_ST_DPS_OpenerContent;
+        internal override bool IncludePot => SCH_Opener_Potion;
 
         public override bool HasCooldowns()
         {

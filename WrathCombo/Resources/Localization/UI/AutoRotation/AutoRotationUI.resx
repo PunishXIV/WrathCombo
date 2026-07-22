@@ -371,4 +371,22 @@ Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}</value>
   <data name="Include_Shields_Helptext" xml:space="preserve">
     <value>Includes shield% in all HP checks.</value>
   </data>
+  <data name="PauseNoTarget" xml:space="preserve">
+    <value>Pause Actions from Combos When No Target Selected</value>
+  </data>
+  <data name="PauseNoTargetHelp" xml:space="preserve">
+    <value>Pauses all actions that would come from combos if there is no target selected with the selected targeting mode. Ideal for blocking self-use actions if no target is available.</value>
+  </data>
+  <data name="AutomaticActivationHeader" xml:space="preserve">
+    <value>Automatic Activation Settings</value>
+  </data>
+  <data name="CombatSettingHeader" xml:space="preserve">
+    <value>Combat Settings</value>
+  </data>
+  <data name="OnlyAoEManualTargetSet" xml:space="preserve">
+    <value>Only AoE When Manual Target is Set</value>
+  </data>
+  <data name="OnlyAoEManualTargetSetHelp" xml:space="preserve">
+    <value>Will still AoE on the best target, but only after you've set a hard target first (this may be switched to the best target afterwards).</value>
+  </data>
 </root>
