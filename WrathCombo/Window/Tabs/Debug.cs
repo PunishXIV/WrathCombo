@@ -320,6 +320,9 @@ internal class Debug : ConfigWindow, IDisposable
                     Util.ShowStruct(&JobGaugeManager.Instance()->Ninja);
                     break;
                 case Job.MCH:
+                    CustomStyleText($"Max Reassemble Recharges:", $"{GetMaxCharges(MCH.Reassemble)}");
+                    CustomStyleText($"Use Both Charges:", $"{MCH.UseBothCharges}");
+                    CustomStyleText($"Should Reassemble:", $"{MCH.ShouldReassemble()}");
                     Util.ShowStruct(&JobGaugeManager.Instance()->Machinist);
                     break;
                 case Job.DRK:
