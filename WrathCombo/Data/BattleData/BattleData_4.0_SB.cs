@@ -1,4 +1,5 @@
-﻿using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+﻿using System.Linq;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
 {
@@ -9,6 +10,26 @@ namespace WrathCombo.Data.BattleData
             bool dataLoaded = true;
             switch (_territoryID)
             {
+                case 674: // Pool of Tribute
+                    _invincibleCheck = (target, targetID, _) =>
+                    {
+                        if (targetID == 7200) // Rocks
+                        {
+                            // If a player is trapped, determine the right rock
+                            if (GetPartyMembers() // Svc.Objects if debugging via ARR
+                                .Select(x => x.BattleChara)
+                                .FirstOrDefault(x => HasStatusEffect(292, x, true)) is { } fettered)
+                            {
+                                return Result(GetTargetDistance(target, fettered) > 1);
+                            }
+                            // No players trapped (freed), ignore rocks
+                            return Invincible.True;
+                        }
+                        return Invincible.False;
+                    };
+
+                    break;
+
                 case 801 or 805 or 1122: // Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
                                          // Omega-M = 9339
                                          // Omega-F = 9340

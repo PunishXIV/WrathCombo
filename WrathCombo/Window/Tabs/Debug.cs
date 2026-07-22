@@ -241,99 +241,14 @@ internal class Debug : ConfigWindow, IDisposable
 
         if (ImGui.CollapsingHeader("Player Statuses"))
         {
-            foreach (Status? status in player.StatusList)
-            {
-                // Set Status
-                string statusId = status.StatusId.ToString();
-                string statusName = StatusCache.GetStatusName(status.StatusId) ?? string.Empty;
-
-                // Set Source Name
-                string sourceName = status.SourceId != player.GameObjectId
-                    ? status.SourceObject?.Name?.ToString() ?? string.Empty
-                    : string.Empty;
-
-                // Set Duration
-                float buffDuration = GetStatusEffectRemainingTime((ushort)status.StatusId, anyOwner: true);
-                string formattedDuration = $"{SymbolDuration} {(buffDuration >= 60f
-                    ? $"{(int)(buffDuration / 60f)}m"
-                    : $"{buffDuration:F1}s")}";
-
-                // Set Parameter
-                string formattedParam = status.Param > 0
-                    ? $"{SymbolParameter} {status.Param}"
-                    : string.Empty;
-
-                // Build First Column
-                string firstColumn = (string.IsNullOrEmpty(statusName), string.IsNullOrEmpty(sourceName)) switch
-                {
-                    (false, false) => $"{sourceName} → {statusName}:", // Both Exist
-                    (false, true) => $"{statusName}:",                // Only 'statusName'
-                    (true, false) => $"{sourceName} → {UnknownName}", // Only 'sourceName'
-                    (true, true) => UnknownName                      // Neither
-                };
-
-                // Build Second Column
-                var secondColumn = new StringBuilder();
-                secondColumn.Append(statusId.PadRight(WidthStatusId));
-                secondColumn.Append(formattedDuration.PadRight(WidthStatusDuration));
-                secondColumn.Append(formattedParam);
-
-                // Print
-                CustomStyleText(firstColumn, secondColumn, useMonofont: true);
-            }
-
+            DrawStatuses(player);
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
         }
 
         if (ImGui.CollapsingHeader("Target Statuses"))
         {
-            if (target is IBattleChara chara)
-            {
-                foreach (Status? status in chara.StatusList)
-                {
-                    // Set Status
-                    string statusId = status.StatusId.ToString();
-                    string sourceName = status.SourceObject?.Name?.ToString() ?? string.Empty;
-                    string statusName = StatusCache.GetStatusName(status.StatusId) ?? string.Empty;
-
-                    // Set Duration
-                    float debuffDuration = GetStatusEffectRemainingTime((ushort)status.StatusId, chara, true);
-                    string formattedDuration = $"{SymbolDuration} {(debuffDuration >= 60f
-                        ? $"{(int)(debuffDuration / 60f)}m"
-                        : $"{debuffDuration:F1}s")}";
-
-                    // Set Parameter
-                    string formattedParam = status.Param > 0
-                        ? $"{SymbolParameter} {status.Param}"
-                        : string.Empty;
-
-                    // Build First Column
-                    string firstColumn = (string.IsNullOrEmpty(statusName), string.IsNullOrEmpty(sourceName)) switch
-                    {
-                        (false, false) => $"{sourceName} → {statusName}:", // Both Exist
-                        (false, true) => $"{statusName}:",                // Only 'statusName'
-                        (true, false) => $"{sourceName} → {UnknownName}", // Only 'sourceName'
-                        (true, true) => UnknownName                      // Neither
-                    };
-
-                    // Build Second Column
-                    var secondColumn = new StringBuilder();
-                    secondColumn.Append(statusId.PadRight(WidthStatusId));
-                    secondColumn.Append(formattedDuration.PadRight(WidthStatusDuration));
-                    secondColumn.Append(formattedParam);
-
-                    // Print
-                    CustomStyleText(firstColumn, secondColumn, useMonofont: true);
-                }
-
-                if (ImGui.CollapsingHeader("ICD Tracker"))
-                {
-                    foreach (var t in ICDTracker.Trackers.Where(x => x.GameObjectId == chara.GameObjectId))
-                    {
-                        CustomStyleText($"{((ushort)t.StatusID).StatusName()}", $"{t.TimeUntilExpired():mm\\:ss}");
-                    }
-                }
-            }
+            DrawStatuses(target);
+            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
         }
 
         #endregion
@@ -406,6 +321,9 @@ internal class Debug : ConfigWindow, IDisposable
                     Util.ShowStruct(&JobGaugeManager.Instance()->Ninja);
                     break;
                 case Job.MCH:
+                    CustomStyleText($"Max Reassemble Recharges:", $"{GetMaxCharges(MCH.Reassemble)}");
+                    CustomStyleText($"Use Both Charges:", $"{MCH.UseBothCharges}");
+                    CustomStyleText($"Should Reassemble:", $"{MCH.ShouldReassemble()}");
                     Util.ShowStruct(&JobGaugeManager.Instance()->Machinist);
                     break;
                 case Job.DRK:
@@ -1486,9 +1404,16 @@ internal class Debug : ConfigWindow, IDisposable
                 ImGui.TreePop();
             }
 
-            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+            if (ImGui.TreeNode("Statuses"))
+            {
+                DrawStatuses(target);
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
+            }
 
             DrawVFXTree(target);
+
+            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
         }
     }
 
@@ -1545,6 +1470,54 @@ internal class Debug : ConfigWindow, IDisposable
 
         ImGui.PopStyleColor();
         ImGui.Columns(1);
+    }
+
+    private static void DrawStatuses(IGameObject? target)
+    {
+        if (target is IBattleChara tar)
+        {
+            foreach (Status? status in tar.SafeStatusList)
+            {
+                // Set Status
+                string statusId = status.StatusId.ToString();
+                string statusName = StatusCache.GetStatusName(status.StatusId) ?? string.Empty;
+
+                // Set Source Name
+                string sourceName = status.SourceId != tar.GameObjectId
+                    ? status.SourceObject?.Name?.ToString() ?? string.Empty
+                    : string.Empty;
+
+                // Set Duration
+                float statusDuration = GetStatusEffectRemainingTime((ushort)status.StatusId, anyOwner: true);
+                string formattedDuration = $"{SymbolDuration} {(statusDuration >= 60f
+                    ? $"{(int)(statusDuration / 60f)}m"
+                    : $"{statusDuration:F1}s")}";
+
+                // Set Parameter
+                string formattedParam = status.Param > 0
+                    ? $"{SymbolParameter} {status.Param}"
+                    : string.Empty;
+
+                // Build First Column
+                string firstColumn = (string.IsNullOrEmpty(statusName), string.IsNullOrEmpty(sourceName)) switch
+                {
+                    (false, false) => $"{sourceName} → {statusName}:", // Both Exist
+                    (false, true) => $"{statusName}:",                // Only 'statusName'
+                    (true, false) => $"{sourceName} → {UnknownName}", // Only 'sourceName'
+                    (true, true) => UnknownName                      // Neither
+                };
+
+                // Build Second Column
+                var secondColumn = new StringBuilder();
+                secondColumn.Append(statusId.PadRight(WidthStatusId));
+                secondColumn.Append(formattedDuration.PadRight(WidthStatusDuration));
+                secondColumn.Append(formattedParam);
+
+                // Print
+                CustomStyleText(firstColumn, secondColumn, useMonofont: true);
+            }
+        }
+        ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
     }
 
     private static void DisableDebugConfig()

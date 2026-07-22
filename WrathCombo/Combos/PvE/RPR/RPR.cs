@@ -117,10 +117,8 @@ internal partial class RPR : Melee
                 if (CanEnshroud(true))
                     return Enshroud;
 
-                if (CanBurstGluttonyWeave())
-                    return Gluttony;
-
-                if (CanGluttonyWeave())
+                if (CanBurstGluttonyWeave(onAoE: true) ||
+                    CanGluttonyWeave(onAoE: true))
                     return Gluttony;
 
                 if (CanGrimSwatheWeave(true))
@@ -321,7 +319,7 @@ internal partial class RPR : Melee
                     return Enshroud;
 
                 if (IsEnabled(Preset.RPR_AoE_Gluttony) &&
-                    CanGluttonyWeave(enshroudEnabled: IsEnabled(Preset.RPR_AoE_Enshroud)))
+                    CanGluttonyWeave(IsEnabled(Preset.RPR_AoE_Enshroud), true))
                     return Gluttony;
 
                 if (IsEnabled(Preset.RPR_AoE_GrimSwathe) &&

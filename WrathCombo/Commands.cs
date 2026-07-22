@@ -34,27 +34,89 @@ public partial class WrathCombo
 
     private static readonly Dictionary<Job, Preset[]> BurstPresetMap = new()
     {
-        { Job.PLD, [Preset.PLD_ST_AdvancedMode_FoF, Preset.PLD_AoE_AdvancedMode_FoF, Preset.PLD_ST_AdvancedMode_Requiescat, Preset.PLD_AoE_AdvancedMode_Requiescat] }, // PLD
-        { Job.WAR, [Preset.WAR_ST_InnerRelease, Preset.WAR_AoE_InnerRelease, Preset.WAR_ST_Infuriate, Preset.WAR_AoE_Infuriate] }, // WAR
-        { Job.DRK, [Preset.DRK_ST_CD_Delirium, Preset.DRK_AoE_CD_Delirium, Preset.DRK_ST_CD_Shadow, Preset.DRK_AoE_CD_Shadow, Preset.DRK_ST_CD_Bringer, Preset.DRK_AoE_CD_Bringer] }, // DRK
-        { Job.GNB, [Preset.GNB_ST_NoMercy, Preset.GNB_AoE_NoMercy, Preset.GNB_ST_Bloodfest, Preset.GNB_AoE_Bloodfest] }, // GNB
-        { Job.WHM, [Preset.WHM_ST_MainCombo_PresenceOfMind, Preset.WHM_AoE_DPS_PresenceOfMind] }, // WHM
-        { Job.SCH, [Preset.SCH_ST_ADV_DPS_ChainStrat, Preset.SCH_AoE_ADV_DPS_ChainStrat] }, // SCH
-        { Job.AST, [Preset.AST_AOE_Divination, Preset.AST_DPS_Divination] }, // AST
-        { Job.SGE, [Preset.SGE_AoE_DPS_Psyche, Preset.SGE_AoE_DPS_Phlegma, Preset.SGE_ST_DPS_Psyche, Preset.SGE_ST_DPS_Phlegma] }, // SGE
-        { Job.DRG, [Preset.DRG_ST_BattleLitany, Preset.DRG_ST_LanceCharge, Preset.DRG_AoE_BattleLitany, Preset.DRG_AoE_LanceCharge, Preset.DRG_ST_DragonfireDive, Preset.DRG_AoE_DragonfireDive, Preset.DRG_ST_LifeSurge, Preset.DRG_AoE_LifeSurge] }, // DRG
-        { Job.MNK, [Preset.MNK_STUseBrotherhood, Preset.MNK_STUseROF, Preset.MNK_STUseFiresReply, Preset.MNK_STUseMasterfulBlitz, Preset.MNK_AoEUseBrotherhood, Preset.MNK_AoEUseROF, Preset.MNK_AoEUseFiresReply, Preset.MNK_AoEUseMasterfulBlitz] }, // MNK
-        { Job.NIN, [Preset.NIN_ST_AdvancedMode_TrickAttack, Preset.NIN_ST_AdvancedMode_Mug, Preset.NIN_AoE_AdvancedMode_TrickAttack, Preset.NIN_AoE_AdvancedMode_Mug] }, // NIN
-        { Job.SAM, [Preset.SAM_ST_CDs_Ikishoten, Preset.SAM_AoE_CDs_Ikishoten, Preset.SAM_ST_CDs_MeikyoShisui, Preset.SAM_AoE_MeikyoShisui] }, // SAM
-        { Job.RPR, [Preset.RPR_ST_Gluttony, Preset.RPR_AoE_Gluttony, Preset.RPR_ST_ArcaneCircle, Preset.RPR_AoE_ArcaneCircle] }, // RPR
-        { Job.VPR, [Preset.VPR_ST_SerpentsIre, Preset.VPR_ST_Reawaken, Preset.VPR_AoE_SerpentsIre, Preset.VPR_AoE_Reawaken, Preset.VPR_AoE_ReawakenCombo] }, // VPR
-        { Job.BRD, [Preset.BRD_Adv_Buffs, Preset.BRD_AoE_Adv_Buffs] }, // BRD
-        { Job.MCH, [Preset.MCH_ST_Adv_Stabilizer, Preset.MCH_ST_Adv_WildFire, Preset.MCH_ST_Adv_TurretQueen, Preset.MCH_ST_Adv_Reassemble, Preset.MCH_ST_Adv_Tools, Preset.MCH_AoE_Adv_Reassemble, Preset.MCH_AoE_Adv_Queen, Preset.MCH_AoE_Adv_Stabilizer, Preset.MCH_AoE_Adv_Tools] }, // MCH
-        { Job.DNC, [Preset.DNC_ST_Adv_TS, Preset.DNC_ST_Adv_SS, Preset.DNC_ST_Adv_FanProccs, Preset.DNC_ST_Adv_Feathers, Preset.DNC_AoE_Adv_Devilment, Preset.DNC_AoE_Adv_Flourish, Preset.DNC_AoE_Adv_SS, Preset.DNC_AoE_Adv_FanProccs, Preset.DNC_AoE_Adv_Feathers, Preset.DNC_AoE_Adv_DawnDance] }, // DNC
-        { Job.BLM, [Preset.BLM_ST_LeyLines, Preset.BLM_AoE_LeyLines, Preset.BLM_ST_Amplifier, Preset.BLM_AoE_Amplifier] }, // BLM
-        { Job.SMN, [Preset.SMN_AoE_Advanced_Combo_SearingLight, Preset.SMN_ST_Advanced_Combo_SearingLight, Preset.SMN_ST_Advanced_Combo_DemiSummons, Preset.SMN_AoE_Advanced_Combo_DemiSummons] }, // SMN
-        { Job.RDM, [Preset.RDM_ST_Embolden, Preset.RDM_AoE_Embolden, Preset.RDM_ST_Manafication, Preset.RDM_AoE_Manafication] }, // RDM
-        { Job.PCT, [Preset.PCT_ST_AdvancedMode_ScenicMuse, Preset.PCT_AoE_AdvancedMode_ScenicMuse, Preset.PCT_ST_AdvancedMode_HammerStampCombo, Preset.PCT_AoE_AdvancedMode_HammerStampCombo] }, // PCT
+        { Job.PLD, [
+            Preset.PLD_ST_AdvancedMode_FoF, Preset.PLD_AoE_AdvancedMode_FoF,
+            Preset.PLD_ST_AdvancedMode_Requiescat, Preset.PLD_AoE_AdvancedMode_Requiescat,
+            Preset.PLD_ST_AdvancedMode_CircleOfScorn, Preset.PLD_AoE_AdvancedMode_CircleOfScorn,
+            Preset.PLD_ST_AdvancedMode_Intervene, Preset.PLD_AoE_AdvancedMode_Intervene,
+        ] },
+        { Job.WAR, [
+            Preset.WAR_ST_InnerRelease, Preset.WAR_AoE_InnerRelease,
+            Preset.WAR_ST_Infuriate, Preset.WAR_AoE_Infuriate,
+            Preset.WAR_ST_Onslaught, Preset.WAR_AoE_Onslaught,
+            Preset.WAR_ST_Upheaval, Preset.WAR_AoE_Orogeny,
+        ] },
+        { Job.DRK, [
+            Preset.DRK_ST_CD_Delirium, Preset.DRK_AoE_CD_Delirium,
+            Preset.DRK_ST_CD_Shadow, Preset.DRK_AoE_CD_Shadow,
+            Preset.DRK_ST_CD_Bringer, Preset.DRK_AoE_CD_Bringer,
+            Preset.DRK_ST_CD_Salt, Preset.DRK_AoE_CD_Salt,
+            Preset.DRK_ST_CD_Spit, Preset.DRK_AoE_CD_Drain,
+        ] },
+        { Job.GNB, [Preset.GNB_ST_NoMercy, Preset.GNB_AoE_NoMercy, Preset.GNB_ST_Bloodfest, Preset.GNB_AoE_Bloodfest] },
+        { Job.WHM, [
+            Preset.WHM_ST_MainCombo_PresenceOfMind, Preset.WHM_AoE_DPS_PresenceOfMind,
+            Preset.WHM_ST_MainCombo_Assize, Preset.WHM_AoE_DPS_Assize,
+            Preset.WHM_ST_MainCombo_Misery, Preset.WHM_AoE_DPS_Misery,
+        ] },
+        { Job.SCH, [Preset.SCH_ST_ADV_DPS_ChainStrat, Preset.SCH_AoE_ADV_DPS_ChainStrat] },
+        { Job.AST, [
+            Preset.AST_AOE_Divination, Preset.AST_DPS_Divination,
+            Preset.AST_ST_DPS_EarthlyStar, Preset.AST_AOE_DPS_EarthlyStar,
+            Preset.AST_DPS_LightSpeed, Preset.AST_AOE_LightSpeed,
+        ] },
+        { Job.SGE, [Preset.SGE_AoE_DPS_Psyche, Preset.SGE_AoE_DPS_Phlegma, Preset.SGE_ST_DPS_Psyche, Preset.SGE_ST_DPS_Phlegma] },
+        { Job.DRG, [
+            Preset.DRG_ST_BattleLitany, Preset.DRG_ST_LanceCharge,
+            Preset.DRG_AoE_BattleLitany, Preset.DRG_AoE_LanceCharge,
+            Preset.DRG_ST_DragonfireDive, Preset.DRG_AoE_DragonfireDive,
+            Preset.DRG_ST_LifeSurge, Preset.DRG_AoE_LifeSurge,
+            Preset.DRG_ST_HighJump, Preset.DRG_AoE_HighJump,
+            Preset.DRG_ST_Geirskogul, Preset.DRG_AoE_Geirskogul,
+        ] },
+        { Job.MNK, [Preset.MNK_STUseBrotherhood, Preset.MNK_STUseROF, Preset.MNK_STUseFiresReply, Preset.MNK_STUseMasterfulBlitz, Preset.MNK_AoEUseBrotherhood, Preset.MNK_AoEUseROF, Preset.MNK_AoEUseFiresReply, Preset.MNK_AoEUseMasterfulBlitz] },
+        { Job.NIN, [
+            Preset.NIN_ST_AdvancedMode_TrickAttack, Preset.NIN_ST_AdvancedMode_Mug,
+            Preset.NIN_AoE_AdvancedMode_TrickAttack, Preset.NIN_AoE_AdvancedMode_Mug,
+            Preset.NIN_ST_AdvancedMode_Bunshin, Preset.NIN_AoE_AdvancedMode_Bunshin,
+            Preset.NIN_ST_AdvancedMode_Kassatsu, Preset.NIN_AoE_AdvancedMode_Kassatsu,
+            Preset.NIN_ST_AdvancedMode_TenChiJin, Preset.NIN_AoE_AdvancedMode_TenChiJin,
+            Preset.NIN_ST_AdvancedMode_Assassinate, Preset.NIN_AoE_AdvancedMode_Assassinate,
+            Preset.NIN_ST_AdvancedMode_Meisui, Preset.NIN_AoE_AdvancedMode_Meisui,
+        ] },
+        { Job.SAM, [
+            Preset.SAM_ST_CDs_Ikishoten, Preset.SAM_AoE_CDs_Ikishoten,
+            Preset.SAM_ST_CDs_MeikyoShisui, Preset.SAM_AoE_MeikyoShisui,
+            Preset.SAM_ST_CDs_Shoha, Preset.SAM_AoE_Shoha,
+        ] },
+        { Job.RPR, [
+            Preset.RPR_ST_Gluttony, Preset.RPR_AoE_Gluttony,
+            Preset.RPR_ST_ArcaneCircle, Preset.RPR_AoE_ArcaneCircle,
+            Preset.RPR_ST_Enshroud, Preset.RPR_AoE_Enshroud,
+        ] },
+        { Job.VPR, [Preset.VPR_ST_SerpentsIre, Preset.VPR_ST_Reawaken, Preset.VPR_AoE_SerpentsIre, Preset.VPR_AoE_Reawaken, Preset.VPR_AoE_ReawakenCombo] },
+        { Job.BRD, [Preset.BRD_Adv_Buffs, Preset.BRD_AoE_Adv_Buffs] },
+        { Job.MCH, [Preset.MCH_ST_Adv_Stabilizer, Preset.MCH_ST_Adv_WildFire, Preset.MCH_ST_Adv_TurretQueen, Preset.MCH_ST_Adv_Reassemble, Preset.MCH_ST_Adv_Tools, Preset.MCH_AoE_Adv_Reassemble, Preset.MCH_AoE_Adv_Queen, Preset.MCH_AoE_Adv_Stabilizer, Preset.MCH_AoE_Adv_Tools] },
+        { Job.DNC, [Preset.DNC_ST_Adv_TS, Preset.DNC_ST_Adv_SS, Preset.DNC_ST_Adv_FanProccs, Preset.DNC_ST_Adv_Feathers, Preset.DNC_AoE_Adv_Devilment, Preset.DNC_AoE_Adv_Flourish, Preset.DNC_AoE_Adv_SS, Preset.DNC_AoE_Adv_FanProccs, Preset.DNC_AoE_Adv_Feathers, Preset.DNC_AoE_Adv_DawnDance] },
+        { Job.BLM, [
+            Preset.BLM_ST_LeyLines, Preset.BLM_AoE_LeyLines,
+            Preset.BLM_ST_Amplifier, Preset.BLM_AoE_Amplifier,
+            Preset.BLM_ST_Manafont, Preset.BLM_AoE_Manafont,
+            Preset.BLM_ST_Triplecast, Preset.BLM_AoE_Triplecast,
+            Preset.BLM_ST_UsePolyglot, Preset.BLM_AoE_UsePolyglot,
+        ] },
+        { Job.SMN, [
+            Preset.SMN_AoE_Advanced_Combo_SearingLight, Preset.SMN_ST_Advanced_Combo_SearingLight,
+            Preset.SMN_ST_Advanced_Combo_DemiSummons, Preset.SMN_AoE_Advanced_Combo_DemiSummons,
+            Preset.SMN_ST_Advanced_Combo_DemiSummons_Attacks, Preset.SMN_AoE_Advanced_Combo_DemiSummons_Attacks,
+        ] },
+        { Job.RDM, [
+            Preset.RDM_ST_Embolden, Preset.RDM_AoE_Embolden,
+            Preset.RDM_ST_Manafication, Preset.RDM_AoE_Manafication,
+            Preset.RDM_ST_Fleche, Preset.RDM_ST_ContreSixte,
+            Preset.RDM_AoE_Fleche, Preset.RDM_AoE_ContreSixte,
+        ] },
+        { Job.PCT, [Preset.PCT_ST_AdvancedMode_ScenicMuse, Preset.PCT_AoE_AdvancedMode_ScenicMuse, Preset.PCT_ST_AdvancedMode_HammerStampCombo, Preset.PCT_AoE_AdvancedMode_HammerStampCombo] },
     };
 
     /// <summary>

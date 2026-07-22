@@ -15,10 +15,6 @@ internal partial class MCH : PhysicalRanged
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SplitShot, HeatedSplitShot))
                 return actionID;
 
-            //Reassemble to start before combat/after downtime
-            if (CanReassemble(false, forPrepull: true) && !IsOverheated && !HasWeaved())
-                return Reassemble;
-
             if (!IsOverheated &&
                 ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -75,6 +71,10 @@ internal partial class MCH : PhysicalRanged
             // Full Metal Field
             if (CanUseFullMetalField)
                 return FullMetalField;
+
+            // Prefer Reassemble→tool over weaving without a tool ready
+            if (CanReassemble(false) && !IsOverheated)
+                return Reassemble;
 
             //Tools
             if (CanUseTools(ref actionID, false) && !IsOverheated)
@@ -148,6 +148,10 @@ internal partial class MCH : PhysicalRanged
                     !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(3))
                     return Flamethrower;
 
+                // Prefer Reassemble→tool over weaving without a tool ready
+                if (CanReassemble(true))
+                    return Reassemble;
+
                 if (CanUseTools(ref actionID, true))
                     return actionID;
             }
@@ -173,12 +177,6 @@ internal partial class MCH : PhysicalRanged
                 (MCH_HaveTarget == 1 || HasBattleTarget()) &&
                 Opener().FullOpener(ref actionID))
                 return actionID;
-
-            //Reassemble to start before combat/after downtime
-            if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold, true) &&
-                !IsOverheated && !HasWeaved())
-                return Reassemble;
 
             if (!IsOverheated &&
                 ContentSpecificActions.TryGet(out uint contentAction))
@@ -279,6 +277,12 @@ internal partial class MCH : PhysicalRanged
                 CanUseFullMetalField)
                 return FullMetalField;
 
+            // Prefer Reassemble→tool over weaving without a tool ready
+            if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
+                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold) &&
+                !IsOverheated)
+                return Reassemble;
+
             //Tools
             if (IsEnabled(Preset.MCH_ST_Adv_Tools) &&
                 GetTargetHPPercent() > ToolsHPThreshold)
@@ -287,7 +291,12 @@ internal partial class MCH : PhysicalRanged
                                              IsWildfireAboutToBeUsed(WildfireHPThreshold, MCH_ST_WildfireBossOnlyOption);
                 bool holdExcavatorForWildfire = IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) && wildfireAboutToBeUsed;
 
-                if (CanUseTools(ref actionID, false, holdExcavatorForWildfire: holdExcavatorForWildfire) &&
+                if (CanUseTools(ref actionID, false,
+                        holdExcavatorForWildfire: holdExcavatorForWildfire,
+                        reassembleEnabled: IsEnabled(Preset.MCH_ST_Adv_Reassemble),
+                        reassembleChoice: MCH_ST_Adv_ReassembleChoice,
+                        chargePool: MCH_ST_ReassemblePool,
+                        hpThreshold: ReassembleHPThreshold) &&
                     !IsOverheated)
                     return actionID;
             }
@@ -385,9 +394,17 @@ internal partial class MCH : PhysicalRanged
                     GetTargetHPPercent() > MCH_AoE_FlamethrowerHPOption)
                     return Flamethrower;
 
+                // Prefer Reassemble→tool over weaving without a tool ready
+                if (IsEnabled(Preset.MCH_AoE_Adv_Reassemble) &&
+                    CanReassemble(true, chargePool: MCH_AoE_ReassemblePool, hpThreshold: MCH_AoE_ReassembleHPThreshold))
+                    return Reassemble;
+
                 if (IsEnabled(Preset.MCH_AoE_Adv_Tools) &&
                     GetTargetHPPercent() > MCH_AoE_ToolsHPThreshold &&
-                    CanUseTools(ref actionID, true, MCH_AoE_AirAnchor))
+                    CanUseTools(ref actionID, true, MCH_AoE_AirAnchor,
+                        reassembleEnabled: IsEnabled(Preset.MCH_AoE_Adv_Reassemble),
+                        chargePool: MCH_AoE_ReassemblePool,
+                        hpThreshold: MCH_AoE_ReassembleHPThreshold))
                     return actionID;
             }
 
