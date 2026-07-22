@@ -215,7 +215,7 @@ public static class ActionWatching
             // Cache Data
             var dateNow = DateTime.Now;
             var actionId = header->ActionId;
-            var actionType = header->ActionType;
+            var actionType = (ActionType)header->ActionType;
             var currentTick = Environment.TickCount64;
             var playerObjectId = LocalPlayer.GameObjectId;
             var partyMembers = GetPartyMembers().ToDictionary(x => x.GameObjectId);
@@ -336,9 +336,9 @@ public static class ActionWatching
                 }
             }
 
-            if (casterEntityId == Player.Object.EntityId && ActionSheet.TryGetValue(actionId, out var actionSheet) && actionSheet.TargetArea)
+            if ((actionType == ActionType.Action && casterEntityId == Player.Object.EntityId && ActionSheet.TryGetValue(actionId, out var actionSheet) && actionSheet.TargetArea) || actionType == ActionType.Item)
             {
-                UpdateLastUsedAction(actionId, ActionType.Action, 0, 0);
+                UpdateLastUsedAction(actionId, actionType, 0, 0);
             }
 
         }
@@ -354,7 +354,6 @@ public static class ActionWatching
         LastAction = actionId;
         TimeLastActionUsed = DateTime.Now;
         var currentTick = Environment.TickCount64;
-
         // Update Counter
         if (actionId != CombatActions.LastOrDefault())
             LastActionUseCount = 1;
@@ -398,7 +397,7 @@ public static class ActionWatching
             WrathOpener.CurrentOpener?.ProgressOpener(actionId);
 
         if (Service.Configuration.EnabledOutputLog)
-            OutputLog();
+            OutputLog(actionType);
 
         if (AutoRotationController.AutorotRaidwiding && AutoRotationController.RaidwideActions.Any(x => x.Action == actionId))
         {
@@ -522,9 +521,13 @@ public static class ActionWatching
     public static TimeSpan TimeSinceLastAction => DateTime.Now - TimeLastActionUsed;
     public static DateTime TimeLastActionUsed { get; set; } = DateTime.Now;
 
-    public static void OutputLog()
+    public static void OutputLog(ActionType actionType)
     {
-        DuoLog.Information($"You just used: {CombatActions.LastOrDefault().ActionName()} x{LastActionUseCount}");
+        if (actionType == ActionType.Action)
+            DuoLog.Information($"You just used: {CombatActions.LastOrDefault().ActionName()} x{LastActionUseCount}");
+        else if (actionType == ActionType.Item)
+            DuoLog.Information($"You just used: {CombatActions.LastOrDefault().ItemName()}");
+
     }
 
 
@@ -539,7 +542,7 @@ public static class ActionWatching
     private unsafe static bool UseActionDetour(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted)
     {
         try
-        {                
+        {
             if (actionType is ActionType.Action)
             {
                 if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == actionManager->GetAdjustedActionId(actionId), out var customAct))
