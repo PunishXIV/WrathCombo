@@ -428,9 +428,9 @@ internal partial class VPR
     {
         if (!ActionReady(UncoiledFury) || !InActionRange(UncoiledFury))
             return false;
-
+        
         if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget() &&
-            !InTwinbladeCombo && !HasStatusEffect(Buffs.Reawakened))
+            !InTwinbladeCombo)
             return true;
 
         if (!CanUseUncoiledFuryInRotation(onAoE))
