@@ -242,8 +242,6 @@ internal partial class MCH
 
     public static bool TwoChargesUnlocked => GetMaxCharges(Reassemble) >= 2;
 
-    public static bool IsWildfireActive => HasStatusEffect(Buffs.Wildfire);
-
     public static bool ShouldReassemble() =>
         !TwoChargesUnlocked || UseBothCharges || (ActionReady(Reassemble) && GetCooldownRemainingTime(Reassemble) <= 10);
 
@@ -275,10 +273,9 @@ internal partial class MCH
     private static bool HigherToolOnCooldown(uint higherTool) =>
         !LevelChecked(higherTool) || GetCooldownRemainingTime(higherTool) > GCD * 2;
 
-    private static bool CanReassembleCharges(int chargePool, int hpThreshold, bool blockInWildfire = false)
+    private static bool CanReassembleCharges(int chargePool, int hpThreshold)
     {
         if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) ||
-            blockInWildfire && IsWildfireActive ||
             !HasBattleTarget() || GetTargetHPPercent() <= hpThreshold ||
             !InReassembleRange() || JustUsed(Reassemble, 2f))
             return false;
@@ -327,14 +324,15 @@ internal partial class MCH
         LevelChecked(Scattergun) && InActionRange(OriginalHook(SpreadShot)) ||
         !LevelChecked(Drill) && InActionRange(OriginalHook(SpreadShot));
 
-    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25) => ActionReady(Reassemble) &&
+    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25) =>
+        ActionReady(Reassemble) &&
         (onAoE
             ? CanReassembleAoE(chargePool, hpThreshold)
             : CanReassembleST(reassembleChoice, chargePool, hpThreshold));
 
     private static bool CanReassembleST(int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
     {
-        if (!CanReassembleCharges(chargePool, hpThreshold, true))
+        if (!CanReassembleCharges(chargePool, hpThreshold))
             return false;
 
         if (reassembleChoice == 0)
@@ -505,7 +503,6 @@ internal partial class MCH
         JustUsed(Drill, window) ||
         JustUsed(Excavator, window);
 
-    // Hold tools while Reassemble wants to land on a ready tool first
     private static bool ShouldHoldToolsForReassemble(
         bool onAoE,
         bool reassembleEnabled,
@@ -517,7 +514,7 @@ internal partial class MCH
             return false;
 
         if (onAoE)
-            return CanReassembleCharges(chargePool, hpThreshold) && HasReassembleToolTarget(onAoE: true);
+            return CanReassemble(true, chargePool: chargePool, hpThreshold: hpThreshold);
 
         return CanReassemble(false, reassembleChoice, chargePool, hpThreshold);
     }
