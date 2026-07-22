@@ -788,6 +788,7 @@ public static class UserConfig
             descriptionColor: ImGuiColors.DalamudYellow
         );
 
+        ImGui.NewLine();
     }
 
     /// <summary>
@@ -832,6 +833,14 @@ public static class UserConfig
             descriptionColor: ImGuiColors.DalamudYellow
         );
 
+    }
+
+    internal static void DrawOpenerPotionChoice(UserBool config)
+    {
+        using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen))
+        {
+            DrawAdditionalBoolChoice(config, "Include Potion?", "Adds the strongest potion appropriate for your job to the opener.");
+        }
     }
 
     internal static void DrawPriorityInput(UserIntArray config, int maxValues, int currentItem, string customLabel = "")

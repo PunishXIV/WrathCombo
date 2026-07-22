@@ -7,11 +7,13 @@ using ECommons.DalamudServices;
 using ECommons.EzHookManager;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using WrathCombo.Attributes;
@@ -29,12 +31,8 @@ public sealed unsafe class CustomAction : IDisposable
                         uint iconId,
                         Action? onClick = null,
                         string? customIconPath = null,
-                        ushort cast100ms = 0,
-                        ushort recast100ms = 0,
-                        byte cooldownGroup = 58,
-                        byte maxCharges = 1,
-                        sbyte range = 0,
-                        byte castType = 1)
+                        uint itemId = 0,
+                        ISharedImmediateTexture tex = null)
     {
         Id = id;
         Name = name;
@@ -42,28 +40,34 @@ public sealed unsafe class CustomAction : IDisposable
         CustomIconPath = customIconPath;
         OnClick = onClick;
         Description = description;
+        ItemId = itemId;
+        TextureForItems = tex;
+        CreateAction();
+    }
 
-        byte[] nameUtf8 = Encoding.UTF8.GetBytes(name);
+    private void CreateAction()
+    {
+        byte[] nameUtf8 = Encoding.UTF8.GetBytes(Name);
         UIntPtr rowSize = (nuint)sizeof(CustomActionManager.CustomActionRow);
         ActionRowPtr = (nint)NativeMemory.AllocZeroed(rowSize + (nuint)nameUtf8.Length + 1);
         CustomActionManager.CustomActionRow* row = (CustomActionManager.CustomActionRow*)ActionRowPtr;
         row->NameOffset = (uint)rowSize;
-        row->Icon = (ushort)iconId;
+        row->Icon = (ushort)IconId;
         row->ActionCategory = 4;
         row->PrimaryCostType = 0;
         row->PrimaryCostValue = 0;
-        row->Cast100ms = cast100ms;
-        row->Recast100ms = recast100ms;
-        row->CooldownGroup = cooldownGroup;
+        row->Cast100ms = 0;
+        row->Recast100ms = 0;
+        row->CooldownGroup = 58;
         row->AdditionalRecastGroup = 0;
-        row->MaxCharges = maxCharges;
+        row->MaxCharges = 1;
         row->ClassJobCategory = 1;
         row->ClassJob = -1;
-        row->Range = range;
-        row->CastType = castType;
+        row->Range = 0;
+        row->CastType = 1;
         nameUtf8.CopyTo(new Span<byte>((void*)(ActionRowPtr + (nint)rowSize), nameUtf8.Length));
 
-        byte[] descBytes = Encoding.UTF8.GetBytes(description);
+        byte[] descBytes = Encoding.UTF8.GetBytes(Description);
         UIntPtr transientSize = (nuint)(4 + descBytes.Length + 1);
         TransientRowPtr = (nint)NativeMemory.AllocZeroed(transientSize);
         *(uint*)TransientRowPtr = 4;
@@ -74,14 +78,17 @@ public sealed unsafe class CustomAction : IDisposable
 
     public uint Id { get; }
     public string Name { get; }
-    public uint IconId { get; }
+    public uint IconId { get; set; }
     public string? CustomIconPath { get; }
-    public Action? OnClick { get; }
+    public Action? OnClick { get; set; }
     public string Description { get; }
 
-    internal nint ActionRowPtr { get; }
-    internal nint TransientRowPtr { get; }
-    internal nint NamePtr { get; }
+    public uint ItemId { get; set; }
+
+    internal nint ActionRowPtr { get; set; }
+    internal nint TransientRowPtr { get; set; }
+    internal nint NamePtr { get; set; }
+    public ISharedImmediateTexture TextureForItems { get; set; }
 
     public void Dispose()
     {
@@ -101,7 +108,7 @@ public sealed unsafe class CustomActionManager : IDisposable
     private readonly IFramework _framework;
 
     private readonly Hook<GetActionRowDelegate> _getActionRowHook;
-    private readonly Dictionary<uint, ISharedImmediateTexture> _iconTextures = new();
+    public readonly Dictionary<uint, ISharedImmediateTexture> _iconTextures = new();
     private readonly Hook<RaptureHotbarModule.HotbarSlot.Delegates.IsSlotUsable> _isSlotUsableHook;
     private readonly Hook<LoadIconDelegate> _loadIconHook;
     private readonly Hook<GetActionRowTransientDelegate> _updateTooltipHook;
@@ -152,7 +159,7 @@ public sealed unsafe class CustomActionManager : IDisposable
         return _updateTooltipHook.Original(rowId);
     }
 
-    public IReadOnlyCollection<CustomAction> Actions => _actions.Values;
+    public IEnumerable<CustomAction> Actions => _actions.Values;
     public IReadOnlyDictionary<uint, ISharedImmediateTexture> IconTextures => _iconTextures;
 
     public void Dispose()
@@ -165,19 +172,16 @@ public sealed unsafe class CustomActionManager : IDisposable
         _updateTooltipHook.Dispose();
         _updateNameHook.Dispose();
 
-        Svc.Framework.RunOnTick(() =>
+        foreach (CustomAction action in _actions.Values)
         {
-            foreach (CustomAction action in _actions.Values)
-            {
-                action.Dispose();
-            }
+            action.Dispose();
+        }
 
-            _actions.Clear();
-            _iconTextures.Clear();
-            _pendingInjects.Clear();
+        _actions.Clear();
+        _iconTextures.Clear();
+        _pendingInjects.Clear();
 
-            Svc.Log.Debug($"Cleared custom actions");
-        }, TimeSpan.FromTicks(100));
+        Svc.Log.Debug($"Cleared custom actions");
     }
 
     public void Register(CustomAction action)
@@ -188,9 +192,13 @@ public sealed unsafe class CustomActionManager : IDisposable
             Svc.Log.Debug($"Registering {action.Id} from path {action.CustomIconPath}");
             _iconTextures[action.IconId] = _texProv.GetFromFileAbsolute(action.CustomIconPath);
         }
+        else if (action.TextureForItems != null)
+        {
+            _iconTextures[action.IconId] = action.TextureForItems;
+        }
         else
         {
-            if (_texProv.TryGetFromGameIcon(new GameIconLookup() { IconId = action.IconId, ItemHq = false }, out var tex))
+            if (_texProv.TryGetFromGameIcon(new GameIconLookup() { IconId = action.IconId, HiRes = true }, out var tex))
                 _iconTextures[action.IconId] = tex;
         }
     }
@@ -203,6 +211,17 @@ public sealed unsafe class CustomActionManager : IDisposable
                 continue;
 
             Register(action);
+        }
+    }
+
+    public void ReRegisterItem(uint itemId, ushort iconId)
+    {
+        var act = _actions[All.Items];
+        if (_texProv.TryGetFromGameIcon(new GameIconLookup() { IconId = iconId, ItemHq = false }, out var tex))
+        {
+            var clone = new CustomAction(act.Id, act.Name, act.Description, iconId, act.OnClick, act.CustomIconPath, itemId, tex);
+            act.Dispose();
+            Register(clone);
         }
     }
 
@@ -360,6 +379,8 @@ public sealed unsafe class CustomActionSetup : IDisposable
     private readonly CustomAction _aoeDPS;
     private readonly CustomAction _singleTargeHeals;
     private readonly CustomAction _aoeHeals;
+    private readonly CustomAction _items;
+
     public (int Hotbar, int Slot)? HoveredSlot = null;
 
     [EzHook("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC 20 48 8B 7C 24 ?? 48 8B D9", false)]
@@ -394,8 +415,9 @@ public sealed unsafe class CustomActionSetup : IDisposable
         _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos.", 1505, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/AoEDPS.png"));
         _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos.", 1508, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/SingleTargetHeals.png"));
         _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE Heal combos.", 1510, customIconPath: Path.Combine(Svc.PluginInterface.AssemblyLocation.DirectoryName!, "Resources/AoEHeals.png"));
+        _items = new(All.Items, "Item Not Found", "Users shouldn't see this", 1511);
 
-        Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals);
+        Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals, _items);
     }
     public void Dispose()
     {

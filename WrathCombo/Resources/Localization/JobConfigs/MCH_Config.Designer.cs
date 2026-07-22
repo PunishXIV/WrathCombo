@@ -87,7 +87,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Early {0} opener.
+        ///   Looks up a localized string similar to Early Buff Opener.
         /// </summary>
         internal static string Early0Opener {
             get {
@@ -145,7 +145,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Uses Early {0} level 100 opener.
+        ///   Looks up a localized string similar to Uses the Early Buff Opener (early {0}).
         /// </summary>
         internal static string UseEarly0Opener {
             get {

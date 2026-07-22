@@ -1,5 +1,6 @@
 using System.Numerics;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
 using ECommons.ImGuiMethods;
 using FFXIVClientStructs.FFXIV.Client.System.Input.SoftKeyboards;
 using WrathCombo.CustomComboNS.Functions;
@@ -93,16 +94,22 @@ internal partial class PLD
                 #region ST
 
                 case Preset.PLD_ST_AdvancedMode_BalanceOpener:
-                    DrawRadioButton(PLD_SelectedOpener, Generics.StandardOpener, "", 0);
-                    DrawRadioButton(PLD_SelectedOpener, "Early Buff Window Opener",
-                        "Moves the buff window forward about 1 GCD.", 1, descriptionAsTooltip: true);
-                    ImGui.NewLine();
                     DrawBossOnlyChoice(PLD_Balance_Content);
-                    ImGui.NewLine();
-                    DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene, FormatAndCache(Generics.Use0, Intervene.ActionName()),
-                        FormatAndCache(Generics.GapcloserUse, Intervene.ActionName()), 0);
-                    DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene, FormatAndCache(Generics.DontUse0, Intervene.ActionName()),
-                        FormatAndCache(Generics.GapcloseSkip, Intervene.ActionName()), 1);
+                    DrawOpenerPotionChoice(PLD_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(PLD_SelectedOpener, Generics.StandardOpener, "", 0, descriptionAsTooltip: true);
+                    DrawRadioButton(PLD_SelectedOpener, "Early Buff Opener",
+                        "Moves the buff window forward about 1 GCD.", 1, descriptionAsTooltip: true);
+
+                    ImGuiEx.TextUnderlined($"{Intervene.ActionName()} Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
+                        FormatAndCache(Generics.Use0, Intervene.ActionName()),
+                        FormatAndCache(Generics.GapcloserUse, Intervene.ActionName()), 0, descriptionAsTooltip: true);
+                    DrawRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
+                        FormatAndCache(Generics.DontUse0, Intervene.ActionName()),
+                        FormatAndCache(Generics.GapcloseSkip, Intervene.ActionName()), 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.PLD_ST_AdvancedMode_GoringBlade:
@@ -405,6 +412,7 @@ internal partial class PLD
             PLD_AoE_InterveneTimeStill = new("PLD_AoE_InterveneTimeStill", 2.5f);
 
         public static UserBool
+            PLD_Opener_Potion = new("PLD_Opener_Potion"),
             PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling = new("PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling"),
             PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling = new("PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling"),
             PLD_ST_AdvancedMode_Intervene_ManualPooling = new("PLD_ST_AdvancedMode_Intervene_ManualPooling"),

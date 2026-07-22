@@ -1,4 +1,6 @@
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -17,28 +19,30 @@ internal partial class MNK
                 #region ST
 
                 case Preset.MNK_STUseOpener:
-                    DrawHorizontalRadioButton(MNK_SelectedOpener,
-                        MNK_Config.DoubleLunarOpener,
-                        MNK_Config.DoubleLunarOpenerDesc, 0);
-
-                    DrawHorizontalRadioButton(MNK_SelectedOpener,
-                        MNK_Config.SolarLunarOpener,
-                        MNK_Config.SolarLunarOpenerDesc, 1);
-
-                    DrawHorizontalRadioButton(MNK_SelectedOpener,
-                        MNK_Config.BrotherhoodFirstOpener,
-                        MNK_Config.BrotherhoodFirstOpenerDesc, 2);
-                    ImGui.NewLine();
-
-                    DrawHorizontalRadioButton(MNK_OpenerCountdown,
-                        Generics.OnlyWithCountdown,
-                        Generics.OnlyUseOpenerWhenCountdownActive, 0);
-
-                    DrawHorizontalRadioButton(MNK_OpenerCountdown,
-                        Generics.Always,
-                        Generics.UseAlways, 1);
-
                     DrawBossOnlyChoice(MNK_Balance_Content);
+                    DrawOpenerPotionChoice(MNK_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(MNK_SelectedOpener,
+                        MNK_Config.DoubleLunarOpener,
+                        MNK_Config.DoubleLunarOpenerDesc, 0, descriptionAsTooltip: true);
+
+                    DrawRadioButton(MNK_SelectedOpener,
+                        MNK_Config.SolarLunarOpener,
+                        MNK_Config.SolarLunarOpenerDesc, 1, descriptionAsTooltip: true);
+
+                    DrawRadioButton(MNK_SelectedOpener,
+                        MNK_Config.BrotherhoodFirstOpener,
+                        MNK_Config.BrotherhoodFirstOpenerDesc, 2, descriptionAsTooltip: true);
+
+                    ImGuiEx.TextUnderlined("Countdown Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(MNK_OpenerCountdown,
+                        Generics.OnlyWithCountdown,
+                        Generics.OnlyUseOpenerWhenCountdownActive, 0, descriptionAsTooltip: true);
+                    DrawRadioButton(MNK_OpenerCountdown,
+                        Generics.Always,
+                        Generics.UseAlways, 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.MNK_STUseBrotherhood:
@@ -220,6 +224,7 @@ internal partial class MNK
             MNK_BH_RoF = new("MNK_BH_RoF");
 
         public static UserBool
+            MNK_Opener_Potion = new("MNK_Opener_Potion"),
             MNK_Thunderclap_FieldMouseover = new("MNK_Thunderclap_FieldMouseover"),
             MNK_BasicCombo_MasterfulBlitz = new("MNK_BasicCombo_MasterfulBlitz"),
             MNK_BasicCombo_Chakra = new("MNK_BasicCombo_Chakra"),

@@ -62,6 +62,7 @@ internal partial class GNB
             GNB_Mit_Advanced_NonBoss_MitigationThreshold = new("GNB_Mit_Advanced_NonBoss_MitigationThreshold", 20f);
 
         public static UserBool
+            GNB_Opener_Potion = new("GNB_Opener_Potion"),
             GNB_Mit_Advanced_Boss_Camouflage_Align = new("GNB_Mit_Advanced_Boss_Camouflage_Align", true),
             GNB_Mit_Advanced_Boss_Nebula_First = new("GNB_Mit_Advanced_Boss_Nebula_First", true),
             GNB_RetargetLightningShot_FieldMO = new("GNB_RetargetLightningShot_FieldMO"),
@@ -168,11 +169,14 @@ internal partial class GNB
                 #region Single-Target
 
                 case Preset.GNB_ST_Opener:
-                    DrawHorizontalRadioButton(GNB_Opener_NM,
-                        $"Normal {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} normally in all openers", 0);
-                    DrawHorizontalRadioButton(GNB_Opener_NM,
-                        $"Early {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} as soon as possible in all openers", 1);
                     DrawBossOnlyChoice(GNB_ST_Balance_Content);
+                    DrawOpenerPotionChoice(GNB_Opener_Potion);
+                    ImGuiEx.TextUnderlined($"{NoMercy.ActionName()} Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(GNB_Opener_NM,
+                        $"Normal {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} normally in all openers", 0, descriptionAsTooltip: true);
+                    DrawRadioButton(GNB_Opener_NM,
+                        $"Early {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} as soon as possible in all openers", 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.GNB_ST_NoMercy:

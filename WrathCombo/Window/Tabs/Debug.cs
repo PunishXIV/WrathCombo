@@ -28,6 +28,7 @@ using System.Text;
 using WrathCombo.API.Enum;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -1039,6 +1040,22 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText($"Ignored Raidwides:", $"{BattleData.IgnoreRaidwideAIDs.Count}");
         }
 
+        if (ImGui.CollapsingHeader("Items"))
+        {
+            foreach (var pot in Items.AllPots)
+            {
+                CustomStyleText($"{pot.Name} ({pot.RowId})", Svc.Texture.GetFromGameIcon(new() { IconId = pot.Icon }).GetWrapOrEmpty().Handle);
+            }
+        }
+
+        if (ImGui.CollapsingHeader("Custom Actions"))
+        {
+            foreach (var act in P.CustomActions.Manager.Actions)
+            {
+                CustomStyleText($"{act.Name}", $"{act.Id}");
+            }
+        }
+
         #endregion
 
         ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
@@ -1445,7 +1462,10 @@ internal class Debug : ConfigWindow, IDisposable
 
         // Optional Monofont
         if (useMonofont) ImGui.PushFont(UiBuilder.MonoFont);
-        ImGui.TextWrapped(secondColumn?.ToString() ?? string.Empty);
+        if (secondColumn is ImTextureID tex)
+            ImGui.Image(tex, new Vector2(28f.Scale()));
+        else
+            ImGui.TextWrapped(secondColumn?.ToString() ?? string.Empty);
         if (useMonofont) ImGui.PopFont();
 
         ImGui.PopStyleColor();

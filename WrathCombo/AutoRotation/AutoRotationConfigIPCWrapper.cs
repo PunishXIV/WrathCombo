@@ -199,6 +199,8 @@ public class DPSSettingsIPCWrapper(DPSSettings settings)
 
     public bool AoEIgnoreManual => settings.AoEIgnoreManual;
 
+    public bool AoEOnlyWhenTargeting => settings.AoEOnlyWhenTargeting;
+
     #endregion
 }
 

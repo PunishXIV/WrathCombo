@@ -1,4 +1,5 @@
 using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -38,7 +39,8 @@ internal partial class PCT
             CombinedMotifsMog = new("CombinedMotifsMog"),
             CombinedMotifsMadeen = new("CombinedMotifsMadeen"),
             CombinedMotifsWeapon = new("CombinedMotifsWeapon"),
-            CombinedMotifsLandscape = new("CombinedMotifsLandscape");
+            CombinedMotifsLandscape = new("CombinedMotifsLandscape"),
+            PCT_Opener_Potion = new("PCT_Opener_Potion");
 
         public static UserFloat
             PCT_ST_AdvancedMode_HammerStampCombo_Timing = new("PCT_ST_AdvancedMode_HammerStampCombo_Timing", 30),
@@ -57,7 +59,9 @@ internal partial class PCT
 
                 case Preset.PCT_ST_Advanced_Openers:
                     DrawBossOnlyChoice(PCT_Balance_Content);
-                    ImGui.NewLine();
+                    DrawOpenerPotionChoice(PCT_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
                     DrawRadioButton(PCT_Opener_Choice, $"2nd GCD {StarryMuse.ActionName()}",
                         "Opener Failure Timeout (in Settings Tab) Must be set to 5+ seconds for opener to function due to long initial spell cast.", 0, descriptionAsTooltip: true);
                     DrawRadioButton(PCT_Opener_Choice, $"3rd GCD {StarryMuse.ActionName()}",

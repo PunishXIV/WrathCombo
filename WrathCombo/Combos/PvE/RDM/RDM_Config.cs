@@ -1,4 +1,5 @@
 ﻿using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -12,6 +13,7 @@ internal partial class RDM
     {
         #region Options
         public static UserBool RDM_ST_ThunderAero_Pull = new("RDM_ST_ThunderAero_Pull", true),
+            RDM_Opener_Potion = new("RDM_Opener_Potion"),
             RDM_VerAero_Dynamic = new("RDM_VerAero_Dynamic", true),
             RDM_VerThunder_Dynamic = new("RDM_VerThunder_Dynamic", true),
             RDM_VerAero2_Dynamic = new("RDM_VerAero2_Dynamic", true),
@@ -74,12 +76,14 @@ internal partial class RDM
                 #region Single Target
                 case Preset.RDM_Balance_Opener:
                     DrawBossOnlyChoice(RDM_BalanceOpener_Content);
-                    ImGui.NewLine();
+                    DrawOpenerPotionChoice(RDM_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
                     DrawRadioButton(RDM_Opener_Selection, Generics.StandardOpener,
                         RDM_Config.RDMOpenerWarning, 0, descriptionAsTooltip: true);
                     DrawRadioButton(RDM_Opener_Selection, RDM_Config.RDMGapCloserOpener,
                         RDM_Config.RDMOpenerWarning, 1, descriptionAsTooltip: true);
-                    DrawRadioButton(RDM_Opener_Selection, RDM_Config.RDMFirstGCDOpener, 
+                    DrawRadioButton(RDM_Opener_Selection, RDM_Config.RDMFirstGCDOpener,
                         FormatAndCache(RDM_Config.RDMFirstGCDOpenerWarning, Acceleration.ActionName(), Veraero3.ActionName()), 2, descriptionAsTooltip: true);
 
                     if (RDM_Opener_Selection == 2)

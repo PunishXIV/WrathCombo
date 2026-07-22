@@ -191,14 +191,10 @@ internal partial class DRK
                 #region Adv Single Target
 
                 case Preset.DRK_ST_BalanceOpener:
-                    ImGui.Indent();
                     DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
-                    ImGui.Unindent();
-                    ImGui.NewLine();
-                    ImGui.Indent();
-                    ImGui.Text("Choose the action to pull with:     (hover each for more info)");
-                    ImGui.Unindent();
-                    ImGui.NewLine();
+                    DrawOpenerPotionChoice(DRK_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
                     DrawRadioButton(DRK_ST_OpenerAction,
                         "Unmend (Standard)",
                         "Will use Unmend to pull, if selected.\n" +
@@ -1231,6 +1227,7 @@ internal partial class DRK
             DRK_Retarget_Unmend_SmartTargeting = new("DRK_Retarget_Unmend_SmartTargeting");
         
         public static readonly UserBool
+            DRK_Opener_Potion = new("DRK_Opener_Potion"),
             DRK_Retarget_Unmend_FieldMO = new("DRK_Retarget_Unmend_FieldMO"),
             DRK_Retarget_Unmend_RangeBasedTargeting = new("DRK_Retarget_Unmend_RangeBasedTargeting"),
             DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer  = new("DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer");

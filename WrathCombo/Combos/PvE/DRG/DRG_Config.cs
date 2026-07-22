@@ -1,4 +1,5 @@
 using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -15,18 +16,20 @@ internal partial class DRG
             switch (preset)
             {
                 case Preset.DRG_ST_Opener:
-                    DrawHorizontalRadioButton(DRG_SelectedOpener,
-                        Generics.StandardOpener, Generics.UsesStandardOpener, 0);
-
-                    DrawHorizontalRadioButton(DRG_SelectedOpener,
-                        FormatAndCache(Generics.Action_Opener, PiercingTalon.ActionName()),
-                        FormatAndCache(Generics.Use_0_Opener, PiercingTalon.ActionName()), 1);
-
-                    DrawHorizontalRadioButton(DRG_SelectedOpener,
-                        DRG_Config.EarlyBuffOpener,
-                        FormatAndCache(DRG_Config.UseEarlyBuffOpener), 2);
-
                     DrawBossOnlyChoice(DRG_BalanceContent);
+                    DrawOpenerPotionChoice(DRG_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(DRG_SelectedOpener,
+                        Generics.StandardOpener, Generics.UsesStandardOpener, 0, descriptionAsTooltip: true);
+
+                    DrawRadioButton(DRG_SelectedOpener,
+                        FormatAndCache(Generics.Action_Opener, PiercingTalon.ActionName()),
+                        FormatAndCache(Generics.Use_0_Opener, PiercingTalon.ActionName()), 1, descriptionAsTooltip: true);
+
+                    DrawRadioButton(DRG_SelectedOpener,
+                        DRG_Config.EarlyBuffOpener,
+                        FormatAndCache(DRG_Config.UseEarlyBuffOpener), 2, descriptionAsTooltip: true);
                     break;
 
                 case Preset.DRG_ST_BattleLitany:
@@ -230,6 +233,7 @@ internal partial class DRG
             DRG_AoE_BloodbathHPThreshold = new("DRG_AoE_BloodbathHPThreshold", 30);
 
         public static UserBool
+            DRG_Opener_Potion = new("DRG_Opener_Potion"),
             DRG_ST_DoubleMirage = new("DRG_ST_DoubleMirage"),
             DRG_ChaoticCombo = new("DRG_ChaoticCombo");
 

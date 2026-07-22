@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.AutoRotation;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -248,6 +249,7 @@ internal partial class DRK
         public override List<uint> OpenerActions { get; set; } =
         [
             Unmend,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
             HardSlash,
             EdgeOfShadow, // Not handled like a procc, since it sets up Darkside
             LivingShadow,
@@ -316,6 +318,8 @@ internal partial class DRK
 
         internal override UserData? ContentCheckConfig =>
             DRK_ST_OpenerDifficulty;
+
+        internal override bool IncludePot => DRK_Opener_Potion;
 
         public override bool HasCooldowns() =>
             LocalPlayer.CurrentMp > 7000 && IsOffCooldown(LivingShadow) &&

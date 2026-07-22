@@ -66,7 +66,7 @@ public static class ActionWatching
     private readonly static Hook<ActionManager.Delegates.UseAction>? UseActionHook;
     private readonly static Hook<ActionManager.Delegates.UseActionLocation>? UseActionLocHook;
 
-    private delegate void SendActionDelegate(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
+    private delegate void SendActionDelegate(ulong targetObjectId, ActionType actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
     private static readonly Hook<SendActionDelegate>? SendActionHook;
     public static readonly Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction;
     public static readonly Hook<PacketDispatcher.Delegates.HandleActorControlPacket> ActorControlPacketHook;
@@ -338,7 +338,7 @@ public static class ActionWatching
 
             if (casterEntityId == Player.Object.EntityId && ActionSheet.TryGetValue(actionId, out var actionSheet) && actionSheet.TargetArea)
             {
-                UpdateLastUsedAction(actionId, 1, 0, 0);
+                UpdateLastUsedAction(actionId, ActionType.Action, 0, 0);
             }
 
         }
@@ -348,7 +348,7 @@ public static class ActionWatching
         }
     }
 
-    private static unsafe void UpdateLastUsedAction(uint actionId, byte actionType, ulong targetObjectId, int castTime)
+    private static unsafe void UpdateLastUsedAction(uint actionId, ActionType actionType, ulong targetObjectId, int castTime)
     {
         // Update Trackers
         LastAction = actionId;
@@ -384,7 +384,7 @@ public static class ActionWatching
                     break;
             }
 
-            if (actionType == 1)
+            if (actionType == ActionType.Action)
             {
                 ActionTimestamps[actionId] = currentTick;
                 UsedOnDict[(actionId, targetObjectId)] = currentTick;
@@ -411,15 +411,19 @@ public static class ActionWatching
     }
 
     /// <summary> Handles logic when an action is sent. </summary>
-    private unsafe static void SendActionDetour(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9)
+    private unsafe static void SendActionDetour(ulong targetObjectId, ActionType actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9)
     {
         try
         {
             if (P.IPC.OnActionUsedProvider.SubscriptionCount > 0)
             {
-                P.IPC.OnActionUsedProvider.SendMessage((ActionType)actionType, actionId);
+                P.IPC.OnActionUsedProvider.SendMessage(actionType, actionId);
             }
-            if (actionType is 1)
+
+            if (actionType is ActionType.Item)
+                WrathOpener.CurrentOpener?.ProgressOpener(actionId, true);
+
+            if (actionType is ActionType.Action)
             {
                 OnActionSend?.Invoke();
 
@@ -535,15 +539,18 @@ public static class ActionWatching
     private unsafe static bool UseActionDetour(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted)
     {
         try
-        {
-            if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == actionId, out var customAct))
-            {
-                if (customAct.OnClick != null)
-                    customAct.OnClick();
-
-            }
+        {                
             if (actionType is ActionType.Action)
             {
+                if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == actionManager->GetAdjustedActionId(actionId), out var customAct))
+                {
+                    if (customAct.OnClick != null)
+                    {
+                        customAct.OnClick();
+                        return false;
+                    }
+                }
+
                 var replacedWith = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
                 var queuedAct = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionManager->QueuedActionId) ? Service.ActionReplacer.LastActionInvokeFor[actionManager->QueuedActionId] : actionManager->QueuedActionId;
 
@@ -551,7 +558,6 @@ public static class ActionWatching
                 // where the base mudra matches, ignore the input.
                 if (NIN.MudraSigns.Contains(replacedWith) && NIN.InMudra && NIN.MudraToBase(LastAction) == NIN.MudraToBase(replacedWith))
                     return false;
-
 
                 // Determine if the queued action conflicts with the current mudra state.
                 var queuedProblem = (queuedAct > 0 && queuedAct != NIN.Ninjutsu && !NIN.MudraSigns.Contains(queuedAct) && !NIN.NormalJutsus.Contains(queuedAct)) || queuedAct == LastAction;
@@ -637,7 +643,7 @@ public static class ActionWatching
                 }
 
                 if (Service.Configuration.OverwriteQueue && actionManager->QueuedActionId != 0 && CanQueueCS(replacedWith))
-                    actionManager->QueuedActionId = replacedWith;
+                    actionManager->QueuedActionId = Service.ActionReplacer.ActionReplacingEnabled ? actionId : replacedWith;
 
                 // Determine if the action will queue according to user settings
                 bool willQueue = CanQueueCS(replacedWith) && RemainingGCD > 0;

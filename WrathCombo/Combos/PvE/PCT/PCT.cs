@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.PCT.Config;
@@ -14,33 +15,32 @@ internal partial class PCT : Caster
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, FireInRed)) return actionID;
 
-
             // Special Content
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
-            
+
             const Combo comboFlags = Combo.ST | Combo.Simple;
-            
+
             //OGCD Spells
             if (TryOGCDSpells(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Mitigation
             if (TryMitigation(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Movement Options
             if (TryMovementOption(comboFlags, ref actionID))
                 return actionID;
-            
+
             //GCD Spells
             if (TryGCDSpells(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Motifs
             if (TryDrawMotif(comboFlags, ref actionID))
                 return actionID;
-            
+
             //SubCombo
             if (TryCombos(comboFlags, ref actionID))
                 return actionID;
@@ -64,29 +64,29 @@ internal partial class PCT : Caster
             // Special Content
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
-            
+
             const Combo comboFlags = Combo.ST | Combo.Adv;
-            
+
             //OGCD Spells
             if (TryOGCDSpells(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Mitigation
             if (TryMitigation(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Movement Options
             if (TryMovementOption(comboFlags, ref actionID))
                 return actionID;
-            
+
             //GCD Spells
             if (TryGCDSpells(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Motifs
             if (TryDrawMotif(comboFlags, ref actionID))
                 return actionID;
-            
+
             //SubCombo
             if (TryCombos(comboFlags, ref actionID))
                 return actionID;
@@ -108,25 +108,25 @@ internal partial class PCT : Caster
             // Special Content
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
-            
+
             const Combo comboFlags = Combo.AoE | Combo.Simple;
-            
+
             //OGCD Spells
             if (TryOGCDSpells(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Movement Options
             if (TryMovementOption(comboFlags, ref actionID))
                 return actionID;
-            
+
             //GCD Spells
             if (TryGCDSpells(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Motifs
             if (TryDrawMotif(comboFlags, ref actionID))
                 return actionID;
-            
+
             //SubCombo
             if (TryCombos(comboFlags, ref actionID))
                 return actionID;
@@ -144,25 +144,25 @@ internal partial class PCT : Caster
             // Special Content
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
-            
+
             const Combo comboFlags = Combo.AoE | Combo.Adv;
-            
+
             //OGCD Spells
             if (TryOGCDSpells(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Movement Options
             if (TryMovementOption(comboFlags, ref actionID))
                 return actionID;
-            
+
             //GCD Spells
             if (TryGCDSpells(comboFlags, ref actionID))
                 return actionID;
-            
+
             //Motifs
             if (TryDrawMotif(comboFlags, ref actionID))
                 return actionID;
-            
+
             //SubCombo
             if (TryCombos(comboFlags, ref actionID))
                 return actionID;
@@ -188,7 +188,7 @@ internal partial class PCT : Caster
                 return HasStatusEffect(Buffs.SubtractivePalette)
                     ? OriginalHook(BlizzardinCyan)
                     : OriginalHook(FireInRed);
-                
+
             }
             if (actionID == BlizzardIIinCyan && choice is 0 or 2)
             {

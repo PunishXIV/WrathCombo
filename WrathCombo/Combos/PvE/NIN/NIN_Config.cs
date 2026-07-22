@@ -1,4 +1,5 @@
 using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -34,6 +35,7 @@ internal partial class NIN
             NIN_SimpleMudra_Choice = new("NIN_SimpleMudra_Choice", 1);
 
         internal static UserBool
+            NIN_Opener_Potion = new("NIN_Opener_Potion"),
             NIN_ST_AdvancedMode_Bhavacakra_Pooling = new("Ninki_BhavaPooling"),
             NIN_ST_AdvancedMode_TrueNorth = new("NIN_ST_AdvancedMode_TrueNorth"),
             NIN_ST_AdvancedMode_ShadeShiftRaidwide = new("NIN_ST_AdvancedMode_ShadeShiftRaidwide"),
@@ -72,12 +74,14 @@ internal partial class NIN
                     break;
 
                 case Preset.NIN_ST_AdvancedMode_BalanceOpener:
-                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 4th GCD {KunaisBane.ActionName()}", "", 0);
-                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {Dokumori.ActionName()}", "", 1);
-                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {KunaisBane.ActionName()}", "", 2);
-                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Buff Rush", "", 3);
-
                     DrawBossOnlyChoice(NIN_Balance_Content);
+                    DrawOpenerPotionChoice(NIN_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 4th GCD {KunaisBane.ActionName()}", "", 0, descriptionAsTooltip: true);
+                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {Dokumori.ActionName()}", "", 1, descriptionAsTooltip: true);
+                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {KunaisBane.ActionName()}", "", 2, descriptionAsTooltip: true);
+                    DrawRadioButton(NIN_Adv_Opener_Selection, $"Buff Rush", "", 3, descriptionAsTooltip: true);
                     break;
 
                 case Preset.NIN_ST_AdvancedMode_Mug:

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -14,6 +15,7 @@ using static WrathCombo.Combos.PvE.BRD.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
+
 internal partial class BRD
 {
     #region ID's
@@ -88,20 +90,20 @@ internal partial class BRD
     }
 
     #endregion
-    
+
     #region Variables
     internal static readonly FrozenDictionary<uint, ushort> PurpleList = new Dictionary<uint, ushort>
     {
         { VenomousBite, Debuffs.VenomousBite },
         { CausticBite, Debuffs.CausticBite }
     }.ToFrozenDictionary();
-    
+
     internal static readonly FrozenDictionary<uint, ushort> BlueList = new Dictionary<uint, ushort>
     {
         { Windbite, Debuffs.Windbite },
         { Stormbite, Debuffs.Stormbite }
     }.ToFrozenDictionary();
-    
+
     // Gauge Stuff
     internal static BRDGauge? gauge = GetJobGauge<BRDGauge>();
     internal static int SongTimerInSeconds => gauge.SongTimer / 1000;
@@ -123,10 +125,10 @@ internal partial class BRD
     internal static bool CanBardWeave => CanWeave();
     internal static bool CanWeaveDelayed => CanDelayedWeave();
     internal static bool CanIronJaws => LevelChecked(IronJaws);
-    internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) && 
+    internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) &&
                                        (HasStatusEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)) &&
                                        (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
-    
+
     //Buff Tracking
     internal static float RagingCD => GetCooldownRemainingTime(RagingStrikes);
     internal static float BattleVoiceCD => GetCooldownRemainingTime(BattleVoice);
@@ -139,26 +141,26 @@ internal partial class BRD
     // Pitch Perfect Logic
     internal static bool PitchPerfected()
     {
-       if (LevelChecked(PitchPerfect) && SongWanderer &&
-            (gauge.Repertoire == 3 || LevelChecked(EmpyrealArrow) && gauge.Repertoire == 2 && EmpyrealCD < 2))
+        if (LevelChecked(PitchPerfect) && SongWanderer &&
+             (gauge.Repertoire == 3 || LevelChecked(EmpyrealArrow) && gauge.Repertoire == 2 && EmpyrealCD < 2))
             return true;
-    
-       return false;
-       
+
+        return false;
+
     }
 
     #region Warden Resolver
     [ActionRetargeting.TargetResolver]
     private static IGameObject? WardenResolver() =>
         GetPartyMembers()
-            .Select(member => member.BattleChara)          
+            .Select(member => member.BattleChara)
             .FirstOrDefault(member => member.IsNotThePlayer() && !member.IsDead && member.IsCleansable() && InActionRange(TheWardensPaeon, member));
     #endregion
-        
+
     #endregion
-    
+
     #region Rotation
-    
+
     #region Flag Stuff
     [Flags]
     private enum Combo
@@ -172,7 +174,7 @@ internal partial class BRD
         Simple = 1 << 3, // 8
         Basic = 1 << 4, // 16
     }
-    
+
     /// <summary>
     ///     Checks whether a given preset is enabled, and the flags match it.
     /// </summary>
@@ -185,7 +187,7 @@ internal partial class BRD
     private static bool IsAoEEnabled(Combo flags, Preset preset) =>
         flags.HasFlag(Combo.AoE) && IsEnabled(preset);
     #endregion
-    
+
     #region OGCD Attacks
     private static bool TryOGCDAttacks(Combo flags, ref uint actionID)
     {
@@ -194,103 +196,103 @@ internal partial class BRD
              flags.HasFlag(Combo.Simple) ||
              IsSTEnabled(flags, Preset.BRD_Adv_Song) ||
              IsAoEEnabled(flags, Preset.BRD_AoE_Adv_Songs);
-        
-        bool buffsEnabled = 
+
+        bool buffsEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_Adv_Buffs) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_Adv_Buffs);
-        
+
         bool oGCDEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_ST_Adv_oGCD) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_Adv_oGCD);
-        
+
         bool poolingEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_Adv_Pooling) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_Pooling);
-        
+
         bool headGrazeEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_Adv_Interrupt) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_Adv_Interrupt);
-        
+
         bool troubadourEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_Adv_Troubadour);
-        
+
         bool naturesMinneEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_Adv_NaturesMinne);
-        
+
         bool secondWindEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_ST_SecondWind) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_SecondWind);
-        
+
         bool wardensEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_ST_Wardens) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_Wardens);
         #endregion
-        
+
         #region Configs
-        
+
         int buffsThresholdST = BRD_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_Adv_Buffs_Threshold : 0; //Boss Check
         int buffsThresholdAoE = BRD_AoE_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_AoE_Adv_Buffs_Threshold : 0; //Boss Check
-        int buffsThreshold = 
-            flags.HasFlag(Combo.Simple) ? 0 : 
+        int buffsThreshold =
+            flags.HasFlag(Combo.Simple) ? 0 :
             flags.HasFlag(Combo.ST) ? buffsThresholdST : buffsThresholdAoE;
-        
-        
-        
-        bool ragingEnabled = flags.HasFlag(Combo.Simple) || 
+
+
+
+        bool ragingEnabled = flags.HasFlag(Combo.Simple) ||
                              flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[0] ||
                              flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[0];
-        
-        bool battleVoiceEnabled = flags.HasFlag(Combo.Simple) || 
+
+        bool battleVoiceEnabled = flags.HasFlag(Combo.Simple) ||
                                   flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[1] ||
                                   flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[1];
-        
-        bool barrageEnabled = flags.HasFlag(Combo.Simple) || 
+
+        bool barrageEnabled = flags.HasFlag(Combo.Simple) ||
                               flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[2] ||
                               flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[2];
 
         bool radiantEnabled = flags.HasFlag(Combo.Simple) ||
                               flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[3] ||
                               flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[3];
-        
-        bool allBuffsEnabled = flags.HasFlag(Combo.Simple) || 
+
+        bool allBuffsEnabled = flags.HasFlag(Combo.Simple) ||
                                radiantEnabled && battleVoiceEnabled && ragingEnabled && barrageEnabled;
-        
-        int seconWindThreshold = 
-            flags.HasFlag(Combo.Simple) ? 40 : 
+
+        int seconWindThreshold =
+            flags.HasFlag(Combo.Simple) ? 40 :
             flags.HasFlag(Combo.ST) ? BRD_STSecondWindThreshold : BRD_AoESecondWindThreshold;
-        
-        bool autoWardenST = flags.HasFlag(Combo.Simple) || 
+
+        bool autoWardenST = flags.HasFlag(Combo.Simple) ||
                             flags.HasFlag(Combo.ST) && BRD_ST_Wardens_Auto ||
                             flags.HasFlag(Combo.AoE) && BRD_AoE_Wardens_Auto;
         #endregion
-        
+
         #region Functions
-       
+
         bool WandererSong()
         {
             if (ActionReady(WanderersMinuet) && !JustSangSong)
             {
                 if (SongNone) // No song, use wanderer first
-                   return true;
-                
-                var canTransition =  IsEnabled(Preset.BRD_Hidden_Song_Extension) 
-                    ? SongTimerInSeconds <= 3 
+                    return true;
+
+                var canTransition = IsEnabled(Preset.BRD_Hidden_Song_Extension)
+                    ? SongTimerInSeconds <= 3
                     : SongTimerInSeconds <= 12 || gauge.Repertoire == 4;
-                
+
                 if (SongArmy && (CanWeaveDelayed || !BardHasTarget) && canTransition) //Transition to wanderer as soon as it is ready
                     return true;
             }
             return false;
         }
-        
+
         bool MagesSong()
         {
             if (ActionReady(MagesBallad) && !JustSangSong && (CanBardWeave || !BardHasTarget))
@@ -303,7 +305,7 @@ internal partial class BRD
             }
             return false;
         }
-        
+
         bool ArmySong()
         {
             if (ActionReady(ArmysPaeon) && !JustSangSong && (CanBardWeave || !BardHasTarget))
@@ -316,42 +318,42 @@ internal partial class BRD
             }
             return false;
         }
-        
+
         bool SongChangeEmpyreal()
         {
             return SongMage && SongTimerInSeconds <= 3 && ActionReady(ArmysPaeon) && ActionReady(EmpyrealArrow) && BardHasTarget && CanBardWeave; // Uses Empyreal before transiitoning to Army if possible
         }
-        
+
         bool SongChangePitchPerfect()
         {
             return SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire > 0 && BardHasTarget && CanBardWeave; // Dumps the Pitch perfect stacks before transition to mages
         }
-        
+
         //Bloodletter & Rain of Death Logic
         bool UsePooledBloodRain()
         {
-            if ((!WasLastAbility(Bloodletter) || !WasLastAbility(RainOfDeath) || !WasLastAbility(HeartbreakShot)) && 
+            if ((!WasLastAbility(Bloodletter) || !WasLastAbility(RainOfDeath) || !WasLastAbility(HeartbreakShot)) &&
                 (EmpyrealCD > 2 || !LevelChecked(EmpyrealArrow)))
             {
-                if (BloodletterCharges == 3 && TraitLevelChecked(Traits.EnhancedBloodletter) || 
+                if (BloodletterCharges == 3 && TraitLevelChecked(Traits.EnhancedBloodletter) ||
                     BloodletterCharges == 2 && !TraitLevelChecked(Traits.EnhancedBloodletter) ||
                     BloodletterCharges > 0 && (BuffWindow || RagingCD > 30))
-                    return true; 
+                    return true;
             }
             return false;
         }
-        
+
         //Sidewinder Logic
         bool UsePooledSidewinder()
         {
             if (BuffWindow && RagingStrikesDuration < 18 || RagingCD > 30)
                 return true;
-            
+
             return false;
         }
-        
+
         #endregion
-        
+
         #region Songs
         if (songsEnabled && InCombat() && (CanWeave() || !BardHasTarget))
         {
@@ -382,7 +384,7 @@ internal partial class BRD
             }
         }
         #endregion
-        
+
         #region Buffs
         if (buffsEnabled && CanWeave() && GetTargetHPPercent() > buffsThreshold)
         {
@@ -435,14 +437,14 @@ internal partial class BRD
             }
         }
         #endregion
-        
+
         #region OGCD Attacks
         if (Role.CanHeadGraze(headGrazeEnabled, WeaveTypes.DelayWeave))
         {
             actionID = Role.HeadGraze;
             return true;
         }
-        
+
         if (CanWeave() && oGCDEnabled && (GetCooldownRemainingTime(RagingStrikes) > 2.7 || !buffsEnabled))
         {
             if (ActionReady(EmpyrealArrow))
@@ -489,9 +491,9 @@ internal partial class BRD
             }
         }
         #endregion
-        
+
         #region Mitigation and Healing
-        
+
         if (flags.HasFlag(Combo.ST) && troubadourEnabled && ActionReady(Troubadour) && GroupDamageIncoming() && CanWeave() &&
             NumberOfAlliesInRange(Troubadour) >= GetPartyMembers().Count * .75 &&
             !JustUsed(NaturesMinne) && !HasAnyStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne, DNC.Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
@@ -507,7 +509,7 @@ internal partial class BRD
             actionID = NaturesMinne;
             return true;
         }
-       
+
         if (secondWindEnabled && Role.CanSecondWind(seconWindThreshold) && CanWeave())
         {
             actionID = Role.SecondWind;
@@ -521,65 +523,65 @@ internal partial class BRD
                 actionID = TheWardensPaeon;
                 return true;
             }
-            
+
             if (autoWardenST && WardenResolver() is not null)
             {
                 actionID = TheWardensPaeon.Retarget(actionID, WardenResolver);
                 return true;
             }
         }
-        
+
         #endregion
-        
+
         return false;
     }
     #endregion
-    
+
     #region GCD Attacks
     private static bool TryGCDAttacks(Combo flags, ref uint actionID)
     {
         #region Enables
         bool stDotEnabled =
             flags.HasFlag(Combo.Simple) || IsSTEnabled(flags, Preset.BRD_Adv_DoT);
-        
+
         bool ironjawsEnabled =
             flags.HasFlag(Combo.Simple) || BRD_Adv_DoT_Options[0];
-        
+
         bool dotApplicationEnabled =
             flags.HasFlag(Combo.Simple) || BRD_Adv_DoT_Options[1];
-        
+
         bool ragingjawsEnabled =
             flags.HasFlag(Combo.Simple) || BRD_Adv_DoT_Options[2];
-        
+
         bool multidotEnabled =
             flags.HasFlag(Combo.Simple) || IsSTEnabled(flags, Preset.BRD_Adv_DoT) && BRD_Adv_DoT_Options[3] || IsAoEEnabled(flags, Preset.BRD_AoE_Adv_Multidot);
-        
-        bool ragingEnabled = flags.HasFlag(Combo.Simple) || 
+
+        bool ragingEnabled = flags.HasFlag(Combo.Simple) ||
                              flags.HasFlag(Combo.ST) && BRD_Adv_Buffs_Options[0] ||
                              flags.HasFlag(Combo.AoE) && BRD_AoE_Adv_Buffs_Options[0];
-        
+
         bool radiantEncoreEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_Adv_BuffsEncore) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_BuffsEncore);
-        
+
         bool apexComboEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_ST_ApexArrow) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_ApexArrow);
-        
+
         bool apexPoolingEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_Adv_ApexPooling) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_ApexPooling);
-        
+
         bool resonantArrowEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.BRD_Adv_BuffsResonant) ||
             IsAoEEnabled(flags, Preset.BRD_AoE_BuffsResonant);
-        
+
         #endregion
-        
+
         #region Configs
         int ComputeMultidotHpThreshold(IGameObject? x)
         {
@@ -597,7 +599,7 @@ internal partial class BRD
                 }
                 return BRD_ST_DPS_DotTrashOption;
             }
-            
+
             if (flags.HasFlag(Combo.AoE))
             {
                 if (InBossEncounter())
@@ -609,17 +611,17 @@ internal partial class BRD
 
             return 0;
         }
-        
-        int computeMultidotRefresh = flags.HasFlag(Combo.Simple) ? 5 : flags.HasFlag(Combo.ST) ? BRD_Adv_DoT_Refresh : BRD_AoE_Adv_Multidot_Refresh; 
+
+        int computeMultidotRefresh = flags.HasFlag(Combo.Simple) ? 5 : flags.HasFlag(Combo.ST) ? BRD_Adv_DoT_Refresh : BRD_AoE_Adv_Multidot_Refresh;
 
         int ragingJawsRenewTime =
             flags.HasFlag(Combo.Simple) ? 5 : BRD_RagingJawsRenewTime;
-        
+
         #endregion
 
         #region Functions
         int computeRefresh() => IsEnabled(Preset.BRD_ST_SimpleMode) ? 4 : BRD_Adv_DoT_Refresh;
-        
+
         //Iron Jaws dot refreshing
         bool UseIronJaws()
         {
@@ -645,14 +647,14 @@ internal partial class BRD
         {
             if (x is null)
                 return 0;
-            
+
             if (InBossEncounter())
             {
                 return x.IsBoss() ? BRD_ST_DPS_DotBossOption : BRD_ST_DPS_DotBossAddsOption;
             }
             return BRD_ST_DPS_DotTrashOption;
         }
-        
+
         // Pooled Apex Logic
         bool UsePooledApex()
         {
@@ -664,7 +666,7 @@ internal partial class BRD
             return false;
         }
         #endregion
-        
+
         #region ST Dot Management
         if (flags.HasFlag(Combo.ST) && stDotEnabled && GetTargetHPPercent() > ComputeHpThreshold(CurrentTarget))
         {
@@ -673,7 +675,7 @@ internal partial class BRD
                 actionID = OriginalHook(IronJaws);
                 return true;
             }
-            
+
             if (dotApplicationEnabled && ApplyBlueDot())
             {
                 actionID = OriginalHook(Stormbite);
@@ -685,7 +687,7 @@ internal partial class BRD
                 actionID = OriginalHook(VenomousBite);
                 return true;
             }
-            
+
             if (ragingjawsEnabled && RagingJawsRefresh() && RagingStrikesDuration < ragingJawsRenewTime)
             {
                 actionID = OriginalHook(IronJaws);
@@ -693,11 +695,11 @@ internal partial class BRD
             }
         }
         #endregion
-        
+
         #region GCDS
 
         var widevolleyEnemyCount = NumberOfEnemiesInRange(OriginalHook(WideVolley));
-        
+
         if (flags.HasFlag(Combo.AoE) && HasStatusEffect(Buffs.Barrage) && widevolleyEnemyCount >= 3)
         {
             actionID = OriginalHook(WideVolley); //Uses on 3 or more. 
@@ -734,7 +736,7 @@ internal partial class BRD
             actionID = ResonantArrow;
             return true;
         }
-        
+
         if (flags.HasFlag(Combo.AoE) && HasStatusEffect(Buffs.HawksEye) && widevolleyEnemyCount >= 2)
         {
             actionID = OriginalHook(WideVolley); //Uses on 2 or more. 
@@ -745,7 +747,7 @@ internal partial class BRD
             actionID = OriginalHook(StraightShot);
             return true;
         }
-            
+
         #endregion
 
         #region Multidot Management
@@ -760,7 +762,7 @@ internal partial class BRD
             var blueTarget = SimpleTarget.DottableEnemy(blueDotAction, blueDotDebuffID, ComputeMultidotHpThreshold, computeMultidotRefresh);
             var purpleTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, ComputeMultidotHpThreshold, computeMultidotRefresh);
             #endregion
-           
+
             if (ironTarget is not null && LevelChecked(IronJaws))
             {
                 actionID = IronJaws.Retarget(actionID, ironTarget);
@@ -784,7 +786,7 @@ internal partial class BRD
         return false;
     }
     #endregion
-    
+
     #endregion
 
     #region Openers
@@ -804,7 +806,25 @@ internal partial class BRD
         return Opener1.LevelChecked ? Opener1 : WrathOpener.Dummy;
     }
 
-    internal class BRDStandard : WrathOpener
+    internal abstract class BRDOpenerBase : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+        public override int MaxOpenerLevel => 109;
+
+        public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
+
+        internal override UserData ContentCheckConfig => BRD_Balance_Content;
+        internal override bool IncludePot => BRD_Opener_Potion;
+        public override bool HasCooldowns() =>
+            IsOffCooldown(WanderersMinuet) &&
+            IsOffCooldown(BattleVoice) &&
+            IsOffCooldown(RadiantFinale) &&
+            IsOffCooldown(RagingStrikes) &&
+            IsOffCooldown(Barrage) &&
+            IsOffCooldown(Sidewinder);
+    }
+
+    internal class BRDStandard : BRDOpenerBase
     {
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -812,6 +832,7 @@ internal partial class BRD
             WanderersMinuet,
             EmpyrealArrow,
             CausticBite,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             BattleVoice,
             BurstShot,
             RadiantFinale,
@@ -836,21 +857,8 @@ internal partial class BRD
         [
             5
         ];
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
-        public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
-
-        internal override UserData ContentCheckConfig => BRD_Balance_Content;
-        public override bool HasCooldowns() =>
-            IsOffCooldown(WanderersMinuet) &&
-            IsOffCooldown(BattleVoice) &&
-            IsOffCooldown(RadiantFinale) &&
-            IsOffCooldown(RagingStrikes) &&
-            IsOffCooldown(Barrage) &&
-            IsOffCooldown(Sidewinder);
     }
-    internal class BRDAdjusted : WrathOpener
+    internal class BRDAdjusted : BRDOpenerBase
     {
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -859,6 +867,7 @@ internal partial class BRD
             WanderersMinuet,
             EmpyrealArrow,
             CausticBite,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             BattleVoice,
             BurstShot,
             RadiantFinale,
@@ -877,27 +886,14 @@ internal partial class BRD
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([7, 10, 17, 18, 20], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
+            ([8, 11, 18, 19, 21], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
-            6
+            7
         ];
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
-        public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
-
-        internal override UserData ContentCheckConfig => BRD_Balance_Content;
-        public override bool HasCooldowns() =>
-            IsOffCooldown(WanderersMinuet) &&
-            IsOffCooldown(BattleVoice) &&
-            IsOffCooldown(RadiantFinale) &&
-            IsOffCooldown(RagingStrikes) &&
-            IsOffCooldown(Barrage) &&
-            IsOffCooldown(Sidewinder);
     }
-    internal class BRDComfy : WrathOpener
+    internal class BRDComfy : BRDOpenerBase
     {
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -905,6 +901,7 @@ internal partial class BRD
             HeartbreakShot,
             WanderersMinuet,
             CausticBite,
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             EmpyrealArrow,
             RadiantFinale,
             BurstShot,
@@ -922,23 +919,13 @@ internal partial class BRD
             IronJaws,
             BurstShot
         ];
+
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([7, 10, 16, 18, 20], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
+            ([8, 11, 17, 19, 21], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-        public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
-        internal override UserData ContentCheckConfig => BRD_Balance_Content;
-        public override bool HasCooldowns() =>
-            IsOffCooldown(WanderersMinuet) &&
-            IsOffCooldown(BattleVoice) &&
-            IsOffCooldown(RadiantFinale) &&
-            IsOffCooldown(RagingStrikes) &&
-            IsOffCooldown(Barrage) &&
-            IsOffCooldown(Sidewinder);
     }
-    internal class BRDEarly : WrathOpener
+    internal class BRDEarly : BRDOpenerBase
     {
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -946,6 +933,7 @@ internal partial class BRD
                 WanderersMinuet,
                 BattleVoice,
             CausticBite, //2.5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
                 RagingStrikes,
                 RadiantFinale,
             BurstShot, //5
@@ -964,19 +952,8 @@ internal partial class BRD
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([7, 9, 15, 18, 19], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
+            ([8, 10, 16, 19, 20], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-        public override Preset Preset => Preset.BRD_ST_Adv_Balance_Standard;
-        internal override UserData ContentCheckConfig => BRD_Balance_Content;
-        public override bool HasCooldowns() =>
-            IsOffCooldown(WanderersMinuet) &&
-            IsOffCooldown(BattleVoice) &&
-            IsOffCooldown(RadiantFinale) &&
-            IsOffCooldown(RagingStrikes) &&
-            IsOffCooldown(Barrage) &&
-            IsOffCooldown(Sidewinder);
     }
     #endregion
 }

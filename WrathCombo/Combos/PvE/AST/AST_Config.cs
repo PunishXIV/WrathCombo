@@ -1,4 +1,5 @@
 ﻿using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using System.Linq;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -93,7 +94,8 @@ internal partial class AST
             AST_ST_DPS_CombustUptime_TwoTarget = new("AST_ST_DPS_CombustUptime_TwoTarget"),
             AST_ST_DPS_OverwriteHealCards = new("AST_ST_DPS_OverwriteHealCards"),
             AST_AOE_DPS_OverwriteHealCards = new("AST_AOE_DPS_OverwriteHealCards"),
-            AST_QuickTarget_Manuals = new("AST_QuickTarget_Manuals", true);
+            AST_QuickTarget_Manuals = new("AST_QuickTarget_Manuals", true),
+            AST_Opener_Potion = new("AST_Opener_Potion");
         public static UserFloat
             AST_AOE_DPS_DoT_Reapply = new("AST_AOE_DPS_DoT_Reapply", 2),
             AST_ST_DPS_CombustUptime_Threshold = new("AST_ST_DPS_CombustUptime_Threshold");
@@ -117,9 +119,11 @@ internal partial class AST
                 #region DPS
                 case Preset.AST_ST_DPS_Opener:
                     DrawBossOnlyChoice(AST_ST_DPS_Balance_Content);
-                    ImGui.NewLine();
-                    DrawHorizontalRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(Generics.Use0, EarthlyStar.ActionName()), Text.FormatAndCache(AST_Config.PlacesEarthlyStarInTheOpener, EarthlyStar.ActionName()), 0);
-                    DrawHorizontalRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(Generics.DontUse0, EarthlyStar.ActionName()), Text.FormatAndCache(AST_Config.DoesNotUseEarthlyStarInTheOpener, EarthlyStar.ActionName()), 1);
+                    DrawOpenerPotionChoice(AST_Opener_Potion);
+                    ImGuiEx.TextUnderlined($"{EarthlyStar.ActionName()} Settings");
+                    ImGui.Spacing();
+                    DrawRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(Generics.Use0, EarthlyStar.ActionName()), Text.FormatAndCache(AST_Config.PlacesEarthlyStarInTheOpener, EarthlyStar.ActionName()), 0, descriptionAsTooltip: true);
+                    DrawRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(Generics.DontUse0, EarthlyStar.ActionName()), Text.FormatAndCache(AST_Config.DoesNotUseEarthlyStarInTheOpener, EarthlyStar.ActionName()), 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.AST_ST_DPS:

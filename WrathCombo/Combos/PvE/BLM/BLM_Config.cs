@@ -1,3 +1,4 @@
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -16,15 +17,17 @@ internal partial class BLM
                 #region ST
 
                 case Preset.BLM_ST_Opener:
-                    DrawHorizontalRadioButton(BLM_SelectedOpener,
-                        Generics.StandardOpener,
-                        Generics.UsesStandardOpener, 0);
-
-                    DrawHorizontalRadioButton(BLM_SelectedOpener,
-                        FormatAndCache(Generics.Action_Opener, Flare.ActionName()),
-                        FormatAndCache(Generics.Use_0_Opener, Flare.ActionName()), 1);
-
                     DrawBossOnlyChoice(BLM_Balance_Content);
+                    DrawOpenerPotionChoice(BLM_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    DrawRadioButton(BLM_SelectedOpener,
+                        Generics.StandardOpener,
+                        Generics.UsesStandardOpener, 0, descriptionAsTooltip: true);
+
+                    DrawRadioButton(BLM_SelectedOpener,
+                        FormatAndCache(Generics.Action_Opener, Flare.ActionName()),
+                        FormatAndCache(Generics.Use_0_Opener, Flare.ActionName()), 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.BLM_ST_LeyLines:
@@ -328,6 +331,7 @@ internal partial class BLM
             BLM_ST_ThunderRefresh = new("BLM_ST_ThunderRefresh", 2.5f);
 
         public static UserBool
+            BLM_Opener_Potion = new("BLM_Opener_Potion"),
             BLM_AM_FieldMouseover = new("BLM_AM_FieldMouseover"),
             BLM_AmplifierXenoCD = new("BLM_AmplifierXenoCD"),
             BLM_Fire4_FlareStar = new("BLM_Fire4_FlareStar"),
