@@ -811,11 +811,9 @@ internal unsafe class AutoRotationController
 
             IGameObject? target = null;
             // Determine target according to rotation mode and AoE settings
-            if (cfg.DPSRotationMode == DPSRotationMode.Manual)
-            {
-                var useAutoTarget = cfg.DPSSettings.AoEIgnoreManual && (!cfg.DPSSettings.AoEOnlyWhenTargeting || manualTarget is not null);
-                target = useAutoTarget ? autoTarget : manualTarget;
-            }
+
+            var useAutoTarget = cfg.DPSRotationMode == DPSRotationMode.Manual && cfg.DPSSettings.AoEIgnoreManual && (!cfg.DPSSettings.AoEOnlyWhenTargeting || manualTarget is not null);
+            target = useAutoTarget ? autoTarget : manualTarget;
 
             if ((target is not { } t || (!t.IsHostile() && !t.IsFriendly())) && cfg.PauseWhenNoTarget) return true;
 
