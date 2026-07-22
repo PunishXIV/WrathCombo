@@ -182,6 +182,13 @@ internal partial class VPR
     private static bool InTwinbladeCombo =>
         UsedVicewinder || UsedHuntersCoil || UsedSwiftskinsCoil ||
         UsedVicepit || UsedHuntersDen || UsedSwiftskinsDen;
+    
+    private static bool OutOfFollowUpRange =>
+        HasStatusEffect(Buffs.Reawakened)
+            ? !InActionRange(Reawaken)
+            : InTwinbladeCombo
+                ? !InActionRange(Vicewinder)
+                : !InMeleeRange();
 
     private static bool ShouldHoldNewTwinblade =>
         ShouldHoldTwinbladeForIre && !InTwinbladeCombo && !IsEmpowermentExpiring(4);
@@ -428,9 +435,8 @@ internal partial class VPR
     {
         if (!ActionReady(UncoiledFury) || !InActionRange(UncoiledFury))
             return false;
-        
-        if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget() &&
-            !InTwinbladeCombo)
+
+        if (!onAoE && HasRattlingCoilStacks && OutOfFollowUpRange && HasBattleTarget())
             return true;
 
         if (!CanUseUncoiledFuryInRotation(onAoE))
@@ -510,8 +516,14 @@ internal partial class VPR
          IsEmpowermentExpiring(4) ||
          IreCD >= GCD * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
 
-    private static bool CanVicewinderCombo(ref uint actionId, bool vicewinderBuffPrio = false)
+    private static bool CanVicewinderCombo(
+        ref uint actionId,
+        bool vicewinderBuffPrio = false,
+        bool preferRangedWhenOor = false)
     {
+        if (preferRangedWhenOor && !InActionRange(Vicewinder))
+            return false;
+
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
             LevelChecked(Vicewinder) &&
             !HasStatusEffect(Buffs.Reawakened))

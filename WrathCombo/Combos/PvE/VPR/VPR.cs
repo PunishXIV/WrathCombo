@@ -43,7 +43,7 @@ internal partial class VPR : Melee
                     return Role.LegSweep;
             }
 
-            if (CanVicewinderCombo(ref actionID))
+            if (CanVicewinderCombo(ref actionID, preferRangedWhenOor: true))
                 return actionID;
 
             if (CanReawaken())
@@ -59,9 +59,8 @@ internal partial class VPR : Melee
                 return UncoiledFury;
 
             if (ActionReady(WrithingSnap) &&
-                !InMeleeRange() && HasBattleTarget() &&
-                !HasRattlingCoilStacks &&
-                !InTwinbladeCombo)
+                OutOfFollowUpRange && HasBattleTarget() &&
+                !HasRattlingCoilStacks)
                 return WrithingSnap;
 
             return UseCombo(actionID, false, true, true);
@@ -168,7 +167,9 @@ internal partial class VPR : Melee
             }
 
             if (IsEnabled(Preset.VPR_ST_VicewinderCombo) &&
-                CanVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio))
+                CanVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio,
+                    preferRangedWhenOor: IsEnabled(Preset.VPR_ST_UncoiledFury) ||
+                                         IsEnabled(Preset.VPR_ST_RangedUptime)))
                 return actionID;
 
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
@@ -190,10 +191,9 @@ internal partial class VPR : Melee
                 CanUseUncoiledFury(stHoldCharges: VPR_ST_UncoiledFuryHoldCharges, stHpThreshold: VPR_ST_UncoiledFuryAlwaysUse))
                 return UncoiledFury;
 
-            if (!InMeleeRange() && HasBattleTarget() &&
+            if (OutOfFollowUpRange && HasBattleTarget() &&
                 IsEnabled(Preset.VPR_ST_RangedUptime) &&
                 ActionReady(WrithingSnap) &&
-                !InTwinbladeCombo &&
                 (IsEnabled(Preset.VPR_ST_UncoiledFury) && !HasRattlingCoilStacks ||
                  IsNotEnabled(Preset.VPR_ST_UncoiledFury)))
                 return WrithingSnap;
