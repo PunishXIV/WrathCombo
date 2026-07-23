@@ -13,7 +13,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs))
+                return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -59,7 +60,7 @@ internal partial class VPR : Melee
                 return UncoiledFury;
 
             if (ActionReady(WrithingSnap) &&
-                OutOfFollowUpRange && HasBattleTarget() &&
+                !InMeleeRange() && HasBattleTarget() &&
                 !HasRattlingCoilStacks)
                 return WrithingSnap;
 
@@ -73,7 +74,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw))
+                return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -124,7 +126,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs))
+                return actionID;
 
             if (IsEnabled(Preset.VPR_ST_Opener) &&
                 Opener().FullOpener(ref actionID))
@@ -168,8 +171,8 @@ internal partial class VPR : Melee
 
             if (IsEnabled(Preset.VPR_ST_VicewinderCombo) &&
                 CanVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio,
-                    preferRangedWhenOor: IsEnabled(Preset.VPR_ST_UncoiledFury) ||
-                                         IsEnabled(Preset.VPR_ST_RangedUptime)))
+                    IsEnabled(Preset.VPR_ST_UncoiledFury) ||
+                    IsEnabled(Preset.VPR_ST_RangedUptime)))
                 return actionID;
 
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
@@ -191,7 +194,7 @@ internal partial class VPR : Melee
                 CanUseUncoiledFury(stHoldCharges: VPR_ST_UncoiledFuryHoldCharges, stHpThreshold: VPR_ST_UncoiledFuryAlwaysUse))
                 return UncoiledFury;
 
-            if (OutOfFollowUpRange && HasBattleTarget() &&
+            if (!InMeleeRange() && HasBattleTarget() &&
                 IsEnabled(Preset.VPR_ST_RangedUptime) &&
                 ActionReady(WrithingSnap) &&
                 (IsEnabled(Preset.VPR_ST_UncoiledFury) && !HasRattlingCoilStacks ||

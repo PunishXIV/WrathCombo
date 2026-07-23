@@ -177,18 +177,11 @@ internal partial class VPR
         InBossEncounter();
 
     private static bool ShouldHoldTwinbladeForIre =>
-        UsesBurstAlignment && LevelChecked(SerpentsIre) && IreCD > 0 && IreCD <= IreDualWieldWindow;
+        UsesBurstAlignment && LevelChecked(SerpentsIre) && IreCD is > 0 and <= IreDualWieldWindow;
 
     private static bool InTwinbladeCombo =>
         UsedVicewinder || UsedHuntersCoil || UsedSwiftskinsCoil ||
         UsedVicepit || UsedHuntersDen || UsedSwiftskinsDen;
-    
-    private static bool OutOfFollowUpRange =>
-        HasStatusEffect(Buffs.Reawakened)
-            ? !InActionRange(Reawaken)
-            : InTwinbladeCombo
-                ? !InActionRange(Vicewinder)
-                : !InMeleeRange();
 
     private static bool ShouldHoldNewTwinblade =>
         ShouldHoldTwinbladeForIre && !InTwinbladeCombo && !IsEmpowermentExpiring(4);
@@ -337,13 +330,13 @@ internal partial class VPR
         if (!enabled)
             return false;
 
-        if (HasStatusEffect(Buffs.PoisedForTwinfang))
+        if (HasStatusEffect(Buffs.PoisedForTwinfang) && InActionRange(OriginalHook(Twinfang)))
         {
             action = OriginalHook(Twinfang);
             return true;
         }
 
-        if (HasStatusEffect(Buffs.PoisedForTwinblood))
+        if (HasStatusEffect(Buffs.PoisedForTwinblood) && InActionRange(OriginalHook(Twinblood)))
         {
             action = OriginalHook(Twinblood);
             return true;
@@ -379,17 +372,15 @@ internal partial class VPR
             return false;
         }
 
-        if (requireMelee && !InMeleeRange() &&
-            !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.SwiftskinsVenom))
-            return false;
-
-        if (HasStatusEffect(Buffs.HuntersVenom))
+        if (HasStatusEffect(Buffs.HuntersVenom) &&
+            (!requireMelee || ignoreRange || InActionRange(OriginalHook(Twinfang))))
         {
             action = OriginalHook(Twinfang);
             return true;
         }
 
-        if (HasStatusEffect(Buffs.SwiftskinsVenom))
+        if (HasStatusEffect(Buffs.SwiftskinsVenom) &&
+            (!requireMelee || ignoreRange || InActionRange(OriginalHook(Twinblood))))
         {
             action = OriginalHook(Twinblood);
             return true;
@@ -436,7 +427,7 @@ internal partial class VPR
         if (!ActionReady(UncoiledFury) || !InActionRange(UncoiledFury))
             return false;
 
-        if (!onAoE && HasRattlingCoilStacks && OutOfFollowUpRange && HasBattleTarget())
+        if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget())
             return true;
 
         if (!CanUseUncoiledFuryInRotation(onAoE))
@@ -521,7 +512,7 @@ internal partial class VPR
         bool vicewinderBuffPrio = false,
         bool preferRangedWhenOor = false)
     {
-        if (preferRangedWhenOor && !InActionRange(Vicewinder))
+        if (preferRangedWhenOor && !InMeleeRange())
             return false;
 
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
