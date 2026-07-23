@@ -563,7 +563,7 @@ public static class ActionWatching
                     return false;
 
                 // Determine if the queued action conflicts with the current mudra state.
-                var queuedProblem = (queuedAct > 0 && queuedAct != NIN.Ninjutsu && !NIN.MudraSigns.Contains(queuedAct) && !NIN.NormalJutsus.Contains(queuedAct)) || queuedAct == LastAction;
+                var queuedProblem = (queuedAct > 0 && queuedAct != NIN.Ninjutsu && !NIN.MudraSigns.Contains(queuedAct) && !NIN.NormalJutsus.Contains(queuedAct) && !NIN.TCJJutsus.Contains(queuedAct)) || queuedAct == LastAction;
 
                 if (NIN.InMudra && (queuedProblem || NIN.MudraUsed(replacedWith)))
                 {
