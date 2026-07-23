@@ -126,11 +126,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs))
-                return actionID;
-
-            if (IsEnabled(Preset.VPR_ST_Opener) &&
-                Opener().FullOpener(ref actionID))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs) ||
+                IsEnabled(Preset.VPR_ST_Opener) && Opener().FullOpener(ref actionID))
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -215,7 +212,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw))
+                return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
