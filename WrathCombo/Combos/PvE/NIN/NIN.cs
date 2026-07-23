@@ -1,7 +1,5 @@
-using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
@@ -812,8 +810,7 @@ internal partial class NIN : Melee
         {
             if (!MudraSigns.Any(x => x == actionID))
                 return actionID;
-
-            // Let the game (or NIN_TCJ) resolve TCJ mudras — Alt paths remap Jin→Doton etc.
+            
             if (HasStatusEffect(Buffs.TenChiJin))
                 return actionID;
 
