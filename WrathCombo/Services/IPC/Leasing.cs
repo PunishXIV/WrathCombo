@@ -531,6 +531,7 @@ public partial class Leasing
     (Guid lease, CancellationReasonEnum cancellationReason,
         string additionalInfo = "")
     {
+#if !DEBUG
         if (cancellationReason == CancellationReasonEnum.WrathUserManuallyCancelled)
             _userRevokedTemporaryBlacklist.Add(
                 lease,
@@ -538,6 +539,7 @@ public partial class Leasing
                     Registrations[lease].ConfigurationsHash,
                     DateTime.Now)
             );
+#endif
 
         Registrations[lease].Cancel(cancellationReason, additionalInfo);
         Registrations.Remove(lease);
@@ -552,7 +554,7 @@ public partial class Leasing
         P.IPCSearch.UpdateActiveJobPresets();
     }
 
-    #endregion
+#endregion
 
     #region Fine-Grained Combo Methods
 

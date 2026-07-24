@@ -194,6 +194,7 @@ internal class Debug : ConfigWindow, IDisposable
                 if (config != null)
                 {
                     DebugConfig = true;
+                    _wrathLease = null;
                     _previousConfig = Service.Configuration;
                     Service.Configuration = config;
                     P.IPC = Provider.Init();
@@ -312,6 +313,7 @@ internal class Debug : ConfigWindow, IDisposable
                     Util.ShowStruct(&JobGaugeManager.Instance()->Scholar);
                     break;
                 case Job.NIN:
+                    CustomStyleText($"In Mudra:", $"{NIN.InMudra}");
                     CustomStyleText($"First Mudra:", $"{NIN.FirstMudra}");
                     CustomStyleText($"Second Mudra:", $"{NIN.SecondMudra}");
                     CustomStyleText($"Third Mudra:", $"{NIN.ThirdMudra}");
@@ -1524,6 +1526,7 @@ internal class Debug : ConfigWindow, IDisposable
     {
         _debugConfig = string.Empty;
         DebugConfig = false;
+        _wrathLease = null;
         Service.Configuration =
             _previousConfig ??
             Svc.PluginInterface.GetPluginConfig() as Configuration ??

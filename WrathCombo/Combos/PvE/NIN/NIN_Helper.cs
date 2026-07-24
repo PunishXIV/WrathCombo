@@ -25,7 +25,7 @@ internal partial class NIN
     {
         get
         {
-            return ActionWatching.LastAction != LastMudra && MudraSigns.Any(x => x == ActionWatching.LastAction);
+            return InMudra && ActionWatching.LastAction != LastMudra && MudraSigns.Any(x => x == ActionWatching.LastAction);
         }
     }
 
@@ -46,7 +46,7 @@ internal partial class NIN
     }
 
     public static uint CurrentNinjutsu => OriginalHook(Ninjutsu);
-    internal static bool InMudra => JutsuFromFlags > 0 || JustUsed(Ten, 1) || JustUsed(Chi, 1) || JustUsed(Jin, 1) || JustUsed(TenCombo, 1) || JustUsed(ChiCombo, 1) || JustUsed(JinCombo, 1);
+    internal static bool InMudra => !NormalJutsus.Contains(ActionWatching.LastAction) && (JutsuFromFlags > 0 || JustUsed(Ten, 1) || JustUsed(Chi, 1) || JustUsed(Jin, 1) || JustUsed(TenCombo, 1) || JustUsed(ChiCombo, 1) || JustUsed(JinCombo, 1));
 
     internal static MudraFlags Flags => HasStatusEffect(Buffs.Mudra) ? (MudraFlags)(GetStatusEffect(Buffs.Mudra).Param) : HasStatusEffect(Buffs.TenChiJin) ? (MudraFlags)(GetStatusEffect(Buffs.TenChiJin).Param) : MudraFlags.None;
     internal static MudraFlags FirstMudra => Flags & MudraFlags.JinFirst;
@@ -439,7 +439,6 @@ internal partial class NIN
                 {
                     Svc.Log.Debug($"{AssociatedPreset} -> {CurrentMudra} reset to none");
                     CurrentMudra = MudraState.None;
-                    ActionWatching.LastAction = 0;
                 }
             }
         }
