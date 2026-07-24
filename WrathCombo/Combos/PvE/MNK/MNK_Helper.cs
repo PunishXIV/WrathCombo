@@ -718,7 +718,8 @@ internal partial class MNK
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
-            ([2], () => JustUsed(FormShift, 30f))
+            ([2], () => JustUsed(FormShift, 30f)),
+            ([11], () => Chakra < 5)
         ];
 
         public override bool HasCooldowns() =>
@@ -774,7 +775,8 @@ internal partial class MNK
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
-            ([2], () => JustUsed(FormShift, 30f))
+            ([2], () => JustUsed(FormShift, 30f)),
+            ([11], () => Chakra < 5)
         ];
 
         public override bool HasCooldowns() =>
@@ -829,7 +831,8 @@ internal partial class MNK
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
-            ([2], () => JustUsed(FormShift, 30f))
+            ([2], () => JustUsed(FormShift, 30f)),
+            ([10], () => Chakra < 5)
         ];
 
         public override bool HasCooldowns() =>

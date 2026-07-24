@@ -13,7 +13,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs))
+                return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -43,7 +44,7 @@ internal partial class VPR : Melee
                     return Role.LegSweep;
             }
 
-            if (CanVicewinderCombo(ref actionID))
+            if (CanVicewinderCombo(ref actionID, preferRangedWhenOor: true))
                 return actionID;
 
             if (CanReawaken())
@@ -60,8 +61,7 @@ internal partial class VPR : Melee
 
             if (ActionReady(WrithingSnap) &&
                 !InMeleeRange() && HasBattleTarget() &&
-                !HasRattlingCoilStacks &&
-                !InTwinbladeCombo && !HasStatusEffect(Buffs.Reawakened))
+                !HasRattlingCoilStacks)
                 return WrithingSnap;
 
             return UseCombo(actionID, false, true, true);
@@ -74,7 +74,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw))
+                return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -125,10 +126,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs)) return actionID;
-
-            if (IsEnabled(Preset.VPR_ST_Opener) &&
-                Opener().FullOpener(ref actionID))
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs) ||
+                IsEnabled(Preset.VPR_ST_Opener) && Opener().FullOpener(ref actionID))
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -168,7 +167,9 @@ internal partial class VPR : Melee
             }
 
             if (IsEnabled(Preset.VPR_ST_VicewinderCombo) &&
-                CanVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio))
+                CanVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio,
+                    IsEnabled(Preset.VPR_ST_UncoiledFury) ||
+                    IsEnabled(Preset.VPR_ST_RangedUptime)))
                 return actionID;
 
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
@@ -193,7 +194,6 @@ internal partial class VPR : Melee
             if (!InMeleeRange() && HasBattleTarget() &&
                 IsEnabled(Preset.VPR_ST_RangedUptime) &&
                 ActionReady(WrithingSnap) &&
-                !InTwinbladeCombo && !HasStatusEffect(Buffs.Reawakened) &&
                 (IsEnabled(Preset.VPR_ST_UncoiledFury) && !HasRattlingCoilStacks ||
                  IsNotEnabled(Preset.VPR_ST_UncoiledFury)))
                 return WrithingSnap;
@@ -212,7 +212,8 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw))
+                return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;

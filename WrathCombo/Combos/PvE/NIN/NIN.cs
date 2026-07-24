@@ -1,7 +1,5 @@
-using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
@@ -684,6 +682,9 @@ internal partial class NIN : Melee
             if (actionID is not (Ten or Chi or Jin) || !HasStatusEffect(Buffs.Mudra))
                 return actionID;
 
+            if (HasStatusEffect(Buffs.TenChiJin))
+                return actionID;
+
             int mudrapath = NIN_SimpleMudra_Choice;
 
             if (mudrapath == 1)
@@ -808,6 +809,9 @@ internal partial class NIN : Melee
         protected override uint Invoke(uint actionID)
         {
             if (!MudraSigns.Any(x => x == actionID))
+                return actionID;
+            
+            if (HasStatusEffect(Buffs.TenChiJin))
                 return actionID;
 
             if (JutsuFromFlags == Rabbit)
