@@ -651,12 +651,34 @@ internal partial class BLM
     internal static BLMStandardOpener StandardOpener = new();
     internal static BLMFlareOpener FlareOpener = new();
 
-    internal class BLMStandardOpener : WrathOpener
+    internal abstract class BLMOpenerBase : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 100;
 
+        public override Preset Preset => Preset.BLM_ST_Opener;
+
+        internal override UserData ContentCheckConfig => BLM_Balance_Content;
+        internal override bool IncludePot => BLM_Opener_Potion;
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([7], () => HasStatusEffect(Buffs.LeyLines))
+        ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } = [7];
+
+        public override bool HasCooldowns() =>
+            MP.Full &&
+            IsOffCooldown(Manafont) &&
+            GetRemainingCharges(Triplecast) >= 1 &&
+            GetRemainingCharges(LeyLines) >= 1 &&
+            IsOffCooldown(Role.Swiftcast) &&
+            IsOffCooldown(Amplifier);
+    }
+
+    internal class BLMStandardOpener : BLMOpenerBase
+    {
         public override List<uint> OpenerActions { get; set; } =
         [
             Fire3,
@@ -692,34 +714,10 @@ internal partial class BLM
             Paradox,
             Fire3
         ];
-
-        public override Preset Preset => Preset.BLM_ST_Opener;
-
-        internal override UserData ContentCheckConfig => BLM_Balance_Content;
-        internal override bool IncludePot => BLM_Opener_Potion;
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([7], () => HasStatusEffect(Buffs.LeyLines))
-        ];
-
-        public override List<int> DelayedWeaveSteps { get; set; } = [7];
-
-        public override bool HasCooldowns() =>
-            MP.Full &&
-            IsOffCooldown(Manafont) &&
-            GetRemainingCharges(Triplecast) >= 1 &&
-            GetRemainingCharges(LeyLines) >= 1 &&
-            IsOffCooldown(Role.Swiftcast) &&
-            IsOffCooldown(Amplifier);
     }
 
-    internal class BLMFlareOpener : WrathOpener
+    internal class BLMFlareOpener : BLMOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-
-        public override int MaxOpenerLevel => 100;
-
         public override List<uint> OpenerActions { get; set; } =
         [
             Fire3,
@@ -754,26 +752,6 @@ internal partial class BLM
             Transpose,
             Fire3
         ];
-
-        public override Preset Preset => Preset.BLM_ST_Opener;
-
-        internal override UserData ContentCheckConfig => BLM_Balance_Content;
-        internal override bool IncludePot => BLM_Opener_Potion;
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([7], () => HasStatusEffect(Buffs.LeyLines))
-        ];
-
-        public override List<int> DelayedWeaveSteps { get; set; } = [7];
-
-        public override bool HasCooldowns() =>
-            MP.Full &&
-            IsOffCooldown(Manafont) &&
-            GetRemainingCharges(Triplecast) >= 1 &&
-            GetRemainingCharges(LeyLines) >= 1 &&
-            IsOffCooldown(Role.Swiftcast) &&
-            IsOffCooldown(Amplifier);
     }
 
   #endregion

@@ -1,13 +1,10 @@
 using Dalamud.Game.ClientState.Objects.Types;
-using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
-using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
-using WrathCombo.Services;
 using static WrathCombo.Combos.PvE.SGE.Config;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -504,42 +501,39 @@ internal partial class SGE : Healer
             if (HasStatusEffect(Buffs.Eukrasia))
                 return OriginalHook(Prognosis);
 
-            if (ActionWatching.WeaveActions.Count < Service.Configuration.MaximumWeavesPerWindow)
-            {
-                if (ActionReady(Rhizomata) && !HasAddersgall() &&
-                    CanWeave())
-                    return Rhizomata;
-
-                if (ActionReady(OriginalHook(Physis)))
-                    return OriginalHook(Physis);
-
-                if (ActionReady(Kerachole) &&
-                    TraitLevelChecked(Traits.EnhancedKerachole) &&
-                    HasAddersgall())
-                    return Kerachole;
-
-                if (ActionReady(Holos))
-                    return Holos;
-
-                if (ActionReady(Ixochole) && HasAddersgall())
-                    return Ixochole;
-
-                if (ActionReady(Philosophia) && !HasStatusEffect(Buffs.Panhaima))
-                    return Philosophia;
-
-                if (ActionReady(Panhaima) && !HasStatusEffect(Buffs.Eudaimonia))
-                    return Panhaima;
-
-                if (ActionReady(Zoe) && (ActionReady(Pneuma) || !LevelChecked(Pneuma)))
-                    return Zoe;
-
-                if (ActionReady(Pepsis) &&
-                    HasStatusEffect(Buffs.EukrasianPrognosis))
-                    return Pepsis;
-            }
-
             if (ActionReady(Eukrasia) && GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= 50 && GetPartyBuffPercent(SCH.Buffs.Galvanize) <= 50 && !HasStatusEffect(Buffs.Eukrasia))
                 return Eukrasia;
+
+            if (ActionReady(Rhizomata) && !HasAddersgall() &&
+                CanWeave())
+                return Rhizomata;
+
+            if (ActionReady(OriginalHook(Physis)))
+                return OriginalHook(Physis);
+
+            if (ActionReady(Kerachole) &&
+                TraitLevelChecked(Traits.EnhancedKerachole) &&
+                HasAddersgall())
+                return Kerachole;
+
+            if (ActionReady(Holos))
+                return Holos;
+
+            if (ActionReady(Ixochole) && HasAddersgall())
+                return Ixochole;
+
+            if (ActionReady(Philosophia) && !HasStatusEffect(Buffs.Panhaima))
+                return Philosophia;
+
+            if (ActionReady(Panhaima) && !HasStatusEffect(Buffs.Eudaimonia))
+                return Panhaima;
+
+            if (ActionReady(Zoe) && (ActionReady(Pneuma) || !LevelChecked(Pneuma)))
+                return Zoe;
+
+            if (ActionReady(Pepsis) &&
+                HasStatusEffect(Buffs.EukrasianPrognosis))
+                return Pepsis;
 
             return OriginalHook(Prognosis);
         }

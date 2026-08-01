@@ -5,6 +5,7 @@ using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using System.Linq;
+using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
@@ -27,15 +28,24 @@ namespace WrathCombo.Data.BattleData
                     break;
                 case 846: // Crown of the Immaculate (normal)
 
-                    _invincibleCheck = (tar, id, _) =>
+                    _invincibleCheck = (target, targetID, _) =>
                     {
-                        if (Svc.Objects.OfType<IBattleChara>().TryGetFirst(y => y.BaseId == 11247, out var venery))
+                        // During the phase where Venery is not targettable and going to eat the shames, check for a tether vfx
+                        if (targetID is 11246 && // Shames
+                           Svc.Objects.GetBattleCharas().FirstOrDefault(x => x.BaseId is 11247 && !x.IsTargetable) is not null) // Venery
                         {
-                            return venery.IsCasting && tar.ObjectId != venery.CastTargetObjectId ? Invincible.True : Invincible.False;
+                            return Result(target.GetTethers().Count is 0); // Ignore if it doesn't have the tether vfx
                         }
 
                         return Invincible.False;
                     };
+
+                    _pauseActions = () =>
+                    {
+                        if (CheckForGazeCasts(10491, 16025)) return true; // Chonky Innocence casting Enthrall
+                        return false;
+                    };
+
                     break;
                 case 887: // The Epic of Alexander (Ultimate)
                           // Jagd Doll = NameId 3759

@@ -121,7 +121,7 @@
     <value>Adds {0} to the rotation if {1} is not unlocked.</value>
   </data>
   <data name="DelaySavageBlade" xml:space="preserve">
-    <value>Delay is enforced by replacing your button with {0}.</value>
+    <value>During a countdown only: holds as {0} until each prepull timing. Without a countdown, prepull steps have no delay.</value>
   </data>
   <data name="HPPercentKenki" xml:space="preserve">
     <value>HP percent threshold to not save Kenki</value>
@@ -154,7 +154,7 @@
     <value>Will prioritise generating all 3 Sens before checking buffs.</value>
   </data>
   <data name="SecondsDelayFromFirstStep" xml:space="preserve">
-    <value>Seconds to delay from first {0} to next step (hover for details)</value>
+    <value>Prepull timing: Meikyo at -13, True North at -5 (skipped if no positionals), then Gekko on pull.</value>
   </data>
   <data name="SkipBoth" xml:space="preserve">
     <value>Skip Both</value>

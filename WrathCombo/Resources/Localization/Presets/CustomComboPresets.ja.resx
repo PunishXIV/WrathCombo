@@ -4557,10 +4557,10 @@ Lv.70以下では可能な限りフェザーを使用します。</value>
     <value>連撃を完全な 1 ボタンの単体ローテーションに置き換えます。
 ジョブに不慣れなプレイヤー向けの推奨設定です。</value>
   </data>
-  <data name="MNK_AOE_SimpleMode_Name" xml:space="preserve">
+  <data name="MNK_AoE_SimpleMode_Name" xml:space="preserve">
     <value>シンプルモード - AoE</value>
   </data>
-  <data name="MNK_AOE_SimpleMode_Desc" xml:space="preserve">
+  <data name="MNK_AoE_SimpleMode_Desc" xml:space="preserve">
     <value>デストロイヤーの腕を、ボタン 1 つで完全にローテーションできるように置き換えます。
 ジョブに不慣れなプレイヤー向けの推奨設定です。</value>
   </data>
@@ -4680,10 +4680,10 @@ Lv.70以下では可能な限りフェザーを使用します。</value>
   <data name="MNK_ST_UseMantra_Desc" xml:space="preserve">
     <value>全体攻撃の詠唱が検出された場合にマントラを追加します。</value>
   </data>
-  <data name="MNK_AOE_AdvancedMode_Name" xml:space="preserve">
+  <data name="MNK_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>アドバンストモード - AoE</value>
   </data>
-  <data name="MNK_AOE_AdvancedMode_Desc" xml:space="preserve">
+  <data name="MNK_AoE_AdvancedMode_Desc" xml:space="preserve">
     <value>デストロイヤーの腕を、ボタン 1 つで完全にローテーションできるように置き換えます。
 ローテーションを細かく調整したい場合に適した設定です。</value>
   </data>

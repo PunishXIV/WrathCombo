@@ -191,7 +191,7 @@ internal partial class DNC
                         (int)Openers.SevenSecond, descriptionAsTooltip: true);
                     DrawRadioButton(DNC_ST_OpenerSelection,
                         "Technical: 30s Countdown",
-                        "Requires a 30s cooldown\nand that you start Standard Step at 30s.\nNot generally recommended.\nWill align buffs worse than Standard 15s.",
+                        "Requires a 30s cooldown\nand that you start Standard Step at 30s.\nNot generally recommended.\nWill align buffs worse than Standard 15s.\nNot recommended if Standard Step would pull.",
                         (int)Openers.ThirtySecondTech, descriptionAsTooltip: true);
                     DrawRadioButton(DNC_ST_OpenerSelection,
                         "Technical: 7+s Countdown",

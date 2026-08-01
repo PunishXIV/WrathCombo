@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2732,7 +2732,12 @@ These features are ideal if you want to customize the rotation.</value>
     <value>Nastrond Option</value>
   </data>
   <data name="DRG_ST_Opener_Desc" xml:space="preserve">
-    <value>Adds the Balance opener at level 100.</value>
+    <value>Adds the Balance opener at level 100.
+Early Buff prepull:
+- Lance Charge at -2
+- Battle Litany at -2
+Without a countdown, prepull steps have no delay.
+(During a countdown only: holds as Savage Blade until each prepull timing)</value>
   </data>
   <data name="DRG_ST_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 100)</value>
@@ -4422,7 +4427,12 @@ Double Check / Checkmate option</value>
     <value>Head Graze Option</value>
   </data>
   <data name="MCH_ST_Adv_Opener_Desc" xml:space="preserve">
-    <value>Adds the Balance opener at lvl 90/100.</value>
+    <value>Adds the Balance opener at lvl 90/100.
+Prepull:
+- Reassemble at -5
+- Potion at -2
+Without a countdown, prepull steps have no delay.
+(During a countdown only: holds as Savage Blade until each prepull timing)</value>
   </data>
   <data name="MCH_ST_Adv_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 90/100)</value>
@@ -4638,11 +4648,11 @@ This is the ideal option for newcomers to the job.</value>
   <data name="MNK_AoEUseWindsReply_Name" xml:space="preserve">
     <value>Wind's Reply Option</value>
   </data>
-  <data name="MNK_AOE_AdvancedMode_Desc" xml:space="preserve">
+  <data name="MNK_AoE_AdvancedMode_Desc" xml:space="preserve">
     <value>Replaces Arms of the Destroyer with a full one-button AoE rotation.
 These features are ideal if you want to customize the rotation.</value>
   </data>
-  <data name="MNK_AOE_AdvancedMode_Name" xml:space="preserve">
+  <data name="MNK_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>Advanced Mode - AoE</value>
   </data>
   <data name="MNK_AoE_ComboHeals_Desc" xml:space="preserve">
@@ -4651,11 +4661,11 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="MNK_AoE_ComboHeals_Name" xml:space="preserve">
     <value>Combo Heals Option</value>
   </data>
-  <data name="MNK_AOE_SimpleMode_Desc" xml:space="preserve">
+  <data name="MNK_AoE_SimpleMode_Desc" xml:space="preserve">
     <value>Replaces Arms of the Destroyer with a full one-button AoE rotation.
 This is the ideal option for newcomers to the job.</value>
   </data>
-  <data name="MNK_AOE_SimpleMode_Name" xml:space="preserve">
+  <data name="MNK_AoE_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - AoE</value>
   </data>
   <data name="MNK_AoE_StunInterupt_Desc" xml:space="preserve">
@@ -4739,7 +4749,14 @@ will use it only under RoF when unlocked.</value>
     <value>Steeled / Forbidden Meditation Option</value>
   </data>
   <data name="MNK_STUseOpener_Desc" xml:space="preserve">
-    <value>Adds the selected Balance opener at lvl 90/100.</value>
+    <value>Adds the selected Balance opener at lvl 90/100.
+Prepull:
+- Meditation at -8
+- Form Shift at -5
+Early Buff prepull:
+- Riddle of Wind at -2
+Without a countdown, prepull steps have no delay.
+(During a countdown only: holds as Savage Blade until each prepull timing)</value>
   </data>
   <data name="MNK_STUseOpener_Name" xml:space="preserve">
     <value>Opener Option</value>
@@ -7766,7 +7783,11 @@ These features are ideal if you want to customize the rotation.</value>
     <value>Lemure's Slice Option</value>
   </data>
   <data name="RPR_ST_Opener_Desc" xml:space="preserve">
-    <value>Adds the Balance opener at level 90/100.</value>
+    <value>Adds the Balance opener at level 90/100.
+Standard opener prepull:
+- Harpe at -1 (skipped in melee)
+Without a countdown, prepull steps have no delay.
+(During a countdown only: holds as Savage Blade until each prepull timing)</value>
   </data>
   <data name="RPR_ST_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 90/100)</value>
@@ -8296,7 +8317,13 @@ POST 94: Will use during burst window.</value>
     <value>Meditate Option</value>
   </data>
   <data name="SAM_ST_Opener_Desc" xml:space="preserve">
-    <value>Adds the Balance opener at level 70/80/90/100.</value>
+    <value>Adds the Balance opener at level 70/80/90/100.
+Prepull:
+- Meikyo at -13
+- True North at -5 (skipped if target has no positionals)
+- Gekko on pull
+Without a countdown, prepull steps have no delay.
+(During a countdown only: holds as Savage Blade until each prepull timing)</value>
   </data>
   <data name="SAM_ST_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 70/80/90/100)</value>
@@ -11460,5 +11487,11 @@ This is the ideal option for newcomers to the job.</value>
   </data>
   <data name="WHM_ThinAirRaise_Name" xml:space="preserve">
     <value>Thin Air Raise Feature</value>
+  </data>
+  <data name="NIN_Anti_Rabbit_Name" xml:space="preserve">
+    <value>Anti-Rabbit Option</value>
+  </data>
+  <data name="NIN_Anti_Rabbit_Desc" xml:space="preserve">
+    <value>Makes it incredibly difficult to rabbit your jutsus. May cause clipping if latency is bad.</value>
   </data>
 </root>

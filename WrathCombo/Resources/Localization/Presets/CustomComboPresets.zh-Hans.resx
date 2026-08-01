@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4579,10 +4579,10 @@
     <value>将“连击”替换为完整的一键单目标循环。
 这是最适合武僧新手的选项。</value>
   </data>
-  <data name="MNK_AOE_SimpleMode_Name" xml:space="preserve">
+  <data name="MNK_AoE_SimpleMode_Name" xml:space="preserve">
     <value>简单输出模式 - 多目标</value>
   </data>
-  <data name="MNK_AOE_SimpleMode_Desc" xml:space="preserve">
+  <data name="MNK_AoE_SimpleMode_Desc" xml:space="preserve">
     <value>将“破坏神冲”替换为完整的一键多目标循环。
 这是最适合武僧新手的选项。</value>
   </data>
@@ -4702,10 +4702,10 @@
   <data name="MNK_ST_UseMantra_Desc" xml:space="preserve">
     <value>检测到全屏 AoE 读条时，加入“真言”。</value>
   </data>
-  <data name="MNK_AOE_AdvancedMode_Name" xml:space="preserve">
+  <data name="MNK_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>进阶输出模式 - 多目标</value>
   </data>
-  <data name="MNK_AOE_AdvancedMode_Desc" xml:space="preserve">
+  <data name="MNK_AoE_AdvancedMode_Desc" xml:space="preserve">
     <value>将“破坏神冲”替换为完整的一键多目标循环。
 如果你想自定义循环，这些功能会更合适。</value>
   </data>

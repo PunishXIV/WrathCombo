@@ -18,6 +18,7 @@ internal abstract partial class CustomComboFunctions
     private static DateTime? castFinishedAt;
     private static uint castId;
     private static HashSet<uint> onPlayerStatuses = [];
+    private static bool GCDRolling;
 
     public static bool PartyInCombatCheck
     {
@@ -42,6 +43,9 @@ internal abstract partial class CustomComboFunctions
     public delegate void OnStatusChangedDelegate(uint statusId, bool onPlayer);
     public static event OnStatusChangedDelegate? OnStatusChanged;
 
+    public delegate void OnGCDRollDelegate(bool reset);
+    public static event OnGCDRollDelegate? OnGCDRoll;
+
     public static Dictionary<ulong, long> Deadtionary { get; set; } = new();
 
     /// <summary> Tells the elapsed time since the combat started. </summary>
@@ -61,6 +65,27 @@ internal abstract partial class CustomComboFunctions
         Svc.Framework.Update += UpdateDeadtionary;
         Svc.Framework.Update += CheckInterruptedCasts;
         Svc.Framework.Update += CheckStatuses;
+        Svc.Framework.Update += CheckGCD;
+    }
+
+    private static void CheckGCD(IFramework framework)
+    {
+        if (!GCDRolling)
+        {
+            if (RemainingGCD >= 0.1)
+            {
+                GCDRolling = true;
+                OnGCDRoll.Invoke(GCDRolling);
+            }
+
+        } else
+        {
+            if (RemainingGCD < 0.1)
+            {
+                GCDRolling = false;
+                OnGCDRoll.Invoke(GCDRolling);
+            }
+        }
     }
 
     private static void CheckStatuses(IFramework framework)
@@ -159,6 +184,7 @@ internal abstract partial class CustomComboFunctions
         Svc.Framework.Update -= UpdateDeadtionary;
         Svc.Framework.Update -= CheckInterruptedCasts;
         Svc.Framework.Update -= CheckStatuses;
+        Svc.Framework.Update -= CheckGCD;
     }
 
     internal static void OnCombat(ConditionFlag flag, bool value)
@@ -173,7 +199,7 @@ internal abstract partial class CustomComboFunctions
         }
     }
 
-    public static unsafe float CountdownRemaining => MathF.Max(0, AgentCountDownSettingDialog.Instance()->TimeRemaining);
+    public static unsafe float CountdownRemaining => CountdownActive ? MathF.Max(0, AgentCountDownSettingDialog.Instance()->TimeRemaining) : 0;
 
     public static unsafe bool CountdownActive => AgentCountDownSettingDialog.Instance()->Active;
 }

@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
+using ECommons;
 using ECommons.DalamudServices;
 using System;
 using System.Collections.Frozen;
@@ -18,14 +19,16 @@ internal partial class NIN
 {
     static NINGauge gauge = GetJobGauge<NINGauge>();
     public static FrozenSet<uint> MudraSigns = [Ten, Chi, Jin, TenCombo, ChiCombo, JinCombo];
-    public static FrozenSet<uint> NormalJutsus = [FumaShuriken, Raiton, Katon, Doton, Suiton, Hyoton, HyoshoRanryu, GokaMekkyaku, Rabbit];
+    public static FrozenSet<uint> NormalJutsus = [FumaShuriken, Raiton, Katon, Hyoton, Doton, Suiton, Huton, HyoshoRanryu, GokaMekkyaku, Rabbit];
+    public static FrozenSet<uint> TCJJutsus = [TCJFumaShurikenChi, TCJFumaShurikenJin, TCJFumaShurikenTen, TCJRaiton, TCJKaton, TCJHyoton, TCJHuton, TCJSuiton, TCJDoton];
+    public static bool DontCountForWeave(uint actionId) => actionId != Ninjutsu && !NormalJutsus.Contains(actionId) && !MudraSigns.Contains(actionId) && !TCJJutsus.Contains(actionId);
     internal static bool STSimpleMode => IsEnabled(Preset.NIN_ST_SimpleMode);
     internal static bool AoESimpleMode => IsEnabled(Preset.NIN_AoE_SimpleMode);
     internal static bool BlockDueToLag
     {
         get
         {
-            return ActionWatching.LastAction != LastMudra && MudraSigns.Any(x => x == ActionWatching.LastAction);
+            return IsEnabled(Preset.NIN_Anti_Rabbit) && InMudra && ActionWatching.LastAction != LastMudra && MudraSigns.Any(x => x == ActionWatching.LastAction);
         }
     }
 
@@ -46,7 +49,7 @@ internal partial class NIN
     }
 
     public static uint CurrentNinjutsu => OriginalHook(Ninjutsu);
-    internal static bool InMudra => JutsuFromFlags > 0 || JustUsed(Ten, 1) || JustUsed(Chi, 1) || JustUsed(Jin, 1) || JustUsed(TenCombo, 1) || JustUsed(ChiCombo, 1) || JustUsed(JinCombo, 1);
+    internal static bool InMudra => !NormalJutsus.Contains(ActionWatching.LastAction) && (JutsuFromFlags > 0 || JustUsed(Ten, 1) || JustUsed(Chi, 1) || JustUsed(Jin, 1) || JustUsed(TenCombo, 1) || JustUsed(ChiCombo, 1) || JustUsed(JinCombo, 1));
 
     internal static MudraFlags Flags => HasStatusEffect(Buffs.Mudra) ? (MudraFlags)(GetStatusEffect(Buffs.Mudra).Param) : HasStatusEffect(Buffs.TenChiJin) ? (MudraFlags)(GetStatusEffect(Buffs.TenChiJin).Param) : MudraFlags.None;
     internal static MudraFlags FirstMudra => Flags & MudraFlags.JinFirst;
@@ -199,7 +202,7 @@ internal partial class NIN
     internal static bool CanUseFumaShuriken => ActionReady(Ten);
 
     internal static bool CanUseRaiton => LevelChecked(Raiton) && ActionReady(Ten) &&
-                                          (!HasKassatsu || IsNotEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Hyosho) && !STSimpleMode || !LevelChecked(HyoshoRanryu)) && //Use kassatsu on it if Hyosho isn't selected. 
+                                          (!HasKassatsu || IsNotEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Hyosho) && !STSimpleMode || !LevelChecked(HyoshoRanryu)) && //Use kassatsu on it if Hyosho isn't selected.
                                            (TrickDebuff || // Buff Window
                                            !LevelChecked(Suiton) || //Dont Pool because of Suiton not learned yet
                                            GetCooldownChargeRemainingTime(Ten) < 1 && TrickCD > 18 || // Spend to avoid cap
@@ -215,7 +218,7 @@ internal partial class NIN
                                           NIN_AoE_AdvancedMode_Ninjitsus_Katon_Uptime && !InMeleeRange() &&
                                           GetCooldownChargeRemainingTime(Ten) <= TrickCD - 10); //Uptime option
 
-    internal static bool CanUseDoton => LevelChecked(Doton) && ActionReady(Ten) && DotonStoppedMoving && !JustUsed(Doton) &&
+    internal static bool CanUseDoton => LevelChecked(Doton) && ActionReady(Ten) && DotonStoppedMoving && !JustUsed(Doton, 1) &&
                                         (!HasDoton || DotonRemaining <= 2) && //No doton down
                                         (TrickDebuff || GetCooldownChargeRemainingTime(Ten) < 3); //Pool for buff window
 
@@ -236,8 +239,7 @@ internal partial class NIN
     internal static bool CanPhantomKamaitachi => !MudraPhase && HasStatusEffect(Buffs.PhantomReady) &&
                                                  (TrickDebuff && ComboAction != GustSlash ||
                                                   !TrickDebuff);
-    internal static bool CanThrowingDaggers => !MudraPhase && ActionReady(ThrowingDaggers) && HasTarget() && !InMeleeRange() &&
-                                               !HasStatusEffect(Buffs.RaijuReady);
+    internal static bool CanThrowingDaggers => !MudraPhase && ActionReady(ThrowingDaggers) && HasTarget() && !InMeleeRange();
     internal static bool CanThrowingDaggersAoE => !MudraPhase && ActionReady(ThrowingDaggers) && HasTarget() && GetTargetDistance() >= 4.5 && InActionRange(ThrowingDaggers) &&
                                                   !HasStatusEffect(Buffs.RaijuReady);
     internal static bool CanRaiju => !MudraPhase && HasStatusEffect(Buffs.RaijuReady);
@@ -331,20 +333,21 @@ internal partial class NIN
 
     #region Kassatsu, Meisui, Assassinate, TenChiJin Logic
     internal static bool HasKassatsu => HasStatusEffect(Buffs.Kassatsu) || JustUsed(Kassatsu, 1);
+    internal static bool HasShadowWalker => (HasStatusEffect(Buffs.ShadowWalker) || JustUsed(Suiton, 1) || JustUsed(Huton, 1) || JustUsed(TCJSuiton, 1) || JustUsed(TCJHuton, 1));
     internal static float KassatsuRemaining => GetStatusEffectRemainingTime(Buffs.Kassatsu);
     internal static bool CanKassatsu => !MudraPhase && ActionReady(Kassatsu) && CanWeave() &&
-                                        (TrickCD < 10 && HasStatusEffect(Buffs.ShadowWalker) ||
+                                        (TrickCD < 10 && (HasShadowWalker ||
                                          BuffWindow ||
-                                         TrickDisabledST);
+                                         TrickDisabledST));
 
     internal static bool CanKassatsuAoE => !MudraPhase && ActionReady(Kassatsu) && CanWeave() &&
-                                        (TrickCD < 10 && HasStatusEffect(Buffs.ShadowWalker) ||
+                                        (TrickCD < 10 && HasShadowWalker ||
                                          BuffWindow ||
                                          TrickDisabledAoE);
 
-    internal static bool CanMeisui => !MudraPhase && ActionReady(Meisui) && CanWeave() && HasStatusEffect(Buffs.ShadowWalker) &&
+    internal static bool CanMeisui => !MudraPhase && ActionReady(Meisui) && CanWeave() && HasShadowWalker &&
                                       (BuffWindow || TrickDisabledST);
-    internal static bool CanMeisuiAoE => !MudraPhase && ActionReady(Meisui) && CanWeave() && HasStatusEffect(Buffs.ShadowWalker) &&
+    internal static bool CanMeisuiAoE => !MudraPhase && ActionReady(Meisui) && CanWeave() && HasShadowWalker &&
                                       (BuffWindow || TrickDisabledAoE);
 
     internal static bool CanAssassinate => !MudraPhase && ActionReady(OriginalHook(Assassinate)) && CanWeave() &&
@@ -473,7 +476,6 @@ internal partial class NIN
                 {
                     Svc.Log.Debug($"{AssociatedPreset} -> {CurrentMudra} reset to none");
                     CurrentMudra = MudraState.None;
-                    ActionWatching.LastAction = 0;
                 }
             }
         }
@@ -583,7 +585,7 @@ internal partial class NIN
         }
         #endregion
 
-        #region Hyosho Ranryu 
+        #region Hyosho Ranryu
         public bool CastHyoshoRanryu(ref uint actionID) // Ten Jin
         {
             if (HyoshoRanryu.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingHyoshoRanryu)

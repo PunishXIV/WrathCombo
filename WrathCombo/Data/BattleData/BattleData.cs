@@ -8,6 +8,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static ECommons.ExcelServices.ExcelTerritoryHelper;
 
@@ -106,7 +107,7 @@ namespace WrathCombo.Data.BattleData
             return target is not null
                 && target.IsCasting
                 && IsTankbuster(target.CastActionId)
-                && target.TargetObject == Player.Object;
+                && target.TargetObject.GameObjectId == Player.Object.GameObjectId;
         }
 
         // Raidwides
@@ -168,8 +169,12 @@ namespace WrathCombo.Data.BattleData
         /// <returns></returns>
         private static bool CheckForGazeCasts(uint actionID)
         {
-            var battleChars = Svc.Objects.Where(x => x is IBattleChara).Cast<IBattleChara>();
-            return battleChars.Any(x => x.IsCasting && x.CastActionId == actionID && (x.TotalCastTime - x.CurrentCastTime) <= Service.Configuration.PenaltyPause);
+            return Svc.Objects
+                .GetBattleCharas()
+                .Any(x =>
+                    x.IsCasting &&
+                    x.CastActionId == actionID &&
+                    (x.TotalCastTime - x.CurrentCastTime) <= Service.Configuration.PenaltyPause);
         }
 
         /// <summary>
@@ -181,7 +186,7 @@ namespace WrathCombo.Data.BattleData
         public static bool CheckForGazeCasts(uint baseId, uint actionID)
         {
             return Svc.Objects
-                .OfType<IBattleChara>()
+                .GetBattleCharas()
                 .Any(x =>
                     x.BaseId == baseId &&
                     x.IsCasting &&

@@ -654,12 +654,41 @@ internal partial class MCH
     internal static MCHLvl100EarlyWFOpener Lvl100EarlyWFOpener = new();
     internal static MCHLvl100StandardOpener Lvl100StandardOpener = new();
 
-    internal class MCHLvl100StandardOpener : WrathOpener
+    internal abstract class MCHOpenerBase : WrathOpener
+    {
+        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
+
+        internal override UserData ContentCheckConfig => MCH_Balance_Content;
+        internal override bool IncludePot => MCH_Opener_Potion;
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([1], () => CountdownRemaining - 5),
+            ([2], () => CountdownRemaining - 2)
+        ];
+
+        protected static bool SharedOpenerCooldowns() =>
+            GetRemainingCharges(Reassemble) is 2 &&
+            GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
+            GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
+            IsOffCooldown(Chainsaw) &&
+            IsOffCooldown(Wildfire) &&
+            IsOffCooldown(BarrelStabilizer);
+    }
+
+    internal abstract class MCHLvl100OpenerBase : MCHOpenerBase
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 100;
 
+        public override bool HasCooldowns() =>
+            SharedOpenerCooldowns() &&
+            IsOffCooldown(Excavator) &&
+            IsOffCooldown(FullMetalField);
+    }
+
+    internal class MCHLvl100StandardOpener : MCHLvl100OpenerBase
+    {
         public override List<uint> OpenerActions { get; set; } =
         [
             Reassemble,
@@ -697,34 +726,10 @@ internal partial class MCH
             HeatedSlugShot,
             HeatedCleanShot
         ];
-
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
-
-        internal override UserData ContentCheckConfig => MCH_Balance_Content;
-        internal override bool IncludePot => MCH_Opener_Potion;
-
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => 3)
-        ];
-
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(Reassemble) is 2 &&
-            GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
-            GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
-            IsOffCooldown(Chainsaw) &&
-            IsOffCooldown(Wildfire) &&
-            IsOffCooldown(BarrelStabilizer) &&
-            IsOffCooldown(Excavator) &&
-            IsOffCooldown(FullMetalField);
     }
 
-    internal class MCHLvl100EarlyWFOpener : WrathOpener
+    internal class MCHLvl100EarlyWFOpener : MCHLvl100OpenerBase
     {
-        public override int MinOpenerLevel => 100;
-
-        public override int MaxOpenerLevel => 100;
-
         public override List<uint> OpenerActions { get; set; } =
         [
             Reassemble,
@@ -762,32 +767,11 @@ internal partial class MCH
             HeatedSlugShot,
             HeatedCleanShot
         ];
-
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
-
-        internal override UserData ContentCheckConfig => MCH_Balance_Content;
-        internal override bool IncludePot => MCH_Opener_Potion;
-
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => 3)
-        ];
-
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(Reassemble) is 2 &&
-            GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
-            GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
-            IsOffCooldown(Chainsaw) &&
-            IsOffCooldown(Wildfire) &&
-            IsOffCooldown(BarrelStabilizer) &&
-            IsOffCooldown(Excavator) &&
-            IsOffCooldown(FullMetalField);
     }
 
-    internal class MCHLvl90EarlyToolsOpener : WrathOpener
+    internal class MCHLvl90EarlyToolsOpener : MCHOpenerBase
     {
         public override int MinOpenerLevel => 90;
-
         public override int MaxOpenerLevel => 90;
 
         public override List<uint> OpenerActions { get; set; } =
@@ -823,28 +807,12 @@ internal partial class MCH
             Drill
         ];
 
-        public override Preset Preset => Preset.MCH_ST_Adv_Opener;
-
-        internal override UserData ContentCheckConfig => MCH_Balance_Content;
-        internal override bool IncludePot => MCH_Opener_Potion;
-
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => 4)
-        ];
-
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
             15
         ];
 
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(Reassemble) is 2 &&
-            GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
-            GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
-            IsOffCooldown(Chainsaw) &&
-            IsOffCooldown(Wildfire) &&
-            IsOffCooldown(BarrelStabilizer);
+        public override bool HasCooldowns() => SharedOpenerCooldowns();
     }
 
     #endregion

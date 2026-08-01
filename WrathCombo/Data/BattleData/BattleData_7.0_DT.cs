@@ -1,10 +1,10 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
-using ECommons.DalamudServices;
+﻿using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.MathHelpers;
 using System.Collections.Frozen;
 using System.Linq;
+using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 
@@ -130,16 +130,9 @@ namespace WrathCombo.Data.BattleData
                         bool pause = false;
 
                         // There can be two of these objects, only one appears to be active.
-                        IGameObject? motionScannerHelper;
-                        unsafe
-                        {
-                            motionScannerHelper = Svc.Objects.FirstOrDefault(x =>
-                                x.BaseId == 0x4C2D &&
-                                x.Address != 0 &&
-                                (int)x.Struct()->RenderFlags == 0);
-                        }
-
-                        if (motionScannerHelper is IGameObject scanner)
+                        if (Svc.Objects.GetBattleCharas().FirstOrDefault(x =>
+                            x.BaseId == 0x4C2D &&
+                            x.IsCharacterVisible()) is { } scanner)
                         {
                             var facingdirection = MathHelper.GetCardinalDirection(MathHelper.RadToDeg(scanner.Rotation));
 

@@ -671,15 +671,26 @@ internal partial class RPR
     }
 
     internal static RPRStandardOpenerLvl100 StandardOpenerLvl100 = new();
-
     internal static RPRFirstGcdBuffsOpenerLvl100 FirstGcdBuffsOpenerLvl100 = new();
-
     internal static RPRStandardOpenerLvl90 StandardOpenerLvl90 = new();
 
-    internal class RPRStandardOpenerLvl100 : WrathOpener
+    internal abstract class RPROpenerBase : WrathOpener
+    {
+        public override Preset Preset => Preset.RPR_ST_Opener;
+
+        internal override UserData ContentCheckConfig => RPR_Balance_Content;
+        internal override bool IncludePot => RPR_Opener_Potion;
+
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(SoulSlice) is 2 &&
+            IsOffCooldown(ArcaneCircle) &&
+            IsOffCooldown(Gluttony) &&
+            Void is 0 && Soul is 0;
+    }
+
+    internal class RPRStandardOpenerLvl100 : RPROpenerBase
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
@@ -710,12 +721,6 @@ internal partial class RPR
             Slice
         ];
 
-        public override Preset Preset => Preset.RPR_ST_Opener;
-
-        internal override UserData ContentCheckConfig => RPR_Balance_Content;
-
-        internal override bool IncludePot => RPR_Opener_Potion;
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([7], ExecutionersGallows, OnTargetsRear),
@@ -729,21 +734,17 @@ internal partial class RPR
             ([1], () => InMeleeRange())
         ];
 
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([1], () => CountdownRemaining - 1)
+        ];
+
         public override List<int> DelayedWeaveSteps { get; set; } = [3];
-
-
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(SoulSlice) is 2 &&
-            IsOffCooldown(ArcaneCircle) &&
-            IsOffCooldown(Gluttony) &&
-            Void is 0 &&
-            Soul is 0;
     }
 
-    internal class RPRFirstGcdBuffsOpenerLvl100 : WrathOpener
+    internal class RPRFirstGcdBuffsOpenerLvl100 : RPROpenerBase
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
@@ -773,12 +774,6 @@ internal partial class RPR
             Slice
         ];
 
-        public override Preset Preset => Preset.RPR_ST_Opener;
-
-        internal override UserData ContentCheckConfig => RPR_Balance_Content;
-
-        internal override bool IncludePot => RPR_Opener_Potion;
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([6], ExecutionersGallows, OnTargetsRear),
@@ -788,19 +783,11 @@ internal partial class RPR
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } = [4];
-
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(SoulSlice) is 2 &&
-            IsOffCooldown(ArcaneCircle) &&
-            IsOffCooldown(Gluttony) &&
-            Void is 0 &&
-            Soul is 0;
     }
 
-    internal class RPRStandardOpenerLvl90 : WrathOpener
+    internal class RPRStandardOpenerLvl90 : RPROpenerBase
     {
         public override int MinOpenerLevel => 90;
-
         public override int MaxOpenerLevel => 90;
 
         public override List<uint> OpenerActions { get; set; } =
@@ -828,12 +815,6 @@ internal partial class RPR
             Gibbet //20
         ];
 
-        public override Preset Preset => Preset.RPR_ST_Opener;
-
-        internal override UserData ContentCheckConfig => RPR_Balance_Content;
-
-        internal override bool IncludePot => RPR_Opener_Potion;
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([17], Gallows, OnTargetsRear),
@@ -849,12 +830,10 @@ internal partial class RPR
             ([1], () => InMeleeRange())
         ];
 
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(SoulSlice) is 2 &&
-            IsOffCooldown(ArcaneCircle) &&
-            IsOffCooldown(Gluttony) &&
-            Void is 0 &&
-            Soul is 0;
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([1], () => CountdownRemaining - 1)
+        ];
     }
 
     #endregion

@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
+using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
@@ -477,12 +478,27 @@ internal partial class DRG
     internal static DRGPiercingTalonOpener PiercingTalonOpener = new();
     internal static DRGEarlyBuffOpener EarlyBuffOpener = new();
 
-    internal class DRGStandardOpener : WrathOpener
+    internal abstract class DRGOpenerBase : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 100;
 
+        public override Preset Preset => Preset.DRG_ST_Opener;
+
+        internal override UserData ContentCheckConfig => DRG_BalanceContent;
+        internal override bool IncludePot => DRG_Opener_Potion;
+
+        public override bool HasCooldowns() => SharedOpenerCooldowns();
+
+        protected static bool SharedOpenerCooldowns() =>
+            GetRemainingCharges(LifeSurge) is 2 &&
+            IsOffCooldown(BattleLitany) &&
+            IsOffCooldown(DragonfireDive) &&
+            IsOffCooldown(LanceCharge);
+    }
+
+    internal class DRGStandardOpener : DRGOpenerBase
+    {
         public override List<uint> OpenerActions { get; set; } =
         [
             TrueThrust,
@@ -511,25 +527,10 @@ internal partial class DRG
             RaidenThrust,
             WyrmwindThrust
         ];
-
-        public override Preset Preset => Preset.DRG_ST_Opener;
-
-        internal override UserData ContentCheckConfig => DRG_BalanceContent;
-        internal override bool IncludePot => DRG_Opener_Potion;
-
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(LifeSurge) is 2 &&
-            IsOffCooldown(BattleLitany) &&
-            IsOffCooldown(DragonfireDive) &&
-            IsOffCooldown(LanceCharge);
     }
 
-    internal class DRGPiercingTalonOpener : WrathOpener
+    internal class DRGPiercingTalonOpener : DRGOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-
-        public override int MaxOpenerLevel => 100;
-
         public override List<uint> OpenerActions { get; set; } =
         [
             PiercingTalon,
@@ -559,25 +560,10 @@ internal partial class DRG
             RaidenThrust,
             WyrmwindThrust
         ];
-
-        public override Preset Preset => Preset.DRG_ST_Opener;
-
-        internal override UserData ContentCheckConfig => DRG_BalanceContent;
-        internal override bool IncludePot => DRG_Opener_Potion;
-
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(LifeSurge) is 2 &&
-            IsOffCooldown(BattleLitany) &&
-            IsOffCooldown(DragonfireDive) &&
-            IsOffCooldown(LanceCharge);
     }
 
-    internal class DRGEarlyBuffOpener : WrathOpener
+    internal class DRGEarlyBuffOpener : DRGOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-
-        public override int MaxOpenerLevel => 100;
-
         public override List<uint> OpenerActions { get; set; } =
         [
             LanceCharge,
@@ -604,20 +590,13 @@ internal partial class DRG
             FangAndClaw,
             Drakesbane,
             RaidenThrust,
-            WyrmwindThrust,
+            WyrmwindThrust
         ];
 
-        public override Preset Preset => Preset.DRG_ST_Opener;
-
-        internal override UserData ContentCheckConfig => DRG_BalanceContent;
-        internal override bool IncludePot => DRG_Opener_Potion;
-
-        public override bool HasCooldowns() =>
-            GetRemainingCharges(LifeSurge) is 2 &&
-            IsOffCooldown(BattleLitany) &&
-            IsOffCooldown(DragonfireDive) &&
-            IsOffCooldown(LanceCharge) &&
-            CountdownRemaining is >= 1.5f and <= 3f;
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([1, 2], () => CountdownRemaining - 2)
+        ];
     }
 
     #endregion

@@ -286,7 +286,7 @@ internal partial class VPR
         InBossEncounter();
 
     private static bool ShouldHoldTwinbladeForIre =>
-        UsesBurstAlignment && LevelChecked(SerpentsIre) && IreCD > 0 && IreCD <= IreDualWieldWindow;
+        UsesBurstAlignment && LevelChecked(SerpentsIre) && IreCD is > 0 and <= IreDualWieldWindow;
 
     private static bool InTwinbladeCombo =>
         UsedVicewinder || UsedHuntersCoil || UsedSwiftskinsCoil ||
@@ -439,13 +439,13 @@ internal partial class VPR
         if (!enabled)
             return false;
 
-        if (HasStatusEffect(Buffs.PoisedForTwinfang))
+        if (HasStatusEffect(Buffs.PoisedForTwinfang) && InActionRange(OriginalHook(Twinfang)))
         {
             action = OriginalHook(Twinfang);
             return true;
         }
 
-        if (HasStatusEffect(Buffs.PoisedForTwinblood))
+        if (HasStatusEffect(Buffs.PoisedForTwinblood) && InActionRange(OriginalHook(Twinblood)))
         {
             action = OriginalHook(Twinblood);
             return true;
@@ -481,17 +481,15 @@ internal partial class VPR
             return false;
         }
 
-        if (requireMelee && !InMeleeRange() &&
-            !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.SwiftskinsVenom))
-            return false;
-
-        if (HasStatusEffect(Buffs.HuntersVenom))
+        if (HasStatusEffect(Buffs.HuntersVenom) &&
+            (!requireMelee || ignoreRange || InActionRange(OriginalHook(Twinfang))))
         {
             action = OriginalHook(Twinfang);
             return true;
         }
 
-        if (HasStatusEffect(Buffs.SwiftskinsVenom))
+        if (HasStatusEffect(Buffs.SwiftskinsVenom) &&
+            (!requireMelee || ignoreRange || InActionRange(OriginalHook(Twinblood))))
         {
             action = OriginalHook(Twinblood);
             return true;
@@ -538,8 +536,7 @@ internal partial class VPR
         if (!ActionReady(UncoiledFury) || !InActionRange(UncoiledFury))
             return false;
 
-        if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget() &&
-            !InTwinbladeCombo && !HasStatusEffect(Buffs.Reawakened))
+        if (!onAoE && HasRattlingCoilStacks && !InMeleeRange() && HasBattleTarget())
             return true;
 
         if (!CanUseUncoiledFuryInRotation(onAoE))
@@ -619,8 +616,14 @@ internal partial class VPR
          IsEmpowermentExpiring(4) ||
          IreCD >= GCD * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
 
-    private static bool CanVicewinderCombo(ref uint actionId, bool vicewinderBuffPrio = false)
+    private static bool CanVicewinderCombo(
+        ref uint actionId,
+        bool vicewinderBuffPrio = false,
+        bool preferRangedWhenOor = false)
     {
+        if (preferRangedWhenOor && !InMeleeRange())
+            return false;
+
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
             LevelChecked(Vicewinder) &&
             !HasStatusEffect(Buffs.Reawakened))
@@ -667,12 +670,24 @@ internal partial class VPR
     internal static VPRStandardOpener StandardOpener = new();
     internal static VPREarlyBuffOpener EarlyBuffOpener = new();
 
-    internal class VPRStandardOpener : WrathOpener
+    internal abstract class VPROpenerBase : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
 
+        public override Preset Preset => Preset.VPR_ST_Opener;
+
+        internal override UserData ContentCheckConfig => VPR_Balance_Content;
+        internal override bool IncludePot => VPR_Opener_Potion;
+
+        public override bool HasCooldowns() =>
+            IsOriginal(ReavingFangs) &&
+            GetRemainingCharges(Vicewinder) is 2 &&
+            IsOffCooldown(SerpentsIre);
+    }
+
+    internal class VPRStandardOpener : VPROpenerBase
+    {
         public override List<uint> OpenerActions { get; set; } =
         [
             ReavingFangs,
@@ -713,11 +728,6 @@ internal partial class VPR
             TwinfangBite //36
         ];
 
-        public override Preset Preset => Preset.VPR_ST_Opener;
-
-        internal override UserData ContentCheckConfig => VPR_Balance_Content;
-        internal override bool IncludePot => VPR_Opener_Potion;
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([31], SwiftskinsCoil, OnTargetsRear),
@@ -736,19 +746,10 @@ internal partial class VPR
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } = [5];
-
-        public override bool HasCooldowns() =>
-            IsOriginal(ReavingFangs) &&
-            GetRemainingCharges(Vicewinder) is 2 &&
-            IsOffCooldown(SerpentsIre);
     }
 
-    internal class VPREarlyBuffOpener : WrathOpener
+    internal class VPREarlyBuffOpener : VPROpenerBase
     {
-        public override int MinOpenerLevel => 100;
-
-        public override int MaxOpenerLevel => 109;
-
         public override List<uint> OpenerActions { get; set; } =
         [
             Vicewinder,
@@ -788,11 +789,6 @@ internal partial class VPR
             UncoiledTwinblood //35
         ];
 
-        public override Preset Preset => Preset.VPR_ST_Opener;
-
-        internal override UserData ContentCheckConfig => VPR_Balance_Content;
-        internal override bool IncludePot => VPR_Opener_Potion;
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([24], SwiftskinsCoil, OnTargetsRear),
@@ -809,11 +805,6 @@ internal partial class VPR
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } = [4];
-
-        public override bool HasCooldowns() =>
-            IsOriginal(ReavingFangs) &&
-            GetRemainingCharges(Vicewinder) is 2 &&
-            IsOffCooldown(SerpentsIre);
     }
 
     #endregion

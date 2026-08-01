@@ -1,5 +1,3 @@
-using Dalamud.Interface.Colors;
-using Dalamud.Interface.Utility.Raii;
 using ECommons.ImGuiMethods;
 using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
@@ -24,9 +22,7 @@ internal partial class SAM
                     DrawBossOnlyChoice(SAM_Balance_Content);
                     DrawOpenerPotionChoice(SAM_Opener_Potion);
 
-                    DrawSliderInt(0, 13, SAM_Opener_PrePullDelay,
-                        FormatAndCache(SAM_Config.SecondsDelayFromFirstStep, MeikyoShisui.ActionName()), 75f.Scale());
-
+                    ImGui.TextWrapped(SAM_Config.SecondsDelayFromFirstStep);
                     if (ImGui.IsItemHovered())
                         ImGui.SetTooltip(FormatAndCache(SAM_Config.DelaySavageBlade, All.SavageBlade.ActionName()));
 
@@ -87,7 +83,6 @@ internal partial class SAM
                     DrawSliderInt(0, 100, SAM_ST_MeikyoExecuteThreshold,
                         FormatAndCache(SAM_Config.HPPercentMeikyo, MeikyoShisui.ActionName()));
                     break;
-
 
                 case Preset.SAM_ST_GekkoCombo:
                     DrawAdditionalBoolChoice(SAM_Gekko_KenkiOvercap,
@@ -215,7 +210,6 @@ internal partial class SAM
 
             //ST
             SAM_Balance_Content = new("SAM_Balance_Content", 1),
-            SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
             SAM_Opener_IncludeGyoten = new("SAM_Opener_IncludeGyoten"),
             SAM_ST_HiganbanaBossHPOption = new("SAM_ST_HiganbanaBossHPOption"),
             SAM_ST_HiganbanaBossAddsHPOption = new("SAM_ST_HiganbanaBossAddsHPOption", 25),

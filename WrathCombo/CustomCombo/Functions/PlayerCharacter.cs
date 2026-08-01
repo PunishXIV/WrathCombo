@@ -50,7 +50,7 @@ internal abstract partial class CustomComboFunctions
     /// <returns> A value indicating a quest has been completed for a job action.</returns>
     public static unsafe bool IsActionUnlocked(uint id)
     {
-        var unlockLink = ActionWatching.ActionSheet[id].UnlockLink.RowId;
+        var unlockLink = ActionWatching.ActionSheet.TryGetValue(id, out var s) ? s.UnlockLink.RowId : 0;
         return unlockLink == 0 || UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(unlockLink);
     }
 

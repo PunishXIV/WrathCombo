@@ -635,14 +635,15 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
         {
             get;
             set;
         } =
         [
-            ([4], () => 7),
-            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 13 : 6)),
+            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 5),
+            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 1),
+            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -693,9 +694,6 @@ internal partial class DNC
             if (InCombat())
                 return false;
 
-            if (!CountdownActive)
-                return false;
-
             // go at 15s, with some leeway
             if (CountdownRemaining is < 13.5f or > 16f)
                 return false;
@@ -739,14 +737,15 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
         {
             get;
             set;
         } =
         [
-            ([4], () => 2),
-            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 5 : 3)),
+            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 3),
+            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 1),
+            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -796,9 +795,6 @@ internal partial class DNC
             if (InCombat())
                 return false;
 
-            if (!CountdownActive)
-                return false;
-
             // go at 7s, with some leeway
             if (CountdownRemaining is < 5.5f or > 8f)
                 return false;
@@ -825,12 +821,12 @@ internal partial class DNC
             Emboite,
             StandardFinish2,
             Peloton, //5
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             TechnicalStep,
             Emboite,
             Emboite,
             Emboite,
-            Emboite, //11
+            Emboite, //10
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
             TechnicalFinish4,
             Devilment,
             LastDance,
@@ -846,14 +842,16 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
         {
             get;
             set;
         } =
         [
-            ([5], () => 1),
-            ([7], () => (!DNC_ST_OpenerOption_Peloton ? 8 : 7)),
+            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 15),
+            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 13),
+            ([11], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining) - 1),
+            ([12], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -862,9 +860,9 @@ internal partial class DNC
             set;
         } =
         [
-            ([2, 3, 8, 9, 10, 11], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 8, 9, 10, 11], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 8, 9, 10, 11], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
             ([20], SaberDance, () => Gauge.Esprit >= 50),
             ([22, 23, 24], SaberDance, () => Gauge.Esprit > 80),
             ([22, 23, 24], StarfallDance,
@@ -903,9 +901,6 @@ internal partial class DNC
             if (InCombat())
                 return false;
 
-            if (!CountdownActive)
-                return false;
-
             // go at 30s, with some leeway
             if (CountdownRemaining < 28.5f)
                 return false;
@@ -928,8 +923,8 @@ internal partial class DNC
             Emboite,
             Emboite,
             Emboite, //5
-            TechnicalFinish4,
             Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
+            TechnicalFinish4,
             Devilment,
             LastDance,
             Flourish,
@@ -944,11 +939,14 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
         {
             get;
             set;
-        } = [];
+        } =
+        [
+            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 1)),
+        ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
         {
@@ -986,9 +984,6 @@ internal partial class DNC
                 return false;
 
             if (InCombat())
-                return false;
-
-            if (!CountdownActive)
                 return false;
 
             // go at 7s, with some leeway
@@ -1029,13 +1024,15 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
         {
             get;
             set;
         } =
         [
-            ([8], () => (!DNC_ST_OpenerOption_Peloton ? 3 : 2)),
+            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 2)),
+            ([7], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 1)),
+            ([8], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -1083,9 +1080,6 @@ internal partial class DNC
                 return false;
 
             if (InCombat())
-                return false;
-
-            if (!CountdownActive)
                 return false;
 
             // go at 7s, with some leeway

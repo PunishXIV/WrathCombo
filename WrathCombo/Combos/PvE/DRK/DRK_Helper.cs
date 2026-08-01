@@ -295,22 +295,22 @@ internal partial class DRK
         } =
         [
             // Skip the duplicate HardSlash, if pulling with HardSlash
-            ([2], () =>
+            ([3], () =>
                 DRK_ST_OpenerAction == (int)PullAction.HardSlash),
             // Skip the early LivingShadow, if non-standard
-            ([4], () =>
+            ([5], () =>
                 DRK_ST_OpenerAction != (int)PullAction.Unmend),
             // Skip the late LivingShadow and aligning HardSlash, if Standard
-            ([6, 9], () => Bursting.PartyIsBursting ||
+            ([7, 10], () => Bursting.PartyIsBursting ||
                 DRK_ST_OpenerAction == (int)PullAction.Unmend),
             // Skip Salted Earth
-            ([11], () =>
+            ([12], () =>
                 IsOnCooldown(SaltedEarth)),
             // Skip Blood spenders when no Blood
-            ([18], () =>
+            ([19], () =>
                 Gauge.Blood < 50),
             // Skip Salt and Darkness
-            ([19], () =>
+            ([20], () =>
                 !ActionReady(SaltAndDarkness)),
         ];
 

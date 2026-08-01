@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -4545,10 +4545,10 @@ Balance에서 권장하는 방식이지만, 글쿨 밀림(Drift)이 발생할 �
     <value>'연격'으로 단일 대상 딜사이클을 수행합니다.
 입문자에게 가장 이상적인 옵션입니다.</value>
   </data>
-  <data name="MNK_AOE_SimpleMode_Name" xml:space="preserve">
+  <data name="MNK_AoE_SimpleMode_Name" xml:space="preserve">
     <value>단순 모드 - 광역 공격</value>
   </data>
-  <data name="MNK_AOE_SimpleMode_Desc" xml:space="preserve">
+  <data name="MNK_AoE_SimpleMode_Desc" xml:space="preserve">
     <value>'파괴신장'으로 모든 광역 딜사이클을 수행합니다.
 입문자에게 가장 이상적인 옵션입니다.</value>
   </data>
@@ -4668,10 +4668,10 @@ Balance에서 권장하는 방식이지만, 글쿨 밀림(Drift)이 발생할 �
   <data name="MNK_ST_UseMantra_Desc" xml:space="preserve">
     <value>적의 광역 공격 시전 시 파티원의 치유량을 높이는 '만트라'를 사용합니다.</value>
   </data>
-  <data name="MNK_AOE_AdvancedMode_Name" xml:space="preserve">
+  <data name="MNK_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>고급 모드 - 광역</value>
   </data>
-  <data name="MNK_AOE_AdvancedMode_Desc" xml:space="preserve">
+  <data name="MNK_AoE_AdvancedMode_Desc" xml:space="preserve">
     <value>'파괴신장'으로 광역 딜사이클 전체를 수행합니다.
 딜사이클을 사용자에 맞게 세부 설정하고 싶을 때 적합합니다.</value>
   </data>

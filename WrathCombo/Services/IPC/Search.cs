@@ -315,6 +315,7 @@ public class Search(Leasing leasing)
     internal void UpdateActiveJobPresets()
     {
         Window.Functions.Presets.UpdateDue = true;
+        P.IPCSearch.UpdateDue = true;
         ActiveJobPresets = Window.Functions.Presets.GetJobAutorots.Count;
     }
 
