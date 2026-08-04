@@ -5620,34 +5620,34 @@ public enum Preset
 
     [AutoAction(false, false)]
     [ReplaceSkill(SGE.Dosis, SGE.Dosis2, SGE.Dosis3)]
-    [ConflictingCombos(SGE_ST_DPS)]
+    [ConflictingCombos(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
     [SimpleCombo]
     SGE_ST_Simple_DPS = 14084,
 
     [AutoAction(true, false)]
     [ReplaceSkill(SGE.Dyskrasia, SGE.Dyskrasia2)]
-    [ConflictingCombos(SGE_AoE_DPS)]
+    [ConflictingCombos(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
     [SimpleCombo]
     SGE_AoE_Simple_DPS = 14085,
 
     [AutoAction(false, true)]
     [ReplaceSkill(SGE.Diagnosis)]
-    [ConflictingCombos(SGE_ST_Heal, SGE_Retarget_Diagnosis)]
+    [ConflictingCombos(SGE_ST_Advanced_Heal, SGE_Retarget_Diagnosis)]
     [JobInfo(Job.SGE)]
     [SimpleCombo]
     [PossiblyRetargeted]
-    SGE_Simple_ST_Heal = 14087,
+    SGE_ST_Simple_Heal = 14087,
 
 
     [AutoAction(true, true)]
     [ReplaceSkill(SGE.Prognosis)]
-    [ConflictingCombos(SGE_AoE_Heal)]
+    [ConflictingCombos(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [SimpleCombo]
     [PossiblyRetargeted]
-    SGE_Simple_AoE_Heal = 14086,
+    SGE_AoE_Simple_Heal = 14086,
 
     #endregion
 
@@ -5658,49 +5658,49 @@ public enum Preset
     [ConflictingCombos(SGE_ST_Simple_DPS)]
     [JobInfo(Job.SGE)]
     [AdvancedCombo]
-    SGE_ST_DPS = 14001,
+    SGE_ST_Advanced_DPS = 14001,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_ST_DPS_Opener = 14055,
+    SGE_ST_Adv_DPS_Opener = 14055,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_ST_DPS_EDosis = 14003,
+    SGE_ST_Adv_DPS_EDosis = 14003,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Druochole)]
-    SGE_ST_DPS_AddersgallProtect = 14054,
+    SGE_ST_Adv_DPS_AddersgallProtect = 14054,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_ST_DPS_Rhizo = 14007,
+    SGE_ST_Adv_DPS_Rhizo = 14007,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_ST_DPS_Phlegma = 14005,
+    SGE_ST_Adv_DPS_Phlegma = 14005,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_ST_DPS_Psyche = 14008,
+    SGE_ST_Adv_DPS_Psyche = 14008,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_ST_DPS_Movement = 14004,
+    SGE_ST_Adv_DPS_Movement = 14004,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
     [Retargeted(SGE.Kardia)]
-    SGE_ST_DPS_Kardia = 14006,
+    SGE_ST_Adv_DPS_Kardia = 14006,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_ST_DPS_Soteria = 14056,
+    SGE_ST_Adv_DPS_Soteria = 14056,
 
-    [ParentCombo(SGE_ST_DPS)]
+    [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_ST_DPS_Lucid = 14002,
+    SGE_ST_Adv_DPS_Lucid = 14002,
 
     #endregion
 
@@ -5711,44 +5711,44 @@ public enum Preset
     [ConflictingCombos(SGE_AoE_Simple_DPS)]
     [JobInfo(Job.SGE)]
     [AdvancedCombo]
-    SGE_AoE_DPS = 14009,
+    SGE_AoE_Advanced_DPS = 14009,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_DPS_EDyskrasia = 14052,
+    SGE_AoE_Adv_DPS_EDyskrasia = 14052,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted]
-    SGE_AoE_DPS_AddersgallProtect = 14053,
+    SGE_AoE_Adv_DPS_AddersgallProtect = 14053,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_DPS_Rhizo = 14013,
+    SGE_AoE_Adv_DPS_Rhizo = 14013,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_DPS_Phlegma = 14010,
+    SGE_AoE_Adv_DPS_Phlegma = 14010,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_DPS_Psyche = 14051,
+    SGE_AoE_Adv_DPS_Psyche = 14051,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_DPS_Toxikon = 14011,
+    SGE_AoE_Adv_DPS_Toxikon = 14011,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_DPS_Pneuma = 14059,
+    SGE_AoE_Adv_DPS_Pneuma = 14059,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_DPS_Soteria = 14057,
+    SGE_AoE_Adv_DPS_Soteria = 14057,
 
-    [ParentCombo(SGE_AoE_DPS)]
+    [ParentCombo(SGE_AoE_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_DPS_Lucid = 14012,
+    SGE_AoE_Adv_DPS_Lucid = 14012,
 
     #endregion
 
@@ -5756,86 +5756,86 @@ public enum Preset
 
     [AutoAction(false, true)]
     [ReplaceSkill(SGE.Diagnosis)]
-    [ConflictingCombos(SGE_Simple_ST_Heal, SGE_Retarget_Diagnosis)]
+    [ConflictingCombos(SGE_ST_Simple_Heal, SGE_Retarget_Diagnosis)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Diagnosis)]
     [HealingCombo]
-    SGE_ST_Heal = 14014,
+    SGE_ST_Advanced_Heal = 14014,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_ST_Heal_Lucid = 14063,
+    SGE_ST_Adv_Heal_Lucid = 14063,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_ST_Heal_Rhizomata = 14023,
+    SGE_ST_Adv_Heal_Rhizomata = 14023,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [Retargeted(SGE.Kardia)]
-    SGE_ST_Heal_Kardia = 14016,
+    SGE_ST_Adv_Heal_Kardia = 14016,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(RoleActions.Healer.Esuna)]
-    SGE_ST_Heal_Esuna = 14015,
+    SGE_ST_Adv_Heal_Esuna = 14015,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Eukrasia)]
-    SGE_ST_Heal_EDiagnosis = 14017,
+    SGE_ST_Adv_Heal_EDiagnosis = 14017,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Druochole)]
-    SGE_ST_Heal_Druochole = 14025,
+    SGE_ST_Adv_Heal_Druochole = 14025,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Taurochole)]
-    SGE_ST_Heal_Taurochole = 14021,
+    SGE_ST_Adv_Heal_Taurochole = 14021,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Haima)]
-    SGE_ST_Heal_Haima = 14022,
+    SGE_ST_Adv_Heal_Haima = 14022,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_ST_Heal_Soteria = 14018,
+    SGE_ST_Adv_Heal_Soteria = 14018,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_ST_Heal_Zoe = 14019,
+    SGE_ST_Adv_Heal_Zoe = 14019,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Krasis)]
-    SGE_ST_Heal_Krasis = 14024,
+    SGE_ST_Adv_Heal_Krasis = 14024,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_ST_Heal_Pepsis = 14020,
+    SGE_ST_Adv_Heal_Pepsis = 14020,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Physis)]
-    SGE_ST_Heal_Physis = 14065,
+    SGE_ST_Adv_Heal_Physis = 14065,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Kerachole)]
-    SGE_ST_Heal_Kerachole = 14066,
+    SGE_ST_Adv_Heal_Kerachole = 14066,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Holos)]
-    SGE_ST_Heal_Holos = 14067,
+    SGE_ST_Adv_Heal_Holos = 14067,
 
-    [ParentCombo(SGE_ST_Heal)]
+    [ParentCombo(SGE_ST_Advanced_Heal)]
     [JobInfo(Job.SGE)]
     [PossiblyRetargeted(SGE.Panhaima)]
-    SGE_ST_Heal_Panhaima = 14068,
+    SGE_ST_Adv_Heal_Panhaima = 14068,
 
     #endregion
 
@@ -5843,54 +5843,54 @@ public enum Preset
 
     [AutoAction(true, true)]
     [ReplaceSkill(SGE.Prognosis)]
-    [ConflictingCombos(SGE_Simple_AoE_Heal)]
+    [ConflictingCombos(SGE_AoE_Simple_Heal)]
     [JobInfo(Job.SGE)]
     [HealingCombo]
-    SGE_AoE_Heal = 14026,
+    SGE_AoE_Advanced_Heal = 14026,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Lucid = 14064,
+    SGE_AoE_Adv_Heal_Lucid = 14064,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Rhizomata = 14036,
+    SGE_AoE_Adv_Heal_Rhizomata = 14036,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_EPrognosis = 14028,
+    SGE_AoE_Adv_Heal_EPrognosis = 14028,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Ixochole = 14033,
+    SGE_AoE_Adv_Heal_Ixochole = 14033,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Kerachole = 14035,
+    SGE_AoE_Adv_Heal_Kerachole = 14035,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Holos = 14030,
+    SGE_AoE_Adv_Heal_Holos = 14030,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Physis = 14027,
+    SGE_AoE_Adv_Heal_Physis = 14027,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Panhaima = 14031,
+    SGE_AoE_Adv_Heal_Panhaima = 14031,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Zoe = 14058,
+    SGE_AoE_Adv_Heal_Zoe = 14058,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Philosophia = 14050,
+    SGE_AoE_Adv_Heal_Philosophia = 14050,
 
-    [ParentCombo(SGE_AoE_Heal)]
+    [ParentCombo(SGE_AoE_Advanced_Heal)]
     [JobInfo(Job.SGE)]
-    SGE_AoE_Heal_Pepsis = 14032,
+    SGE_AoE_Adv_Heal_Pepsis = 14032,
 
     #endregion
 
@@ -5970,7 +5970,7 @@ public enum Preset
     [ParentCombo(SGE_Retarget)]
     [JobInfo(Job.SGE)]
     [Retargeted(SGE.Diagnosis)]
-    [ConflictingCombos(SGE_Simple_ST_Heal, SGE_ST_Heal)]
+    [ConflictingCombos(SGE_ST_Simple_Heal, SGE_ST_Advanced_Heal)]
     SGE_Retarget_Diagnosis = 14079,
 
     [ParentCombo(SGE_Retarget)]

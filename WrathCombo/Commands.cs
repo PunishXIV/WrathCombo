@@ -66,7 +66,7 @@ public partial class WrathCombo
             Preset.AST_ST_DPS_EarthlyStar, Preset.AST_AOE_DPS_EarthlyStar,
             Preset.AST_DPS_LightSpeed, Preset.AST_AOE_LightSpeed,
         ] },
-        { Job.SGE, [Preset.SGE_AoE_DPS_Psyche, Preset.SGE_AoE_DPS_Phlegma, Preset.SGE_ST_DPS_Psyche, Preset.SGE_ST_DPS_Phlegma] },
+        { Job.SGE, [Preset.SGE_AoE_Adv_DPS_Psyche, Preset.SGE_AoE_Adv_DPS_Phlegma, Preset.SGE_ST_Adv_DPS_Psyche, Preset.SGE_ST_Adv_DPS_Phlegma] },
         { Job.DRG, [
             Preset.DRG_ST_BattleLitany, Preset.DRG_ST_LanceCharge,
             Preset.DRG_AoE_BattleLitany, Preset.DRG_AoE_LanceCharge,

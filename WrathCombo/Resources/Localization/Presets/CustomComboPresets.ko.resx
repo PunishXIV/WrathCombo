@@ -6872,24 +6872,24 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
     <value>'위험질환' 버튼 하나로 광역 딜사이클 전체를 수행합니다.
 입문자에게 가장 이상적인 옵션입니다.</value>
   </data>
-  <data name="SGE_Simple_ST_Heal_Name" xml:space="preserve">
+  <data name="SGE_ST_Simple_Heal_Name" xml:space="preserve">
     <value>단순 치유 모드 - 단일 대상</value>
   </data>
-  <data name="SGE_Simple_ST_Heal_Desc" xml:space="preserve">
+  <data name="SGE_ST_Simple_Heal_Desc" xml:space="preserve">
     <value>'진단치료' 버튼 하나로 단일 대상 치유 유틸리티 전체를 수행합니다.
 입문자에게 이상적이며, 특히 자동 사이클 기능을 사용할 때 유용합니다.</value>
   </data>
-  <data name="SGE_Simple_AoE_Heal_Name" xml:space="preserve">
+  <data name="SGE_AoE_Simple_Heal_Name" xml:space="preserve">
     <value>단순 치유 모드 - 광역</value>
   </data>
-  <data name="SGE_Simple_AoE_Heal_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Simple_Heal_Desc" xml:space="preserve">
     <value>'예후' 버튼 하나로 광역 치유 유틸리티 전체를 수행합니다.
 입문자에게 이상적이며, 특히 자동 사이클 기능을 사용할 때 유용합니다.</value>
   </data>
-  <data name="SGE_ST_DPS_Name" xml:space="preserve">
+  <data name="SGE_ST_Advanced_DPS_Name" xml:space="preserve">
     <value>고급 공격 모드 - 단일 대상</value>
   </data>
-  <data name="SGE_ST_DPS_Desc" xml:space="preserve">
+  <data name="SGE_ST_Advanced_DPS_Desc" xml:space="preserve">
     <value>'도시스/2/3'에 다양한 부가 옵션을 추가합니다.</value>
   </data>
   <data name="SGE_ST_DPS_Opener_Name" xml:space="preserve">
@@ -6952,10 +6952,10 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="SGE_ST_DPS_Lucid_Desc" xml:space="preserve">
     <value>MP가 설정값 미만일 때 '자각몽'을 끼워 넣습니다.</value>
   </data>
-  <data name="SGE_AoE_DPS_Name" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_DPS_Name" xml:space="preserve">
     <value>고급 공격 모드 - 광역</value>
   </data>
-  <data name="SGE_AoE_DPS_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_DPS_Desc" xml:space="preserve">
     <value>'위험질환/2'에 다양한 옵션을 추가합니다. 대상이 필요합니다.</value>
   </data>
   <data name="SGE_AoE_DPS_EDyskrasia_Name" xml:space="preserve">
@@ -7012,10 +7012,10 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="SGE_AoE_DPS_Lucid_Desc" xml:space="preserve">
     <value>MP가 설정값 미만일 때 '자각몽'을 끼워 넣습니다.</value>
   </data>
-  <data name="SGE_ST_Heal_Name" xml:space="preserve">
+  <data name="SGE_ST_Advanced_Heal_Name" xml:space="preserve">
     <value>고급 치유 모드 - 단일 대상</value>
   </data>
-  <data name="SGE_ST_Heal_Desc" xml:space="preserve">
+  <data name="SGE_ST_Advanced_Heal_Desc" xml:space="preserve">
     <value>'진단치료'를 다양한 치유 옵션으로 변경합니다.</value>
   </data>
   <data name="SGE_ST_Heal_Lucid_Name" xml:space="preserve">
@@ -7114,10 +7114,10 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="SGE_ST_Heal_Panhaima_Desc" xml:space="preserve">
     <value>'온혈액'을 추가합니다.</value>
   </data>
-  <data name="SGE_AoE_Heal_Name" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_Heal_Name" xml:space="preserve">
     <value>고급 치유 모드 - 광역</value>
   </data>
-  <data name="SGE_AoE_Heal_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_Heal_Desc" xml:space="preserve">
     <value>'예후'를 다양한 치유 옵션으로 변경합니다.</value>
   </data>
   <data name="SGE_AoE_Heal_Lucid_Name" xml:space="preserve">

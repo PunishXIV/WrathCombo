@@ -6923,24 +6923,24 @@
     <value>将“失衡”替换为完整的一键多目标循环。
 这是最适合贤者新手的选项。</value>
   </data>
-  <data name="SGE_Simple_ST_Heal_Name" xml:space="preserve">
+  <data name="SGE_ST_Simple_Heal_Name" xml:space="preserve">
     <value>简单治疗模式 - 单目标</value>
   </data>
-  <data name="SGE_Simple_ST_Heal_Desc" xml:space="preserve">
+  <data name="SGE_ST_Simple_Heal_Desc" xml:space="preserve">
     <value>将“诊断”替换为完整的一键单目标治疗功能。
 这是最适合贤者新手的选项，尤其适合自动循环。</value>
   </data>
-  <data name="SGE_Simple_AoE_Heal_Name" xml:space="preserve">
+  <data name="SGE_AoE_Simple_Heal_Name" xml:space="preserve">
     <value>简单治疗模式 - 多目标</value>
   </data>
-  <data name="SGE_Simple_AoE_Heal_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Simple_Heal_Desc" xml:space="preserve">
     <value>将“预后”替换为完整的一键多目标治疗功能。
 这是最适合贤者新手的选项，尤其适合自动循环。</value>
   </data>
-  <data name="SGE_ST_DPS_Name" xml:space="preserve">
+  <data name="SGE_ST_Advanced_DPS_Name" xml:space="preserve">
     <value>进阶输出模式 - 单目标</value>
   </data>
-  <data name="SGE_ST_DPS_Desc" xml:space="preserve">
+  <data name="SGE_ST_Advanced_DPS_Desc" xml:space="preserve">
     <value>为“注药 I/II/III”加入多种功能选项。</value>
   </data>
   <data name="SGE_ST_DPS_Opener_Name" xml:space="preserve">
@@ -7003,10 +7003,10 @@
   <data name="SGE_ST_DPS_Lucid_Desc" xml:space="preserve">
     <value>当 MP 低于设定值时，插入“醒梦”。</value>
   </data>
-  <data name="SGE_AoE_DPS_Name" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_DPS_Name" xml:space="preserve">
     <value>进阶输出模式 - 多目标</value>
   </data>
-  <data name="SGE_AoE_DPS_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_DPS_Desc" xml:space="preserve">
     <value>为“失衡 I/II”加入多种功能选项。需要目标。</value>
   </data>
   <data name="SGE_AoE_DPS_EDyskrasia_Name" xml:space="preserve">
@@ -7063,10 +7063,10 @@
   <data name="SGE_AoE_DPS_Lucid_Desc" xml:space="preserve">
     <value>当 MP 低于设定值时，插入“醒梦”。</value>
   </data>
-  <data name="SGE_ST_Heal_Name" xml:space="preserve">
+  <data name="SGE_ST_Advanced_Heal_Name" xml:space="preserve">
     <value>进阶治疗模式 - 单目标</value>
   </data>
-  <data name="SGE_ST_Heal_Desc" xml:space="preserve">
+  <data name="SGE_ST_Advanced_Heal_Desc" xml:space="preserve">
     <value>将“诊断”替换为多种治疗选项。</value>
   </data>
   <data name="SGE_ST_Heal_Lucid_Name" xml:space="preserve">
@@ -7165,10 +7165,10 @@
   <data name="SGE_ST_Heal_Panhaima_Desc" xml:space="preserve">
     <value>加入“泛输血”。</value>
   </data>
-  <data name="SGE_AoE_Heal_Name" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_Heal_Name" xml:space="preserve">
     <value>进阶治疗模式 - 多目标</value>
   </data>
-  <data name="SGE_AoE_Heal_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_Heal_Desc" xml:space="preserve">
     <value>将“预后”替换为多种治疗选项。</value>
   </data>
   <data name="SGE_AoE_Heal_Lucid_Name" xml:space="preserve">
