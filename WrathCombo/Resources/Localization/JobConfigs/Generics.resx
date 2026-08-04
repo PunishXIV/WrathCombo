@@ -164,7 +164,7 @@
   </data>
   <data name="Align0WithManual1" xml:space="preserve">
     <value>Keep {0} aligned with manual use of {1}.</value>
-  </data>  
+  </data>
   <data name="AllContent" xml:space="preserve">
     <value>All Content</value>
   </data>
@@ -197,7 +197,7 @@
   </value>
   </data>
   <data name="BlockStun" xml:space="preserve">
-    <value>Block {0} when with Savage Blade when no stunnable targets are found.</value>
+    <value>Block {0} when no stunnable targets are found.</value>
   </data>
   <data name="BossEncounterNonBossHpPercent" xml:space="preserve">
       <value>Boss Encounter Non-Bosses: Stop using at Enemy HP %</value>
@@ -402,7 +402,7 @@ Set to Zero to disable this check.</value>
   <data name="RangeBasedTargetingDesc" xml:space="preserve">
     <value>Choose to retarget to the nearest of furthest enemy outside of 5y.</value>
   </data>
-    <data name="On0" xml:space="preserve">
+  <data name="On0" xml:space="preserve">
     <value>On {0}</value>
     <comment>Used for simple "On {Action}" strings</comment>
   </data>

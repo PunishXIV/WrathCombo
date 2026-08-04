@@ -98,7 +98,7 @@ internal partial class MCH : PhysicalRanged
                 return actionID;
 
             if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
-                return All.SavageBlade;
+                return All.Cease;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -324,7 +324,7 @@ internal partial class MCH : PhysicalRanged
                 return actionID;
 
             if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
-                return All.SavageBlade;
+                return All.Cease;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -438,7 +438,7 @@ internal partial class MCH : PhysicalRanged
                 return actionID;
 
             return HasStatusEffect(Debuffs.Dismantled, CurrentTarget, true) && IsOffCooldown(Dismantle)
-                ? All.SavageBlade
+                ? All.Cease
                 : actionID;
         }
     }

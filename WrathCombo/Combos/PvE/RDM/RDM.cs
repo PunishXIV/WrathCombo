@@ -744,7 +744,7 @@ internal partial class RDM : Caster
                 return OriginalHook(Zwerchhau);
 
             if (IsEnabled(Preset.RDM_Riposte_NoWaste) && !HasEnoughManaToStartStandalone && !CanMagickedSwordplay)
-                return All.SavageBlade;
+                return All.Cease;
 
             return actionID;
         }
@@ -793,7 +793,7 @@ internal partial class RDM : Caster
 
             if (IsEnabled(Preset.RDM_Moulinet_NoWaste) &&
                 ComboAction is not (Moulinet or EnchantedMoulinet or EnchantedMoulinetDeux) && !HasEnoughManaToStartStandalone && !CanMagickedSwordplay)
-                return All.SavageBlade;
+                return All.Cease;
 
             return actionID;
         }
@@ -828,7 +828,7 @@ internal partial class RDM : Caster
 
             return ActionReady(Embolden) &&
                    HasStatusEffect(Buffs.EmboldenOthers, anyOwner: true)
-                ? All.SavageBlade
+                ? All.Cease
                 : actionID;
         }
     }
@@ -846,11 +846,11 @@ internal partial class RDM : Caster
             {
                 if (Role.CanAddle() && CanNotMagickBarrier ||
                     GetCooldownRemainingTime(Role.Addle) < GetCooldownRemainingTime(MagickBarrier))
-                    return GetStatusEffectRemainingTime(Debuffs.Addle, CurrentTarget, anyOwner: true) > RDM_AddleDuration ? All.SavageBlade : Role.Addle;
+                    return GetStatusEffectRemainingTime(Debuffs.Addle, CurrentTarget, anyOwner: true) > RDM_AddleDuration ? All.Cease : Role.Addle;
             }
 
             if (ActionReady(MagickBarrier) && GetStatusEffectRemainingTime(Buffs.MagickBarrier, anyOwner: true) > RDM_MagickProtectionDuration)
-                return All.SavageBlade;
+                return All.Cease;
 
             if (IsEnabled(Preset.RDM_MagickBarrierAddle) && GetCooldownRemainingTime(Role.Addle) < GetCooldownRemainingTime(MagickBarrier))
                 return Role.Addle;

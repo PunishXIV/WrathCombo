@@ -20,6 +20,9 @@ namespace WrathCombo.Combos;
 /// <summary> Combo presets. </summary>
 public enum Preset
 {
+    [JobInfo(Job.ADV)]
+    AlwaysOn = 1 ,
+
     #region PvE Combos
 
     #region GLOBAL FEATURES

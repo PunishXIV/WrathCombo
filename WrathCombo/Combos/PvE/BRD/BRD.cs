@@ -267,7 +267,7 @@ internal partial class BRD : PhysicalRanged
                             return IronJaws.Retarget([CausticBite, VenomousBite], lowestBlue);
                     }
                     else
-                        return All.SavageBlade;
+                        return All.Cease;
                 }
 
                 if (purpleDotTarget != null && ActionReady(purpleDotAction))
@@ -286,7 +286,7 @@ internal partial class BRD : PhysicalRanged
                             return blueDotAction.Retarget([CausticBite, VenomousBite], lowestBlue);
                     }
                     else
-                        return All.SavageBlade;
+                        return All.Cease;
                 }
             }
 

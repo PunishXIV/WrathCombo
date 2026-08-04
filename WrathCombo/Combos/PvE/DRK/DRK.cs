@@ -417,7 +417,7 @@ internal partial class DRK : Tank
                 (GetStatusEffectRemainingTime(Buffs.Oblation, checkTarget, anyOwner: true) > DRK_RetargetOblationDuration ||
                  JustUsedOn(Oblation, checkTarget)) &&
                 CanApplyStatus(checkTarget, Buffs.Oblation))
-                return All.SavageBlade;
+                return All.Cease;
 
             if (target is not null &&
                 CanApplyStatus(target, Buffs.Oblation))

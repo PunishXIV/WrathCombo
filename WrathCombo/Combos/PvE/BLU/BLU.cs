@@ -496,7 +496,7 @@ internal partial class BLU : Caster
                     return OriginalHook(PhantomFlurry);
 
                 if (HasStatusEffect(Buffs.MoonFlute))
-                    return All.SavageBlade;
+                    return All.Cease;
             }
 
             return actionID;

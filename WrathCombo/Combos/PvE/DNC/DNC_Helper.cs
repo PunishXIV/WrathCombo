@@ -135,7 +135,7 @@ internal partial class DNC
     /// <returns>
     ///     The Finisher to use, or if
     ///     <see cref="Preset.DNC_ST_BlockFinishes" /> is enabled and
-    ///     there is no enemy in range: <see cref="All.SavageBlade" />.
+    ///     there is no enemy in range: <see cref="All.Cease" />.
     /// </returns>
     private static uint FinishOrHold(uint desiredFinish)
     {
@@ -153,7 +153,7 @@ internal partial class DNC
 
         // If there is no enemy in range, hold the finish
         if (!EnemyIn15Yalms)
-            return All.SavageBlade;
+            return All.Cease;
 
         // If there is an enemy in range, or as a fallback, return the desired finish
         return desiredFinish;
@@ -564,13 +564,13 @@ internal partial class DNC
     /// <param name="action">The action ID to check.</param>
     /// <param name="updatedAction">
     ///     The matching dance step the action was assigned to.<br />
-    ///     Will be Savage Blade if used and was not a custom dance step.<br />
+    ///     Will be Cease if used and was not a custom dance step.<br />
     ///     Do not use this value if the return is <c>false</c>.
     /// </param>
     /// <returns>If the action was assigned as a custom dance step.</returns>
     private static bool GetCustomDanceStep(uint action, out uint updatedAction)
     {
-        updatedAction = All.SavageBlade;
+        updatedAction = All.Cease;
 
         if (!CustomDanceStepActions.Contains(action))
             return false;

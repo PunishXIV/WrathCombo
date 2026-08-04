@@ -473,7 +473,7 @@ internal partial class VPR : Melee
             return (UsedVicewinder || UsedHuntersCoil || UsedSwiftskinsCoil ||
                     UsedVicepit || UsedHuntersDen || UsedSwiftskinsDen) &&
                    LevelChecked(Vicewinder)
-                ? All.SavageBlade
+                ? All.Cease
                 : actionID;
         }
     }

@@ -650,7 +650,7 @@ internal partial class SCH : Healer
                 return actionID;
 
             if (SCH_Dissipation_WastePrevention && HasAetherflow)
-                return All.SavageBlade;
+                return All.Cease;
 
             return IsOffCooldown(Aetherflow) || 
                    !LevelChecked(Dissipation) || 

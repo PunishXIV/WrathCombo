@@ -98,7 +98,7 @@ internal static class DNCPvP
             if (IsEnabled(Preset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && GetTargetDistance() <= 5 && !enemyGuarded)
             {
                 if (HasStatusEffect(Buffs.Acclaim) && acclaimStacks < 4)
-                    return All.SavageBlade;
+                    return All.Cease;
 
                 return HoningDance;
             }

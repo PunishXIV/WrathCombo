@@ -6,6 +6,7 @@ using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
+using ECommons.Logging;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
@@ -90,6 +91,30 @@ internal unsafe class AutoRotationController
             Paused = true;
             Svc.Framework.RunOnTick(() => Paused = false, TimeSpan.FromSeconds(UnpauseSeconds));
         }
+    }
+
+    /// <summary>
+    ///     Toggles the auto-rotation setting.
+    /// </summary>
+    /// <param name="value">
+    ///     Whether to enable or disable auto-rotation.
+    /// </param>
+    public static void ToggleAutoRotation(bool value)
+    {
+        Service.Configuration.RotationConfig.Enabled = value;
+        Service.Configuration.Save();
+
+        var stateControlled =
+            P.UIHelper.AutoRotationStateControlled() is not null;
+
+        Paused = false;
+
+        if (!Service.Configuration.SuppressAutorotCommand)
+            DuoLog.Information(
+                "Auto-Rotation set to "
+                + (Service.Configuration.RotationConfig.Enabled ? "ON" : "OFF")
+                + (stateControlled ? " " + OptionControlledByIPC : "")
+            );
     }
 
     public void Dispose()
@@ -864,7 +889,7 @@ internal unsafe class AutoRotationController
 
                 OverrideTarget = target ?? OverrideTarget;
                 uint outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, OverrideTarget));
-                if (outAct is All.SavageBlade) return true;
+                if (outAct is All.Cease) return true;
                 if (!ActionReady(outAct))
                     return false;
 

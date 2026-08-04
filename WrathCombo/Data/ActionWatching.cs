@@ -605,7 +605,8 @@ public static class ActionWatching
 
                 if (replacedWith >= All.SingleTargetDPS)
                 {
-                    Svc.Toasts.ShowError("This is a custom action, it does nothing on its own.");
+                    if (replacedWith != All.Cease)
+                        Svc.Toasts.ShowError("This is a custom action, it does nothing on its own.");
                     return false;
                 }
 

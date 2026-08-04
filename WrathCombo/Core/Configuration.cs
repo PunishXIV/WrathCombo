@@ -206,7 +206,7 @@ public partial class Configuration : IPluginConfiguration
 
     #region Rotation Behavior Settings
 
-    /// Whether all Combos should be <see cref="All.SavageBlade"/> when moving. Default: false.
+    /// Whether all Combos should be <see cref="All.Cease"/> when moving. Default: false.
     /// <seealso cref="ActionReplacer.GetAdjustedAction"/>
     [SettingCategory(Rotation_Behavior_Options)]
     [Setting(Setting.Type.Toggle)]

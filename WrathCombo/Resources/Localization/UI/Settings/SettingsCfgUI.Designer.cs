@@ -268,7 +268,7 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Will completely block actions while moving, by replacing Combo outputs with Savage Blade.
+        ///   Looks up a localized string similar to Will completely block actions while moving.
         ///This would supersede combo-specific movement options, which many jobs have..
         /// </summary>
         internal static string BlockSpellOnMove_helpMark {
@@ -952,7 +952,7 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Will lockout combos on your hotbar with Savage Blade when detected mechanics that inflict a penalty for using an action is detected (e.g pyretics, acceleration bombs, gazes etc.) has this much time left before resolving.
+        ///   Looks up a localized string similar to Will lockout combos on your hotbar when detected mechanics that inflict a penalty for using an action is detected (e.g pyretics, acceleration bombs, gazes etc.) has this much time left before resolving.
         ///
         ///Some mechanics may override this value.
         ///

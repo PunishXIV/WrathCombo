@@ -437,10 +437,22 @@
         <None Update="Resources\AoEHeals.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Resources\NewSavageBlade.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Resources\SingleTargetDPS.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Resources\SingleTargetHeals.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\WrathAutoOff.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\WrathAutoOn.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\WrathAutoToggle.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="WrathCombo.json">

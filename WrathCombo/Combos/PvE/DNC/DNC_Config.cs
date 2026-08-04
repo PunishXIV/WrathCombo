@@ -444,14 +444,12 @@ internal partial class DNC
                     DrawRadioButton(
                         DNC_Partner_ActionToShow, "Closed Position",
                         "When your current partner is optimal Closed Position will be shown.\n" +
-                        "This will block you from using Closed Position or Ending\n(unless you hard target a friendly other than your partner).\n\n" +
-                        "This is less distracting than the Savage Blade option.",
+                        "This will block you from using Closed Position or Ending\n(unless you hard target a friendly other than your partner)",
                         outputValue: (int)PartnerShowAction.ClosedPosition,
                         descriptionAsTooltip: true);
                     DrawRadioButton(
-                        DNC_Partner_ActionToShow, "Savage Blade",
-                        "When your current partner is optimal Savage Blade will be shown.\n" +
-                        "Savage Blade is a removed action that we use to block input.\n" +
+                        DNC_Partner_ActionToShow, "Block Input",
+                        "When your current partner is optimal, the input will be blocked.\n" +
                         "This will block you from using Closed Position or Ending.\n\n" +
                         "This is the recommended option, to keep you from mistakenly switching partners.",
                         outputValue: (int)PartnerShowAction.SavageBlade,

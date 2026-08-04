@@ -133,7 +133,7 @@ internal static class RPRPvP
                         // Holds Communio when moving & Enshrouded Time Remaining > 2s
                         // Returns a Void/Cross Reaping if under 2s to avoid charge waste
                         if (IsMoving() && GetStatusEffectRemainingTime(Buffs.Enshrouded) > 2)
-                            return All.SavageBlade;
+                            return All.Cease;
 
                         // Returns Communio if stationary
                         if (!IsMoving())

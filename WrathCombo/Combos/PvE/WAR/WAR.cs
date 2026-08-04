@@ -364,7 +364,7 @@ internal partial class WAR
             return InBossEncounter() && 
                    (GetPossessedStatusRemainingTime(Buffs.InnerStrength) > WAR_ArmsLengthLockout_Time || 
                     JustUsed(InnerRelease))
-                ? All.SavageBlade
+                ? All.Cease
                 : actionID;
         }
     }

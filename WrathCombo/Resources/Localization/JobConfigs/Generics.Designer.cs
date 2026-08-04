@@ -305,7 +305,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Block {0} when with Savage Blade when no stunnable targets are found..
+        ///   Looks up a localized string similar to Block {0} when no stunnable targets are found..
         /// </summary>
         internal static string BlockStun {
             get {

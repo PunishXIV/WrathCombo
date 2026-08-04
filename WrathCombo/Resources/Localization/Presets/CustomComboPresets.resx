@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ALL_Caster_Addle_Desc" xml:space="preserve">
-    <value>Prevents the use of Addle when target already has the effect by replacing it with Savage Blade.</value>
+    <value>Prevents the use of Addle when target already has the effect.</value>
   </data>
   <data name="ALL_Caster_Addle_Name" xml:space="preserve">
     <value>Magical Ranged DPS: Double Addle Protection</value>
@@ -172,7 +172,7 @@
     <value>Healer: Rescue Retargeting</value>
   </data>
   <data name="ALL_Melee_Feint_Desc" xml:space="preserve">
-    <value>Prevents the use of Feint when target already has the effect by replacing it with Savage Blade.</value>
+    <value>Prevents the use of Feint when target already has the effect.</value>
   </data>
   <data name="ALL_Melee_Feint_Name" xml:space="preserve">
     <value>Melee DPS: Double Feint Protection</value>
@@ -184,7 +184,7 @@
     <value>Global Melee DPS Features</value>
   </data>
   <data name="ALL_Melee_TrueNorth_Desc" xml:space="preserve">
-    <value>Prevents the use of True North when its buff is already active by replacing it with Savage Blade.</value>
+    <value>Prevents the use of True North when its buff is already active.</value>
   </data>
   <data name="ALL_Melee_TrueNorth_Name" xml:space="preserve">
     <value>Melee DPS: True North Protection</value>
@@ -202,7 +202,7 @@
     <value>Global Physical Ranged Features</value>
   </data>
   <data name="ALL_Ranged_Mitigation_Desc" xml:space="preserve">
-    <value>Prevents the use of Tactician/Troubadour/Shield Samba when target already has one of those three effects by replacing them with Savage Blade.</value>
+    <value>Prevents the use of Tactician/Troubadour/Shield Samba when target already has one of those three effects.</value>
   </data>
   <data name="ALL_Ranged_Mitigation_Name" xml:space="preserve">
     <value>Physical Ranged DPS: Double Mitigation Protection</value>
@@ -227,7 +227,7 @@ For PLDs this feature will add Shield Bash when Interject and Low Blow are on co
     <value>Global Tank Features</value>
   </data>
   <data name="ALL_Tank_Reprisal_Desc" xml:space="preserve">
-    <value>Prevents the use of Reprisal when target already has the effect by replacing it with Savage Blade.</value>
+    <value>Prevents the use of Reprisal when target already has the effect.</value>
   </data>
   <data name="ALL_Tank_Reprisal_Name" xml:space="preserve">
     <value>Tank: Double Reprisal Protection</value>
@@ -1155,7 +1155,7 @@ Will only be used if Swiftcast is on cooldown.</value>
     <value>Foul/Xenoglossy Option</value>
   </data>
   <data name="BLM_TriplecastProtection_Desc" xml:space="preserve">
-    <value>Replaces Triplecast with Savage Blade when you already have triplecast active.</value>
+    <value>Blocks Triplecast with when you already have Triplecast active.</value>
   </data>
   <data name="BLM_TriplecastProtection_Name" xml:space="preserve">
     <value>Triplecast Protection</value>
@@ -1821,10 +1821,10 @@ Alternates between the two if Iron Jaws isn't available.</value>
     <value>Multi-Target Feature</value>
   </data>
   <data name="BRD_OneButtonDots_SavageBlade_Desc" xml:space="preserve">
-    <value>If nothing is left to DoT or refresh within 5s, lockout with Savage Blade</value>
+    <value>Blocks the actions from being used whenever there is no targets to apply DoTs to or refresh.</value>
   </data>
   <data name="BRD_OneButtonDots_SavageBlade_Name" xml:space="preserve">
-    <value>Savage Blade Lockout Feature</value>
+    <value>Lockout Feature</value>
   </data>
   <data name="BRD_OneButtonSongs_Desc" xml:space="preserve">
     <value>Add Mage's Ballad and Army's Paeon to Wanderer's Minuet depending on cooldowns.</value>
@@ -2367,7 +2367,7 @@ Requirements:
 - Standard Step ready
 - Technical Step ready
 - Devilment ready
-(Will change to Savage Blade to wait for the countdown)
+
 (REQUIRES a countdown)</value>
   </data>
   <data name="DNC_ST_BalanceOpener_Name" xml:space="preserve">
@@ -2380,7 +2380,7 @@ Requirements:
     <value>Basic Combo</value>
   </data>
   <data name="DNC_ST_BlockFinishes_Desc" xml:space="preserve">
-    <value>Will hold Standard Finish and Technical Finish until an enemy is within range of the abilities in all (non-Simple) Modes and Features below by replacing whatever button with Savage Blade.
+    <value>Will hold Standard Finish and Technical Finish until an enemy is within range of the abilities in all (non-Simple) Modes and Features below.
 Will show either Finish when the dance is about to expire.
 This behavior is recommended by The Balance but can introduce drift, so it may not be what is best for your group.</value>
   </data>
@@ -2412,7 +2412,7 @@ This behavior is recommended by The Balance but can introduce drift, so it may n
     <value>Single Target Multibutton Feature</value>
   </data>
   <data name="DNC_ST_Opener_BlockEarly_Desc" xml:space="preserve">
-    <value>When not in combat will change to Savage Blade to wait for a countdown to appear.
+    <value>When not in combat, will block the action to wait for a countdown to appear.
 Mostly here to allow for targeting the boss before the exact countdown window your opener selection is waiting for.
 ONLY designed to be something you turn on while doing back-to-back pulls of content, NOT suitable to leave on all the time.</value>
   </data>
@@ -2737,7 +2737,7 @@ Early Buff prepull:
 - Lance Charge at -2
 - Battle Litany at -2
 Without a countdown, prepull steps have no delay.
-(During a countdown only: holds as Savage Blade until each prepull timing)</value>
+(During a countdown only: blocks action until each prepull timing)</value>
   </data>
   <data name="DRG_ST_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 100)</value>
@@ -3235,7 +3235,7 @@ NOTE: Will not use unless there is a target within range to prevent waste.</valu
     <value>Will Retarget Oblation outside of other combos to your MouseOver Target (or a friendly Hard Target).</value>
   </data>
   <data name="DRK_Retarget_Oblation_DoubleProtection_Desc" xml:space="preserve">
-    <value>Will change Oblation to Savage Blade when your target already has Oblation on them.</value>
+    <value>Will block Oblation when your target already has Oblation on them.</value>
   </data>
   <data name="DRK_Retarget_Oblation_DoubleProtection_Name" xml:space="preserve">
     <value>Prevent Double Oblations</value>
@@ -4234,14 +4234,14 @@ This feature is ideal for any fresh newcomers to the job.</value>
   <data name="MCH_AoE_AdvancedMode_Desc" xml:space="preserve">
     <value>Replaces Spreadshot with a full one-button AoE rotation.
 These features are ideal if you want to customize the rotation.
-Will lock out input to keep Flamethrower going by replacing Spreadshot with Savage Blade.</value>
+Will lock out input to keep Flamethrower going.</value>
   </data>
   <data name="MCH_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>Advanced Mode - AoE</value>
   </data>
   <data name="MCH_AoE_Adv_FlameThrower_Desc" xml:space="preserve">
     <value>Adds Flamethrower to the rotation.
- Changes to Savage blade when in use to prevent cancelling.</value>
+Will block action whilst channelling.</value>
   </data>
   <data name="MCH_AoE_Adv_FlameThrower_Name" xml:space="preserve">
     <value>Flamethrower Option</value>
@@ -4313,7 +4313,7 @@ Double Check / Checkmate option</value>
   <data name="MCH_AoE_SimpleMode_Desc" xml:space="preserve">
     <value>Replaces Spreadshot with a full one-button AoE rotation.
 This is the ideal option for newcomers to the job.
-Will lock out input to keep Flamethrower going by replacing Spreadshot with Savage Blade.</value>
+Will block action whilst channelling.</value>
   </data>
   <data name="MCH_AoE_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - AoE</value>
@@ -4344,7 +4344,7 @@ Will lock out input to keep Flamethrower going by replacing Spreadshot with Sava
     <value>Big Hitter Feature</value>
   </data>
   <data name="MCH_DismantleProtection_Desc" xml:space="preserve">
-    <value>Prevents the use of Dismantle when target already has the effect by replacing it with Savage Blade.</value>
+    <value>Prevents the use of Dismantle when target already has the effect.</value>
   </data>
   <data name="MCH_DismantleProtection_Name" xml:space="preserve">
     <value>Double Dismantle Protection</value>
@@ -4432,7 +4432,7 @@ Prepull:
 - Reassemble at -5
 - Potion at -2
 Without a countdown, prepull steps have no delay.
-(During a countdown only: holds as Savage Blade until each prepull timing)</value>
+(During a countdown only: blocks action until each prepull timing)</value>
   </data>
   <data name="MCH_ST_Adv_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 90/100)</value>
@@ -4694,7 +4694,7 @@ Do not expect these options to be maintained, or even kept, after they are no lo
     <value>Hidden Options</value>
   </data>
   <data name="MNK_PerfectBalanceProtection_Desc" xml:space="preserve">
-    <value>Replaces Perfect Balance with Savage Blade when you already have Perfect Balance active.</value>
+    <value>Blocks Perfect Balance when you already have Perfect Balance active.</value>
   </data>
   <data name="MNK_PerfectBalanceProtection_Name" xml:space="preserve">
     <value>Perfect Balance Protection</value>
@@ -4756,7 +4756,7 @@ Prepull:
 Early Buff prepull:
 - Riddle of Wind at -2
 Without a countdown, prepull steps have no delay.
-(During a countdown only: holds as Savage Blade until each prepull timing)</value>
+(During a countdown only: blocks action until each prepull timing)</value>
   </data>
   <data name="MNK_STUseOpener_Name" xml:space="preserve">
     <value>Opener Option</value>
@@ -5121,7 +5121,7 @@ Cooldown tracking plugin recommended.</value>
     <value>Kassatsu to Trick Feature</value>
   </data>
   <data name="NIN_MudraProtection_Desc" xml:space="preserve">
-    <value>Replaces with Savage Blade during Mudra Phase to help prevent manual usage Mudra fails.</value>
+    <value>Blocks actions during Mudra Phase to help prevent manual usage Mudra fails.</value>
   </data>
   <data name="NIN_MudraProtection_Name" xml:space="preserve">
     <value>Mudra Protection</value>
@@ -6410,7 +6410,7 @@ This is the ideal option for newcomers to the job.</value>
     <value>Simple Mode - AoE</value>
   </data>
   <data name="PLD_BlockForWings_Desc" xml:space="preserve">
-    <value>Will block the main Combos with Savage Blade while Passage of Arms is still active, to prevent actions from those combos cancelling Passage of Arms early.
+    <value>Will block the main Combos while Passage of Arms is still active, to prevent actions from those combos cancelling Passage of Arms early.
 This will leave it up to you to cancel Passage of Arms via other actions or movement (or letting it be used fully).</value>
   </data>
   <data name="PLD_BlockForWings_Name" xml:space="preserve">
@@ -6853,7 +6853,7 @@ This is the ideal option for newcomers to the job.</value>
     <value>Recuperate Option</value>
   </data>
   <data name="PvP_MashCancel_Desc" xml:space="preserve">
-    <value>Stops you cancelling your guard if you're pressing buttons quickly by replacing your buttons with Savage Blade.</value>
+    <value>Stops you cancelling your guard if you're pressing buttons quickly by blocking your actions.</value>
   </data>
   <data name="PvP_MashCancel_Name" xml:space="preserve">
     <value>Prevent Mash Cancelling Feature</value>
@@ -6866,7 +6866,7 @@ This is the ideal option for newcomers to the job.</value>
   </data>
   <data name="RDMPvP_BurstMode_Desc" xml:space="preserve">
     <value>Turns Jolt III into an all-in-one button.
-- Will not attempt to cast Jolt III while moving by replacing it with Savage Blade.</value>
+- Will not attempt to cast Jolt III while moving.</value>
   </data>
   <data name="RDMPvP_BurstMode_Name" xml:space="preserve">
     <value>Burst Mode</value>
@@ -7096,7 +7096,7 @@ Ensure your opener timeout setting is higher than your Veraero III cast time!!!
     <value>Embolden to Manafication Option</value>
   </data>
   <data name="RDM_EmboldenProtection_Desc" xml:space="preserve">
-    <value>Disables Embolden when buffed by another Red Mage's Embolden by replacing it with Savage Blade.</value>
+    <value>Disables Embolden when buffed by another Red Mage's Embolden.</value>
   </data>
   <data name="RDM_EmboldenProtection_Name" xml:space="preserve">
     <value>Embolden Overlap Protection</value>
@@ -7109,7 +7109,7 @@ Will Display the lowest cooldown skill if both are on cooldown.</value>
     <value>Magick Barrier to Addle Option</value>
   </data>
   <data name="RDM_MagickProtection_Desc" xml:space="preserve">
-    <value>Disables Magick Barrier when buffed by another Red Mage's Magick Barrier by replacing it with Savage Blade. 
+    <value>Disables Magick Barrier when buffed by another Red Mage's Magick Barrier.
 Applies to suboption for Addle as well.</value>
   </data>
   <data name="RDM_MagickProtection_Name" xml:space="preserve">
@@ -7134,7 +7134,7 @@ Applies to suboption for Addle as well.</value>
     <value>Moulinet Melee Combo</value>
   </data>
   <data name="RDM_Moulinet_NoWaste_Desc" xml:space="preserve">
-    <value>Replaces Moulinet with Savage Blade when resources are too low to complete combo</value>
+    <value>Blocks Moulinet when resources are too low to complete combo</value>
   </data>
   <data name="RDM_Moulinet_NoWaste_Name" xml:space="preserve">
     <value>Moulinet Waste Prevention Option</value>
@@ -7206,7 +7206,7 @@ Applies to suboption for Addle as well.</value>
     <value>Riposte Melee Combo</value>
   </data>
   <data name="RDM_Riposte_NoWaste_Desc" xml:space="preserve">
-    <value>Replaces Riposte with Savage Blade when resources are too low to complete combo</value>
+    <value>Blocks Riposte when resources are too low to complete combo</value>
   </data>
   <data name="RDM_Riposte_NoWaste_Name" xml:space="preserve">
     <value>Riposte Waste Prevention Option</value>
@@ -7787,7 +7787,7 @@ These features are ideal if you want to customize the rotation.</value>
 Standard opener prepull:
 - Harpe at -1 (skipped in melee)
 Without a countdown, prepull steps have no delay.
-(During a countdown only: holds as Savage Blade until each prepull timing)</value>
+(During a countdown only: blocks action until each prepull timing)</value>
   </data>
   <data name="RPR_ST_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 90/100)</value>
@@ -8134,7 +8134,7 @@ Do not expect these options to be maintained, or even kept, after they are no lo
     <value>Sens Feature</value>
   </data>
   <data name="SAM_MeikyoShisuiProtection_Desc" xml:space="preserve">
-    <value>Blocks Meikyo Shisui with Savage Blade when you already have Meikyo Shisui active.</value>
+    <value>Blocks Meikyo Shisui when you already have Meikyo Shisui active.</value>
   </data>
   <data name="SAM_MeikyoShisuiProtection_Name" xml:space="preserve">
     <value>Meikyo Shisui Protection</value>
@@ -8323,7 +8323,7 @@ Prepull:
 - True North at -5 (skipped if target has no positionals)
 - Gekko on pull
 Without a countdown, prepull steps have no delay.
-(During a countdown only: holds as Savage Blade until each prepull timing)</value>
+(During a countdown only: blocks action until each prepull timing)</value>
   </data>
   <data name="SAM_ST_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 70/80/90/100)</value>
@@ -10384,7 +10384,7 @@ Will automatically swap depending on your position.</value>
     <value>Include Twin Combo Actions</value>
   </data>
   <data name="VPR_VicewinderProtection_Desc" xml:space="preserve">
-    <value>Replaces Vicewinder / Vicepit with Savage Blade when you already have Vicewinder / Vicepit active.</value>
+    <value>Blocks Vicewinder / Vicepit when you already have Vicewinder / Vicepit active.</value>
   </data>
   <data name="VPR_VicewinderProtection_Name" xml:space="preserve">
     <value>Vicewinder / Vicepit Protection</value>

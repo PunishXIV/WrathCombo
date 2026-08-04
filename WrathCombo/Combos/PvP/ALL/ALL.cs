@@ -144,7 +144,7 @@ internal static class PvPCommon
                 if (actionID is Guard)
                     return Guard;
 
-                return All.SavageBlade;
+                return All.Cease;
             }
 
             if (Execute() && InPvP() &&
@@ -192,7 +192,7 @@ internal static class PvPCommon
                     return Guard;
                 }
 
-                return All.SavageBlade;
+                return All.Cease;
             }
 
             if (Execute() && InPvP() &&
@@ -247,7 +247,7 @@ internal static class PvPCommon
                 if (actionID is Guard)
                     return Guard;
 
-                return All.SavageBlade;
+                return All.Cease;
             }
 
             if (Execute() && InPvP() && IsOffCooldown(Purify) &&

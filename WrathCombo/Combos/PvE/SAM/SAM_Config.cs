@@ -24,7 +24,7 @@ internal partial class SAM
 
                     ImGui.TextWrapped(SAM_Config.SecondsDelayFromFirstStep);
                     if (ImGui.IsItemHovered())
-                        ImGui.SetTooltip(FormatAndCache(SAM_Config.DelaySavageBlade, All.SavageBlade.ActionName()));
+                        ImGui.SetTooltip(FormatAndCache(SAM_Config.DelaySavageBlade, All.Cease.ActionName()));
 
                     ImGuiEx.Spacing(new Vector2(0, 10));
                     ImGuiEx.TextUnderlined($"{Gyoten.ActionName()} Settings");

@@ -163,7 +163,7 @@ internal sealed class ActionReplacer : IDisposable
                         ActionManager.GetAdjustedCastTime(ActionType.Action, newActionID) > 0 &&
                         CustomComboFunctions.TimeMoving.Ticks > 0) || (Service.Configuration.PenaltyPause > 0 && CustomComboFunctions.PlayerHasActionPenalty(false)))
                     {
-                        return All.SavageBlade;
+                        return All.Cease;
                     }
 
                     return newActionID;

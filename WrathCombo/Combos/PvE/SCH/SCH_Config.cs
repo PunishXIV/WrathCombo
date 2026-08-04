@@ -290,7 +290,7 @@ internal partial class SCH
                 #region Standalones
                 case Preset.SCH_Dissipation:
                     DrawAdditionalBoolChoice(SCH_Dissipation_WastePrevention, Generics.WastePrevention, 
-                        FormatAndCache(Generics.SavageBladeWaste, Dissipation.ActionName(), All.SavageBlade.ActionName()));
+                        FormatAndCache(Generics.SavageBladeWaste, Dissipation.ActionName(), All.Cease.ActionName()));
                     break;
                     
                 case Preset.SCH_Aetherflow:

@@ -25,7 +25,7 @@ internal partial class PLD : Tank
 
             if (IsEnabled(Preset.PLD_BlockForWings) &&
                 (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
-                return All.SavageBlade;
+                return All.Cease;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -58,7 +58,7 @@ internal partial class PLD : Tank
 
             if (IsEnabled(Preset.PLD_BlockForWings) &&
                 (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
-                return All.SavageBlade;
+                return All.Cease;
 
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -94,7 +94,7 @@ internal partial class PLD : Tank
             const Combo comboFlags = Combo.ST | Combo.Adv;
 
             if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
-                return All.SavageBlade;
+                return All.Cease;
 
             //Opener
             if (IsEnabled(Preset.PLD_ST_AdvancedMode_BalanceOpener) &&
@@ -131,7 +131,7 @@ internal partial class PLD : Tank
             const Combo comboFlags = Combo.AoE | Combo.Adv;
 
             if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
-                return All.SavageBlade;
+                return All.Cease;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -431,7 +431,7 @@ internal partial class PLD : Tank
                 return ShieldBash.Retarget(actionID, tar);
 
             if (PLD_RetargetStunLockout)
-                return All.SavageBlade;
+                return All.Cease;
 
             return actionID;
         }

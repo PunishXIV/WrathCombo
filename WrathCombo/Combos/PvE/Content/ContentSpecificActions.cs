@@ -13,7 +13,7 @@ public static class ContentSpecificActions
     /// </summary>
     /// <param name="actionID">
     ///     The action to perform, if any.<br/>
-    ///     Defaults to <see cref="All.SavageBlade"/> when the
+    ///     Defaults to <see cref="All.Cease"/> when the
     ///     <see langword="return"/> would be <see langword="false"/>.
     /// </param>
     /// <param name="healing">
@@ -24,7 +24,7 @@ public static class ContentSpecificActions
     /// </returns>
     public static bool TryGet(out uint actionID, bool healing = false)
     {
-        actionID = All.SavageBlade;
+        actionID = All.Cease;
         
         // The methods below must check (first) that the player is in
         // the appropriate area (that should not be checked here)

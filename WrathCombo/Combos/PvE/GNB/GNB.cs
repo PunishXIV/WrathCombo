@@ -656,10 +656,10 @@ internal partial class GNB : Tank
             return target != null && CanApplyStatus(target, Buffs.Aurora)
                 ? !HasStatusEffect(Buffs.Aurora, target, true)
                     ? actionID.Retarget(target)
-                    : All.SavageBlade
+                    : All.Cease
                 : !HasStatusEffect(Buffs.Aurora, SimpleTarget.Self, true)
                 ? actionID
-                : All.SavageBlade;
+                : All.Cease;
         }
     }
     #endregion

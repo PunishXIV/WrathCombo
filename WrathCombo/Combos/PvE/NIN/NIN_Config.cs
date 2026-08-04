@@ -260,12 +260,12 @@ internal partial class NIN
 
 
                 case Preset.NIN_MudraProtection:
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, ShadeShift.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 0);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Shukuchi.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 1);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.Feint.ActionName(), "Replaces with Savage Blade while in Mudra or Current Target already has Feint", 6, 2);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.Bloodbath.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 3);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.SecondWind.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 4);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.LegSweep.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 5);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, ShadeShift.ActionName(), "Blocks input while in Mudra.", 6, 0);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Shukuchi.ActionName(), "Blocks input while in Mudra.", 6, 1);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.Feint.ActionName(), "Blocks input while in Mudra or Current Target already has Feint", 6, 2);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.Bloodbath.ActionName(), "Blocks input while in Mudra.", 6, 3);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.SecondWind.ActionName(), "Blocks input while in Mudra.", 6, 4);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.LegSweep.ActionName(), "Blocks input while in Mudra.", 6, 5);
                     break;
 
                 #endregion
