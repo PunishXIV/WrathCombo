@@ -8257,47 +8257,41 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="SAM_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>Advanced Mode - AoE</value>
   </data>
-  <data name="SAM_AoE_CDs_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_CDs_Desc" xml:space="preserve">
     <value>Collection of Cooldown features on main combo.</value>
   </data>
-  <data name="SAM_AoE_CDs_Ikishoten_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Ikishoten_Desc" xml:space="preserve">
     <value>Adds Ikishoten when at or below 50 Kenki.
 Will dump Kenki at 10 seconds left to allow Ikishoten to be used.</value>
   </data>
-  <data name="SAM_AoE_CDs_Ikishoten_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Ikishoten_Name" xml:space="preserve">
     <value>Ikishoten Option</value>
   </data>
-  <data name="SAM_AoE_CDs_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_CDs_Name" xml:space="preserve">
     <value>Cooldowns on Main Combo</value>
   </data>
-  <data name="SAM_AoE_ComboHeals_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_ComboHeals_Desc" xml:space="preserve">
     <value>Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.</value>
   </data>
-  <data name="SAM_AoE_ComboHeals_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_ComboHeals_Name" xml:space="preserve">
     <value>Combo Heals Option</value>
   </data>
-  <data name="SAM_AoE_Damage_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Damage_Desc" xml:space="preserve">
     <value>Collection of Damage skills on main combo.</value>
   </data>
-  <data name="SAM_AoE_Damage_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Damage_Name" xml:space="preserve">
     <value>Damage skills on Main Combo</value>
   </data>
-  <data name="SAM_AoE_Guren_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Guren_Desc" xml:space="preserve">
     <value>Adds Guren to the rotation.</value>
   </data>
-  <data name="SAM_AoE_Guren_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Guren_Name" xml:space="preserve">
     <value>Guren Option</value>
   </data>
-  <data name="SAM_AoE_Hagakure_Desc" xml:space="preserve">
-    <value>Adds Hagakure to the rotation when there are three Sen.</value>
-  </data>
-  <data name="SAM_AoE_Hagakure_Name" xml:space="preserve">
-    <value>Hagakure Option</value>
-  </data>
-  <data name="SAM_AoE_Kyuten_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Kyuten_Desc" xml:space="preserve">
     <value>Adds Kyuten to the rotation.</value>
   </data>
-  <data name="SAM_AoE_Kyuten_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Kyuten_Name" xml:space="preserve">
     <value>Kyuten Option</value>
   </data>
   <data name="SAM_AoE_MangetsuCombo_Desc" xml:space="preserve">
@@ -8307,16 +8301,16 @@ Enabling Oka combo options makes this a one button basic combo.</value>
   <data name="SAM_AoE_MangetsuCombo_Name" xml:space="preserve">
     <value>Mangetsu Combo</value>
   </data>
-  <data name="SAM_AoE_MeikyoShisui_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Meikyo_Desc" xml:space="preserve">
     <value>Adds Meikyo Shisui to the rotation.</value>
   </data>
-  <data name="SAM_AoE_MeikyoShisui_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Meikyo_Name" xml:space="preserve">
     <value>Meikyo Shisui Option</value>
   </data>
-  <data name="SAM_AoE_OgiNamikiri_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_OgiNamikiri_Desc" xml:space="preserve">
     <value>Adds Ogi Namikiri and Kaeshi: Namikiri when ready and when you're not moving to the rotation.</value>
   </data>
-  <data name="SAM_AoE_OgiNamikiri_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_OgiNamikiri_Name" xml:space="preserve">
     <value>Ogi Namikiri Option</value>
   </data>
   <data name="SAM_AoE_OkaCombo_Desc" xml:space="preserve">
@@ -8325,16 +8319,16 @@ Enabling Oka combo options makes this a one button basic combo.</value>
   <data name="SAM_AoE_OkaCombo_Name" xml:space="preserve">
     <value>Oka Combo</value>
   </data>
-  <data name="SAM_AoE_Oka_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Oka_Desc" xml:space="preserve">
     <value>Adds Oka combo to the rotation.</value>
   </data>
-  <data name="SAM_AoE_Oka_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Oka_Name" xml:space="preserve">
     <value>Oka Combo</value>
   </data>
-  <data name="SAM_AoE_Shoha_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Shoha_Desc" xml:space="preserve">
     <value>Adds Shoha when you have 3 meditation stacks.</value>
   </data>
-  <data name="SAM_AoE_Shoha_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Shoha_Name" xml:space="preserve">
     <value>Shoha Option</value>
   </data>
   <data name="SAM_AoE_SimpleMode_Desc" xml:space="preserve">
@@ -8344,22 +8338,22 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SAM_AoE_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - AoE</value>
   </data>
-  <data name="SAM_AoE_StunInterrupt_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_StunInterrupt_Desc" xml:space="preserve">
     <value>Adds Leg Sweep when target non-boss is casting.</value>
   </data>
-  <data name="SAM_AoE_StunInterrupt_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_StunInterrupt_Name" xml:space="preserve">
     <value>Leg Sweep Option</value>
   </data>
-  <data name="SAM_AoE_TenkaGoken_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_TenkaGoken_Desc" xml:space="preserve">
     <value>Adds Tenka Goken, Midare: Setsugekka, and Kaeshi: Goken when ready and when you're not moving to the rotation.</value>
   </data>
-  <data name="SAM_AoE_TenkaGoken_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_TenkaGoken_Name" xml:space="preserve">
     <value>Iaijutsu Option</value>
   </data>
-  <data name="SAM_AoE_Zanshin_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Zanshin_Desc" xml:space="preserve">
     <value>Adds Zanshin to the rotation.</value>
   </data>
-  <data name="SAM_AoE_Zanshin_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Zanshin_Name" xml:space="preserve">
     <value>Zanshin Option</value>
   </data>
   <data name="SAM_GyotenYaten_Desc" xml:space="preserve">
@@ -8508,102 +8502,102 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="SAM_ST_AdvancedMode_Name" xml:space="preserve">
     <value>Advanced Mode - Single Target</value>
   </data>
-  <data name="SAM_ST_CDs_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_CDs_Desc" xml:space="preserve">
     <value>Collection of Cooldown features on main combo.</value>
   </data>
-  <data name="SAM_ST_CDs_Iaijutsu_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Iaijutsu_Desc" xml:space="preserve">
     <value>Adds Midare: Setsugekka, Higanbana, and Kaeshi: Setsugekka to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_Iaijutsu_Movement_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Iaijutsu_Movement_Desc" xml:space="preserve">
     <value>Adds Midare: Setsugekka and Higanbana when you're not moving.</value>
   </data>
-  <data name="SAM_ST_CDs_Iaijutsu_Movement_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Iaijutsu_Movement_Name" xml:space="preserve">
     <value>Iajutsu movement Option</value>
   </data>
-  <data name="SAM_ST_CDs_Iaijutsu_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Iaijutsu_Name" xml:space="preserve">
     <value>Iaijutsu Option</value>
   </data>
-  <data name="SAM_ST_CDs_Ikishoten_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Ikishoten_Desc" xml:space="preserve">
     <value>Adds Ikishoten when at or below 50 Kenki.
 PRE 94: Will dump Kenki at 10 seconds left to allow Ikishoten to be used.
 POST 94: Will use during burst window.</value>
   </data>
-  <data name="SAM_ST_CDs_Ikishoten_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Ikishoten_Name" xml:space="preserve">
     <value>Ikishoten Option</value>
   </data>
-  <data name="SAM_ST_CDs_MeikyoShisui_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Meikyo_Desc" xml:space="preserve">
     <value>Adds Meikyo Shisui to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_MeikyoShisui_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Meikyo_Name" xml:space="preserve">
     <value>Meikyo Shisui Option</value>
   </data>
-  <data name="SAM_ST_CDs_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_CDs_Name" xml:space="preserve">
     <value>Cooldowns on Main Combo</value>
   </data>
-  <data name="SAM_ST_CDs_OgiNamikiri_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_OgiNamikiri_Desc" xml:space="preserve">
     <value>Adds Ogi Namikiri and Kaeshi: Namikiri to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_OgiNamikiri_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_OgiNamikiri_Name" xml:space="preserve">
     <value>Ogi Namikiri Option</value>
   </data>
-  <data name="SAM_ST_CDs_Senei_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Senei_Desc" xml:space="preserve">
     <value>Adds Senei to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_Senei_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Senei_Name" xml:space="preserve">
     <value>Senei Option</value>
   </data>
-  <data name="SAM_ST_CDs_Shoha_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Shoha_Desc" xml:space="preserve">
     <value>Adds Shoha when you have three meditation stacks.</value>
   </data>
-  <data name="SAM_ST_CDs_Shoha_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Shoha_Name" xml:space="preserve">
     <value>Shoha Option</value>
   </data>
-  <data name="SAM_ST_CDs_UseHiganbana_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Higanbana_Desc" xml:space="preserve">
     <value>Will use Higanbana depending on suboptions.</value>
   </data>
-  <data name="SAM_ST_CDs_UseHiganbana_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Higanbana_Name" xml:space="preserve">
     <value>Add Higanbana</value>
   </data>
-  <data name="SAM_ST_CDs_UseMidare_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Midare_Desc" xml:space="preserve">
     <value>Will use Midare Setsugekka and Tendo Setsugekka.</value>
   </data>
-  <data name="SAM_ST_CDs_UseMidare_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Midare_Name" xml:space="preserve">
     <value>Add Midare Setsugekka</value>
   </data>
-  <data name="SAM_ST_CDs_UseTenkaGoken_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_TenkaGoken_Desc" xml:space="preserve">
     <value>Will Use Tenka Goken when lvlsynched below lvl 50.</value>
   </data>
-  <data name="SAM_ST_CDs_UseTenkaGoken_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_TenkaGoken_Name" xml:space="preserve">
     <value>Add Tenka Goken</value>
   </data>
-  <data name="SAM_ST_CDs_UseTsubame_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Tsubame_Desc" xml:space="preserve">
     <value>Will use Tsubame-gaeshi and Tendo Kaeshi Setsugekka.</value>
   </data>
-  <data name="SAM_ST_CDs_UseTsubame_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Tsubame_Name" xml:space="preserve">
     <value>Add Tsubame-gaeshi</value>
   </data>
-  <data name="SAM_ST_CDs_Zanshin_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Zanshin_Desc" xml:space="preserve">
     <value>Adds Zanshin when ready to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_Zanshin_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Zanshin_Name" xml:space="preserve">
     <value>Zanshin Option</value>
   </data>
-  <data name="SAM_ST_ComboHeals_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_ComboHeals_Desc" xml:space="preserve">
     <value>Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.</value>
   </data>
-  <data name="SAM_ST_ComboHeals_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_ComboHeals_Name" xml:space="preserve">
     <value>Combo Heals Option</value>
   </data>
-  <data name="SAM_ST_Damage_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Damage_Desc" xml:space="preserve">
     <value>Collection of Damage skills on main combo.</value>
   </data>
-  <data name="SAM_ST_Damage_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Damage_Name" xml:space="preserve">
     <value>Damage skills on Main Combo</value>
   </data>
-  <data name="SAM_ST_Feint_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Feint_Desc" xml:space="preserve">
     <value>Adds Feint when Raidwide is detected casting.</value>
   </data>
-  <data name="SAM_ST_Feint_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Feint_Name" xml:space="preserve">
     <value>Feint Raidwide Option</value>
   </data>
   <data name="SAM_ST_GekkoCombo_Desc" xml:space="preserve">
@@ -8612,10 +8606,10 @@ POST 94: Will use during burst window.</value>
   <data name="SAM_ST_GekkoCombo_Name" xml:space="preserve">
     <value>Gekko Combo</value>
   </data>
-  <data name="SAM_ST_Gekko_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Gekko_Desc" xml:space="preserve">
     <value>Adds Gekko combo to the rotation.</value>
   </data>
-  <data name="SAM_ST_Gekko_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Gekko_Name" xml:space="preserve">
     <value>Gekko Combo</value>
   </data>
   <data name="SAM_ST_KashaCombo_Desc" xml:space="preserve">
@@ -8624,19 +8618,19 @@ POST 94: Will use during burst window.</value>
   <data name="SAM_ST_KashaCombo_Name" xml:space="preserve">
     <value>Kasha Combo</value>
   </data>
-  <data name="SAM_ST_Kasha_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Kasha_Desc" xml:space="preserve">
     <value>Adds Kasha combo to the rotation.</value>
   </data>
-  <data name="SAM_ST_Kasha_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Kasha_Name" xml:space="preserve">
     <value>Kasha Combo</value>
   </data>
-  <data name="SAM_ST_Meditate_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Meditate_Desc" xml:space="preserve">
     <value>Adds Meditate when not moving, not having a target and being in combat.</value>
   </data>
-  <data name="SAM_ST_Meditate_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Meditate_Name" xml:space="preserve">
     <value>Meditate Option</value>
   </data>
-  <data name="SAM_ST_Opener_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Opener_Desc" xml:space="preserve">
     <value>Adds the Balance opener at level 70/80/90/100.
 Prepull:
 - Meikyo at -13
@@ -8645,21 +8639,21 @@ Prepull:
 Without a countdown, prepull steps have no delay.
 (During a countdown only: blocks action until each prepull timing)</value>
   </data>
-  <data name="SAM_ST_Opener_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 70/80/90/100)</value>
   </data>
-  <data name="SAM_ST_RangedUptime_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_RangedUptime_Desc" xml:space="preserve">
     <value>Adds Enpi to the rotation when you are out of range.
 Will use Ogi or Iaijutsu when possible and enabled.</value>
   </data>
-  <data name="SAM_ST_RangedUptime_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_RangedUptime_Name" xml:space="preserve">
     <value>Ranged Uptime Feature</value>
   </data>
-  <data name="SAM_ST_Shinten_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Shinten_Desc" xml:space="preserve">
     <value>Adds Shinten to the rotation.
 Will pool kenki for burst.</value>
   </data>
-  <data name="SAM_ST_Shinten_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Shinten_Name" xml:space="preserve">
     <value>Shinten Option</value>
   </data>
   <data name="SAM_ST_SimpleMode_Desc" xml:space="preserve">
@@ -8669,23 +8663,23 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SAM_ST_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - Single Target</value>
   </data>
-  <data name="SAM_ST_StunInterrupt_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_StunInterrupt_Desc" xml:space="preserve">
     <value>Adds Leg Sweep when target non-boss is casting.</value>
   </data>
-  <data name="SAM_ST_StunInterrupt_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_StunInterrupt_Name" xml:space="preserve">
     <value>Leg Sweep Option</value>
   </data>
-  <data name="SAM_ST_ThirdEye_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_ThirdEye_Desc" xml:space="preserve">
     <value>Adds Third Eye when Raidwide is detected casting. 
 When Solo, uses on cd.</value>
   </data>
-  <data name="SAM_ST_ThirdEye_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_ThirdEye_Name" xml:space="preserve">
     <value>Third Eye Raidwide Option</value>
   </data>
-  <data name="SAM_ST_TrueNorth_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_TrueNorth_Desc" xml:space="preserve">
     <value>Adds True North when you are not in the correct position for the enhanced potency bonus.</value>
   </data>
-  <data name="SAM_ST_TrueNorth_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_TrueNorth_Name" xml:space="preserve">
     <value>True North Feature</value>
   </data>
   <data name="SAM_ST_YukikazeCombo_Desc" xml:space="preserve">
@@ -8695,10 +8689,10 @@ Enabling Gekko and Kasha combo options makes this a one button basic combo.</val
   <data name="SAM_ST_YukikazeCombo_Name" xml:space="preserve">
     <value>Yukikaze Combo</value>
   </data>
-  <data name="SAM_ST_Yukikaze_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Yukikaze_Desc" xml:space="preserve">
     <value>Adds Yukikaze combo to the rotation.</value>
   </data>
-  <data name="SAM_ST_Yukikaze_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Yukikaze_Name" xml:space="preserve">
     <value>Yukikaze Combo</value>
   </data>
   <data name="SCHPvP_Adlo_Desc" xml:space="preserve">

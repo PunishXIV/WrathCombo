@@ -86,9 +86,9 @@ public partial class WrathCombo
             Preset.NIN_ST_AdvancedMode_Meisui, Preset.NIN_AoE_AdvancedMode_Meisui,
         ] },
         { Job.SAM, [
-            Preset.SAM_ST_CDs_Ikishoten, Preset.SAM_AoE_CDs_Ikishoten,
-            Preset.SAM_ST_CDs_MeikyoShisui, Preset.SAM_AoE_MeikyoShisui,
-            Preset.SAM_ST_CDs_Shoha, Preset.SAM_AoE_Shoha,
+            Preset.SAM_ST_Adv_Ikishoten, Preset.SAM_AoE_Adv_Ikishoten,
+            Preset.SAM_ST_Adv_Meikyo, Preset.SAM_AoE_Adv_Meikyo,
+            Preset.SAM_ST_Adv_Shoha, Preset.SAM_AoE_Adv_Shoha,
         ] },
         { Job.RPR, [
             Preset.RPR_ST_Gluttony, Preset.RPR_AoE_Gluttony,
