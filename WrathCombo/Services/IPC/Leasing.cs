@@ -621,6 +621,7 @@ public partial class Leasing
 
         registration.LastUpdated = DateTime.Now;
         CombosUpdated = DateTime.Now;
+        P.IPCSearch.UpdateDue = true;
 
         Logging.Log(
             $"{registration.PluginName}: Registered Combo ({combo}){oppositeText}");
@@ -682,6 +683,7 @@ public partial class Leasing
 
         registration.LastUpdated = DateTime.Now;
         OptionsUpdated = DateTime.Now;
+        P.IPCSearch.UpdateDue = true;
 
         Logging.Log($"{registration.PluginName}: Registered Option ({option})");
         return SetResult.Okay;

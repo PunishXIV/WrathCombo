@@ -278,13 +278,18 @@ public class Search(Leasing leasing)
                 .Select(pair => new
                 {
                     pair.Key,
+                    pair.Value.enabled,
                     pair.Value.autoMode,
                     registration.LastUpdated,
                 }))
             .GroupBy(x => x.Key)
             .ToDictionary(
                 g => g.Key,
-                g => g.OrderByDescending(x => x.LastUpdated).First().autoMode
+                g =>
+                {
+                    var latest = g.OrderByDescending(x => x.LastUpdated).First();
+                    return (enabled: latest.enabled, autoMode: latest.autoMode);
+                }
             );
 
         _presetRuntimeStates = PresetStorage.AllPresets
@@ -292,19 +297,27 @@ public class Search(Leasing leasing)
                 preset => preset.Key,
                 preset =>
                 {
-                    var isEnabled =
-                        CustomComboFunctions.IsEnabled(preset.Key);
-                    var ipcAutoMode =
-                        latestComboOverrides.GetValueOrDefault(preset.Key);
-                    var isAutoMode =
-                        Service.Configuration.AutoActions.TryGetValue(
+                    bool isEnabled, isAutoMode;
+
+                    // If a lease controls this preset, use its values exclusively
+                    if (latestComboOverrides.TryGetValue(preset.Key, out var ipcOverride))
+                    {
+                        isEnabled = ipcOverride.enabled;
+                        isAutoMode = ipcOverride.autoMode && preset.Value.AutoAction != null;
+                    }
+                    else
+                    {
+                        // No lease control - use config as fallback
+                        isEnabled = CustomComboFunctions.IsEnabled(preset.Key);
+                        isAutoMode = Service.Configuration.AutoActions.TryGetValue(
                             preset.Key, out var autoMode) &&
-                        autoMode && preset.Value.AutoAction != null;
+                            autoMode && preset.Value.AutoAction != null;
+                    }
 
                     return new PresetRuntimeState(preset.Value)
                     {
                         Enabled = isEnabled,
-                        AutoMode = isAutoMode || ipcAutoMode,
+                        AutoMode = isAutoMode,
                     };
                 }
             );
