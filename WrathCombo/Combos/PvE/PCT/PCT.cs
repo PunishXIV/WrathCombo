@@ -16,7 +16,7 @@ internal partial class PCT : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, FireInRed)) return actionID;
 
             // Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             const Combo comboFlags = Combo.ST | Combo.Simple;
@@ -62,7 +62,7 @@ internal partial class PCT : Caster
                 return actionID;
 
             // Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             const Combo comboFlags = Combo.ST | Combo.Adv;
@@ -106,7 +106,7 @@ internal partial class PCT : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, FireIIinRed)) return actionID;
 
             // Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             const Combo comboFlags = Combo.AoE | Combo.Simple;
@@ -142,7 +142,7 @@ internal partial class PCT : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, FireIIinRed)) return actionID;
 
             // Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             const Combo comboFlags = Combo.AoE | Combo.Adv;

@@ -34,7 +34,7 @@ internal partial class WHM : Healer
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, StoneGlareList.ToArray())) return actionID;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (!PartyInCombat()) return OriginalHook(Stone1);
@@ -96,7 +96,7 @@ internal partial class WHM : Healer
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Holy, Holy3)) return actionID;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             #region Weaves
@@ -178,7 +178,7 @@ internal partial class WHM : Healer
 
             #endregion
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (!PartyInCombat()) return OriginalHook(Stone1);
@@ -285,7 +285,7 @@ internal partial class WHM : Healer
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Holy, Holy3)) return actionID;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
 
@@ -378,7 +378,7 @@ internal partial class WHM : Healer
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetHeals, Cure)) return actionID;
 
-            if (ContentSpecificActions.TryGet(out var contentAction, healing: true))
+            if (ContentSpecificActions.TryGet(ref actionID, out var contentAction, healing: true))
                 return contentAction;
             
             var healTarget = SimpleTarget.Stack.OneButtonHealLogic;
@@ -503,7 +503,7 @@ internal partial class WHM : Healer
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetHeals, Cure)) return actionID;
 
-            if (ContentSpecificActions.TryGet(out var contentAction, healing: true))
+            if (ContentSpecificActions.TryGet(ref actionID, out var contentAction, healing: true))
                 return contentAction;
 
             #region Variables

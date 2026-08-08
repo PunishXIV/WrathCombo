@@ -96,15 +96,15 @@ internal class StatusCache
 
     public static bool HasDamageUp(IGameObject? target) => HasStatusInCacheList(DamageUpStatuses, target);
 
-    private static readonly FrozenSet<uint> evasionUpStatuses =
-        ENStatusSheet.TryGetValue(61, out var refRow)
+    private static readonly FrozenSet<uint> EvasionUpStatuses =
+        ENStatusSheet.TryGetValue(31, out var refRow)
             ? ENStatusSheet
                 .Where(x => x.Value.Name.ToString().Contains(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 .Select(x => x.Key)
                 .ToFrozenSet()
             : [];
 
-    public static bool HasEvasionUp(IGameObject? target) => HasStatusInCacheList(evasionUpStatuses, target);
+    public static bool HasEvasionUp(IGameObject? target) => HasStatusInCacheList(EvasionUpStatuses, target);
 
     /// <summary>
     /// A cached set of dispellable status IDs for quick lookup.
@@ -126,7 +126,7 @@ internal class StatusCache
             .Select(kvp => kvp.Key)
             .ToFrozenSet();
 
-    public static bool HasBeneficialStatus(IGameObject? targt) => HasStatusInCacheList(BeneficialStatuses, targt);
+    public static bool HasBeneficialStatus(IGameObject? target) => HasStatusInCacheList(BeneficialStatuses, target);
 
     /// <summary>
     /// A set of status effect IDs that grant general invincibility.
@@ -146,6 +146,22 @@ internal class StatusCache
             })
             .ToFrozenSet();
 
+    private static readonly FrozenSet<uint> RaiseInvincibilityStatuses =
+        StatusSheet
+            .Where(row => row.Value.Icon == 215273) // Transcendant statuses, based on Icon
+            .Select(row => row.Key)
+            .ToFrozenSet();
+
+    public static bool HasRaiseInvincibility(IBattleChara? target) => HasStatusInCacheList(RaiseInvincibilityStatuses, target);
+
+    private static readonly FrozenSet<uint> RaiseStatuses =
+        StatusSheet
+            .Where(row => row.Value.Icon == 210406) // Raise statuses, based on Icon
+            .Select(row => row.Key)
+            .ToFrozenSet();
+
+    public static bool HasRaiseStatus(IBattleChara? target) => HasStatusInCacheList(RaiseStatuses, target);
+
     internal static readonly FrozenSet<uint> DoNotHealStatuses = new uint[]
     {
         2852,
@@ -160,7 +176,9 @@ internal class StatusCache
                     .Select(row => row.Key)
             )
             {
+            1132, // Baelsar's Wall - Extreme Caution
             4130 // Authority's Hold
+
             }.ToFrozenSet();
 
         internal static readonly FrozenSet<uint> Pyretics =
@@ -208,30 +226,15 @@ internal class StatusCache
     /// <param name="statusList">Hashset of Status IDs to check</param>
     /// <param name="gameObject">GameObject to check</param>
     /// <returns></returns>
-    internal static bool HasStatusInCacheList(FrozenSet<uint> statusList, IGameObject? gameObject = null)
+    internal static bool HasStatusInCacheList(FrozenSet<uint> statusList, IGameObject? gameObject)
     {
         if (gameObject is not IBattleChara chara)
             return false;
 
         var statuses = chara.SafeStatusList;
-
         if (statuses is null)
             return false;
 
-        var targetStatuses = statuses.Select(s => s.StatusId).ToHashSet();
-        return statusList.Count switch
-        {
-            0 => false,
-            _ => CompareLists(statusList, targetStatuses)
-        };
+         return statuses.Any(s => statusList.Contains(s.StatusId));
     }
-
-    /// <summary>
-    /// Compares two hashsets, in this case, used to compare a cached set of status IDs against a character's StatusID list
-    /// </summary>
-    /// <param name="statusList"></param>
-    /// <param name="charaStatusList"></param>
-    /// <returns></returns>
-    internal static bool CompareLists(FrozenSet<uint> statusList, HashSet<uint> charaStatusList) =>
-        charaStatusList.Any(id => statusList.Contains(id));
 }

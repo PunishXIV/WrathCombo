@@ -87,7 +87,7 @@ internal partial class DRK : Tank
                 return actionID;
             }
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             // Unmend Option for Pulling
@@ -159,7 +159,7 @@ internal partial class DRK : Tank
             var newAction = HardSlash;
             _ = IsBursting;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             
             // Unmend Option
@@ -207,7 +207,7 @@ internal partial class DRK : Tank
             const Combo comboFlags = Combo.AoE | Combo.Adv;
             var newAction = Unleash;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             // Bail if not in combat
@@ -248,7 +248,7 @@ internal partial class DRK : Tank
             const Combo comboFlags = Combo.AoE | Combo.Simple;
             var newAction = Unleash;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             // Bail if not in combat

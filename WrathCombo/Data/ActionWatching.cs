@@ -718,7 +718,7 @@ public static class ActionWatching
             target is null)
             return false;
 
-        if (actionId == OccultCrescent.Revive)
+        if (actionId == OccultCrescent.Revive || actionId == OccultCrescent.OccultRaise)
         {
             target = SimpleTarget.Stack.AllyToRaise;
             if (target is null) return false;

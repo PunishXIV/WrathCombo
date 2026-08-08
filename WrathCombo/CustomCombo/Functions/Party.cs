@@ -116,21 +116,27 @@ internal abstract partial class CustomComboFunctions
         get
         {
             field ??= new();
-            foreach (var pc in Svc.Objects
-                         .Where(x => x is IBattleChara && x.CanUseOn(WHM.Raise))
-                         .Cast<IBattleChara>().ToList())
+
+            var existingIds = new HashSet<ulong>(field.Select(x => x.GameObjectId));
+
+            foreach (var pc in Svc.Objects.GetBattleCharas()
+                         .Where(x => x.IsDead))
             {
-                if (pc.IsDead && !pc.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
+                if (pc.SafeStatusList?.Any(x => x.StatusId == All.Buffs.Raised) == true)
+                    continue;
+
+                if (!existingIds.Contains(pc.GameObjectId))
                 {
-                    if (!field.Any(x => x.GameObjectId == pc.GameObjectId))
-                        field.Add(new WrathPartyMember
-                        {
-                            GameObjectId = pc.GameObjectId,
-                            CurrentHP = pc.CurrentHp,
-                            NPCClassJob = pc.ClassJob.RowId
-                        });
+                    field.Add(new WrathPartyMember
+                    {
+                        GameObjectId = pc.GameObjectId,
+                        CurrentHP = pc.CurrentHp,
+                        NPCClassJob = pc.ClassJob.RowId
+                    });
+                    existingIds.Add(pc.GameObjectId);
                 }
             }
+
             field.RemoveAll(x => x.BattleChara is null || !x.BattleChara.IsDead);
             return field;
         }

@@ -27,7 +27,7 @@ internal partial class PLD : Tank
                 (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
                 return All.Cease;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (PLD_ST_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
@@ -61,7 +61,7 @@ internal partial class PLD : Tank
                 return All.Cease;
 
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (PLD_AoE_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
@@ -101,7 +101,7 @@ internal partial class PLD : Tank
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (PLD_ST_Advanced_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
@@ -133,7 +133,7 @@ internal partial class PLD : Tank
             if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
                 return All.Cease;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (PLD_AoE_Advanced_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)

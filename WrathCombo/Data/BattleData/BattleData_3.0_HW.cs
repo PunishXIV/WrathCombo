@@ -1,5 +1,9 @@
-﻿using ECommons.ExcelServices;
+﻿using ECommons.DalamudServices;
+using ECommons.ExcelServices;
+using ECommons.GameFunctions;
 using ECommons.GameHelpers;
+using System.Linq;
+using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data.BattleData
@@ -35,6 +39,26 @@ namespace WrathCombo.Data.BattleData
                         return Invincible.False;
                     };
                     break;
+
+                case 637: // Containment Bay Z1T9 Zurvan
+                    _invincibleCheck = (_, targetID, _) =>
+                    {
+                        // Note, would need a Player.CombatRole not Tank if this is built out further for Extreme/Unreal, presuming NPC base IDs are the same for Ex
+                        if (targetID is 6556 or 6553) // Ignore Execrated Thew (6556) or Wills (6553) (mostly Wills) when Execrated Witts (6554) are around
+                            return Result(Svc.Objects.GetBattleCharas().Any(x => x.BaseId is 6554 && !x.IsDead && x.IsCharacterVisible()));
+                        return Invincible.False;
+                    };
+                    break;
+
+                case 1114: // Baelsar's Wall
+                    _invincibleCheck = (_, targetID, _) =>
+                    {
+                        if (targetID is 6461) // The Griffin. Ignore when Restraint Collar shows (hiddden NPC helper)
+                            return Result(Svc.Objects.GetBattleCharas().Any(x => x.BaseId is 6462 && !x.IsDead && x.IsCharacterVisible()));
+                        return Invincible.False;
+                    };
+                    break;
+
                 default:
                     dataLoaded = false;
                     break;

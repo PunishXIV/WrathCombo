@@ -15,7 +15,7 @@ internal partial class BLM : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Blizzard))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
@@ -26,11 +26,11 @@ internal partial class BLM : Caster
                 if (CanStLeyLinesWeave(allowMoving: false, timeStillSeconds: 2.5))
                     return LeyLines;
 
-                if (TryEndOfFireWeave(fallbackWhenNoTranspose: Blizzard) is var endOfFireWeave and not 0)
-                    return endOfFireWeave;
+                if (TryEndOfFireWeave(ref actionID, fallbackWhenNoTranspose: Blizzard))
+                    return actionID;
 
-                if (TryIceWeave() is var iceWeave and not 0)
-                    return iceWeave;
+                if (TryIceWeave(ref actionID))
+                    return actionID;
 
                 if (CanStManaward(true, simpleLogic: true))
                     return Manaward;
@@ -42,34 +42,26 @@ internal partial class BLM : Caster
             if (CanStScatheFiller())
                 return Scathe;
 
-            if (TryStPolyglotOvercap() is var polyglotOvercap and not 0)
-                return polyglotOvercap;
+            if (TryStPolyglotOvercap(ref actionID))
+                return actionID;
 
-            if (TryStThunder() is var thunder and not 0)
-                return thunder;
+            if (TryStThunder(ref actionID))
+                return actionID;
 
-            if (TryStAmplifierXeno() is var amplifierXeno and not 0)
-                return amplifierXeno;
+            if (TryStAmplifierXeno(ref actionID))
+                return actionID;
 
-            if (TryStMovementGcd() is var movementGcd and not 0)
-                return movementGcd;
+            if (TryStMovementGcd(ref actionID))
+                return actionID;
 
-            if (IsInFirePhase)
-            {
-                uint gcd = UseFirePhaseGcd();
-                if (gcd != 0)
-                    return gcd;
-            }
+            if (IsInFirePhase && TryFirePhaseGcd(ref actionID))
+                return actionID;
 
-            if (IsInIcePhase)
-            {
-                uint gcd = UseIcePhaseGcd();
-                if (gcd != 0)
-                    return gcd;
-            }
+            if (IsInIcePhase && TryIcePhaseGcd(ref actionID))
+                return actionID;
 
-            if (UseOutOfPhaseGcd() is var outOfPhase and not 0)
-                return outOfPhase;
+            if (TryOutOfPhaseGcd(ref actionID))
+                return actionID;
 
             return OriginalHook(Blizzard);
         }
@@ -84,13 +76,13 @@ internal partial class BLM : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Blizzard2, HighBlizzard2))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
             {
-                if (TryAoEMovementTriplecast() is var movementTriplecast and not 0)
-                    return movementTriplecast;
+                if (TryAoEMovementTriplecast(ref actionID))
+                    return actionID;
 
                 if (CanAoEManafontWeave())
                     return Manafont;
@@ -108,23 +100,23 @@ internal partial class BLM : Caster
                     return LeyLines;
             }
 
-            if (TryAoEPolyglotOvercap() is var polyglotOvercap and not 0)
-                return polyglotOvercap;
+            if (TryAoEPolyglotOvercap(ref actionID))
+                return actionID;
 
-            if (TryAoEPolyglot() is var polyglot and not 0)
-                return polyglot;
+            if (TryAoEPolyglot(ref actionID))
+                return actionID;
 
-            if (TryAoEThunder() is var thunder and not 0)
-                return thunder;
+            if (TryAoEThunder(ref actionID))
+                return actionID;
 
-            if (TryAoEParadoxFiller() is var paradox and not 0)
-                return paradox;
+            if (TryAoEParadoxFiller(ref actionID))
+                return actionID;
 
-            if (IsInFirePhase && UseAoEFirePhaseGcd() is var fireGcd and not 0)
-                return fireGcd;
+            if (IsInFirePhase && TryAoEFirePhaseGcd(ref actionID))
+                return actionID;
 
-            if (IsInIcePhase && UseAoEIcePhaseGcd() is var iceGcd and not 0)
-                return iceGcd;
+            if (IsInIcePhase && TryAoEIcePhaseGcd(ref actionID))
+                return actionID;
 
             return OriginalHook(Blizzard2);
         }
@@ -144,7 +136,7 @@ internal partial class BLM : Caster
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanStManaward(
@@ -169,6 +161,7 @@ internal partial class BLM : Caster
                     return LeyLines;
 
                 if (TryEndOfFireWeave(
+                    ref actionID,
                     IsEnabled(Preset.BLM_ST_Manafont),
                     IsEnabled(Preset.BLM_ST_Swiftcast),
                     IsEnabled(Preset.BLM_ST_Triplecast),
@@ -176,62 +169,60 @@ internal partial class BLM : Caster
                     true,
                     IsEnabled(Preset.BLM_ST_Transpose),
                     true,
-                    Blizzard) is var endOfFireWeave and not 0)
-                    return endOfFireWeave;
+                    Blizzard))
+                    return actionID;
 
                 if (TryIceWeave(
+                    ref actionID,
                     IsEnabled(Preset.BLM_ST_Transpose),
                     IsEnabled(Preset.BLM_ST_Swiftcast),
                     IsEnabled(Preset.BLM_ST_Triplecast),
                     BLM_ST_Triplecast_WhenToUse == 0,
-                    true) is var iceWeave and not 0)
-                    return iceWeave;
+                    true))
+                    return actionID;
 
                 if (CanStAddleWeave(IsEnabled(Preset.BLM_ST_Addle)))
                     return Role.Addle;
             }
 
-            if (TryStPolyglotOvercap(IsEnabled(Preset.BLM_ST_UsePolyglot)) is var polyglotOvercap and not 0)
-                return polyglotOvercap;
+            if (TryStPolyglotOvercap(ref actionID, IsEnabled(Preset.BLM_ST_UsePolyglot)))
+                return actionID;
 
             if (TryStThunder(
+                ref actionID,
                 IsEnabled(Preset.BLM_ST_Thunder),
                 ThunderHPThreshold(),
-                BLM_ST_ThunderRefresh) is var thunder and not 0)
-                return thunder;
+                BLM_ST_ThunderRefresh))
+                return actionID;
 
             if (TryStAmplifierXeno(
+                ref actionID,
                 IsEnabled(Preset.BLM_ST_Amplifier),
-                IsEnabled(Preset.BLM_ST_UsePolyglot)) is var amplifierXeno and not 0)
-                return amplifierXeno;
+                IsEnabled(Preset.BLM_ST_UsePolyglot)))
+                return actionID;
 
             if (IsEnabled(Preset.BLM_ST_Movement) &&
-                TryStMovementGcd(useConfiguredPriority: true) is var movementGcd and not 0)
-                return movementGcd;
+                TryStMovementGcd(ref actionID, true))
+                return actionID;
 
-            if (IsInFirePhase)
-            {
-                uint gcd = UseFirePhaseGcd(
+            if (IsInFirePhase &&
+                TryFirePhaseGcd(
+                    ref actionID,
                     IsEnabled(Preset.BLM_ST_FlareStar),
                     IsEnabled(Preset.BLM_ST_Despair),
                     IsEnabled(Preset.BLM_ST_Transpose),
                     IsEnabled(Preset.BLM_ST_UsePolyglot),
                     false,
                     BLM_ST_PolyglotMovement,
-                    BLM_ST_PolyglotSaveUsage);
-                if (gcd != 0)
-                    return gcd;
-            }
+                    BLM_ST_PolyglotSaveUsage))
+                return actionID;
 
-            if (IsInIcePhase)
-            {
-                uint gcd = UseIcePhaseGcd(useTranspose: IsEnabled(Preset.BLM_ST_Transpose));
-                if (gcd != 0)
-                    return gcd;
-            }
+            if (IsInIcePhase &&
+                TryIcePhaseGcd(ref actionID, IsEnabled(Preset.BLM_ST_Transpose)))
+                return actionID;
 
-            if (UseOutOfPhaseGcd() is var outOfPhase and not 0)
-                return outOfPhase;
+            if (TryOutOfPhaseGcd(ref actionID))
+                return actionID;
 
             return OriginalHook(Blizzard);
         }
@@ -246,13 +237,13 @@ internal partial class BLM : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Blizzard2, HighBlizzard2))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
             {
-                if (TryAoEMovementTriplecast(IsEnabled(Preset.BLM_AoE_Movement)) is var movementTriplecast and not 0)
-                    return movementTriplecast;
+                if (TryAoEMovementTriplecast(ref actionID, IsEnabled(Preset.BLM_AoE_Movement)))
+                    return actionID;
 
                 if (CanAoEManafontWeave(IsEnabled(Preset.BLM_AoE_Manafont)))
                     return Manafont;
@@ -272,33 +263,35 @@ internal partial class BLM : Caster
                     return LeyLines;
             }
 
-            if (TryAoEPolyglotOvercap(IsEnabled(Preset.BLM_AoE_UsePolyglot)) is var polyglotOvercap and not 0)
-                return polyglotOvercap;
+            if (TryAoEPolyglotOvercap(ref actionID, IsEnabled(Preset.BLM_AoE_UsePolyglot)))
+                return actionID;
 
-            if (TryAoEPolyglot(IsEnabled(Preset.BLM_AoE_UsePolyglot)) is var polyglot and not 0)
-                return polyglot;
+            if (TryAoEPolyglot(ref actionID, IsEnabled(Preset.BLM_AoE_UsePolyglot)))
+                return actionID;
 
-            if (TryAoEThunder(IsEnabled(Preset.BLM_AoE_Thunder), BLM_AoE_ThunderHP) is var thunder and not 0)
-                return thunder;
+            if (TryAoEThunder(ref actionID, IsEnabled(Preset.BLM_AoE_Thunder), BLM_AoE_ThunderHP))
+                return actionID;
 
-            if (TryAoEParadoxFiller(IsEnabled(Preset.BLM_AoE_ParadoxFiller)) is var paradox and not 0)
-                return paradox;
+            if (TryAoEParadoxFiller(ref actionID, IsEnabled(Preset.BLM_AoE_ParadoxFiller)))
+                return actionID;
 
             if (IsInFirePhase &&
-                UseAoEFirePhaseGcd(
+                TryAoEFirePhaseGcd(
+                    ref actionID,
                     IsEnabled(Preset.BLM_AoE_Triplecast),
                     BLM_AoE_TriplecastHoldCharges,
                     IsEnabled(Preset.BLM_AoE_Transpose),
-                    IsNotEnabled(Preset.BLM_AoE_Transpose)) is var fireGcd and not 0)
-                return fireGcd;
+                    IsNotEnabled(Preset.BLM_AoE_Transpose)))
+                return actionID;
 
             if (IsInIcePhase &&
-                UseAoEIcePhaseGcd(
+                TryAoEIcePhaseGcd(
+                    ref actionID,
                     IsEnabled(Preset.BLM_AoE_Transpose),
                     IsNotEnabled(Preset.BLM_AoE_Transpose),
                     IsEnabled(Preset.BLM_AoE_Blizzard4Sub),
-                    true) is var iceGcd and not 0)
-                return iceGcd;
+                    true))
+                return actionID;
 
             return OriginalHook(Blizzard2);
         }

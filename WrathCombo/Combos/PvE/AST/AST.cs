@@ -41,7 +41,7 @@ internal partial class AST : Healer
             #endregion
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out var contentAction))
                 return contentAction;
             #endregion
 
@@ -118,7 +118,7 @@ internal partial class AST : Healer
 
             #region Special Content
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             #endregion
@@ -237,7 +237,7 @@ internal partial class AST : Healer
             #endregion
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
 
@@ -370,7 +370,7 @@ internal partial class AST : Healer
             #endregion
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
 

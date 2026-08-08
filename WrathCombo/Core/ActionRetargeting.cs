@@ -318,6 +318,13 @@ public class ActionRetargeting : IDisposable
         BLU.AngelWhisper,
         RDM.Verraise,
         SMN.Resurrection,
+
+        // Occult Crescent phantom raises
+        OccultCrescent.Revive,
+        OccultCrescent.OccultRaise,
+
+        // Occult Crescent party-targetable mit
+        OccultCrescent.Pledge,
     ];
 
     /// <summary>

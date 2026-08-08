@@ -274,43 +274,43 @@ internal partial class RDM
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Veraero3,
-            Verthunder3,
-            Role.Swiftcast,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            Verthunder3,
-            Fleche, // 5
-            Acceleration,
-            Verthunder3,
-            Embolden,
-            Manafication,
-            EnchantedRiposteManafication, //10
-            ContreSixte,
-            EnchantedZwerchhauManafication,
-            Engagement,
-            EnchantedRedoublementManafication,
-            Corpsacorps, //15
-            Verholy,
-            ViceOfThorns,
-            Scorch,
-            Engagement,
-            Corpsacorps, //20
-            Resolution,
-            Prefulgence,
-            GrandImpact,
-            Acceleration,
-            Verfire,   //25
-            GrandImpact,
-            Verthunder3,
-            Fleche,
-            Veraero3,
-            Verfire,  //30
-            Verthunder3,
-            Verstone,
-            Veraero3,
-            Role.Swiftcast,
-            Veraero3, //35
-            ContreSixte
+            Veraero3, // 1
+            Verthunder3, // 2
+            Role.Swiftcast, // 3
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 4
+            Verthunder3, // 5
+            Fleche, // 6
+            Acceleration, // 7
+            Verthunder3, // 8
+            Embolden, // 9
+            Manafication, // 10
+            EnchantedRiposteManafication, // 11
+            ContreSixte, // 12
+            EnchantedZwerchhauManafication, // 13
+            Engagement, // 14
+            EnchantedRedoublementManafication, // 15
+            Corpsacorps, // 16
+            Verholy, // 17
+            ViceOfThorns, // 18
+            Scorch, // 19
+            Engagement, // 20
+            Corpsacorps, // 21
+            Resolution, // 22
+            Prefulgence, // 23
+            GrandImpact, // 24
+            Acceleration, // 25
+            Verfire, // 26
+            GrandImpact, // 27
+            Verthunder3, // 28
+            Fleche, // 29
+            Veraero3, // 30
+            Verfire, // 31
+            Verthunder3, // 32
+            Verstone, // 33
+            Veraero3, // 34
+            Role.Swiftcast, // 35
+            Veraero3, // 36
+            ContreSixte // 37
         ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
@@ -322,8 +322,8 @@ internal partial class RDM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([13, 15, 19, 20], () => !InMeleeRange()),
-            ([35],() => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
+            ([14, 16, 20, 21], () => !InMeleeRange()),
+            ([6],() => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
@@ -344,43 +344,43 @@ internal partial class RDM
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Veraero3,
-            Verthunder3,
-            Role.Swiftcast,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            Verthunder3,
-            Fleche, // 5
-            Acceleration,
-            Verthunder3,
-            Embolden,
-            Manafication,
-            EnchantedRiposteManafication, //10
-            ContreSixte,
-            EnchantedZwerchhauManafication,
-            Corpsacorps,
-            EnchantedRedoublementManafication,
-            Engagement, //15
-            Verholy,
-            ViceOfThorns,
-            Scorch,
-            Corpsacorps,
-            Engagement, //20
-            Resolution,
-            Prefulgence,
-            GrandImpact,
-            Acceleration,
-            Verfire,   //25
-            GrandImpact,
-            Verthunder3,
-            Fleche,
-            Veraero3,
-            Verfire,  //30
-            Verthunder3,
-            Verstone,
-            Veraero3,
-            Role.Swiftcast,
-            Veraero3, //35
-            ContreSixte
+            Veraero3, // 1
+            Verthunder3, // 2
+            Role.Swiftcast, // 3
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 4
+            Verthunder3, // 5
+            Fleche, // 6
+            Acceleration, // 7
+            Verthunder3, // 8
+            Embolden, // 9
+            Manafication, // 10
+            EnchantedRiposteManafication, // 11
+            ContreSixte, // 12
+            EnchantedZwerchhauManafication, // 13
+            Corpsacorps, // 14
+            EnchantedRedoublementManafication, // 15
+            Engagement, // 16
+            Verholy, // 17
+            ViceOfThorns, // 18
+            Scorch, // 19
+            Corpsacorps, // 20
+            Engagement, // 21
+            Resolution, // 22
+            Prefulgence, // 23
+            GrandImpact, // 24
+            Acceleration, // 25
+            Verfire, // 26
+            GrandImpact, // 27
+            Verthunder3, // 28
+            Fleche, // 29
+            Veraero3, // 30
+            Verfire, // 31
+            Verthunder3, // 32
+            Verstone, // 33
+            Veraero3, // 34
+            Role.Swiftcast, // 35
+            Veraero3, // 36
+            ContreSixte // 37
         ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
@@ -392,7 +392,7 @@ internal partial class RDM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = 
         [
-            ([15, 20], () => !InMeleeRange()),
+            ([16, 21], () => !InMeleeRange()),
             ([35], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
         ];
 
@@ -414,35 +414,35 @@ internal partial class RDM
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Acceleration,
-            Veraero3,
-            Veraero3,
-            Embolden,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            GrandImpact, //5
-            Fleche, 
-            Manafication,
-            EnchantedRiposteManafication,
-            Corpsacorps,
-            EnchantedZwerchhauManafication, //10
-            Engagement,
-            EnchantedRedoublementManafication,
-            ContreSixte,
-            Verflare,
-            Engagement, //15
-            Corpsacorps,
-            Scorch,
-            Acceleration,
-            Role.Swiftcast,
-            Resolution, //20
-            Veraero3,
-            ViceOfThorns,
-            Prefulgence,
-            GrandImpact,
-            Verthunder3, //25
-            Verfire,
-            Verthunder3,
-            Fleche
+            Acceleration, // 1
+            Veraero3, // 2
+            Veraero3, // 3
+            Embolden, // 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 5
+            GrandImpact, // 6
+            Fleche, // 7
+            Manafication, // 8
+            EnchantedRiposteManafication, // 9
+            Corpsacorps, // 10
+            EnchantedZwerchhauManafication, // 11
+            Engagement, // 12
+            EnchantedRedoublementManafication, // 13
+            ContreSixte, // 14
+            Verflare, // 15
+            Engagement, // 16
+            Corpsacorps, // 17
+            Scorch, // 18
+            Acceleration, // 19
+            Role.Swiftcast, // 20
+            Resolution, // 21
+            Veraero3, // 22
+            ViceOfThorns, // 23
+            Prefulgence, // 24
+            GrandImpact, // 25
+            Verthunder3, // 26
+            Verfire, // 27
+            Verthunder3, // 28
+            Fleche // 29
         ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;

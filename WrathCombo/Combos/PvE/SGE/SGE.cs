@@ -32,7 +32,7 @@ internal partial class SGE : Healer
                     .Retarget(actionID, Target);
 
             //Content skills
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave() && !HasStatusEffect(Buffs.Eukrasia))
@@ -111,7 +111,7 @@ internal partial class SGE : Healer
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DyskrasiaList.ToArray())) return actionID;
 
             //Occult skills
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
@@ -207,7 +207,7 @@ internal partial class SGE : Healer
                 return actionID;
 
             //Content Actions
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             #region Raidwide Feature
@@ -320,7 +320,7 @@ internal partial class SGE : Healer
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DyskrasiaList.ToArray())) return actionID;
 
             //Occult skills
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             #region Raidwide Feature

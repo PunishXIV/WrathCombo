@@ -11,7 +11,7 @@ public static class ContentSpecificActions
     /// <summary>
     ///     Runs the logic for content-specific actions.
     /// </summary>
-    /// <param name="actionID">
+    /// <param name="contentAction">
     ///     The action to perform, if any.<br/>
     ///     Defaults to <see cref="All.Cease"/> when the
     ///     <see langword="return"/> would be <see langword="false"/>.
@@ -22,29 +22,29 @@ public static class ContentSpecificActions
     /// <returns>
     ///     Whether any content-specific actions are suggested.
     /// </returns>
-    public static bool TryGet(out uint actionID, bool healing = false)
+    public static bool TryGet(ref uint actionId, out uint contentAction, bool healing = false)
     {
-        actionID = All.Cease;
+        contentAction = actionId;
         
         // The methods below must check (first) that the player is in
         // the appropriate area (that should not be checked here)
 
-        if (Quests.TryGetQuestActionFix(ref actionID))
+        if (Quests.TryGetQuestActionFix(ref contentAction))
             return true;
 
         // Skip checking for Combat Actions if this is a Healing Combo
         if (healing) return false;
 
-        if (EncounterSafety.TryGetTEADollBlock(ref actionID))
+        if (EncounterSafety.TryGetTEADollBlock(ref contentAction))
             return true;
 
-        if (OccultCrescent.TryGetPhantomAction(ref actionID))
+        if (OccultCrescent.TryGetPhantomAction(ref contentAction))
             return true;
 
-        if (Variant.TryGetVariantAction(ref actionID))
+        if (Variant.TryGetVariantAction(ref contentAction))
             return true;
 
-        if (Bozja.TryGetBozjaAction(ref actionID))
+        if (Bozja.TryGetBozjaAction(ref contentAction))
             return true;
 
         // Deep dungeons next?

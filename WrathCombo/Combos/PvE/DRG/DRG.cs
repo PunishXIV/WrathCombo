@@ -16,7 +16,7 @@ internal partial class DRG : Melee
 
             ReportDRGPositionalHints();
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeaveOgcds())
@@ -91,7 +91,7 @@ internal partial class DRG : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DoomSpike))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeaveOgcds())
@@ -169,7 +169,7 @@ internal partial class DRG : Melee
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeaveOgcds())
@@ -288,7 +288,7 @@ internal partial class DRG : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DoomSpike))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeaveOgcds())

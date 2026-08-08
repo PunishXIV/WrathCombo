@@ -30,6 +30,15 @@ namespace WrathCombo.Data.BattleData
 
                     break;
 
+                case 788: // Saint Mocianne's Arboretum (Hard)
+                    _pauseActions = () =>
+                    {
+                        // Lakhamu's Empty Gaze
+                        if (CheckForGazeCasts(9257, 12587)) return true;
+                        return false;
+                    };
+                    break;
+
                 case 801 or 805 or 1122: // Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
                                          // Omega-M = 9339
                                          // Omega-F = 9340

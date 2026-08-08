@@ -21,7 +21,7 @@ internal partial class WAR
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HeavySwing)) return actionID;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             
             const Combo comboFlags = Combo.ST | Combo.Simple;
@@ -51,7 +51,7 @@ internal partial class WAR
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Overpower)) return actionID;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             
             const Combo comboFlags = Combo.AoE | Combo.Simple;
@@ -84,7 +84,7 @@ internal partial class WAR
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HeavySwing)) return actionID;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             
             const Combo comboFlags = Combo.ST | Combo.Adv;
@@ -119,7 +119,7 @@ internal partial class WAR
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Overpower)) return actionID;
 
             // Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             
             const Combo comboFlags = Combo.AoE | Combo.Adv;

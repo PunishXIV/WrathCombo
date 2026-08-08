@@ -103,8 +103,7 @@ internal partial class DNC : PhysicalRanged
             // Dance Partner
             if (IsEnabled(Preset.DNC_ST_Adv_Partner) && !InCombat() &&
                 ActionReady(ClosedPosition) &&
-                !HasStatusEffect(Buffs.ClosedPosition) &&
-                (IsInParty() || HasCompanionPresent()))
+                CurrentPartnerNonOptimal)
                 if (InAutoMode(true, false) ||
                     IsEnabled(Preset.DNC_ST_Adv_PartnerAuto))
                     return ClosedPosition.Retarget(actionID, DancePartnerResolver);
@@ -177,7 +176,7 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             #region Weaves
@@ -288,7 +287,7 @@ internal partial class DNC : PhysicalRanged
                 if (ActionReady(ShieldSamba) &&
                     IsEnabled(Preset.DNC_ST_Adv_ShieldSamba) && GroupDamageIncoming() && 
                     NumberOfAlliesInRange(ShieldSamba) >= GetPartyMembers().Count * .75 &&
-                    !HasAnyStatusEffects ([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
+                    !HasStatusEffects([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
                     return ShieldSamba;
 
                 // ST Panic Heals
@@ -486,8 +485,7 @@ internal partial class DNC : PhysicalRanged
             {
                 // Dance Partner
                 if (ActionReady(ClosedPosition) &&
-                    !HasStatusEffect(Buffs.ClosedPosition) &&
-                    (GetPartyMembers().Count > 1 || HasCompanionPresent()))
+                    CurrentPartnerNonOptimal)
                     return ClosedPosition.Retarget(actionID, DancePartnerResolver);
 
                 if (HasBattleTarget())
@@ -525,7 +523,7 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             #region Weaves
@@ -619,7 +617,7 @@ internal partial class DNC : PhysicalRanged
                 }
                 if (ActionReady(ShieldSamba) && GroupDamageIncoming() && 
                     NumberOfAlliesInRange(ShieldSamba) >= GetPartyMembers().Count * .75 &&
-                    !HasAnyStatusEffects ([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
+                    !HasStatusEffects([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
                     return ShieldSamba;
 
                 // ST Panic Heals
@@ -779,8 +777,7 @@ internal partial class DNC : PhysicalRanged
             if (!InCombat() &&
                 IsEnabled(Preset.DNC_AoE_Adv_Partner) &&
                 ActionReady(ClosedPosition) &&
-                !HasStatusEffect(Buffs.ClosedPosition) &&
-                (GetPartyMembers().Count > 1 || HasCompanionPresent()))
+                CurrentPartnerNonOptimal)
                 if (InAutoMode(false, false) ||
                     IsEnabled(Preset.DNC_DesirablePartner))
                     return ClosedPosition.Retarget(actionID, DancePartnerResolver);
@@ -807,7 +804,7 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             #region Weaves
@@ -1057,8 +1054,7 @@ internal partial class DNC : PhysicalRanged
             // Dance Partner
             if (!InCombat() &&
                 ActionReady(ClosedPosition) &&
-                !HasStatusEffect(Buffs.ClosedPosition) &&
-                (GetPartyMembers().Count > 1 || HasCompanionPresent()))
+                CurrentPartnerNonOptimal)
                 if (InAutoMode(false, true) ||
                     IsEnabled(Preset.DNC_DesirablePartner))
                     return ClosedPosition.Retarget(actionID, DancePartnerResolver);
@@ -1083,7 +1079,7 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             #region Weaves

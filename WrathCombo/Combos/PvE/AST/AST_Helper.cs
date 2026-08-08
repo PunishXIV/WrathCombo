@@ -497,28 +497,28 @@ internal partial class AST
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            EarthlyStar,
-            FallMalefic,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
-            Combust3,
-            Lightspeed,
-            FallMalefic,
-            FallMalefic,
-            Divination,
-            Balance,
-            FallMalefic,
-            LordOfCrowns,
-            UmbralDraw,
-            FallMalefic,
-            Spear,
-            Oracle,
-            FallMalefic,
-            FallMalefic,
-            FallMalefic,
-            FallMalefic,
-            FallMalefic,
-            Combust3,
-            FallMalefic
+            EarthlyStar, // 1
+            FallMalefic, // 2
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 3
+            Combust3, // 4
+            Lightspeed, // 5
+            FallMalefic, // 6
+            FallMalefic, // 7
+            Divination, // 8
+            Balance, // 9
+            FallMalefic, // 10
+            LordOfCrowns, // 11
+            UmbralDraw, // 12
+            FallMalefic, // 13
+            Spear, // 14
+            Oracle, // 15
+            FallMalefic, // 16
+            FallMalefic, // 17
+            FallMalefic, // 18
+            FallMalefic, // 19
+            FallMalefic, // 20
+            Combust3, // 21
+            FallMalefic // 22
         ];
         public override int MinOpenerLevel => 92;
         public override int MaxOpenerLevel => 109;

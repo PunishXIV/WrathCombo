@@ -259,23 +259,21 @@ internal partial class RPR
         LevelChecked(onAoE ? LemuresScythe : LemuresSlice) &&
         (!onAoE || InActionRange(OriginalHook(GrimSwathe)));
 
-    private static bool UseEnshroudWeaves(out uint action, bool onAoE, bool sacrificium = true, bool lemure = true,
+    private static bool UseEnshroudWeaves(ref uint actionID, bool onAoE, bool sacrificium = true, bool lemure = true,
         bool useArcaneCircleBoss = true, bool arcaneCircleEnabled = true, int arcaneCircleBossOption = 0)
     {
-        action = 0;
-
         if (!HasStatusEffect(Buffs.Enshrouded))
             return false;
 
         if (sacrificium && CanSacrificiumWeave(onAoE, useArcaneCircleBoss, arcaneCircleEnabled, arcaneCircleBossOption))
         {
-            action = OriginalHook(Gluttony);
+            actionID = OriginalHook(Gluttony);
             return true;
         }
 
         if (lemure && CanLemureWeave(onAoE))
         {
-            action = OriginalHook(onAoE ? GrimSwathe : BloodStalk);
+            actionID = OriginalHook(onAoE ? GrimSwathe : BloodStalk);
             return true;
         }
 
@@ -395,7 +393,7 @@ internal partial class RPR
         LevelChecked(Gibbet) && !HasStatusEffect(Buffs.Enshrouded) &&
         (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner));
 
-    private static uint GibbetGallowsAction(
+    private static bool TryGibbetGallows(ref uint actionID,
         int positionalChoice = 1,
         bool useSimpleTrueNorth = true,
         bool useDynamicTrueNorth = false,
@@ -412,9 +410,13 @@ internal partial class RPR
                 (holdTnCharge && GetRemainingCharges(Role.TrueNorth) is 2 || !holdTnCharge) &&
                 Role.CanTrueNorth() && !OnTargetsFlank() &&
                 GetRemainingCharges(Role.TrueNorth) > tnChargePool)
-                return Role.TrueNorth;
+            {
+                actionID = Role.TrueNorth;
+                return true;
+            }
 
-            return OriginalHook(Gibbet);
+            actionID = OriginalHook(Gibbet);
+            return true;
         }
 
         if (HasStatusEffect(Buffs.EnhancedGallows) ||
@@ -425,76 +427,101 @@ internal partial class RPR
                 (holdTnCharge && GetRemainingCharges(Role.TrueNorth) is 2 || !holdTnCharge) &&
                 Role.CanTrueNorth() && !OnTargetsRear() &&
                 GetRemainingCharges(Role.TrueNorth) > tnChargePool)
-                return Role.TrueNorth;
+            {
+                actionID = Role.TrueNorth;
+                return true;
+            }
 
-            return OriginalHook(Gallows);
+            actionID = OriginalHook(Gallows);
+            return true;
         }
 
-        return 0;
+        return false;
     }
 
-    private static uint EnshroudComboGCD(bool onAoE, bool communio = true, bool reaping = true)
+    private static bool TryEnshroudComboGCD(ref uint actionID, bool onAoE, bool communio = true, bool reaping = true)
     {
         if (!HasStatusEffect(Buffs.Enshrouded))
-            return 0;
+            return false;
 
         if (onAoE)
         {
             if (communio && LevelChecked(Communio) && Lemure is 1 && Void is 0)
-                return Communio;
+            {
+                actionID = Communio;
+                return true;
+            }
 
             if (reaping && Lemure > 0 && InActionRange(OriginalHook(Guillotine)))
-                return OriginalHook(Guillotine);
+            {
+                actionID = OriginalHook(Guillotine);
+                return true;
+            }
 
-            return 0;
+            return false;
         }
 
         if (communio && Lemure is 1 && LevelChecked(Communio))
-            return Communio;
-
-        switch (reaping)
         {
-            case true when HasStatusEffect(Buffs.EnhancedVoidReaping):
-                return OriginalHook(Gibbet);
-
-            case true when
-                HasStatusEffect(Buffs.EnhancedCrossReaping) ||
-                !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping):
-                return OriginalHook(Gallows);
-
-            default:
-                return 0;
+            actionID = Communio;
+            return true;
         }
+
+        if (reaping && HasStatusEffect(Buffs.EnhancedVoidReaping))
+        {
+            actionID = OriginalHook(Gibbet);
+            return true;
+        }
+
+        if (reaping &&
+            (HasStatusEffect(Buffs.EnhancedCrossReaping) ||
+             !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping)))
+        {
+            actionID = OriginalHook(Gallows);
+            return true;
+        }
+
+        return false;
     }
 
-    private static uint BloodStalkGrimSwatheEnshroudGCD(uint actionId)
+    private static bool TryBloodStalkGrimSwatheEnshroudGCD(ref uint actionID)
     {
-        switch (actionId)
+        switch (actionID)
         {
             case GrimSwathe when HasStatusEffect(Buffs.PerfectioParata):
-                return OriginalHook(Communio);
+                actionID = OriginalHook(Communio);
+                return true;
             case GrimSwathe when !HasStatusEffect(Buffs.Enshrouded):
-                return 0;
+                return false;
             case GrimSwathe:
             {
                 switch (Lemure)
                 {
                     case 1 when Void == 0 && LevelChecked(Communio):
-                        return Communio;
+                        actionID = Communio;
+                        return true;
 
                     case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
-                        return OriginalHook(Gluttony);
+                        actionID = OriginalHook(Gluttony);
+                        return true;
                 }
 
                 if (Void >= 2 && LevelChecked(LemuresScythe))
-                    return OriginalHook(GrimSwathe);
+                {
+                    actionID = OriginalHook(GrimSwathe);
+                    return true;
+                }
 
                 if (Lemure > 1)
-                    return OriginalHook(Guillotine);
+                {
+                    actionID = OriginalHook(Guillotine);
+                    return true;
+                }
                 break;
             }
             case BloodStalk when HasStatusEffect(Buffs.PerfectioParata):
-                return OriginalHook(Communio);
+                actionID = OriginalHook(Communio);
+                return true;
 
             case BloodStalk when !HasStatusEffect(Buffs.Enshrouded):
                 break;
@@ -504,50 +531,70 @@ internal partial class RPR
                 switch (Lemure)
                 {
                     case 1 when Void == 0 && LevelChecked(Communio):
-                        return Communio;
+                        actionID = Communio;
+                        return true;
 
                     case 2 when Void is 1 && HasStatusEffect(Buffs.Oblatio):
-                        return OriginalHook(Gluttony);
+                        actionID = OriginalHook(Gluttony);
+                        return true;
                 }
 
                 if (Void >= 2 && LevelChecked(LemuresSlice))
-                    return OriginalHook(BloodStalk);
+                {
+                    actionID = OriginalHook(BloodStalk);
+                    return true;
+                }
 
                 if (HasStatusEffect(Buffs.EnhancedVoidReaping))
-                    return OriginalHook(Gibbet);
+                {
+                    actionID = OriginalHook(Gibbet);
+                    return true;
+                }
 
                 if (HasStatusEffect(Buffs.EnhancedCrossReaping) ||
                     !HasStatusEffect(Buffs.EnhancedCrossReaping) && !HasStatusEffect(Buffs.EnhancedVoidReaping))
-                    return OriginalHook(Gallows);
+                {
+                    actionID = OriginalHook(Gallows);
+                    return true;
+                }
                 break;
             }
         }
 
-        return 0;
+        return false;
     }
 
-    private static uint BloodStalkGrimSwatheSoulReaverGCD(uint actionId, bool enshroudEnabled = true)
+    private static bool TryBloodStalkGrimSwatheSoulReaverGCD(ref uint actionID, bool enshroudEnabled = true)
     {
-        if (IsShroudOvercapping(enshroudEnabled, actionId is GrimSwathe))
-            return 0;
+        if (IsShroudOvercapping(enshroudEnabled, actionID is GrimSwathe))
+            return false;
 
-        if (actionId is GrimSwathe &&
+        if (actionID is GrimSwathe &&
             (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)) &&
             LevelChecked(Guillotine))
-            return Guillotine;
+        {
+            actionID = Guillotine;
+            return true;
+        }
 
-        if (actionId is BloodStalk &&
+        if (actionID is BloodStalk &&
             (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)))
         {
             if (HasStatusEffect(Buffs.EnhancedGibbet))
-                return OriginalHook(Gibbet);
+            {
+                actionID = OriginalHook(Gibbet);
+                return true;
+            }
 
             if (HasStatusEffect(Buffs.EnhancedGallows) ||
                 !HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows))
-                return OriginalHook(Gallows);
+            {
+                actionID = OriginalHook(Gallows);
+                return true;
+            }
         }
 
-        return 0;
+        return false;
     }
 
     private static bool CanSoulSliceScythe(bool onAoE) =>
@@ -695,30 +742,30 @@ internal partial class RPR
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            Harpe,
-            ShadowOfDeath,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            SoulSlice,
-            ArcaneCircle,
-            Gluttony,
-            ExecutionersGibbet, //7
-            ExecutionersGallows, //8
-            SoulSlice,
-            PlentifulHarvest,
-            Enshroud,
-            VoidReaping,
-            Sacrificium,
-            CrossReaping,
-            LemuresSlice,
-            VoidReaping,
-            CrossReaping,
-            LemuresSlice,
-            Communio,
-            Perfectio,
-            UnveiledGibbet, //21
-            Gibbet, //22
-            ShadowOfDeath,
-            Slice
+            Harpe, // 1
+            ShadowOfDeath, // 2
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
+            SoulSlice, // 4
+            ArcaneCircle, // 5
+            Gluttony, // 6
+            ExecutionersGibbet, // 7
+            ExecutionersGallows, // 8
+            SoulSlice, // 9
+            PlentifulHarvest, // 10
+            Enshroud, // 11
+            VoidReaping, // 12
+            Sacrificium, // 13
+            CrossReaping, // 14
+            LemuresSlice, // 15
+            VoidReaping, // 16
+            CrossReaping, // 17
+            LemuresSlice, // 18
+            Communio, // 19
+            Perfectio, // 20
+            UnveiledGibbet, // 21
+            Gibbet, // 22
+            ShadowOfDeath, // 23
+            Slice // 24
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
@@ -749,29 +796,29 @@ internal partial class RPR
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            SoulSlice,
-            ArcaneCircle,
-            ShadowOfDeath,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            Gluttony,
-            ExecutionersGibbet, //6
-            ExecutionersGallows, //7
-            PlentifulHarvest,
-            Enshroud,
-            VoidReaping,
-            Sacrificium,
-            CrossReaping,
-            LemuresSlice,
-            VoidReaping,
-            CrossReaping,
-            LemuresSlice,
-            Communio,
-            Perfectio,
-            SoulSlice,
-            UnveiledGibbet, //20
-            Gibbet, //21
-            ShadowOfDeath,
-            Slice
+            SoulSlice, // 1
+            ArcaneCircle, // 2
+            ShadowOfDeath, // 3
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            Gluttony, // 5
+            ExecutionersGibbet, // 6
+            ExecutionersGallows, // 7
+            PlentifulHarvest, // 8
+            Enshroud, // 9
+            VoidReaping, // 10
+            Sacrificium, // 11
+            CrossReaping, // 12
+            LemuresSlice, // 13
+            VoidReaping, // 14
+            CrossReaping, // 15
+            LemuresSlice, // 16
+            Communio, // 17
+            Perfectio, // 18
+            SoulSlice, // 19
+            UnveiledGibbet, // 20
+            Gibbet, // 21
+            ShadowOfDeath, // 22
+            Slice // 23
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
@@ -792,27 +839,27 @@ internal partial class RPR
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            Harpe,
-            ShadowOfDeath,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            ArcaneCircle,
-            SoulSlice,
-            SoulSlice,
-            PlentifulHarvest,
-            Enshroud,
-            VoidReaping,
-            CrossReaping,
-            LemuresSlice,
-            VoidReaping,
-            CrossReaping,
-            LemuresSlice,
-            Communio,
-            HarvestMoon,
-            Gluttony,
-            Gibbet, //17
-            Gallows, //18
-            UnveiledGibbet, //19
-            Gibbet //20
+            Harpe, // 1
+            ShadowOfDeath, // 2
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
+            ArcaneCircle, // 4
+            SoulSlice, // 5
+            SoulSlice, // 6
+            PlentifulHarvest, // 7
+            Enshroud, // 8
+            VoidReaping, // 9
+            CrossReaping, // 10
+            LemuresSlice, // 11
+            VoidReaping, // 12
+            CrossReaping, // 13
+            LemuresSlice, // 14
+            Communio, // 15
+            HarvestMoon, // 16
+            Gluttony, // 17
+            Gibbet, // 18
+            Gallows, // 19
+            UnveiledGibbet, // 20
+            Gibbet // 21
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =

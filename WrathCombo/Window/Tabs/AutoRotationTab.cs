@@ -270,10 +270,10 @@ internal class AutoRotationTab : ConfigWindow
                     Job.SCH.Shorthand(),
                     Job.AST.Shorthand(),
                     Job.SGE.Shorthand(),
-                    // Occult Crescent Phantom Chemist Revive
+                    // Occult Crescent phantom raises
                     Text.Misc.GetString(OccultCrescentContentName),
-                    Text.Misc.GetString(OccultPhantomChemist),
-                    OccultCrescent.Revive.ActionName()
+                    OccultCrescent.Revive.ActionName(),
+                    OccultCrescent.OccultRaise.ActionName()
                 )
             );
             var autoRez = (bool)P.IPC.GetAutoRotationConfigState(AutoRotationConfigOption.AutoRez)!;

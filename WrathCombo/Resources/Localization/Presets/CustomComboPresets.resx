@@ -4437,6 +4437,14 @@ Without a countdown, prepull steps have no delay.
   <data name="MCH_ST_Adv_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 90/100)</value>
   </data>
+  <data name="MCH_ST_Opener_BlockEarly_Desc" xml:space="preserve">
+    <value>When not in combat will change to Savage Blade to wait for a countdown to appear.
+Mostly here to allow for targeting the boss before the countdown your opener is waiting for.
+ONLY designed to be something you turn on while doing back-to-back pulls of content, NOT suitable to leave on all the time.</value>
+  </data>
+  <data name="MCH_ST_Opener_BlockEarly_Name" xml:space="preserve">
+    <value>Wait for Countdown Options</value>
+  </data>
   <data name="MCH_ST_Adv_QueenInHypercharge_Desc" xml:space="preserve">
     <value>Allow Automaton Queen to be used while in Hypercharge</value>
   </data>
@@ -5774,6 +5782,90 @@ This is the ideal option for newcomers to the job.</value>
   <data name="Phantom_Berserker_Rage_Name" xml:space="preserve">
     <value>Rage</value>
   </data>
+  <data name="Phantom_BlackMage_Desc" xml:space="preserve">
+    <value>Enable this to add Black Mage-specific actions into the rotation.</value>
+  </data>
+  <data name="Phantom_BlackMage_Name" xml:space="preserve">
+    <value>Black Mage Job Actions</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultBlizzardIII_Desc" xml:space="preserve">
+    <value>Adds Occult Blizzard III into the rotation (prefers Ice Weakness).</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultBlizzardIII_Name" xml:space="preserve">
+    <value>Occult Blizzard III</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultFireIII_Desc" xml:space="preserve">
+    <value>Adds Occult Fire III into the rotation (prefers Fire Weakness).</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultFireIII_Name" xml:space="preserve">
+    <value>Occult Fire III</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultFlare_Desc" xml:space="preserve">
+    <value>Adds Occult Flare into the rotation.</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultFlare_Name" xml:space="preserve">
+    <value>Occult Flare</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultThunderIII_Desc" xml:space="preserve">
+    <value>Adds Occult Thunder III into the rotation (prefers Lightning Weakness).</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultThunderIII_Name" xml:space="preserve">
+    <value>Occult Thunder III</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultToad_Desc" xml:space="preserve">
+    <value>Adds Occult Toad into the rotation (optionally only as AoE / raidwide mit).</value>
+  </data>
+  <data name="Phantom_BlackMage_OccultToad_Name" xml:space="preserve">
+    <value>Occult Toad</value>
+  </data>
+  <data name="Phantom_BlueMage_Desc" xml:space="preserve">
+    <value>Enable this to add Blue Mage-specific actions into the rotation.</value>
+  </data>
+  <data name="Phantom_BlueMage_Name" xml:space="preserve">
+    <value>Blue Mage Job Actions</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultAero_Desc" xml:space="preserve">
+    <value>Adds Occult Aero into the rotation.</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultAero_Name" xml:space="preserve">
+    <value>Occult Aero</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultAeroII_Desc" xml:space="preserve">
+    <value>Adds Occult Aero II into the rotation.</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultAeroII_Name" xml:space="preserve">
+    <value>Occult Aero II</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultAeroIII_Desc" xml:space="preserve">
+    <value>Adds Occult Aero III into the rotation.</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultAeroIII_Name" xml:space="preserve">
+    <value>Occult Aero III</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultAquaBreath_Desc" xml:space="preserve">
+    <value>Adds Occult Aqua Breath into the rotation.</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultAquaBreath_Name" xml:space="preserve">
+    <value>Occult Aqua Breath</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultMightyGuard_Desc" xml:space="preserve">
+    <value>Adds Occult Mighty Guard into the rotation.</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultMightyGuard_Name" xml:space="preserve">
+    <value>Occult Mighty Guard</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultMissile_Desc" xml:space="preserve">
+    <value>Adds Occult Missile into the rotation.</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultMissile_Name" xml:space="preserve">
+    <value>Occult Missile</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultWhiteWind_Desc" xml:space="preserve">
+    <value>Adds Occult White Wind into the rotation.</value>
+  </data>
+  <data name="Phantom_BlueMage_OccultWhiteWind_Name" xml:space="preserve">
+    <value>Occult White Wind</value>
+  </data>
   <data name="Phantom_Cannoneer_DarkCannon_Desc" xml:space="preserve">
     <value>Adds Dark Cannon into the rotation.</value>
   </data>
@@ -5838,7 +5930,7 @@ Requires Occult Potions in inventory.</value>
     <value>Occult Potion</value>
   </data>
   <data name="Phantom_Chemist_Revive_Desc" xml:space="preserve">
-    <value>Adds Revive into the rotation.</value>
+    <value>Adds Revive into the rotation, retargeted to your Raise Stack.</value>
   </data>
   <data name="Phantom_Chemist_Revive_Name" xml:space="preserve">
     <value>Revive</value>
@@ -5866,6 +5958,30 @@ Requires Occult Potions in inventory.</value>
   </data>
   <data name="Phantom_Dancer_QuickStep_Name" xml:space="preserve">
     <value>Quickstep</value>
+  </data>
+  <data name="Phantom_Dancer_SteadfastStance_Desc" xml:space="preserve">
+    <value>Adds Steadfast Stance into the rotation (barrier).</value>
+  </data>
+  <data name="Phantom_Dancer_SteadfastStance_Name" xml:space="preserve">
+    <value>Steadfast Stance</value>
+  </data>
+  <data name="Phantom_Dragoon_Desc" xml:space="preserve">
+    <value>Enable this to add Dragoon-specific actions into the rotation.</value>
+  </data>
+  <data name="Phantom_Dragoon_Name" xml:space="preserve">
+    <value>Dragoon Job Actions</value>
+  </data>
+  <data name="Phantom_Dragoon_Lance_Desc" xml:space="preserve">
+    <value>Adds Lance into the rotation.</value>
+  </data>
+  <data name="Phantom_Dragoon_Lance_Name" xml:space="preserve">
+    <value>Lance</value>
+  </data>
+  <data name="Phantom_Dragoon_OccultJump_Desc" xml:space="preserve">
+    <value>Adds Occult Jump into the rotation.</value>
+  </data>
+  <data name="Phantom_Dragoon_OccultJump_Name" xml:space="preserve">
+    <value>Occult Jump</value>
   </data>
   <data name="Phantom_Freelancer_Desc" xml:space="preserve">
     <value>Enable this to add Freelancer-specific actions into the rotation.</value>
@@ -5934,7 +6050,7 @@ Requires Occult Potions in inventory.</value>
     <value>Sunbath</value>
   </data>
   <data name="Phantom_Geomancer_Suspend_Desc" xml:space="preserve">
-    <value>Adds Suspend into the rotation.</value>
+    <value>Adds Suspend into the rotation (configure in/out of combat).</value>
   </data>
   <data name="Phantom_Geomancer_Suspend_Name" xml:space="preserve">
     <value>Suspend</value>
@@ -5994,13 +6110,13 @@ Requires Occult Potions in inventory.</value>
     <value>Phantom Guard</value>
   </data>
   <data name="Phantom_Knight_Pledge_Desc" xml:space="preserve">
-    <value>Adds Pledge into the rotation.</value>
+    <value>Adds Pledge into the rotation (self or lowest-HP party member).</value>
   </data>
   <data name="Phantom_Knight_Pledge_Name" xml:space="preserve">
     <value>Pledge</value>
   </data>
   <data name="Phantom_Knight_Pray_Desc" xml:space="preserve">
-    <value>Adds Pray into the rotation.</value>
+    <value>Adds Pray into the rotation (keep-up and/or HP threshold).</value>
   </data>
   <data name="Phantom_Knight_Pray_Name" xml:space="preserve">
     <value>Pray</value>
@@ -6065,6 +6181,78 @@ Requires Occult Potions in inventory.</value>
   <data name="Phantom_MysticKnight_SunderingSpellblade_Name" xml:space="preserve">
     <value>Sundering Spellblade</value>
   </data>
+  <data name="Phantom_Necromancer_ChaosDrive_Desc" xml:space="preserve">
+    <value>Adds Chaos Drive into the rotation (prefers Lightning Weakness).</value>
+  </data>
+  <data name="Phantom_Necromancer_ChaosDrive_Name" xml:space="preserve">
+    <value>Chaos Drive</value>
+  </data>
+  <data name="Phantom_Necromancer_DeepFreeze_Desc" xml:space="preserve">
+    <value>Adds Deep Freeze into the rotation (prefers Ice Weakness).</value>
+  </data>
+  <data name="Phantom_Necromancer_DeepFreeze_Name" xml:space="preserve">
+    <value>Deep Freeze</value>
+  </data>
+  <data name="Phantom_Necromancer_Desc" xml:space="preserve">
+    <value>Enable this to add Necromancer-specific actions into the rotation.</value>
+  </data>
+  <data name="Phantom_Necromancer_Doomsday_Desc" xml:space="preserve">
+    <value>Adds Doomsday into the rotation.</value>
+  </data>
+  <data name="Phantom_Necromancer_Doomsday_Name" xml:space="preserve">
+    <value>Doomsday</value>
+  </data>
+  <data name="Phantom_Necromancer_DrainTouch_Desc" xml:space="preserve">
+    <value>Adds Drain Touch into the rotation (DPS, Heal, or Emergency mode).</value>
+  </data>
+  <data name="Phantom_Necromancer_DrainTouch_Name" xml:space="preserve">
+    <value>Drain Touch</value>
+  </data>
+  <data name="Phantom_Necromancer_HellWind_Desc" xml:space="preserve">
+    <value>Adds Hell Wind into the rotation (prefers Wind Weakness).</value>
+  </data>
+  <data name="Phantom_Necromancer_HellWind_Name" xml:space="preserve">
+    <value>Hell Wind</value>
+  </data>
+  <data name="Phantom_Necromancer_Name" xml:space="preserve">
+    <value>Necromancer Job Actions</value>
+  </data>
+  <data name="Phantom_Ninja_Desc" xml:space="preserve">
+    <value>Enable this to add Ninja-specific actions into the rotation.</value>
+  </data>
+  <data name="Phantom_Ninja_FlameScroll_Desc" xml:space="preserve">
+    <value>Adds Flame Scroll into the rotation when the target has Fire Weakness.</value>
+  </data>
+  <data name="Phantom_Ninja_FlameScroll_Name" xml:space="preserve">
+    <value>Flame Scroll</value>
+  </data>
+  <data name="Phantom_Ninja_FumaShuriken_Desc" xml:space="preserve">
+    <value>Adds Fuma Shuriken into the rotation.</value>
+  </data>
+  <data name="Phantom_Ninja_FumaShuriken_Name" xml:space="preserve">
+    <value>Fuma Shuriken</value>
+  </data>
+  <data name="Phantom_Ninja_Image_Desc" xml:space="preserve">
+    <value>Adds Image into the rotation.</value>
+  </data>
+  <data name="Phantom_Ninja_Image_Name" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Phantom_Ninja_LightningScroll_Desc" xml:space="preserve">
+    <value>Adds Lightning Scroll into the rotation when the target has Lightning Weakness.</value>
+  </data>
+  <data name="Phantom_Ninja_LightningScroll_Name" xml:space="preserve">
+    <value>Lightning Scroll</value>
+  </data>
+  <data name="Phantom_Ninja_Name" xml:space="preserve">
+    <value>Ninja Job Actions</value>
+  </data>
+  <data name="Phantom_Ninja_Smoke_Desc" xml:space="preserve">
+    <value>Adds Smoke into the rotation.</value>
+  </data>
+  <data name="Phantom_Ninja_Smoke_Name" xml:space="preserve">
+    <value>Smoke</value>
+  </data>
   <data name="Phantom_Oracle_Blessing_Desc" xml:space="preserve">
     <value>Adds Blessing into the rotation.</value>
   </data>
@@ -6080,20 +6268,44 @@ Requires Occult Potions in inventory.</value>
   <data name="Phantom_Oracle_Desc" xml:space="preserve">
     <value>Enable this to add Oracle-specific actions into the rotation.</value>
   </data>
+  <data name="Phantom_Oracle_Invulnerability_Desc" xml:space="preserve">
+    <value>Adds Invulnerability into the rotation (optionally saved for Starfall).</value>
+  </data>
+  <data name="Phantom_Oracle_Invulnerability_Name" xml:space="preserve">
+    <value>Invulnerability</value>
+  </data>
   <data name="Phantom_Oracle_Name" xml:space="preserve">
     <value>Oracle Job Actions</value>
   </data>
+  <data name="Phantom_Oracle_PhantomDoom_Desc" xml:space="preserve">
+    <value>Adds Phantom Doom into the rotation.</value>
+  </data>
+  <data name="Phantom_Oracle_PhantomDoom_Name" xml:space="preserve">
+    <value>Phantom Doom</value>
+  </data>
   <data name="Phantom_Oracle_PhantomJudgment_Desc" xml:space="preserve">
-    <value>Adds Phantom Judgment into the rotation.</value>
+    <value>Adds Phantom Judgment into the rotation (prioritizes as a heal when party/self HP is low).</value>
   </data>
   <data name="Phantom_Oracle_PhantomJudgment_Name" xml:space="preserve">
     <value>Phantom Judgment</value>
+  </data>
+  <data name="Phantom_Oracle_PhantomRejuvenation_Desc" xml:space="preserve">
+    <value>Adds Phantom Rejuvenation into the rotation.</value>
+  </data>
+  <data name="Phantom_Oracle_PhantomRejuvenation_Name" xml:space="preserve">
+    <value>Phantom Rejuvenation</value>
   </data>
   <data name="Phantom_Oracle_Predict_Desc" xml:space="preserve">
     <value>Adds Predict into the rotation.</value>
   </data>
   <data name="Phantom_Oracle_Predict_Name" xml:space="preserve">
     <value>Predict</value>
+  </data>
+  <data name="Phantom_Oracle_Recuperation_Desc" xml:space="preserve">
+    <value>Adds Recuperation into the rotation when you have a cleansable Doom.</value>
+  </data>
+  <data name="Phantom_Oracle_Recuperation_Name" xml:space="preserve">
+    <value>Recuperation</value>
   </data>
   <data name="Phantom_Oracle_Starfall_Desc" xml:space="preserve">
     <value>Adds Starfall into the rotation.</value>
@@ -6118,6 +6330,42 @@ Requires Occult Potions in inventory.</value>
   </data>
   <data name="Phantom_Ranger_PhantomAim_Name" xml:space="preserve">
     <value>Phantom Aim</value>
+  </data>
+  <data name="Phantom_RedMage_Desc" xml:space="preserve">
+    <value>Enable this to add Red Mage-specific actions into the rotation.</value>
+  </data>
+  <data name="Phantom_RedMage_Name" xml:space="preserve">
+    <value>Red Mage Job Actions</value>
+  </data>
+  <data name="Phantom_RedMage_OccultBlizzardII_Desc" xml:space="preserve">
+    <value>Adds Occult Blizzard II into the rotation (prefers Ice Weakness).</value>
+  </data>
+  <data name="Phantom_RedMage_OccultBlizzardII_Name" xml:space="preserve">
+    <value>Occult Blizzard II</value>
+  </data>
+  <data name="Phantom_RedMage_OccultCureII_Desc" xml:space="preserve">
+    <value>Adds Occult Cure II into the rotation.</value>
+  </data>
+  <data name="Phantom_RedMage_OccultCureII_Name" xml:space="preserve">
+    <value>Occult Cure II</value>
+  </data>
+  <data name="Phantom_RedMage_OccultFireII_Desc" xml:space="preserve">
+    <value>Adds Occult Fire II into the rotation (prefers Fire Weakness).</value>
+  </data>
+  <data name="Phantom_RedMage_OccultFireII_Name" xml:space="preserve">
+    <value>Occult Fire II</value>
+  </data>
+  <data name="Phantom_RedMage_OccultLibra_Desc" xml:space="preserve">
+    <value>Adds Occult Libra into the rotation.</value>
+  </data>
+  <data name="Phantom_RedMage_OccultLibra_Name" xml:space="preserve">
+    <value>Occult Libra</value>
+  </data>
+  <data name="Phantom_RedMage_OccultThunderII_Desc" xml:space="preserve">
+    <value>Adds Occult Thunder II into the rotation (prefers Lightning Weakness).</value>
+  </data>
+  <data name="Phantom_RedMage_OccultThunderII_Name" xml:space="preserve">
+    <value>Occult Thunder II</value>
   </data>
   <data name="Phantom_RestrictToBuff_Desc" xml:space="preserve">
       <value>Will restrict damaging Phantom Abilities to when you or your party have damage buffs (including minor ones on yourself, like Paladin's Fight or Flight).
@@ -6156,6 +6404,42 @@ NOT RECOMMENDED!</value>
   </data>
   <data name="Phantom_Samurai_Zeninage_Name" xml:space="preserve">
     <value>Phantom Zeninage</value>
+  </data>
+  <data name="Phantom_Summoner_Desc" xml:space="preserve">
+    <value>Enable this to add Summoner-specific actions into the rotation.</value>
+  </data>
+  <data name="Phantom_Summoner_EarthenWall_Desc" xml:space="preserve">
+    <value>Adds Earthen Wall into the rotation.</value>
+  </data>
+  <data name="Phantom_Summoner_EarthenWall_Name" xml:space="preserve">
+    <value>Earthen Wall</value>
+  </data>
+  <data name="Phantom_Summoner_Hellfire_Desc" xml:space="preserve">
+    <value>Adds Hellfire into the rotation (prefers Fire Weakness).</value>
+  </data>
+  <data name="Phantom_Summoner_Hellfire_Name" xml:space="preserve">
+    <value>Hellfire</value>
+  </data>
+  <data name="Phantom_Summoner_JudgmentBolt_Desc" xml:space="preserve">
+    <value>Adds Judgment Bolt into the rotation (prefers Lightning Weakness).</value>
+  </data>
+  <data name="Phantom_Summoner_JudgmentBolt_Name" xml:space="preserve">
+    <value>Judgment Bolt</value>
+  </data>
+  <data name="Phantom_Summoner_Megaflare_Desc" xml:space="preserve">
+    <value>Adds Megaflare into the rotation.</value>
+  </data>
+  <data name="Phantom_Summoner_Megaflare_Name" xml:space="preserve">
+    <value>Megaflare</value>
+  </data>
+  <data name="Phantom_Summoner_Name" xml:space="preserve">
+    <value>Summoner Job Actions</value>
+  </data>
+  <data name="Phantom_Summoner_Thunderstorm_Desc" xml:space="preserve">
+    <value>Adds Thunderstorm into the rotation (prefers Wind Weakness).</value>
+  </data>
+  <data name="Phantom_Summoner_Thunderstorm_Name" xml:space="preserve">
+    <value>Thunderstorm</value>
   </data>
   <data name="Phantom_Thief_Desc" xml:space="preserve">
     <value>Enable this to add Thief-specific actions into the rotation.</value>
@@ -6228,6 +6512,42 @@ NOT RECOMMENDED!</value>
   </data>
   <data name="Phantom_TimeMage_OccultSlowga_Wait_Name" xml:space="preserve">
     <value>Wait to get Full(-ish) Effect</value>
+  </data>
+  <data name="Phantom_WhiteMage_Desc" xml:space="preserve">
+    <value>Enable this to add White Mage-specific actions into the rotation.</value>
+  </data>
+  <data name="Phantom_WhiteMage_Name" xml:space="preserve">
+    <value>White Mage Job Actions</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultBlink_Desc" xml:space="preserve">
+    <value>Adds Occult Blink into the rotation.</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultBlink_Name" xml:space="preserve">
+    <value>Occult Blink</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultCureII_Desc" xml:space="preserve">
+    <value>Adds Occult Cure II into the rotation.</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultCureII_Name" xml:space="preserve">
+    <value>Occult Cure II</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultCureIII_Desc" xml:space="preserve">
+    <value>Adds Occult Cure III into the rotation.</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultCureIII_Name" xml:space="preserve">
+    <value>Occult Cure III</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultHoly_Desc" xml:space="preserve">
+    <value>Adds Occult Holy into the rotation.</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultHoly_Name" xml:space="preserve">
+    <value>Occult Holy</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultRaise_Desc" xml:space="preserve">
+    <value>Adds Occult Raise into the rotation, retargeted to your Raise Stack.</value>
+  </data>
+  <data name="Phantom_WhiteMage_OccultRaise_Name" xml:space="preserve">
+    <value>Occult Raise</value>
   </data>
   <data name="PLDPvP_Burst_Desc" xml:space="preserve">
     <value>Turns Royal Authority Combo into an all-in-one damage button.</value>
@@ -11493,5 +11813,11 @@ This is the ideal option for newcomers to the job.</value>
   </data>
   <data name="NIN_Anti_Rabbit_Desc" xml:space="preserve">
     <value>Makes it incredibly difficult to rabbit your jutsus. May cause clipping if latency is bad.</value>
+  </data>
+  <data name="Phantom_RedMage_OccultCureII_Retarget_Name" xml:space="preserve">
+    <value>Retarget Phantom Cure II</value>
+  </data>
+  <data name="Phantom_RedMage_OccultCureII_Retarget_Desc" xml:space="preserve">
+    <value>Retargets Phantom Cure II. Retargets if anyone in your party is below the slider above.</value>
   </data>
 </root>

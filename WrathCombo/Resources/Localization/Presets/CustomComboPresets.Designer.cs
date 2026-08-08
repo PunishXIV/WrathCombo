@@ -12750,6 +12750,26 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When not in combat will change to Savage Blade to wait for a countdown to appear.
+        ///Mostly here to allow for targeting the boss before the countdown your opener is waiting for.
+        ///ONLY designed to be something you turn on while doing back-to-back pulls of content, NOT suitable to leave on all the time..
+        /// </summary>
+        internal static string MCH_ST_Opener_BlockEarly_Desc {
+            get {
+                return ResourceManager.GetString("MCH_ST_Opener_BlockEarly_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for Countdown Options.
+        /// </summary>
+        internal static string MCH_ST_Opener_BlockEarly_Name {
+            get {
+                return ResourceManager.GetString("MCH_ST_Opener_BlockEarly_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaces Split Shot with a full one-button single target rotation.
         ///This is the ideal option for newcomers to the job..
         /// </summary>
@@ -16644,6 +16664,258 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable this to add Black Mage-specific actions into the rotation..
+        /// </summary>
+        internal static string Phantom_BlackMage_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Black Mage Job Actions.
+        /// </summary>
+        internal static string Phantom_BlackMage_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Blizzard III into the rotation (prefers Ice Weakness)..
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultBlizzardIII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultBlizzardIII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Blizzard III.
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultBlizzardIII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultBlizzardIII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Fire III into the rotation (prefers Fire Weakness)..
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultFireIII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultFireIII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Fire III.
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultFireIII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultFireIII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Flare into the rotation..
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultFlare_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultFlare_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Flare.
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultFlare_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultFlare_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Thunder III into the rotation (prefers Lightning Weakness)..
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultThunderIII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultThunderIII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Thunder III.
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultThunderIII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultThunderIII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Toad into the rotation (optionally only as AoE / raidwide mit)..
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultToad_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultToad_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Toad.
+        /// </summary>
+        internal static string Phantom_BlackMage_OccultToad_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlackMage_OccultToad_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to add Blue Mage-specific actions into the rotation..
+        /// </summary>
+        internal static string Phantom_BlueMage_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blue Mage Job Actions.
+        /// </summary>
+        internal static string Phantom_BlueMage_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Aero into the rotation..
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultAero_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultAero_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Aero.
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultAero_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultAero_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Aero II into the rotation..
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultAeroII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultAeroII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Aero II.
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultAeroII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultAeroII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Aero III into the rotation..
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultAeroIII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultAeroIII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Aero III.
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultAeroIII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultAeroIII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Aqua Breath into the rotation..
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultAquaBreath_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultAquaBreath_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Aqua Breath.
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultAquaBreath_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultAquaBreath_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Mighty Guard into the rotation..
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultMightyGuard_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultMightyGuard_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Mighty Guard.
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultMightyGuard_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultMightyGuard_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Missile into the rotation..
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultMissile_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultMissile_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Missile.
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultMissile_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultMissile_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult White Wind into the rotation..
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultWhiteWind_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultWhiteWind_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult White Wind.
+        /// </summary>
+        internal static string Phantom_BlueMage_OccultWhiteWind_Name {
+            get {
+                return ResourceManager.GetString("Phantom_BlueMage_OccultWhiteWind_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds Dark Cannon into the rotation..
         /// </summary>
         internal static string Phantom_Cannoneer_DarkCannon_Desc {
@@ -16827,7 +17099,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Revive into the rotation..
+        ///   Looks up a localized string similar to Adds Revive into the rotation, retargeted to your Raise Stack..
         /// </summary>
         internal static string Phantom_Chemist_Revive_Desc {
             get {
@@ -16913,6 +17185,78 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string Phantom_Dancer_QuickStep_Name {
             get {
                 return ResourceManager.GetString("Phantom_Dancer_QuickStep_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Steadfast Stance into the rotation (barrier)..
+        /// </summary>
+        internal static string Phantom_Dancer_SteadfastStance_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Dancer_SteadfastStance_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steadfast Stance.
+        /// </summary>
+        internal static string Phantom_Dancer_SteadfastStance_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Dancer_SteadfastStance_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to add Dragoon-specific actions into the rotation..
+        /// </summary>
+        internal static string Phantom_Dragoon_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Dragoon_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Lance into the rotation..
+        /// </summary>
+        internal static string Phantom_Dragoon_Lance_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Dragoon_Lance_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lance.
+        /// </summary>
+        internal static string Phantom_Dragoon_Lance_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Dragoon_Lance_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dragoon Job Actions.
+        /// </summary>
+        internal static string Phantom_Dragoon_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Dragoon_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Jump into the rotation..
+        /// </summary>
+        internal static string Phantom_Dragoon_OccultJump_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Dragoon_OccultJump_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Jump.
+        /// </summary>
+        internal static string Phantom_Dragoon_OccultJump_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Dragoon_OccultJump_Name", resourceCulture);
             }
         }
         
@@ -17115,7 +17459,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Suspend into the rotation..
+        ///   Looks up a localized string similar to Adds Suspend into the rotation (configure in/out of combat)..
         /// </summary>
         internal static string Phantom_Geomancer_Suspend_Desc {
             get {
@@ -17295,7 +17639,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Pledge into the rotation..
+        ///   Looks up a localized string similar to Adds Pledge into the rotation (self or lowest-HP party member)..
         /// </summary>
         internal static string Phantom_Knight_Pledge_Desc {
             get {
@@ -17313,7 +17657,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Pray into the rotation..
+        ///   Looks up a localized string similar to Adds Pray into the rotation (keep-up and/or HP threshold)..
         /// </summary>
         internal static string Phantom_Knight_Pray_Desc {
             get {
@@ -17511,6 +17855,222 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adds Chaos Drive into the rotation (prefers Lightning Weakness)..
+        /// </summary>
+        internal static string Phantom_Necromancer_ChaosDrive_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_ChaosDrive_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chaos Drive.
+        /// </summary>
+        internal static string Phantom_Necromancer_ChaosDrive_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_ChaosDrive_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Deep Freeze into the rotation (prefers Ice Weakness)..
+        /// </summary>
+        internal static string Phantom_Necromancer_DeepFreeze_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_DeepFreeze_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deep Freeze.
+        /// </summary>
+        internal static string Phantom_Necromancer_DeepFreeze_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_DeepFreeze_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to add Necromancer-specific actions into the rotation..
+        /// </summary>
+        internal static string Phantom_Necromancer_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Doomsday into the rotation..
+        /// </summary>
+        internal static string Phantom_Necromancer_Doomsday_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_Doomsday_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doomsday.
+        /// </summary>
+        internal static string Phantom_Necromancer_Doomsday_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_Doomsday_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Drain Touch into the rotation (DPS, Heal, or Emergency mode)..
+        /// </summary>
+        internal static string Phantom_Necromancer_DrainTouch_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_DrainTouch_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drain Touch.
+        /// </summary>
+        internal static string Phantom_Necromancer_DrainTouch_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_DrainTouch_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Hell Wind into the rotation (prefers Wind Weakness)..
+        /// </summary>
+        internal static string Phantom_Necromancer_HellWind_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_HellWind_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hell Wind.
+        /// </summary>
+        internal static string Phantom_Necromancer_HellWind_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_HellWind_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Necromancer Job Actions.
+        /// </summary>
+        internal static string Phantom_Necromancer_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Necromancer_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to add Ninja-specific actions into the rotation..
+        /// </summary>
+        internal static string Phantom_Ninja_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Flame Scroll into the rotation when the target has Fire Weakness..
+        /// </summary>
+        internal static string Phantom_Ninja_FlameScroll_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_FlameScroll_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flame Scroll.
+        /// </summary>
+        internal static string Phantom_Ninja_FlameScroll_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_FlameScroll_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Fuma Shuriken into the rotation..
+        /// </summary>
+        internal static string Phantom_Ninja_FumaShuriken_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_FumaShuriken_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fuma Shuriken.
+        /// </summary>
+        internal static string Phantom_Ninja_FumaShuriken_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_FumaShuriken_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Image into the rotation..
+        /// </summary>
+        internal static string Phantom_Ninja_Image_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_Image_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image.
+        /// </summary>
+        internal static string Phantom_Ninja_Image_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_Image_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Lightning Scroll into the rotation when the target has Lightning Weakness..
+        /// </summary>
+        internal static string Phantom_Ninja_LightningScroll_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_LightningScroll_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lightning Scroll.
+        /// </summary>
+        internal static string Phantom_Ninja_LightningScroll_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_LightningScroll_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ninja Job Actions.
+        /// </summary>
+        internal static string Phantom_Ninja_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Smoke into the rotation..
+        /// </summary>
+        internal static string Phantom_Ninja_Smoke_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_Smoke_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smoke.
+        /// </summary>
+        internal static string Phantom_Ninja_Smoke_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Ninja_Smoke_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds Blessing into the rotation..
         /// </summary>
         internal static string Phantom_Oracle_Blessing_Desc {
@@ -17556,6 +18116,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adds Invulnerability into the rotation (optionally saved for Starfall)..
+        /// </summary>
+        internal static string Phantom_Oracle_Invulnerability_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Oracle_Invulnerability_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invulnerability.
+        /// </summary>
+        internal static string Phantom_Oracle_Invulnerability_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Oracle_Invulnerability_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Oracle Job Actions.
         /// </summary>
         internal static string Phantom_Oracle_Name {
@@ -17565,7 +18143,25 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Phantom Judgment into the rotation..
+        ///   Looks up a localized string similar to Adds Phantom Doom into the rotation..
+        /// </summary>
+        internal static string Phantom_Oracle_PhantomDoom_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Oracle_PhantomDoom_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phantom Doom.
+        /// </summary>
+        internal static string Phantom_Oracle_PhantomDoom_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Oracle_PhantomDoom_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Phantom Judgment into the rotation (prioritizes as a heal when party/self HP is low)..
         /// </summary>
         internal static string Phantom_Oracle_PhantomJudgment_Desc {
             get {
@@ -17579,6 +18175,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string Phantom_Oracle_PhantomJudgment_Name {
             get {
                 return ResourceManager.GetString("Phantom_Oracle_PhantomJudgment_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Phantom Rejuvenation into the rotation..
+        /// </summary>
+        internal static string Phantom_Oracle_PhantomRejuvenation_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Oracle_PhantomRejuvenation_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phantom Rejuvenation.
+        /// </summary>
+        internal static string Phantom_Oracle_PhantomRejuvenation_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Oracle_PhantomRejuvenation_Name", resourceCulture);
             }
         }
         
@@ -17597,6 +18211,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string Phantom_Oracle_Predict_Name {
             get {
                 return ResourceManager.GetString("Phantom_Oracle_Predict_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Recuperation into the rotation when you have a cleansable Doom..
+        /// </summary>
+        internal static string Phantom_Oracle_Recuperation_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Oracle_Recuperation_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recuperation.
+        /// </summary>
+        internal static string Phantom_Oracle_Recuperation_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Oracle_Recuperation_Name", resourceCulture);
             }
         }
         
@@ -17669,6 +18301,132 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string Phantom_Ranger_PhantomAim_Name {
             get {
                 return ResourceManager.GetString("Phantom_Ranger_PhantomAim_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to add Red Mage-specific actions into the rotation..
+        /// </summary>
+        internal static string Phantom_RedMage_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Red Mage Job Actions.
+        /// </summary>
+        internal static string Phantom_RedMage_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Blizzard II into the rotation (prefers Ice Weakness)..
+        /// </summary>
+        internal static string Phantom_RedMage_OccultBlizzardII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultBlizzardII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Blizzard II.
+        /// </summary>
+        internal static string Phantom_RedMage_OccultBlizzardII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultBlizzardII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Cure II into the rotation..
+        /// </summary>
+        internal static string Phantom_RedMage_OccultCureII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultCureII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Cure II.
+        /// </summary>
+        internal static string Phantom_RedMage_OccultCureII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultCureII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retargets Phantom Cure II. Retargets if anyone in your party is below the slider above..
+        /// </summary>
+        internal static string Phantom_RedMage_OccultCureII_Retarget_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultCureII_Retarget_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retarget Phantom Cure II.
+        /// </summary>
+        internal static string Phantom_RedMage_OccultCureII_Retarget_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultCureII_Retarget_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Fire II into the rotation (prefers Fire Weakness)..
+        /// </summary>
+        internal static string Phantom_RedMage_OccultFireII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultFireII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Fire II.
+        /// </summary>
+        internal static string Phantom_RedMage_OccultFireII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultFireII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Libra into the rotation..
+        /// </summary>
+        internal static string Phantom_RedMage_OccultLibra_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultLibra_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Libra.
+        /// </summary>
+        internal static string Phantom_RedMage_OccultLibra_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultLibra_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Thunder II into the rotation (prefers Lightning Weakness)..
+        /// </summary>
+        internal static string Phantom_RedMage_OccultThunderII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultThunderII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Thunder II.
+        /// </summary>
+        internal static string Phantom_RedMage_OccultThunderII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultThunderII_Name", resourceCulture);
             }
         }
         
@@ -17779,6 +18537,114 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string Phantom_Samurai_Zeninage_Name {
             get {
                 return ResourceManager.GetString("Phantom_Samurai_Zeninage_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to add Summoner-specific actions into the rotation..
+        /// </summary>
+        internal static string Phantom_Summoner_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Earthen Wall into the rotation..
+        /// </summary>
+        internal static string Phantom_Summoner_EarthenWall_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_EarthenWall_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Earthen Wall.
+        /// </summary>
+        internal static string Phantom_Summoner_EarthenWall_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_EarthenWall_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Hellfire into the rotation (prefers Fire Weakness)..
+        /// </summary>
+        internal static string Phantom_Summoner_Hellfire_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_Hellfire_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hellfire.
+        /// </summary>
+        internal static string Phantom_Summoner_Hellfire_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_Hellfire_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Judgment Bolt into the rotation (prefers Lightning Weakness)..
+        /// </summary>
+        internal static string Phantom_Summoner_JudgmentBolt_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_JudgmentBolt_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Judgment Bolt.
+        /// </summary>
+        internal static string Phantom_Summoner_JudgmentBolt_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_JudgmentBolt_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Megaflare into the rotation..
+        /// </summary>
+        internal static string Phantom_Summoner_Megaflare_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_Megaflare_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Megaflare.
+        /// </summary>
+        internal static string Phantom_Summoner_Megaflare_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_Megaflare_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Summoner Job Actions.
+        /// </summary>
+        internal static string Phantom_Summoner_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Thunderstorm into the rotation (prefers Wind Weakness)..
+        /// </summary>
+        internal static string Phantom_Summoner_Thunderstorm_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_Thunderstorm_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thunderstorm.
+        /// </summary>
+        internal static string Phantom_Summoner_Thunderstorm_Name {
+            get {
+                return ResourceManager.GetString("Phantom_Summoner_Thunderstorm_Name", resourceCulture);
             }
         }
         
@@ -17995,6 +18861,114 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string Phantom_TimeMage_OccultSlowga_Wait_Name {
             get {
                 return ResourceManager.GetString("Phantom_TimeMage_OccultSlowga_Wait_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to add White Mage-specific actions into the rotation..
+        /// </summary>
+        internal static string Phantom_WhiteMage_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to White Mage Job Actions.
+        /// </summary>
+        internal static string Phantom_WhiteMage_Name {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Blink into the rotation..
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultBlink_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultBlink_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Blink.
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultBlink_Name {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultBlink_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Cure II into the rotation..
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultCureII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultCureII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Cure II.
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultCureII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultCureII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Cure III into the rotation..
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultCureIII_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultCureIII_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Cure III.
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultCureIII_Name {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultCureIII_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Holy into the rotation..
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultHoly_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultHoly_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Holy.
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultHoly_Name {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultHoly_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Occult Raise into the rotation, retargeted to your Raise Stack..
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultRaise_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultRaise_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Raise.
+        /// </summary>
+        internal static string Phantom_WhiteMage_OccultRaise_Name {
+            get {
+                return ResourceManager.GetString("Phantom_WhiteMage_OccultRaise_Name", resourceCulture);
             }
         }
         

@@ -191,6 +191,16 @@ internal partial class DRK
                 #region Adv Single Target
 
                 case Preset.DRK_ST_BalanceOpener:
+                    DrawRadioButton(DRK_SelectedOpener,
+                        "Standard opener",
+                        "Uses the Standard opener.",
+                        outputValue: 0,
+                        descriptionAsTooltip: true);
+                    DrawRadioButton(DRK_SelectedOpener,
+                        "Early Buff Window Opener",
+                        "Front-loads burst to align with an early (1st GCD) party buff window.",
+                        outputValue: 1,
+                        descriptionAsTooltip: true);
                     DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
                     DrawOpenerPotionChoice(DRK_Opener_Potion);
                     ImGuiEx.TextUnderlined("Select Opener");
@@ -1224,7 +1234,8 @@ internal partial class DRK
 
         public static readonly UserInt
             DRK_RetargetOblationDuration = new("DRK_RetargetOblationDuration"),
-            DRK_Retarget_Unmend_SmartTargeting = new("DRK_Retarget_Unmend_SmartTargeting");
+            DRK_Retarget_Unmend_SmartTargeting = new("DRK_Retarget_Unmend_SmartTargeting"),
+            DRK_SelectedOpener = new("DRK_SelectedOpener", 0);
         
         public static readonly UserBool
             DRK_Opener_Potion = new("DRK_Opener_Potion"),

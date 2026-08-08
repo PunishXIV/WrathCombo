@@ -23,7 +23,7 @@ internal partial class RPR : Melee
 
             if (!HasStatusEffect(Buffs.Executioner) &&
                 !HasStatusEffect(Buffs.SoulReaver) &&
-                ContentSpecificActions.TryGet(out uint contentAction))
+                ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             //All Weaves
@@ -47,8 +47,8 @@ internal partial class RPR : Melee
                 if (CanBloodstalkWeave())
                     return OriginalHook(BloodStalk);
 
-                if (UseEnshroudWeaves(out uint weave, false))
-                    return weave;
+                if (UseEnshroudWeaves(ref actionID, false))
+                    return actionID;
 
                 if (Role.CanFeint() && GroupDamageIncoming())
                     return Role.Feint;
@@ -72,21 +72,15 @@ internal partial class RPR : Melee
             if (CanUseShadowOfDeath())
                 return ShadowOfDeath;
 
-            //Gibbet/Gallows
-            if (LevelChecked(Gibbet) && !HasStatusEffect(Buffs.Enshrouded) &&
-                (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)))
-            if (CanGibbetGallowsGCD())
-            {
-                uint gg = GibbetGallowsAction();
-                if (gg != 0)
-                    return gg;
-            }
+            if (CanGibbetGallowsGCD() &&
+                TryGibbetGallows(ref actionID))
+                return actionID;
 
             if (CanPlentifulHarvest())
                 return PlentifulHarvest;
 
-            if (EnshroudComboGCD(false) is var enshroudGcd and not 0)
-                return enshroudGcd;
+            if (TryEnshroudComboGCD(ref actionID, false))
+                return actionID;
 
             if (CanSoulSliceScythe(false))
                 return SoulSlice;
@@ -111,7 +105,7 @@ internal partial class RPR : Melee
                 !HasStatusEffect(Buffs.Soulsow) && !PartyInCombat())
                 return Soulsow;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
@@ -129,8 +123,8 @@ internal partial class RPR : Melee
                 if (CanGrimSwatheWeave(true))
                     return GrimSwathe;
 
-                if (UseEnshroudWeaves(out uint weave, true))
-                    return weave;
+                if (UseEnshroudWeaves(ref actionID, true))
+                    return actionID;
 
                 if (Role.CanSecondWind(25))
                     return Role.SecondWind;
@@ -154,8 +148,8 @@ internal partial class RPR : Melee
             if (CanGuillotineGCD())
                 return OriginalHook(Guillotine);
 
-            if (EnshroudComboGCD(true) is var enshroudGcd and not 0)
-                return enshroudGcd;
+            if (TryEnshroudComboGCD(ref actionID, true))
+                return actionID;
 
             if (CanSoulSliceScythe(true))
                 return SoulScythe;
@@ -189,7 +183,7 @@ internal partial class RPR : Melee
 
             if (!HasStatusEffect(Buffs.Executioner) &&
                 !HasStatusEffect(Buffs.SoulReaver) &&
-                ContentSpecificActions.TryGet(out uint contentAction))
+                ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             //All Weaves
@@ -218,12 +212,12 @@ internal partial class RPR : Melee
                         IsEnabled(Preset.RPR_ST_Enshroud)))
                     return OriginalHook(BloodStalk);
 
-                if (UseEnshroudWeaves(out uint weave, false,
+                if (UseEnshroudWeaves(ref actionID, false,
                     IsEnabled(Preset.RPR_ST_Sacrificium),
                     IsEnabled(Preset.RPR_ST_Lemure),
                     arcaneCircleEnabled: IsEnabled(Preset.RPR_ST_ArcaneCircle),
                     arcaneCircleBossOption: RPR_ST_ArcaneCircleHPBossOption))
-                    return weave;
+                    return actionID;
 
                 if (IsEnabled(Preset.RPR_ST_Feint) &&
                     Role.CanFeint() &&
@@ -264,25 +258,22 @@ internal partial class RPR : Melee
 
             //Gibbet/Gallows
             if (IsEnabled(Preset.RPR_ST_GibbetGallows) &&
-                CanGibbetGallowsGCD(enshroudEnabled: IsEnabled(Preset.RPR_ST_Enshroud)))
-            {
-                uint gg = GibbetGallowsAction(positionalChoice,
+                CanGibbetGallowsGCD(enshroudEnabled: IsEnabled(Preset.RPR_ST_Enshroud)) &&
+                TryGibbetGallows(ref actionID, positionalChoice,
                     false,
                     IsEnabled(Preset.RPR_ST_TrueNorthDynamic),
                     RPR_ManualTN,
-                    RPR_ST_TrueNorthDynamicHoldCharge);
-                if (gg != 0)
-                    return gg;
-            }
+                    RPR_ST_TrueNorthDynamicHoldCharge))
+                return actionID;
 
             if (IsEnabled(Preset.RPR_ST_PlentifulHarvest) &&
                 CanPlentifulHarvest())
                 return PlentifulHarvest;
 
-            if (EnshroudComboGCD(false,
+            if (TryEnshroudComboGCD(ref actionID, false,
                 IsEnabled(Preset.RPR_ST_Communio),
-                IsEnabled(Preset.RPR_ST_Reaping)) is var enshroudGcd and not 0)
-                return enshroudGcd;
+                IsEnabled(Preset.RPR_ST_Reaping)))
+                return actionID;
 
             if (IsEnabled(Preset.RPR_ST_SoulSlice) &&
                 CanSoulSliceScythe(false))
@@ -313,7 +304,7 @@ internal partial class RPR : Melee
                 !HasStatusEffect(Buffs.Soulsow) && !PartyInCombat())
                 return Soulsow;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
@@ -334,11 +325,11 @@ internal partial class RPR : Melee
                     CanGrimSwatheWeave(true, IsEnabled(Preset.RPR_AoE_Enshroud)))
                     return GrimSwathe;
 
-                if (UseEnshroudWeaves(out uint weave, true,
+                if (UseEnshroudWeaves(ref actionID, true,
                     IsEnabled(Preset.RPR_AoE_Sacrificium),
                     IsEnabled(Preset.RPR_AoE_Lemure),
                     false))
-                    return weave;
+                    return actionID;
 
                 if (IsEnabled(Preset.RPR_AoE_ComboHeals))
                 {
@@ -374,10 +365,10 @@ internal partial class RPR : Melee
                 CanGuillotineGCD(enshroudEnabled: IsEnabled(Preset.RPR_AoE_Enshroud)))
                 return OriginalHook(Guillotine);
 
-            if (EnshroudComboGCD(true,
+            if (TryEnshroudComboGCD(ref actionID, true,
                 IsEnabled(Preset.RPR_AoE_Communio),
-                IsEnabled(Preset.RPR_AoE_Reaping)) is var enshroudGcd and not 0)
-                return enshroudGcd;
+                IsEnabled(Preset.RPR_AoE_Reaping)))
+                return actionID;
 
             if (IsEnabled(Preset.RPR_AoE_SoulScythe) &&
                 CanSoulSliceScythe(true))
@@ -470,8 +461,8 @@ internal partial class RPR : Melee
 
                     if (IsEnabled(Preset.RPR_GluttonyBloodSwathe_Enshroud))
                     {
-                        if (BloodStalkGrimSwatheEnshroudGCD(actionID) is var enshroudGcd and not 0)
-                            return enshroudGcd;
+                        if (TryBloodStalkGrimSwatheEnshroudGCD(ref actionID))
+                            return actionID;
                     }
 
                     if (ActionReady(Gluttony) && !HasStatusEffect(Buffs.Enshrouded) && !HasStatusEffect(Buffs.SoulReaver))
@@ -482,8 +473,9 @@ internal partial class RPR : Melee
                         return OriginalHook(Gluttony);
 
                     if (IsEnabled(Preset.RPR_GluttonyBloodSwathe_BloodSwatheCombo) &&
-                        BloodStalkGrimSwatheSoulReaverGCD(actionID) is var soulReaverGcd and not 0)
-                        return soulReaverGcd;
+                        TryBloodStalkGrimSwatheSoulReaverGCD(ref actionID,
+                            IsEnabled(Preset.RPR_GluttonyBloodSwathe_Enshroud)))
+                        return actionID;
 
                     break;
                 }
@@ -513,8 +505,8 @@ internal partial class RPR : Melee
 
                     if (IsEnabled(Preset.RPR_GluttonyBloodSwathe_Enshroud))
                     {
-                        if (BloodStalkGrimSwatheEnshroudGCD(actionID) is var enshroudGcd and not 0)
-                            return enshroudGcd;
+                        if (TryBloodStalkGrimSwatheEnshroudGCD(ref actionID))
+                            return actionID;
                     }
 
                     if (ActionReady(Gluttony) && !HasStatusEffect(Buffs.Enshrouded) && !HasStatusEffect(Buffs.SoulReaver))
@@ -525,8 +517,9 @@ internal partial class RPR : Melee
                         return OriginalHook(Gluttony);
 
                     if (IsEnabled(Preset.RPR_GluttonyBloodSwathe_BloodSwatheCombo) &&
-                        BloodStalkGrimSwatheSoulReaverGCD(actionID) is var soulReaverGcd and not 0)
-                        return soulReaverGcd;
+                        TryBloodStalkGrimSwatheSoulReaverGCD(ref actionID,
+                            IsEnabled(Preset.RPR_GluttonyBloodSwathe_Enshroud)))
+                        return actionID;
 
                     break;
                 }
@@ -545,13 +538,14 @@ internal partial class RPR : Melee
             if (actionID is not (BloodStalk or GrimSwathe))
                 return actionID;
 
-            if (IsEnabled(Preset.RPR_BloodStalkEnshroudCombo_Enshroud) &&
-                BloodStalkGrimSwatheEnshroudGCD(actionID) is var enshroudGcd and not 0)
-                return enshroudGcd;
+            bool enshroudEnabled = IsEnabled(Preset.RPR_BloodStalkEnshroudCombo_Enshroud);
 
-            if (IsEnabled(Preset.RPR_BloodStalkEnshroudCombo_BloodSwatheCombo) &&
-                BloodStalkGrimSwatheSoulReaverGCD(actionID) is var soulReaverGcd and not 0)
-                return soulReaverGcd;
+            if (enshroudEnabled &&
+                TryBloodStalkGrimSwatheEnshroudGCD(ref actionID))
+                return actionID;
+
+            if (IsEnabled(Preset.RPR_BloodStalkEnshroudCombo_BloodSwatheCombo))
+                TryBloodStalkGrimSwatheSoulReaverGCD(ref actionID, enshroudEnabled);
 
             return actionID;
         }

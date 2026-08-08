@@ -26,7 +26,7 @@ internal partial class SMN : Caster
             #endregion
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
 
@@ -72,7 +72,7 @@ internal partial class SMN : Caster
             #endregion
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
 
@@ -128,7 +128,7 @@ internal partial class SMN : Caster
             #endregion
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
             
@@ -174,7 +174,7 @@ internal partial class SMN : Caster
             #endregion
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
 

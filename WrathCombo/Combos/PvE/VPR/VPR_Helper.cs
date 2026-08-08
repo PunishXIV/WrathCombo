@@ -432,33 +432,29 @@ internal partial class VPR
               : IsDeathRattleWeave && InActionRange(DeathRattle))) ||
          allowLegacy && IsLegacyWeaveReady && InActionRange(FirstLegacy));
 
-    private static bool UsePoisedTwinWeaves(out uint action, bool enabled = true)
+    private static bool UsePoisedTwinWeaves(ref uint actionID, bool enabled = true)
     {
-        action = 0;
-
         if (!enabled)
             return false;
 
         if (HasStatusEffect(Buffs.PoisedForTwinfang) && InActionRange(OriginalHook(Twinfang)))
         {
-            action = OriginalHook(Twinfang);
+            actionID = OriginalHook(Twinfang);
             return true;
         }
 
         if (HasStatusEffect(Buffs.PoisedForTwinblood) && InActionRange(OriginalHook(Twinblood)))
         {
-            action = OriginalHook(Twinblood);
+            actionID = OriginalHook(Twinblood);
             return true;
         }
 
         return false;
     }
 
-    private static bool UseViceTwinWeaves(out uint action, bool onAoE, bool enabled, bool requireMelee = true,
+    private static bool UseViceTwinWeaves(ref uint actionID, bool onAoE, bool enabled, bool requireMelee = true,
         bool ignoreRange = false)
     {
-        action = 0;
-
         if (!enabled || HasStatusEffect(Buffs.Reawakened))
             return false;
 
@@ -467,14 +463,14 @@ internal partial class VPR
             if (HasStatusEffect(Buffs.FellhuntersVenom) &&
                 (ignoreRange || InActionRange(TwinfangThresh)))
             {
-                action = OriginalHook(Twinfang);
+                actionID = OriginalHook(Twinfang);
                 return true;
             }
 
             if (HasStatusEffect(Buffs.FellskinsVenom) &&
                 (ignoreRange || InActionRange(TwinbloodThresh)))
             {
-                action = OriginalHook(Twinblood);
+                actionID = OriginalHook(Twinblood);
                 return true;
             }
 
@@ -484,14 +480,14 @@ internal partial class VPR
         if (HasStatusEffect(Buffs.HuntersVenom) &&
             (!requireMelee || ignoreRange || InActionRange(OriginalHook(Twinfang))))
         {
-            action = OriginalHook(Twinfang);
+            actionID = OriginalHook(Twinfang);
             return true;
         }
 
         if (HasStatusEffect(Buffs.SwiftskinsVenom) &&
             (!requireMelee || ignoreRange || InActionRange(OriginalHook(Twinblood))))
         {
-            action = OriginalHook(Twinblood);
+            actionID = OriginalHook(Twinblood);
             return true;
         }
 
@@ -690,42 +686,42 @@ internal partial class VPR
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            ReavingFangs,
-            SerpentsIre,
-            SwiftskinsSting,
-            Vicewinder,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            HuntersCoil,
-            TwinfangBite,
-            TwinbloodBite,
-            SwiftskinsCoil,
-            TwinbloodBite,
-            TwinfangBite,
-            Reawaken,
-            FirstGeneration,
-            FirstLegacy,
-            SecondGeneration,
-            SecondLegacy,
-            ThirdGeneration,
-            ThirdLegacy,
-            FourthGeneration,
-            FourthLegacy,
-            Ouroboros,
-            UncoiledFury, //22
-            UncoiledTwinfang, //23
-            UncoiledTwinblood, //24
-            UncoiledFury, //25
-            UncoiledTwinfang, //26
-            UncoiledTwinblood, //27
-            HindstingStrike, //28
-            DeathRattle, //29
-            Vicewinder, //30
-            HuntersCoil, //31
-            TwinfangBite, //32
-            TwinbloodBite, //33
-            SwiftskinsCoil, //34
-            TwinbloodBite, //35
-            TwinfangBite //36
+            ReavingFangs, // 1
+            SerpentsIre, // 2
+            SwiftskinsSting, // 3
+            Vicewinder, // 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            HuntersCoil, // 6
+            TwinfangBite, // 7
+            TwinbloodBite, // 8
+            SwiftskinsCoil, // 9
+            TwinbloodBite, // 10
+            TwinfangBite, // 11
+            Reawaken, // 12
+            FirstGeneration, // 13
+            FirstLegacy, // 14
+            SecondGeneration, // 15
+            SecondLegacy, // 16
+            ThirdGeneration, // 17
+            ThirdLegacy, // 18
+            FourthGeneration, // 19
+            FourthLegacy, // 20
+            Ouroboros, // 21
+            UncoiledFury, // 22
+            UncoiledTwinfang, // 23
+            UncoiledTwinblood, // 24
+            UncoiledFury, // 25
+            UncoiledTwinfang, // 26
+            UncoiledTwinblood, // 27
+            HindstingStrike, // 28
+            DeathRattle, // 29
+            Vicewinder, // 30
+            HuntersCoil, // 31
+            TwinfangBite, // 32
+            TwinbloodBite, // 33
+            SwiftskinsCoil, // 34
+            TwinbloodBite, // 35
+            TwinfangBite // 36
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
@@ -752,41 +748,41 @@ internal partial class VPR
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Vicewinder,
-            SerpentsIre,
-            HuntersCoil,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            TwinfangBite,
-            TwinbloodBite,
-            SwiftskinsCoil,
-            TwinbloodBite,
-            TwinfangBite,
-            Reawaken,
-            FirstGeneration,
-            FirstLegacy,
-            SecondGeneration,
-            SecondLegacy,
-            ThirdGeneration,
-            ThirdLegacy,
-            FourthGeneration,
-            FourthLegacy,
-            Ouroboros,
-            UncoiledFury, //20
-            UncoiledTwinfang, //21
-            UncoiledTwinblood, //22
-            Vicewinder,
-            HuntersCoil, //24
-            TwinfangBite, //25
-            TwinbloodBite, //26
-            SwiftskinsCoil, //27
-            TwinbloodBite, //28
-            TwinfangBite, //29
-            UncoiledFury, //30
-            UncoiledTwinfang, //31
-            UncoiledTwinblood, //32
-            UncoiledFury, //33
-            UncoiledTwinfang, //34
-            UncoiledTwinblood //35
+            Vicewinder, // 1
+            SerpentsIre, // 2
+            HuntersCoil, // 3
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 4
+            TwinfangBite, // 5
+            TwinbloodBite, // 6
+            SwiftskinsCoil, // 7
+            TwinbloodBite, // 8
+            TwinfangBite, // 9
+            Reawaken, // 10
+            FirstGeneration, // 11
+            FirstLegacy, // 12
+            SecondGeneration, // 13
+            SecondLegacy, // 14
+            ThirdGeneration, // 15
+            ThirdLegacy, // 16
+            FourthGeneration, // 17
+            FourthLegacy, // 18
+            Ouroboros, // 19
+            UncoiledFury, // 20
+            UncoiledTwinfang, // 21
+            UncoiledTwinblood, // 22
+            Vicewinder, // 23
+            HuntersCoil, // 24
+            TwinfangBite, // 25
+            TwinbloodBite, // 26
+            SwiftskinsCoil, // 27
+            TwinbloodBite, // 28
+            TwinfangBite, // 29
+            UncoiledFury, // 30
+            UncoiledTwinfang, // 31
+            UncoiledTwinblood, // 32
+            UncoiledFury, // 33
+            UncoiledTwinfang, // 34
+            UncoiledTwinblood // 35
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =

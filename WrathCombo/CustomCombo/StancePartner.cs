@@ -144,6 +144,18 @@ public static class StancePartner
         if (!CustomComboFunctions.ActionReady(action))
             return;
 
+        if (target is not null)
+        {
+            var partner = target.Value.GetObject();
+            // Partner still in cutscene / loading — wait, don't spam Closed Position
+            if (action == DNC.ClosedPosition &&
+                !DNC.IsDancePartnerReady(partner))
+                return;
+
+            if (partner is null)
+                return;
+        }
+
         PluginLog.Verbose(
             $"OnIPCInstanceChange: Casting {action.ActionName()} {target}");
 

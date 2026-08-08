@@ -16,7 +16,7 @@ internal static partial class Bozja
     {
         if (!IsInBozja) return false;
 
-        bool CanUse(uint action) => HasActionEquipped(action) && IsOffCooldown(action);
+        bool CanUse(uint action) => ActionReady(action);
         bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && CanUse(action);
         switch (GetRoleFromJob(Player.Job))
         {

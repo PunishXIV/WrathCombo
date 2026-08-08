@@ -1,4 +1,4 @@
-﻿#region Dependencies
+#region Dependencies
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
@@ -675,27 +675,27 @@ internal partial class PCT
         public override int MaxOpenerLevel => 109;
         public override List<uint> OpenerActions { get; set; } =
         [
-            RainbowDrip,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            PomMuse,
-            StrikingMuse,
-            WingMotif,
-            StarryMuse, //5
-            HammerStamp,
-            SubtractivePalette,
-            BlizzardinCyan,
-            StoneinYellow,
-            ThunderinMagenta,//10
-            CometinBlack,
-            WingedMuse,
-            MogoftheAges,
-            StarPrism,
-            HammerBrush,//15
-            PolishingHammer,
-            RainbowDrip,
-            Role.Swiftcast,
-            ClawMotif,
-            ClawedMuse,//20
+            RainbowDrip, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 2
+            PomMuse, // 3
+            StrikingMuse, // 4
+            WingMotif, // 5
+            StarryMuse, // 6
+            HammerStamp, // 7
+            SubtractivePalette, // 8
+            BlizzardinCyan, // 9
+            StoneinYellow, // 10
+            ThunderinMagenta, // 11
+            CometinBlack, // 12
+            WingedMuse, // 13
+            MogoftheAges, // 14
+            StarPrism, // 15
+            HammerBrush, // 16
+            PolishingHammer, // 17
+            RainbowDrip, // 18
+            Role.Swiftcast, // 19
+            ClawMotif, // 20
+            ClawedMuse, // 21
         ];
         internal override bool IncludePot => PCT_Opener_Potion;
         internal override UserData? ContentCheckConfig => PCT_Balance_Content;
@@ -744,29 +744,29 @@ internal partial class PCT
         public override int MaxOpenerLevel => 109;
         public override List<uint> OpenerActions { get; set; } =
         [
-            RainbowDrip,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            StrikingMuse,
-            HolyInWhite,
-            PomMuse,
-            WingMotif, //5 
-            StarryMuse,
-            HammerStamp,
-            SubtractivePalette,
-            BlizzardinCyan,
-            BlizzardinCyan, //10
-            BlizzardinCyan,
-            CometinBlack,
-            WingedMuse,
-            MogoftheAges,
-            StarPrism, //15
-            HammerBrush,
-            PolishingHammer,
-            RainbowDrip,
-            FireInRed,
-            Role.Swiftcast, //20
-            ClawMotif,
-            ClawedMuse
+            RainbowDrip, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 2
+            StrikingMuse, // 3
+            HolyInWhite, // 4
+            PomMuse, // 5
+            WingMotif, // 6
+            StarryMuse, // 7
+            HammerStamp, // 8
+            SubtractivePalette, // 9
+            BlizzardinCyan, // 10
+            BlizzardinCyan, // 11
+            BlizzardinCyan, // 12
+            CometinBlack, // 13
+            WingedMuse, // 14
+            MogoftheAges, // 15
+            StarPrism, // 16
+            HammerBrush, // 17
+            PolishingHammer, // 18
+            RainbowDrip, // 19
+            FireInRed, // 20
+            Role.Swiftcast, // 21
+            ClawMotif, // 22
+            ClawedMuse // 23
         ];
         internal override bool IncludePot => PCT_Opener_Potion;
         internal override UserData? ContentCheckConfig => PCT_Balance_Content;
@@ -818,25 +818,25 @@ internal partial class PCT
         
         public override List<uint> OpenerActions { get; set; } =
         [
-            FireInRed,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            StrikingMuse,
-            AeroInGreen,
-            StarryMuse,
-            HammerStamp,
-            PomMuse,
-            SubtractivePalette,
-            WingMotif,
-            WingedMuse,
-            HammerBrush,
-            MogoftheAges,
-            PolishingHammer,
-            ThunderinMagenta,
-            BlizzardinCyan,
-            StoneinYellow,//15
-            CometinBlack,
-            WaterInBlue,
-            FireInRed//20
+            FireInRed, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 2
+            StrikingMuse, // 3
+            AeroInGreen, // 4
+            StarryMuse, // 5
+            HammerStamp, // 6
+            PomMuse, // 7
+            SubtractivePalette, // 8
+            WingMotif, // 9
+            WingedMuse, // 10
+            HammerBrush, // 11
+            MogoftheAges, // 12
+            PolishingHammer, // 13
+            ThunderinMagenta, // 14
+            BlizzardinCyan, // 15
+            StoneinYellow, // 16
+            CometinBlack, // 17
+            WaterInBlue, // 18
+            FireInRed // 19
         ];
         internal override bool IncludePot => PCT_Opener_Potion;
         internal override UserData? ContentCheckConfig => PCT_Balance_Content;
@@ -877,28 +877,28 @@ internal partial class PCT
         public override int MaxOpenerLevel => 90;
         public override List<uint> OpenerActions { get; set; } =
         [
-            FireInRed,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            StrikingMuse,
-            AeroInGreen,
-            WaterInBlue,
-            StarryMuse,
-            HammerStamp,
-            PomMuse,
-            SubtractivePalette,
-            WingMotif,
-            WingedMuse,
-            HammerBrush,
-            MogoftheAges,
-            PolishingHammer,
-            BlizzardinCyan,
-            StoneinYellow,
-            ThunderinMagenta,
-            CometinBlack,
-            FireInRed,
-            AeroInGreen,
-            Role.Swiftcast, //20
-            WaterInBlue
+            FireInRed, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 2
+            StrikingMuse, // 3
+            AeroInGreen, // 4
+            WaterInBlue, // 5
+            StarryMuse, // 6
+            HammerStamp, // 7
+            PomMuse, // 8
+            SubtractivePalette, // 9
+            WingMotif, // 10
+            WingedMuse, // 11
+            HammerBrush, // 12
+            MogoftheAges, // 13
+            PolishingHammer, // 14
+            BlizzardinCyan, // 15
+            StoneinYellow, // 16
+            ThunderinMagenta, // 17
+            CometinBlack, // 18
+            FireInRed, // 19
+            AeroInGreen, // 20
+            Role.Swiftcast, // 21
+            WaterInBlue // 22
         ];
         internal override bool IncludePot => PCT_Opener_Potion;
         internal override UserData? ContentCheckConfig => PCT_Balance_Content;

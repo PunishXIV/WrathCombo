@@ -496,7 +496,7 @@ internal partial class BRD
 
         if (flags.HasFlag(Combo.ST) && troubadourEnabled && ActionReady(Troubadour) && GroupDamageIncoming() && CanWeave() &&
             NumberOfAlliesInRange(Troubadour) >= GetPartyMembers().Count * .75 &&
-            !JustUsed(NaturesMinne) && !HasAnyStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne, DNC.Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
+            !JustUsed(NaturesMinne) && !HasStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne, DNC.Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
         {
             actionID = Troubadour;
             return true;
@@ -504,7 +504,7 @@ internal partial class BRD
 
         if (flags.HasFlag(Combo.ST) && naturesMinneEnabled && ActionReady(NaturesMinne) && GroupDamageIncoming() && CanWeave() &&
             NumberOfAlliesInRange(NaturesMinne) >= GetPartyMembers().Count * .75 &&
-            !JustUsed(Troubadour) && !HasAnyStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne], anyOwner: true))
+            !JustUsed(Troubadour) && !HasStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne], anyOwner: true))
         {
             actionID = NaturesMinne;
             return true;
@@ -828,26 +828,26 @@ internal partial class BRD
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Stormbite,
-            WanderersMinuet,
-            EmpyrealArrow,
-            CausticBite,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            BattleVoice,
-            BurstShot,
-            RadiantFinale,
-            RagingStrikes,
-            BurstShot,
-            RadiantEncore,
-            Barrage,
-            RefulgentArrow,
-            Sidewinder,
-            ResonantArrow,
-            EmpyrealArrow,
-            BurstShot,
-            BurstShot,
-            IronJaws,
-            BurstShot
+            Stormbite, // 1
+            WanderersMinuet, // 2
+            EmpyrealArrow, // 3
+            CausticBite, // 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            BattleVoice, // 6
+            BurstShot, // 7
+            RadiantFinale, // 8
+            RagingStrikes, // 9
+            BurstShot, // 10
+            RadiantEncore, // 11
+            Barrage, // 12
+            RefulgentArrow, // 13
+            Sidewinder, // 14
+            ResonantArrow, // 15
+            EmpyrealArrow, // 16
+            BurstShot, // 17
+            BurstShot, // 18
+            IronJaws, // 19
+            BurstShot // 20
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
@@ -862,27 +862,27 @@ internal partial class BRD
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            HeartbreakShot,
-            Stormbite,
-            WanderersMinuet,
-            EmpyrealArrow,
-            CausticBite,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            BattleVoice,
-            BurstShot,
-            RadiantFinale,
-            RagingStrikes,
-            BurstShot,
-            Barrage,
-            RefulgentArrow,
-            Sidewinder,
-            RadiantEncore,
-            ResonantArrow,
-            EmpyrealArrow,
-            BurstShot,
-            BurstShot,
-            IronJaws,
-            BurstShot
+            HeartbreakShot, // 1
+            Stormbite, // 2
+            WanderersMinuet, // 3
+            EmpyrealArrow, // 4
+            CausticBite, // 5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            BattleVoice, // 7
+            BurstShot, // 8
+            RadiantFinale, // 9
+            RagingStrikes, // 10
+            BurstShot, // 11
+            Barrage, // 12
+            RefulgentArrow, // 13
+            Sidewinder, // 14
+            RadiantEncore, // 15
+            ResonantArrow, // 16
+            EmpyrealArrow, // 17
+            BurstShot, // 18
+            BurstShot, // 19
+            IronJaws, // 20
+            BurstShot // 21
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
@@ -897,27 +897,27 @@ internal partial class BRD
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Stormbite,
-            HeartbreakShot,
-            WanderersMinuet,
-            CausticBite,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            EmpyrealArrow,
-            RadiantFinale,
-            BurstShot,
-            BattleVoice,
-            RagingStrikes,
-            BurstShot,
-            Barrage,
-            RefulgentArrow,
-            Sidewinder,
-            RadiantEncore,
-            ResonantArrow,
-            BurstShot,
-            EmpyrealArrow,
-            BurstShot,
-            IronJaws,
-            BurstShot
+            Stormbite, // 1
+            HeartbreakShot, // 2
+            WanderersMinuet, // 3
+            CausticBite, // 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            EmpyrealArrow, // 6
+            RadiantFinale, // 7
+            BurstShot, // 8
+            BattleVoice, // 9
+            RagingStrikes, // 10
+            BurstShot, // 11
+            Barrage, // 12
+            RefulgentArrow, // 13
+            Sidewinder, // 14
+            RadiantEncore, // 15
+            ResonantArrow, // 16
+            BurstShot, // 17
+            EmpyrealArrow, // 18
+            BurstShot, // 19
+            IronJaws, // 20
+            BurstShot // 21
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
@@ -929,26 +929,26 @@ internal partial class BRD
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Stormbite, //0
-                WanderersMinuet,
-                BattleVoice,
-            CausticBite, //2.5
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-                RagingStrikes,
-                RadiantFinale,
-            BurstShot, //5
-                EmpyrealArrow,
-            BurstShot, //7.5
-                Barrage,
-            RefulgentArrow, //10
-                Sidewinder,
-            RadiantEncore, //12.5
-            ResonantArrow, //15
-            BurstShot, //17.5
-            IronJaws, //20
-                EmpyrealArrow,
-            BurstShot, //22.5
-            BurstShot, //25
+            Stormbite, // 1
+                WanderersMinuet, // 2
+                BattleVoice, // 3
+            CausticBite, // 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+                RagingStrikes, // 6
+                RadiantFinale, // 7
+            BurstShot, // 8
+                EmpyrealArrow, // 9
+            BurstShot, // 10
+                Barrage, // 11
+            RefulgentArrow, // 12
+                Sidewinder, // 13
+            RadiantEncore, // 14
+            ResonantArrow, // 15
+            BurstShot, // 16
+            IronJaws, // 17
+                EmpyrealArrow, // 18
+            BurstShot, // 19
+            BurstShot, // 20
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [

@@ -30,7 +30,7 @@ internal partial class GNB : Tank
             if (Role.CanLowBlow())
                 return Role.LowBlow;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (GNB_ST_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
@@ -137,7 +137,7 @@ internal partial class GNB : Tank
                 IsEnabled(Preset.GNB_ST_Stun))
                 return Role.LowBlow;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (GNB_ST_Advanced_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
@@ -251,7 +251,7 @@ internal partial class GNB : Tank
             if (Role.CanLowBlow())
                 return Role.LowBlow;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (GNB_AoE_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
@@ -324,7 +324,7 @@ internal partial class GNB : Tank
             if (IsEnabled(Preset.GNB_AoE_Stun) && Role.CanLowBlow())
                 return Role.LowBlow;
 
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (GNB_AoE_Advanced_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)

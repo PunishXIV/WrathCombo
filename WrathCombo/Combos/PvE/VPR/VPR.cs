@@ -18,7 +18,7 @@ internal partial class VPR : Melee
 
             ReportVPRPositionalHints();
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
@@ -26,9 +26,9 @@ internal partial class VPR : Melee
                 if (UseSerpentsTailWeave(false, true, true))
                     return OriginalHook(SerpentsTail);
 
-                if (UsePoisedTwinWeaves(out uint twin) ||
-                    UseViceTwinWeaves(out twin, false, true))
-                    return twin;
+                if (UsePoisedTwinWeaves(ref actionID) ||
+                    UseViceTwinWeaves(ref actionID, false, true))
+                    return actionID;
 
                 if (CanSerpentsIre())
                     return SerpentsIre;
@@ -79,7 +79,7 @@ internal partial class VPR : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
@@ -87,9 +87,9 @@ internal partial class VPR : Melee
                 if (UseSerpentsTailWeave(true, true, true))
                     return OriginalHook(SerpentsTail);
 
-                if (UsePoisedTwinWeaves(out uint twin) ||
-                    UseViceTwinWeaves(out twin, true, true))
-                    return twin;
+                if (UsePoisedTwinWeaves(ref actionID) ||
+                    UseViceTwinWeaves(ref actionID, true, true))
+                    return actionID;
 
                 if (CanSerpentsIre(25))
                     return SerpentsIre;
@@ -136,7 +136,7 @@ internal partial class VPR : Melee
             if (IsEnabled(Preset.VPR_ST_Opener) && Opener().FullOpener(ref actionID))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
@@ -146,9 +146,9 @@ internal partial class VPR : Melee
                     IsEnabled(Preset.VPR_ST_LegacyWeaves)))
                     return OriginalHook(SerpentsTail);
 
-                if (UsePoisedTwinWeaves(out uint twin, IsEnabled(Preset.VPR_ST_UncoiledFuryCombo)) ||
-                    UseViceTwinWeaves(out twin, false, IsEnabled(Preset.VPR_ST_VicewinderWeaves)))
-                    return twin;
+                if (UsePoisedTwinWeaves(ref actionID, IsEnabled(Preset.VPR_ST_UncoiledFuryCombo)) ||
+                    UseViceTwinWeaves(ref actionID, false, IsEnabled(Preset.VPR_ST_VicewinderWeaves)))
+                    return actionID;
 
                 if (IsEnabled(Preset.VPR_ST_SerpentsIre) && CanSerpentsIre(SerpentsIreHPThreshold))
                     return SerpentsIre;
@@ -221,7 +221,7 @@ internal partial class VPR : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SteelMaw))
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
             if (CanWeave())
@@ -231,9 +231,9 @@ internal partial class VPR : Melee
                     IsEnabled(Preset.VPR_AoE_ReawakenCombo)))
                     return OriginalHook(SerpentsTail);
 
-                if (UsePoisedTwinWeaves(out uint twin, IsEnabled(Preset.VPR_AoE_UncoiledFuryCombo)) ||
-                    UseViceTwinWeaves(out twin, true, IsEnabled(Preset.VPR_AoE_VicepitWeaves), ignoreRange: VPR_AoE_VicepitComboRangeCheck == 1))
-                    return twin;
+                if (UsePoisedTwinWeaves(ref actionID, IsEnabled(Preset.VPR_AoE_UncoiledFuryCombo)) ||
+                    UseViceTwinWeaves(ref actionID, true, IsEnabled(Preset.VPR_AoE_VicepitWeaves), ignoreRange: VPR_AoE_VicepitComboRangeCheck == 1))
+                    return actionID;
 
                 if (IsEnabled(Preset.VPR_AoE_SerpentsIre) &&
                     CanSerpentsIre(VPR_AoE_SerpentsIreHPThreshold))
@@ -320,8 +320,8 @@ internal partial class VPR : Melee
                 return actionID;
 
             if (IsEnabled(Preset.VPR_VicewinderCoils_oGCDs) &&
-                UseViceTwinWeaves(out uint twin, false, true, false))
-                return twin;
+                UseViceTwinWeaves(ref actionID, false, true, false))
+                return actionID;
 
             if (UsedVicewinder && (!OnTargetsFlank() || !TargetNeedsPositionals()) || UsedHuntersCoil)
                 return SwiftskinsCoil;
@@ -343,8 +343,8 @@ internal partial class VPR : Melee
                 return actionID;
 
             if (IsEnabled(Preset.VPR_VicepitDens_oGCDs) &&
-                UseViceTwinWeaves(out uint twin, true, true, false, true))
-                return twin;
+                UseViceTwinWeaves(ref actionID, true, true, false, true))
+                return actionID;
 
             if (UsedSwiftskinsDen)
                 return HuntersDen;
@@ -365,9 +365,8 @@ internal partial class VPR : Melee
             if (actionID is not UncoiledFury)
                 return actionID;
 
-            return UsePoisedTwinWeaves(out uint twin)
-                ? twin
-                : actionID;
+            UsePoisedTwinWeaves(ref actionID);
+            return actionID;
         }
     }
 

@@ -24,6 +24,12 @@ public static class GameObjectExtensions
     extension(IGameObject? obj)
     {
 
+        /// <summary>
+        ///     Gets the combat role of the object (Tank, Healer, DPS, or NonCombat).
+        /// </summary>
+        /// <remarks>
+        ///     Returns <see cref="CombatRole.NonCombat"/> if the object is not a character or has no class job assigned.
+        /// </remarks>
         public CombatRole Role
         {
             get
@@ -36,6 +42,12 @@ public static class GameObjectExtensions
             }
         }
 
+        /// <summary>
+        ///     Gets the current HP percentage of the object (0-100).
+        /// </summary>
+        /// <remarks>
+        ///     Returns <see cref="float.NaN"/> if the object is not a battle character or if HP cannot be determined.
+        /// </remarks>
         public float HPP
         {
             get {
@@ -57,10 +69,8 @@ public static class GameObjectExtensions
                    obj.IsAPlayer() &&
                    !HasStatusEffect(2648, obj, true) && // just rezzed
                    !HasStatusEffect(148, obj, true) && // pending rezz
-                   !HasStatusEffect(4263, obj, true) && // un-rezzable (OC)
                    obj.IsTargetable &&
-                   (TimeSpentDead(obj.GameObjectId)
-                       .TotalSeconds > 2 || !obj.IsInParty());
+                   TimeSpentDead(obj.GameObjectId).TotalSeconds > 2;
         }
 
         #region Target Classification
@@ -134,6 +144,24 @@ public static class GameObjectExtensions
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it return
+        ///     <see langword="null" /> if the target is not within range.
+        /// </summary>
+        /// <param name="range">The range to check against. Defaults to 25 yalms.</param>
+        public IGameObject? IfWithinActionRange
+            (uint actionId) =>
+            obj != null && InActionRange(actionId, obj) ? obj : null;
+
+        /// <summary>
+        ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+        ///     boolean check for if the target is within action range.
+        /// </summary>
+        /// <param name="actionId">The action ID to check range for.</param>
+        public bool IsWithinActionRange
+            (uint actionId) =>
+            obj != null && InActionRange(actionId, obj);
+
+        /// <summary>
+        ///     Can be chained onto a <see cref="IGameObject" /> to make it return
         ///     <see langword="null" /> if the target is not within line of sight.
         /// </summary>
         public IGameObject? IfWithinLineOfSight
@@ -141,12 +169,32 @@ public static class GameObjectExtensions
             obj != null && IsInLineOfSight(obj) ? obj : null;
 
         /// <summary>
+        ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+        ///     boolean check for if the target is within line of sight.
+        /// </summary>
+        public bool IsWithinLineOfSight
+            () =>
+            obj != null && IsInLineOfSight(obj);
+
+        /// <summary>
+        ///     Can be chained onto a <see cref="IGameObject" /> to make it return
+        ///     <see langword="null" /> if the target is not in sight, in range, or cannot be affected by the action.
+        /// </summary>
+        /// <remarks>
+        ///     This is a convenience method that combines checks for line of sight, action range, and action usability.
+        /// </remarks>
+        /// <param name="actionId">The action ID to check against the target.</param>
+        public IGameObject? IfInSightInRangeCanUseOn
+            (uint actionId) =>
+            obj != null && obj.CanUseOn(actionId) && obj.IsWithinActionRange(actionId) && obj.IsWithinLineOfSight() ? obj : null;
+
+        /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it return
         ///     <see langword="null" /> if the target is not below 99% HP.
         /// </summary>
-        public IGameObject? IfMissingHP() =>
+        public IGameObject? IfMissingHP(float missingHpp = 99) =>
             obj is IBattleChara battle &&
-            battle.CurrentHp / battle.MaxHp * 100 < 99
+            GetTargetHPPercent(battle) <= missingHpp
                 ? obj
                 : null;
 
@@ -331,6 +379,13 @@ public static class GameObjectExtensions
 
         #region Safe Access to Members
         
+        /// <summary>
+        ///     Safely gets the GameObjectId of the object, handling cases where the object may have been deleted.
+        /// </summary>
+        /// <remarks>
+        ///     This property performs safety checks to ensure the object still exists before attempting to access its ID.
+        ///     Returns <see langword="null"/> if the object is no longer valid, returns null ID, or if an exception occurs.
+        /// </remarks>
         public ulong? SafeGameObjectId
         {
             get
@@ -360,6 +415,13 @@ public static class GameObjectExtensions
             }
         }
 
+        /// <summary>
+        ///     Safely gets the status list of the object, handling cases where the object may have been deleted or is not a battle character.
+        /// </summary>
+        /// <remarks>
+        ///     This property performs safety checks to ensure the object still exists and is a battle character before attempting to access its status list.
+        ///     Returns <see langword="null"/> if the object is no longer valid, is not a battle character, or if an exception occurs.
+        /// </remarks>
         public StatusList? SafeStatusList
         {
             get
@@ -388,7 +450,7 @@ public static class GameObjectExtensions
         #endregion
     }
 
-    #region Get Objects more conveniently
+    #region Get Objects More Conveniently
 
     /// <summary>
     ///     Converts a GameObject pointer to an IGameObject from the object table.

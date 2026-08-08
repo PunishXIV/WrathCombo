@@ -24,7 +24,7 @@ internal partial class RDM : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Jolt, Jolt2, Jolt3)) return actionID;
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
 
@@ -128,7 +128,7 @@ internal partial class RDM : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Scatter, Impact)) return actionID;
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
 
@@ -229,7 +229,7 @@ internal partial class RDM : Caster
             #endregion
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
             
@@ -371,7 +371,7 @@ internal partial class RDM : Caster
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, Scatter, Impact)) return actionID;
 
             #region Special Content
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
             #endregion
             

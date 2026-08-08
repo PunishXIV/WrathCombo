@@ -1,8 +1,14 @@
-﻿using System;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using WrathCombo.Core;
+using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Combos.PvE.OccultCrescent.Config;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using ContentHelper = ECommons.GameHelpers;
 using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
 namespace WrathCombo.Combos.PvE;
@@ -35,6 +41,14 @@ internal partial class OccultCrescent
         if (TryGetDancerAction(ref actionID)) return true;
         if (TryGetMysticKnightAction(ref actionID)) return true;
         if (TryGetGladiatorAction(ref actionID)) return true;
+        if (TryGetNinjaAction(ref actionID)) return true;
+        if (TryGetWhiteMageAction(ref actionID)) return true;
+        if (TryGetBlackMageAction(ref actionID)) return true;
+        if (TryGetDragoonAction(ref actionID)) return true;
+        if (TryGetSummonerAction(ref actionID)) return true;
+        if (TryGetBlueMageAction(ref actionID)) return true;
+        if (TryGetRedMageAction(ref actionID)) return true;
+        if (TryGetNecromancerAction(ref actionID)) return true;
 
         return false;
     }
@@ -60,7 +74,8 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Knight_Pray, Pray) &&
-            PlayerHP <= Phantom_Knight_Pray_Health && !HasStatusEffect(Buffs.Pray) && !CanWeaveNow)
+            !HasStatusEffect(Buffs.Pray) && !CanWeaveNow &&
+            (Phantom_Knight_Pray_KeepUp || PlayerHP <= Phantom_Knight_Pray_Health))
         {
             actionID = Pray; // regen
             return true;
@@ -84,11 +99,8 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Knight_Pledge, Pledge) &&
-            PlayerHP <= Phantom_Knight_Pledge_Health)
-        {
-            actionID = Pledge; // inv
+            TryUsePledge(ref actionID))
             return true;
-        }
 
         return false;
     }
@@ -99,7 +111,7 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Monk_Counterstance, Counterstance) &&
-            IsPlayerTargeted() && !HasStatusEffect(Buffs.Counterstance) && !CanWeaveNow)
+            InCombatNow && !HasStatusEffect(Buffs.Counterstance) && !CanWeaveNow)
         {
             actionID = Counterstance; // counterstance
             return true;
@@ -109,9 +121,9 @@ internal partial class OccultCrescent
         if (!CanWeaveNow) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Monk_OccultChakra, OccultChakra) &&
-            PlayerHP <= Phantom_Monk_OccultChakra_Health)
+            (PlayerHP <= Phantom_Monk_OccultChakra_Health || PlayerMP <= Phantom_Monk_OccultChakra_MP))
         {
-            actionID = OccultChakra; // heal
+            actionID = OccultChakra; // heal / MP recovery
             return true;
         }
 
@@ -121,7 +133,8 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Monk_PhantomKick, PhantomKick) &&
-            !IsMovingNow && InActionRange(PhantomKick))
+            !IsMovingNow && InActionRange(PhantomKick) &&
+            GetTargetDistance() <= Phantom_Monk_PhantomKick_Distance)
         {
             actionID = PhantomKick; // damage buff + dash
             return true;
@@ -249,9 +262,13 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Berserker_DeadlyBlow, DeadlyBlow) &&
-            GetStatusEffectRemainingTime(Buffs.PentupRage) <= 3f && (HasStatusEffect(Buffs.PentupRage) || CurrentJobLevel < 3) && InActionRange(DeadlyBlow) && !CanWeaveNow)
+            InActionRange(DeadlyBlow) && !CanWeaveNow &&
+            (CurrentJobLevel < 3 ||
+             !IsEnabled(Preset.Phantom_Berserker_Rage) ||
+             GetStatusEffectRemainingTime(Buffs.PentupRage) <= 3f && HasStatusEffect(Buffs.PentupRage) ||
+             !HasStatusEffect(Buffs.PentupRage) && !ActionReady(Rage)))
         {
-            actionID = DeadlyBlow; // better when buff timer is low
+            actionID = DeadlyBlow; // better when buff timer is low / Rage on CD
             return true;
         }
 
@@ -305,7 +322,8 @@ internal partial class OccultCrescent
         if (CanWeaveNow) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_TimeMage_OccultQuick, OccultQuick) &&
-            !HasStatusEffect(Buffs.OccultQuick) && ActionWatching.NumberOfGcdsUsed > 3)
+            !HasStatusEffect(Buffs.OccultQuick) && ActionWatching.NumberOfGcdsUsed > 3 &&
+            !ShouldHoldOccultQuick())
         {
             actionID = OccultQuick; // damage buff
             return true;
@@ -333,9 +351,10 @@ internal partial class OccultCrescent
                 !HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) && !JustUsed(RoleActions.Magic.Swiftcast) &&
                 !HasStatusEffect(BLM.Buffs.Triplecast) && !JustUsed(BLM.Triplecast) &&
                 !HasStatusEffect(PLD.Buffs.Requiescat) && !JustUsed(PLD.Imperator) &&
-                !HasStatusEffect(RDM.Buffs.Dualcast))
+                !HasStatusEffect(RDM.Buffs.Dualcast) &&
+                !HasStatusEffect(Buffs.Dualcast))
             {
-                if (HasActionEquipped(OccultQuick) && ActionReady(OccultQuick))
+                if (ActionReady(OccultQuick))
                 {
                     actionID = OccultQuick;
                     return true;
@@ -353,7 +372,8 @@ internal partial class OccultCrescent
                 HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) ||
                 HasStatusEffect(BLM.Buffs.Triplecast) ||
                 HasStatusEffect(PLD.Buffs.Requiescat) ||
-                HasStatusEffect(RDM.Buffs.Dualcast))
+                HasStatusEffect(RDM.Buffs.Dualcast) ||
+                HasStatusEffect(Buffs.Dualcast))
             {
                 actionID = OccultComet; // damage
                 return true;
@@ -381,21 +401,18 @@ internal partial class OccultCrescent
         if (CanWeaveNow) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, Revive) &&
-            CurrentTarget.IfCanUseOn(Revive).IfDead() is not null)
-        {
-            actionID = Revive;
+            TryRetargetPhantomRaise(ref actionID, Revive))
             return true;
-        }
 
         if (IsEnabledAndUsable(Preset.Phantom_Chemist_OccultPotion, OccultPotion) &&
-            PlayerHP <= Phantom_Chemist_OccultPotion_Health)
+            ChemistNeedsPotion())
         {
             actionID = OccultPotion;
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Chemist_OccultEther, OccultEther) &&
-            PlayerMP <= Phantom_Chemist_OccultEther_MP)
+            ChemistNeedsEther())
         {
             actionID = OccultEther;
             return true;
@@ -419,27 +436,6 @@ internal partial class OccultCrescent
 
         if (!CanWeaveNow) return false;
 
-        // Skip if no damage buff, and user wants things under buffs
-        if (IsEnabled(Preset.Phantom_RestrictToBuff) &&
-            !Bursting.PlayerIsDamageBuffed)
-            return false;
-
-        if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
-        {
-            if (IsEnabledAndUsable(Preset.Phantom_Bard_HerosRime, HerosRime))
-            {
-                actionID = HerosRime; // burst song
-                return true;
-            }
-        }
-
-        if (IsEnabledAndUsable(Preset.Phantom_Bard_OffensiveAria, OffensiveAria) &&
-            !HasStatusEffect(Buffs.OffensiveAria) && !HasStatusEffect(Buffs.HerosRime, anyOwner: true))
-        {
-            actionID = OffensiveAria; // off-song
-            return true;
-        }
-
         if (IsEnabledAndUsable(Preset.Phantom_Bard_RomeosBallad, RomeosBallad) &&
             CanInterruptEnemy())
         {
@@ -451,6 +447,24 @@ internal partial class OccultCrescent
             !HasStatusEffect(Buffs.MightyMarch) && PlayerHP <= Phantom_Bard_MightyMarch_Health)
         {
             actionID = MightyMarch; // aoe heal
+            return true;
+        }
+
+        // Skip if no damage buff, and user wants things under buffs
+        if (IsEnabled(Preset.Phantom_RestrictToBuff) &&
+            !Bursting.PlayerIsDamageBuffed)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_Bard_HerosRime, HerosRime))
+        {
+            actionID = HerosRime; // burst song
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Bard_OffensiveAria, OffensiveAria) &&
+            !HasStatusEffect(Buffs.OffensiveAria) && !HasStatusEffect(Buffs.HerosRime, anyOwner: true))
+        {
+            actionID = OffensiveAria; // off-song
             return true;
         }
 
@@ -468,6 +482,7 @@ internal partial class OccultCrescent
                 !HasStatusEffect(Buffs.PredictionOfJudgment) && !HasStatusEffect(Buffs.PredictionOfCleansing) &&
                 !HasStatusEffect(Buffs.PredictionOfBlessing) && !HasStatusEffect(Buffs.PredictionOfStarfall))
             {
+                ResetOracleDeck();
                 actionID = Predict; // start of the chain
                 return true;
             }
@@ -476,36 +491,143 @@ internal partial class OccultCrescent
         // Skip things we want to weave, if not in a weave window
         if (!CanWeaveNow) return false;
 
-        if (IsEnabledAndUsable(Preset.Phantom_Oracle_Blessing, Blessing) &&
-            HasStatusEffect(Buffs.PredictionOfBlessing) && PlayerHP <= Phantom_Oracle_Blessing_Health)
+        UpdateOracleDeck();
+        bool lastCard = OracleRemainingCards.Count <= 1;
+        bool starfallStillInDeck = OracleRemainingCards.Contains(Buffs.PredictionOfStarfall);
+        bool canStillInvulnForStarfall =
+            Phantom_Oracle_SaveInvulnForStarfall &&
+            IsEnabled(Preset.Phantom_Oracle_Invulnerability) &&
+            ActionReady(Invulnerability) &&
+            !HasStatusEffect(Buffs.Invulnerability);
+        bool holdForStarfall = !lastCard && starfallStillInDeck && canStillInvulnForStarfall &&
+                               GetStatusEffectRemainingTime(OracleCurrentCard) > 3f;
+        bool tanking = PlayerHasTankStance();
+        bool raidwideIncoming = GroupDamageIncoming();
+        float partyAvgHp = GetPartyAvgHPPercent();
+        bool needsBlessingHeal = PlayerHP <= Phantom_Oracle_Blessing_Health ||
+                                 partyAvgHp <= Phantom_Oracle_Blessing_Health;
+        bool needsJudgmentHeal = PlayerHP <= Phantom_Oracle_Judgment_PartyHP ||
+                                 partyAvgHp <= Phantom_Oracle_Judgment_PartyHP;
+
+        if (HasStatusEffect(Buffs.PredictionOfStarfall))
         {
+            if (IsEnabledAndUsable(Preset.Phantom_Oracle_Invulnerability, Invulnerability) &&
+                canStillInvulnForStarfall && InCombat())
+            {
+                actionID = Invulnerability;
+                return true;
+            }
+
+            bool canStarfallSafely =
+                HasStatusEffect(Buffs.Invulnerability) ||
+                (PlayerHP >= Phantom_Oracle_Starfall_Health &&
+                 !canStillInvulnForStarfall &&
+                 !raidwideIncoming);
+
+            if (IsEnabledAndUsable(Preset.Phantom_Oracle_Starfall, Starfall) &&
+                canStarfallSafely &&
+                (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed ||
+                 HasStatusEffect(Buffs.Invulnerability) || lastCard))
+            {
+                MarkOracleCardPlayed(Buffs.PredictionOfStarfall);
+                actionID = Starfall; // damage + 90% total HP damage to self
+                return true;
+            }
+
+            // Hold Starfall if another card remains and we aren't safe yet
+            if (!lastCard && !canStarfallSafely)
+                return false;
+        }
+
+        // While tanking with Starfall still saved, prefer Cleansing (potency without self-harm)
+        if (tanking && holdForStarfall &&
+            IsEnabledAndUsable(Preset.Phantom_Oracle_Cleansing, Cleansing) &&
+            HasStatusEffect(Buffs.PredictionOfCleansing))
+        {
+            MarkOracleCardPlayed(Buffs.PredictionOfCleansing);
+            actionID = Cleansing;
+            return true;
+        }
+
+        // Dispel / interrupt before heal cards
+        if (IsEnabledAndUsable(Preset.Phantom_Oracle_Recuperation, Recuperation) &&
+            HasCleansableDoom())
+        {
+            actionID = Recuperation;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Oracle_Cleansing, Cleansing) &&
+            HasStatusEffect(Buffs.PredictionOfCleansing) && CanInterruptEnemy())
+        {
+            MarkOracleCardPlayed(Buffs.PredictionOfCleansing);
+            actionID = Cleansing;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Oracle_Blessing, Blessing) &&
+            HasStatusEffect(Buffs.PredictionOfBlessing) &&
+            (needsBlessingHeal || lastCard) &&
+            (!holdForStarfall || lastCard || tanking))
+        {
+            MarkOracleCardPlayed(Buffs.PredictionOfBlessing);
             actionID = Blessing; // heal
             return true;
         }
 
+        if (IsEnabledAndUsable(Preset.Phantom_Oracle_PhantomRejuvenation, PhantomRejuvenation) &&
+            PlayerHP <= Phantom_Oracle_PhantomRejuvenation_Health)
+        {
+            actionID = PhantomRejuvenation;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Oracle_PhantomDoom, PhantomDoom) && HasBattleTarget())
+        {
+            actionID = PhantomDoom;
+            return true;
+        }
+
+        // Judgment as heal when party/self is low — skip RestrictToBuff
+        if (IsEnabledAndUsable(Preset.Phantom_Oracle_PhantomJudgment, PhantomJudgment) &&
+            HasStatusEffect(Buffs.PredictionOfJudgment) &&
+            needsJudgmentHeal &&
+            (!holdForStarfall || lastCard || tanking))
+        {
+            MarkOracleCardPlayed(Buffs.PredictionOfJudgment);
+            actionID = PhantomJudgment;
+            return true;
+        }
+
         // Skip if no damage buff, and user wants things under buffs
-        if (IsEnabled(Preset.Phantom_RestrictToBuff) &&
+        if (!lastCard &&
+            IsEnabled(Preset.Phantom_RestrictToBuff) &&
             !Bursting.PlayerIsDamageBuffed)
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Oracle_PhantomJudgment, PhantomJudgment) &&
-            HasStatusEffect(Buffs.PredictionOfJudgment))
+            HasStatusEffect(Buffs.PredictionOfJudgment) &&
+            (!holdForStarfall || lastCard))
         {
+            MarkOracleCardPlayed(Buffs.PredictionOfJudgment);
             actionID = PhantomJudgment; // damage + heal
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Oracle_Cleansing, Cleansing) &&
-            HasStatusEffect(Buffs.PredictionOfCleansing)) // removed interrupt. it hits 20% harder than Judgment. 120k aoe.
+            HasStatusEffect(Buffs.PredictionOfCleansing) &&
+            (!holdForStarfall || lastCard))
         {
+            MarkOracleCardPlayed(Buffs.PredictionOfCleansing);
             actionID = Cleansing; // damage plus interrupt
             return true;
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_Oracle_Starfall, Starfall) &&
-            HasStatusEffect(Buffs.PredictionOfStarfall) && PlayerHP >= Phantom_Oracle_Starfall_Health)
+        if (IsEnabledAndUsable(Preset.Phantom_Oracle_Invulnerability, Invulnerability) &&
+            !Phantom_Oracle_SaveInvulnForStarfall && InCombat() &&
+            !HasStatusEffect(Buffs.Invulnerability) && PlayerHP <= Phantom_Oracle_Invulnerability_Health)
         {
-            actionID = Starfall; // damage + 90% total HP damage to self
+            actionID = Invulnerability;
             return true;
         }
 
@@ -527,24 +649,59 @@ internal partial class OccultCrescent
 
         if (IsEnabledAndUsable(Preset.Phantom_Cannoneer_SilverCannon, SilverCannon) &&
             ((!HasStatusEffect(Debuffs.SilverSickness, CurrentTarget, true) ||
-              GetStatusEffectRemainingTime(Debuffs.SilverSickness, CurrentTarget, true) < 30f) ||
+              GetStatusEffectRemainingTime(Debuffs.SilverSickness, CurrentTarget, true) < 15f) ||
              IsNotEnabled(Preset.Phantom_Cannoneer_HolyCannon)))
         {
             actionID = SilverCannon; // debuff
             return true;
         }
 
-        foreach((Preset preset, uint action) in new[]
+        if (IsEnabledAndUsable(Preset.Phantom_Cannoneer_HolyCannon, HolyCannon))
         {
-            (Preset.Phantom_Cannoneer_PhantomFire, PhantomFire),
-            (Preset.Phantom_Cannoneer_HolyCannon, HolyCannon),
-            (Preset.Phantom_Cannoneer_DarkCannon, DarkCannon),
-            (Preset.Phantom_Cannoneer_ShockCannon, ShockCannon)
-        })
+            actionID = HolyCannon;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Cannoneer_PhantomFire, PhantomFire))
         {
-            if (IsEnabledAndUsable(preset, action))
+            actionID = PhantomFire;
+            return true;
+        }
+
+        bool darkOk = IsEnabledAndUsable(Preset.Phantom_Cannoneer_DarkCannon, DarkCannon);
+        bool shockOk = IsEnabledAndUsable(Preset.Phantom_Cannoneer_ShockCannon, ShockCannon);
+        if (darkOk || shockOk)
+        {
+            bool canBlind = CanApplyStatus(CurrentTarget, Debuffs.Blind);
+            bool canPara = CanApplyStatus(CurrentTarget, Debuffs.Paralysis);
+
+            if (canBlind && canPara && darkOk && shockOk)
             {
-                actionID = action;
+                actionID = Phantom_Cannoneer_DarkShockPrefer == 1 ? ShockCannon : DarkCannon;
+                return true;
+            }
+
+            if (canBlind && darkOk)
+            {
+                actionID = DarkCannon;
+                return true;
+            }
+
+            if (canPara && shockOk)
+            {
+                actionID = ShockCannon;
+                return true;
+            }
+
+            if (darkOk && (Phantom_Cannoneer_DarkShockImmunePrefer == 0 || !shockOk))
+            {
+                actionID = DarkCannon;
+                return true;
+            }
+
+            if (shockOk)
+            {
+                actionID = ShockCannon;
                 return true;
             }
         }
@@ -621,7 +778,9 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Geomancer_Suspend, Suspend) &&
-            !HasStatusEffect(Buffs.Suspend))
+            !HasStatusEffect(Buffs.Suspend) &&
+            (InCombatNow && Phantom_Geomancer_Suspend_InCombat ||
+             !InCombatNow && Phantom_Geomancer_Suspend_OutOfCombat))
         {
             actionID = Suspend; // float
             return true;
@@ -680,29 +839,43 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_Dancer))
             return false;
 
-        if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
+        if (CanWeaveNow)
         {
-            if (IsEnabledAndUsable(Preset.Phantom_Dancer_Dance, Dance) && CanWeave())
+            if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
             {
-                actionID = Dance;
+                if (IsEnabledAndUsable(Preset.Phantom_Dancer_Dance, Dance))
+                {
+                    actionID = Dance;
+                    return true;
+                }
+            }
+
+            if (IsEnabledAndUsable(Preset.Phantom_Dancer_Mesmerize, Mesmerize) && InCombat())
+            {
+                actionID = Mesmerize; //Damage Debuff
                 return true;
             }
-        }
 
-        if (IsEnabledAndUsable(Preset.Phantom_Dancer_Mesmerize, Mesmerize) && InCombat() && CanWeave())
-        {
-            actionID = Mesmerize; //Damage Debuff
-            return true;
-        }
+            if (IsEnabledAndUsable(Preset.Phantom_Dancer_SteadfastStance, SteadfastStance) &&
+                InCombat() && !HasStatusEffect(Buffs.SteadfastStance))
+            {
+                actionID = SteadfastStance; // barrier
+                return true;
+            }
 
-        if (CanWeaveNow) return false;
+            if (IsEnabledAndUsable(Preset.Phantom_Dancer_QuickStep, Quickstep) &&
+                !HasStatusEffect(Buffs.Quickstep))
+            {
+                actionID = Quickstep; //Evasion self buff
+                return true;
+            }
+
+            return false;
+        }
 
         // Skip if no damage buff, and user wants things under buffs
-        if (!IsEnabled(Preset.Phantom_RestrictToBuff) ||
-            Bursting.PlayerIsDamageBuffed)
+        if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
         {
-            #region Dances
-
             if (IsEnabled(Preset.Phantom_Dancer_Dance) && HasStatusEffect(Buffs.PoisedToSwordDance))
             {
                 actionID = PoisedToSwordDance;
@@ -723,14 +896,6 @@ internal partial class OccultCrescent
                 actionID = WillingToWaltz;
                 return true;
             }
-
-            #endregion
-        }
-
-        if (IsEnabledAndUsable(Preset.Phantom_Dancer_QuickStep, Quickstep) && !HasStatusEffect(Buffs.Quickstep))
-        {
-            actionID = Quickstep; //Evasion self buff
-            return true;
         }
 
         return false;
@@ -738,7 +903,22 @@ internal partial class OccultCrescent
 
     private static bool TryGetGladiatorAction(ref uint actionID)
     {
-        if (CanWeaveNow) return false;
+        if (!IsEnabled(Preset.Phantom_Gladiator))
+            return false;
+
+        if (CanWeaveNow)
+        {
+            if (IsEnabledAndUsable(Preset.Phantom_Gladiator_Defend, Defend) && InCombat() &&
+                (!Phantom_Gladiator_DefendOnlyAtMaxFervor ||
+                 GetStatusEffectStacks(Buffs.FinishingFervor) >= 4))
+            {
+                actionID = Defend;
+                return true;
+            }
+
+            return false;
+        }
+
         if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
         {
             if (IsEnabledAndUsable(Preset.Phantom_Gladiator_Finisher, Finisher) && HasBattleTarget() && InMeleeRange())
@@ -748,22 +928,16 @@ internal partial class OccultCrescent
             }
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_Gladiator_Defend, Defend) && InCombat())
-        {
-            actionID = Defend;
-            return true;
-        }
-
-        // Skip if no damage buff, and user wants things under buffs
         if (IsEnabled(Preset.Phantom_RestrictToBuff) &&
             !Bursting.PlayerIsDamageBuffed)
             return false;
-        
+
         if (IsEnabledAndUsable(Preset.Phantom_Gladiator_LongReach, LongReach) && HasBattleTarget())
         {
             actionID = LongReach;
             return true;
         }
+
         if (IsEnabledAndUsable(Preset.Phantom_Gladiator_BladeBlitz, BladeBlitz) && InCombat() && InActionRange(BladeBlitz))
         {
             actionID = BladeBlitz;
@@ -771,6 +945,654 @@ internal partial class OccultCrescent
         }
 
         return false;
+    }
+    private static bool TryGetNinjaAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_Ninja))
+            return false;
+        if (!CanWeaveNow)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_Ninja_Smoke, Smoke) && InCombat() &&
+            !HasStatusEffect(Buffs.Smoke))
+        {
+            actionID = Smoke;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Ninja_Image, Image) && InCombat())
+        {
+            actionID = Image;
+            return true;
+        }
+
+        if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_Ninja_FumaShuriken, FumaShuriken) && HasBattleTarget())
+        {
+            actionID = FumaShuriken;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Ninja_LightningScroll, LightningScroll) &&
+            HasBattleTarget() && HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+        {
+            actionID = LightningScroll;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Ninja_FlameScroll, FlameScroll) &&
+            HasBattleTarget() && HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+        {
+            actionID = FlameScroll;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_Ninja_FlameScroll, FlameScroll) && HasBattleTarget())
+        {
+            actionID = FlameScroll;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Ninja_LightningScroll, LightningScroll) && HasBattleTarget())
+        {
+            actionID = LightningScroll;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryGetWhiteMageAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_WhiteMage))
+            return false;
+        if (IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultBlink, OccultBlink) && InCombat() && CanWeave() &&
+            !HasStatusEffect(Buffs.OccultBlink))
+        {
+            actionID = OccultBlink;
+            return true;
+        }
+        if (CanWeaveNow)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultRaise, OccultRaise) &&
+            TryRetargetPhantomRaise(ref actionID, OccultRaise))
+            return true;
+
+        if (IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultCureIII, OccultCureIII) &&
+            PlayerHP <= Phantom_WhiteMage_OccultCureIII_Health)
+        {
+            actionID = OccultCureIII;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultCureII, OccultCureII) &&
+            PlayerHP <= Phantom_WhiteMage_OccultCureII_Health)
+        {
+            actionID = OccultCureII;
+            return true;
+        }
+
+        if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultHoly, OccultHoly) && HasBattleTarget())
+        {
+            actionID = OccultHoly;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryGetBlackMageAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_BlackMage))
+            return false;
+        if (CanWeaveNow)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultToad, OccultToad) && InCombat() &&
+            (!Phantom_BlackMage_OccultToad_RequireAoE ||
+             GroupDamageIncoming() ||
+             NumberOfEnemiesInRange(OccultToad) >= 2))
+        {
+            actionID = OccultToad;
+            return true;
+        }
+
+        if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultFlare, OccultFlare) && HasBattleTarget())
+        {
+            actionID = OccultFlare;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultFireIII, OccultFireIII) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+        {
+            actionID = OccultFireIII;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultBlizzardIII, OccultBlizzardIII) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
+        {
+            actionID = OccultBlizzardIII;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultThunderIII, OccultThunderIII) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+        {
+            actionID = OccultThunderIII;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultThunderIII, OccultThunderIII) && HasBattleTarget())
+        {
+            actionID = OccultThunderIII;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultBlizzardIII, OccultBlizzardIII) && HasBattleTarget())
+        {
+            actionID = OccultBlizzardIII;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultFireIII, OccultFireIII) && HasBattleTarget())
+        {
+            actionID = OccultFireIII;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryGetDragoonAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_Dragoon))
+            return false;
+        if (CanWeaveNow)
+        {
+            if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+                return false;
+
+            if (IsEnabledAndUsable(Preset.Phantom_Dragoon_Lance, Lance) && HasBattleTarget())
+            {
+                actionID = Lance;
+                return true;
+            }
+
+            return false;
+        }
+
+        if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_Dragoon_OccultJump, OccultJump) &&
+            HasBattleTarget() && CanUseOccultJumpHoldOptions())
+        {
+            actionID = OccultJump;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryGetSummonerAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_Summoner))
+            return false;
+        if (CanWeaveNow)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_Summoner_EarthenWall, EarthenWall) && InCombat() &&
+            !HasStatusEffect(Buffs.EarthenWall))
+        {
+            actionID = EarthenWall;
+            return true;
+        }
+
+        if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_Summoner_Megaflare, Megaflare) && HasBattleTarget())
+        {
+            actionID = Megaflare;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Summoner_Thunderstorm, Thunderstorm) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true))
+        {
+            actionID = Thunderstorm;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Summoner_JudgmentBolt, JudgmentBolt) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+        {
+            actionID = JudgmentBolt;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Summoner_Hellfire, Hellfire) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+        {
+            actionID = Hellfire;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_Summoner_Thunderstorm, Thunderstorm) && HasBattleTarget())
+        {
+            actionID = Thunderstorm;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Summoner_JudgmentBolt, JudgmentBolt) && HasBattleTarget())
+        {
+            actionID = JudgmentBolt;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Summoner_Hellfire, Hellfire) && HasBattleTarget())
+        {
+            actionID = Hellfire;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryGetBlueMageAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_BlueMage))
+            return false;
+        if (CanWeaveNow)
+            return false;
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultMightyGuard, OccultMightyGuard) && InCombat() &&
+            !HasStatusEffect(Buffs.OccultMightyGuard))
+        {
+            actionID = OccultMightyGuard;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultWhiteWind, OccultWhiteWind) &&
+            PlayerHP <= Phantom_BlueMage_OccultWhiteWind_Health)
+        {
+            actionID = OccultWhiteWind;
+            return true;
+        }
+
+        if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+            return false;
+        if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultMissile, OccultMissile) &&
+            HasBattleTarget() && !ContentCheck.IsInFieldRaids)
+        {
+            actionID = OccultMissile;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultAquaBreath, OccultAquaBreath) && HasBattleTarget())
+        {
+            actionID = OccultAquaBreath;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultAeroIII, OccultAeroIII) && HasBattleTarget())
+        {
+            actionID = OccultAeroIII;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultAeroII, OccultAeroII) && HasBattleTarget())
+        {
+            actionID = OccultAeroII;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultAero, OccultAero) && HasBattleTarget())
+        {
+            actionID = OccultAero;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryGetRedMageAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_RedMage))
+            return false;
+        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultLibra, OccultLibra))
+        {
+            var canDebuff = EnemiesInRange(OccultLibra).Any(x => x.IsInCombat() && x.IsTargetable && !HasLibraWeakness(x) && CanApplyLibraWeakness(x));
+            if (canDebuff && (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed))
+            {
+                actionID = OccultLibra;
+                return true;
+            }
+        }
+
+        if (!IsMoving())
+        {
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultCureII, OccultCureII_RDM) &&
+                TryRetargetPhantomCure(ref actionID,
+                OccultCureII_RDM, Phantom_RedMage_OccultCureII_Health,
+                IsEnabled(Preset.Phantom_RedMage_OccultCureII_Retarget),
+                Phantom_RedMage_Retarget_OutOfParty))
+            {
+                return true;
+            }
+
+            if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+                return false;
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultBlizzardII, OccultBlizzardII) && HasBattleTarget() &&
+                HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
+            {
+                actionID = OccultBlizzardII;
+                return true;
+            }
+
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultThunderII, OccultThunderII) && HasBattleTarget() &&
+                HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+            {
+                actionID = OccultThunderII;
+                return true;
+            }
+
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget() &&
+                HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+            {
+                actionID = OccultFireII;
+                return true;
+            }
+
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget())
+            {
+                actionID = OccultFireII;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool HasLibraWeakness(IGameObject? tar)
+    {
+        var statuses = tar?.SafeStatusList;
+        if (statuses == null) return false;
+
+        foreach (var s in statuses)
+        {
+            if (s.StatusId is Debuffs.FireWeakness or Debuffs.IceWeakness or Debuffs.WindWeakness or Debuffs.LightningWeakness)
+                return true;
+        }
+        return false;
+    }
+
+    private static bool CanApplyLibraWeakness(IGameObject? tar)
+    {
+        var statuses = tar?.SafeStatusList;
+        if (statuses == null) return false;
+
+        if (CanApplyStatus(tar, Debuffs.FireWeakness) || CanApplyStatus(tar, Debuffs.IceWeakness) || CanApplyStatus(tar, Debuffs.LightningWeakness) || CanApplyStatus(tar, Debuffs.WindWeakness))
+            return true;
+
+        return false;
+    }
+
+    private static bool TryGetNecromancerAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_Necromancer))
+            return false;
+        if (CanWeaveNow)
+        {
+            if (!IsEnabledAndUsable(Preset.Phantom_Necromancer_DrainTouch, DrainTouch) || !HasBattleTarget())
+                return false;
+            if (ShouldUseDrainTouch())
+            {
+                actionID = DrainTouch;
+                return true;
+            }
+
+            return false;
+        }
+
+        if (!CanUseNecromancerSpells())
+            return false;
+
+        if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+            return false;
+        if (IsEnabledAndUsable(Preset.Phantom_Necromancer_ChaosDrive, ChaosDrive) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+        {
+            actionID = ChaosDrive;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Necromancer_HellWind, HellWind) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true))
+        {
+            actionID = HellWind;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Necromancer_DeepFreeze, DeepFreeze) && HasBattleTarget() &&
+            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
+        {
+            actionID = DeepFreeze;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Necromancer_Doomsday, Doomsday) && HasBattleTarget())
+        {
+            actionID = Doomsday;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_Necromancer_DeepFreeze, DeepFreeze) && HasBattleTarget())
+        {
+            actionID = DeepFreeze;
+            return true;
+        }
+
+        return false;
+    }
+    private static bool CanUseNecromancerSpells()
+    {
+        if (Phantom_Necromancer_SpellDuringDrainTouch == 1)
+            return HasStatusEffect(Buffs.DrainTouch);
+        if (Phantom_Necromancer_SpellDuringDrainTouch == 2)
+            return true;
+        return !HasStatusEffect(Buffs.DrainTouch);
+    }
+
+    private static bool ShouldUseDrainTouch()
+    {
+        if (Phantom_Necromancer_DrainTouch_Mode == 1)
+            return PlayerHP <= Phantom_Necromancer_DrainTouch_Health;
+        if (Phantom_Necromancer_DrainTouch_Mode == 2)
+            return PlayerHP <= Phantom_Necromancer_DrainTouch_EmergencyHealth;
+
+        // DPS mode
+        return !IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed;
+    }
+
+    private static bool TryUsePledge(ref uint actionID)
+    {
+        if (Phantom_Knight_Pledge_SelfOnly)
+        {
+            if (PlayerHP > Phantom_Knight_Pledge_Health)
+                return false;
+            actionID = Pledge;
+            return true;
+        }
+
+        var ally = SimpleTarget.LowestHPPAlly;
+        if (ally is not null &&
+            ally.GameObjectId != LocalPlayer.GameObjectId &&
+            GetPartyMembers().Any(m => m.BattleChara?.GameObjectId == ally.GameObjectId) &&
+            GetTargetHPPercent(ally) <= Phantom_Knight_Pledge_Health)
+        {
+            actionID = Pledge.Retarget(actionID, ally);
+            return true;
+        }
+
+        if (PlayerHP <= Phantom_Knight_Pledge_Health)
+        {
+            actionID = Pledge;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool ShouldHoldOccultQuick() =>
+        HasStatusEffect(RDM.Buffs.Manafication) ||
+        HasStatusEffect(RDM.Buffs.Embolden) ||
+        HasStatusEffect(RDM.Buffs.MagickedSwordPlay) ||
+        HasStatusEffect(RDM.Buffs.GrandImpactReady);
+
+    private static bool TryRetargetPhantomRaise(ref uint actionID, uint raiseAction)
+    {
+        var raiseTarget = SimpleTarget.Stack.AllyToRaiseOccult;
+        if (raiseTarget is null)
+            return false;
+
+        var originalId = actionID;
+        actionID = raiseAction.Retarget(originalId, raiseTarget);
+        return true;
+    }
+
+    private static bool TryRetargetPhantomCure(ref uint actionID, uint cureAction, float HPThreshold, bool retargeting, bool outOfParty)
+    {
+        var originalId = actionID;
+        // If player HP is at or below threshold, heal self
+        if (PlayerHP <= HPThreshold)
+        {
+            actionID = cureAction.Retarget(originalId, SimpleTarget.Self);
+            return true;
+        }
+
+        // If retargeting is disabled, no action taken
+        if (!retargeting)
+            return false;
+
+        // Try to find lowest HP ally at or below threshold
+        var allyTarget = SimpleTarget.LowestHPAlly?.IfMissingHP(HPThreshold).IfInSightInRangeCanUseOn(cureAction);
+        if (allyTarget != null)
+        {
+            actionID = cureAction.Retarget(originalId, allyTarget);
+            return true;
+        }
+
+        // If no in-party ally found and out-of-party is allowed, try out-of-party allies
+        if (outOfParty)
+        {
+            var outOfPartyTarget = SimpleTarget.LowestHPAllyOutOfParty?.IfMissingHP(HPThreshold).IfInSightInRangeCanUseOn(cureAction);
+            if (outOfPartyTarget != null)
+            {
+                Svc.Log.Debug($"Healing OOP {outOfPartyTarget.Name}");
+                actionID = cureAction.Retarget(originalId, outOfPartyTarget);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static bool CanPhantomRaise() =>
+        IsInOccult &&
+        (IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, Revive) ||
+         IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultRaise, OccultRaise));
+
+    private static readonly HashSet<uint> OracleRemainingCards = [];
+    private static uint OracleCurrentCard;
+
+    private static void ResetOracleDeck()
+    {
+        OracleRemainingCards.Clear();
+        OracleRemainingCards.Add(Buffs.PredictionOfBlessing);
+        OracleRemainingCards.Add(Buffs.PredictionOfCleansing);
+        OracleRemainingCards.Add(Buffs.PredictionOfJudgment);
+        OracleRemainingCards.Add(Buffs.PredictionOfStarfall);
+        OracleCurrentCard = 0;
+    }
+
+    private static void UpdateOracleDeck()
+    {
+        uint card = 0;
+        if (HasStatusEffect(Buffs.PredictionOfBlessing))
+            card = Buffs.PredictionOfBlessing;
+        else if (HasStatusEffect(Buffs.PredictionOfCleansing))
+            card = Buffs.PredictionOfCleansing;
+        else if (HasStatusEffect(Buffs.PredictionOfJudgment))
+            card = Buffs.PredictionOfJudgment;
+        else if (HasStatusEffect(Buffs.PredictionOfStarfall))
+            card = Buffs.PredictionOfStarfall;
+
+        if (card == 0)
+        {
+            if (OracleCurrentCard != 0)
+            {
+                OracleRemainingCards.Remove(OracleCurrentCard);
+                OracleCurrentCard = 0;
+            }
+            return;
+        }
+
+        if (OracleRemainingCards.Count == 0)
+            OracleRemainingCards.Add(card);
+
+        if (OracleCurrentCard != 0 && OracleCurrentCard != card)
+            OracleRemainingCards.Remove(OracleCurrentCard);
+
+        OracleCurrentCard = card;
+    }
+
+    private static void MarkOracleCardPlayed(uint card)
+    {
+        OracleRemainingCards.Remove(card);
+        if (OracleCurrentCard == card)
+            OracleCurrentCard = 0;
+    }
+
+    private static bool ChemistNeedsPotion()
+    {
+        if (Phantom_Chemist_OccultPotion_SelfOnly)
+            return PlayerHP <= Phantom_Chemist_OccultPotion_Health;
+
+        return GetPartyMinHPPercent() <= Phantom_Chemist_OccultPotion_Health;
+    }
+
+    private static bool ChemistNeedsEther()
+    {
+        if (Phantom_Chemist_OccultEther_SelfOnly)
+            return PlayerMP <= Phantom_Chemist_OccultEther_MP;
+
+        return GetPartyMembers().Any(m =>
+            m.BattleChara is not null && !m.BattleChara.IsDead &&
+            m.BattleChara.CurrentMp <= Phantom_Chemist_OccultEther_MP);
+    }
+
+    private static float GetPartyMinHPPercent()
+    {
+        float min = PlayerHP;
+        foreach (var member in GetPartyMembers())
+        {
+            if (member.BattleChara is null || member.BattleChara.IsDead)
+                continue;
+            float hp = GetTargetHPPercent(member.BattleChara);
+            if (hp < min)
+                min = hp;
+        }
+
+        return min;
     }
 
     #region Shorter variables

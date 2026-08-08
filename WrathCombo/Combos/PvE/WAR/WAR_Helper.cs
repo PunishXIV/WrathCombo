@@ -28,7 +28,7 @@ internal partial class WAR : Tank
     #endregion
 
     #region Openers
-    
+
     internal static WAROpenerMaxLevel1 Opener1 = new();
     internal static WrathOpener Opener()
     {
@@ -42,32 +42,32 @@ internal partial class WAR : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Tomahawk,
-            Infuriate,
-            HeavySwing,
-            Maim,
-            StormsEye,
-            InnerRelease,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            InnerChaos,
-            Upheaval,
-            Onslaught, //10
-            FellCleave,
-            Onslaught, //12
-            FellCleave,
-            Onslaught, //14
-            FellCleave,
-            PrimalWrath,
-            Infuriate,
-            PrimalRend,
-            PrimalRuination,
-            InnerChaos,
-            HeavySwing,
-            Maim,
-            StormsPath,
-            FellCleave,
-            Infuriate,
-            InnerChaos
+            Tomahawk, // 1
+            Infuriate, // 2
+            HeavySwing, // 3
+            Maim, // 4
+            StormsEye, // 5
+            InnerRelease, // 6
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 7
+            InnerChaos, // 8
+            Upheaval, // 9
+            Onslaught, // 10
+            FellCleave, // 11
+            Onslaught, // 12
+            FellCleave, // 13
+            Onslaught, // 14
+            FellCleave, // 15
+            PrimalWrath, // 16
+            Infuriate, // 17
+            PrimalRend, // 18
+            PrimalRuination, // 19
+            InnerChaos, // 20
+            HeavySwing, // 21
+            Maim, // 22
+            StormsPath, // 23
+            FellCleave, // 24
+            Infuriate, // 25
+            InnerChaos // 26
         ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
@@ -83,9 +83,9 @@ internal partial class WAR : Tank
     }
 
     #endregion
-    
+
     #region Rotation
-    
+
     #region Flag Stuff
     [Flags]
     private enum Combo
@@ -99,7 +99,7 @@ internal partial class WAR : Tank
         Simple = 1 << 3, // 8
         Basic = 1 << 4, // 16
     }
-    
+
     /// <summary>
     ///     Checks whether a given preset is enabled, and the flags match it.
     /// </summary>
@@ -112,7 +112,7 @@ internal partial class WAR : Tank
     private static bool IsAoEEnabled(Combo flags, Preset preset) =>
         flags.HasFlag(Combo.AoE) && IsEnabled(preset);
     #endregion
-    
+
     #region OGCD Attacks
     private static bool TryOGCDAttacks(Combo flags, ref uint actionID)
     {
@@ -121,75 +121,75 @@ internal partial class WAR : Tank
              flags.HasFlag(Combo.Simple) ||
              IsSTEnabled(flags, Preset.WAR_ST_Interrupt) ||
              IsAoEEnabled(flags, Preset.WAR_AoE_Interrupt);
-        
-        bool lowBlowEnabled = 
+
+        bool lowBlowEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_Stun) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_Stun);
-        
+
         bool innerReleaseEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_InnerRelease) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_InnerRelease);
-        
+
         bool infuriateEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_Infuriate) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_Infuriate);
-        
+
         bool onslaughtEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_Onslaught) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_Onslaught);
-        
+
         bool upheavalEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_Upheaval) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_Orogeny);
-        
+
         bool primalWrathEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_PrimalWrath) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_PrimalWrath);
-        
+
         #endregion
-        
+
         #region Configs
         int innerReleaseThresholdST = WAR_ST_InnerRelease_Threshold_SubOption == 1 || !InBossEncounter() ? WAR_ST_InnerRelease_Threshold : 0; //Boss Check
         int innerReleaseThresholdAoE = WAR_AoE_InnerRelease_Threshold_SubOption == 1 || !InBossEncounter() ? WAR_AoE_InnerRelease_Threshold : 0; //Boss Check
-        int innerReleaseStopThreshold = 
-            flags.HasFlag(Combo.Simple) ? 0 : 
+        int innerReleaseStopThreshold =
+            flags.HasFlag(Combo.Simple) ? 0 :
             flags.HasFlag(Combo.ST) ? innerReleaseThresholdST : innerReleaseThresholdAoE;
-        
-        bool poolOnslaughtForManual = !flags.HasFlag(Combo.Simple) && 
+
+        bool poolOnslaughtForManual = !flags.HasFlag(Combo.Simple) &&
                                       (flags.HasFlag(Combo.ST) && WAR_ST_Onslaught_ManualPooling ||
                                        flags.HasFlag(Combo.AoE) && WAR_AoE_Onslaught_ManualPooling);
-        
-        int infuriateGaugeThreshold = 
-            flags.HasFlag(Combo.Simple) ? 40 : 
+
+        int infuriateGaugeThreshold =
+            flags.HasFlag(Combo.Simple) ? 40 :
             flags.HasFlag(Combo.ST) ? WAR_ST_Infuriate_Gauge : WAR_AoE_Infuriate_Gauge;
-        
-        int infuriateChargeThreshold = 
-            flags.HasFlag(Combo.Simple) ? 0 : 
+
+        int infuriateChargeThreshold =
+            flags.HasFlag(Combo.Simple) ? 0 :
             flags.HasFlag(Combo.ST) ? WAR_ST_Infuriate_Charges : WAR_AoE_Infuriate_Charges;
-        
-        int onslaughtChargeThreshold = 
-            flags.HasFlag(Combo.Simple) ? 0 : 
+
+        int onslaughtChargeThreshold =
+            flags.HasFlag(Combo.Simple) ? 0 :
             flags.HasFlag(Combo.ST) ? WAR_ST_Onslaught_Charges : WAR_AoE_Onslaught_Charges;
-        
-        float onslaughtDistanceThreshold = 
-            flags.HasFlag(Combo.Simple) ? 3 : 
+
+        float onslaughtDistanceThreshold =
+            flags.HasFlag(Combo.Simple) ? 3 :
             flags.HasFlag(Combo.ST) ? WAR_ST_Onslaught_Distance : WAR_AoE_Onslaught_Distance;
-        
-        int onslaughtMovement = 
-            flags.HasFlag(Combo.Simple) ? 0 : 
+
+        int onslaughtMovement =
+            flags.HasFlag(Combo.Simple) ? 0 :
             flags.HasFlag(Combo.ST) ? WAR_ST_Onslaught_Movement : WAR_AoE_Onslaught_Movement;
-        
-        float onslaughtTimeStoodStill = 
-            flags.HasFlag(Combo.Simple) ? 2 : 
+
+        float onslaughtTimeStoodStill =
+            flags.HasFlag(Combo.Simple) ? 2 :
             flags.HasFlag(Combo.ST) ? WAR_ST_Onslaught_TimeStill : WAR_AoE_Onslaught_TimeStill;
         #endregion
-        
+
         if (InCombat() && HasBattleTarget() && CanWeave())
         {
             if (interruptEnabled && Role.CanInterject())
@@ -203,7 +203,7 @@ internal partial class WAR : Tank
                 actionID = Role.LowBlow;
                 return true;
             }
-            
+
             if (innerReleaseEnabled &&
                 ActionReady(OriginalHook(Berserk)) && HasSurgingTempest && !HasWrathful &&
                 GetTargetHPPercent() >= innerReleaseStopThreshold) //Health Threshold Check, boss check built into config
@@ -211,17 +211,17 @@ internal partial class WAR : Tank
                 actionID = OriginalHook(Berserk);
                 return true;
             }
-            
-            if (infuriateEnabled && 
-                ActionReady(Infuriate) && !HasNascentChaos && !JustUsed(Infuriate) && !HasIR.Stacks && 
+
+            if (infuriateEnabled &&
+                ActionReady(Infuriate) && !HasNascentChaos && !JustUsed(Infuriate) && !HasIR.Stacks &&
                 BeastGauge <= infuriateGaugeThreshold && //Gauge slider check
                 GetRemainingCharges(Infuriate) > infuriateChargeThreshold) //Charge slider check
             {
                 actionID = Infuriate;
                 return true;
             }
-                
-            if (onslaughtEnabled && 
+
+            if (onslaughtEnabled &&
                 ActionReady(Onslaught) && HasSurgingTempest &&
                 (!innerReleaseEnabled && !poolOnslaughtForManual || IR.Cooldown > 40) && //Buff Window Check
                 GetRemainingCharges(Onslaught) > onslaughtChargeThreshold &&  //Charge Slider Check
@@ -236,7 +236,7 @@ internal partial class WAR : Tank
             if (upheavalEnabled &&
                 ActionReady(Upheaval) && HasSurgingTempest && InActionRange(Upheaval))
             {
-                if (flags.HasFlag(Combo.ST) || 
+                if (flags.HasFlag(Combo.ST) ||
                     flags.HasFlag(Combo.AoE) && !LevelChecked(Orogeny)) //Use Upheaval if too low level
                 {
                     actionID = Upheaval;
@@ -249,7 +249,7 @@ internal partial class WAR : Tank
                 }
             }
 
-            if (primalWrathEnabled && 
+            if (primalWrathEnabled &&
                 LevelChecked(PrimalWrath)  && HasWrathful && HasSurgingTempest && GetTargetDistance() <= 4.99f)
             {
                 actionID = PrimalWrath;
@@ -259,7 +259,7 @@ internal partial class WAR : Tank
         return false;
     }
     #endregion
-    
+
     #region GCD Attacks
     private static bool TryGCDAttacks(Combo flags, ref uint actionID)
     {
@@ -268,23 +268,23 @@ internal partial class WAR : Tank
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_PrimalRend) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_PrimalRend);
-        
+
         bool rangedUptimeEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_RangedUptime) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_RangedUptime);
-        
+
         bool primalRuinationEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_PrimalRuination) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_PrimalRuination);
-        
+
         bool fellCleaveEnabled =
             flags.HasFlag(Combo.Simple) ||
             IsSTEnabled(flags, Preset.WAR_ST_FellCleave) ||
             IsAoEEnabled(flags, Preset.WAR_AoE_Decimate);
         #endregion
-        
+
         #region Configs
         int fellCleaveGaugeThresholdST =
             WAR_ST_FellCleave_Pooling //is pooling enabled
@@ -292,51 +292,51 @@ internal partial class WAR : Tank
                     ? !JustUsed(OriginalHook(Berserk), 20f) //not in Burst Window
                         ? ComboAction is HeavySwing
                             ? 100 //Use to prevent Overcap from Maim
-                            : ComboAction is Maim  
+                            : ComboAction is Maim
                                 ? 90 //Use to prevent Overcap
                                 : 110 //Dont use it
                         : 50 // In Burst Window, Dump at 50
                     : 50 //Option not selected and not in Boss encounter, dump at 50
                 : WAR_ST_FellCleave_Gauge; //Pooling not enabled, follow slider
-            
-        int decimateGaugeThresholdAoE = 
+
+        int decimateGaugeThresholdAoE =
             WAR_AoE_Decimate_Pooling //is pooling enabled
                 ? !WAR_AoE_Decimate_Pooling_BossOnly || InBossEncounter() //Is pooling not boss only or in a boss encounter
                     ? !JustUsed(OriginalHook(Berserk), 20f) //not in Burst Window
-                        ?ComboAction is Overpower 
+                        ?ComboAction is Overpower
                             ? 90 //Use to prevent Overcap
                             : 110 //Dont use it
                         : 50 // In Burst Window, Dump at 50
                     : 50 //Option not selected and not in Boss encounter, dump at 50
                 : WAR_AoE_Decimate_Gauge; //Pooling not enabled, follow slider
-        
-        int spenderGaugeThreshold = 
-            flags.HasFlag(Combo.Simple) ? 50 : 
+
+        int spenderGaugeThreshold =
+            flags.HasFlag(Combo.Simple) ? 50 :
             flags.HasFlag(Combo.ST) ? fellCleaveGaugeThresholdST : decimateGaugeThresholdAoE;
-        
-        float primalRendDistanceThreshold = 
-            flags.HasFlag(Combo.Simple) ? 3 : 
+
+        float primalRendDistanceThreshold =
+            flags.HasFlag(Combo.Simple) ? 3 :
             flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_Distance : WAR_AoE_PrimalRend_Distance;
-        
-        int primalRendMovement = 
-            flags.HasFlag(Combo.Simple) ? 0 : 
+
+        int primalRendMovement =
+            flags.HasFlag(Combo.Simple) ? 0 :
             flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_Movement : WAR_AoE_PrimalRend_Movement;
-        
-        float primalRendTimeStoodStill = 
-            flags.HasFlag(Combo.Simple) ? 2 : 
+
+        float primalRendTimeStoodStill =
+            flags.HasFlag(Combo.Simple) ? 2 :
             flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_TimeStill : WAR_AoE_PrimalRend_TimeStill;
-        
-        int primalRendTiming = 
-            flags.HasFlag(Combo.Simple) ? 0 : 
+
+        int primalRendTiming =
+            flags.HasFlag(Combo.Simple) ? 0 :
             flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_EarlyLate : WAR_AoE_PrimalRend_EarlyLate;
-        
-        bool useSmartAoE = flags.HasFlag(Combo.Simple) ? true : WAR_AoE_Decimate_Smart; 
+
+        bool useSmartAoE = flags.HasFlag(Combo.Simple) ? true : WAR_AoE_Decimate_Smart;
         #endregion
-        
-        if (HasBattleTarget())  
+
+        if (HasBattleTarget())
         {
             #region Primal Rend
-            if (primalRendEnabled && HasSurgingTempest && HasStatusEffect(Buffs.PrimalRendReady) && 
+            if (primalRendEnabled && HasSurgingTempest && HasStatusEffect(Buffs.PrimalRendReady) &&
                 GetTargetDistance() <= primalRendDistanceThreshold && //Distance Slider Check
                 (primalRendMovement == 1 || //Any Movement
                  primalRendMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(primalRendTimeStoodStill)) && //Time Stood Still Slider Check
@@ -363,7 +363,7 @@ internal partial class WAR : Tank
                  BeastGauge >= spenderGaugeThreshold)) //Use if you have Nascent Buff
             {
                 int enemyCount = NumberOfEnemiesInRange(Role.Reprisal);
-                
+
                 if (InMeleeRange() && //Melee range check for single target
                     (flags.HasFlag(Combo.ST) || //Fell Cleave in ST
                      flags.HasFlag(Combo.AoE) && LevelChecked(FellCleave) && useSmartAoE && (!LevelChecked(Decimate) && enemyCount < 5 || //Fell Cleave in Aoe if Decimate too low level
@@ -392,26 +392,26 @@ internal partial class WAR : Tank
         return false;
     }
     #endregion
-    
+
     #region Basic Combos
     internal static uint STCombo
-        => ComboTimer > 0 
+        => ComboTimer > 0
             ? LevelChecked(Maim) && ComboAction == HeavySwing // Logic for Combo 2
                 ? Maim
                 : LevelChecked(StormsPath) && ComboAction == Maim //Logic for Combos 3.1 and 3.2
-                    ? LevelChecked(StormsEye) && ((IsEnabled(Preset.WAR_ST_Simple) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= 29) || 
+                    ? LevelChecked(StormsEye) && ((IsEnabled(Preset.WAR_ST_Simple) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= 29) ||
                                                   (IsEnabled(Preset.WAR_ST_Advanced) && IsEnabled(Preset.WAR_ST_StormsEye) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_SurgingRefreshRange))
                         ? StormsEye //return if ST is needed
                         : StormsPath //return if ST is not needed
                     : HeavySwing  //return if cant Storms Path
             : HeavySwing; //Return of cant Maim
-    
-    internal static uint AoECombo 
-        => ComboTimer > 0 && LevelChecked(MythrilTempest) && ComboAction == Overpower 
-            ? MythrilTempest 
+
+    internal static uint AoECombo
+        => ComboTimer > 0 && LevelChecked(MythrilTempest) && ComboAction == Overpower
+            ? MythrilTempest
             : Overpower;
     #endregion
-    
+
     #endregion
 
     #region One-Button Mitigation Combo Priorities
@@ -484,31 +484,31 @@ internal partial class WAR : Tank
     }
 
     #endregion
-    
+
     #region Auto Mitigation System
-    
+
     [Flags]
     private enum RotationMode{
         simple = 1 << 0,
         advanced = 1 << 1
     }
-    
+
     private static bool TryUseMits(RotationMode rotationFlags, ref uint actionID) => CanUseNonBossMits(rotationFlags, ref actionID) || CanUseBossMits(rotationFlags, ref actionID);
-    
+
     private static bool CanUseNonBossMits(RotationMode rotationFlags, ref uint actionID)
     {
         #region Variables
         var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
         var pre56Mitigation = !LevelChecked(RawIntuition) && numberOfEnemies >= 3;
-        
+
         var mitigationRunning = HasStatusEffect(Role.Buffs.ArmsLength) ||
-                                HasStatusEffect(Role.Buffs.Rampart) || 
+                                HasStatusEffect(Role.Buffs.Rampart) ||
                                 HasStatusEffect(Buffs.Holmgang) ||
                                 HasStatusEffect(Buffs.ThrillOfBattle) ||
-                                HasStatusEffect(Buffs.Vengeance) || 
+                                HasStatusEffect(Buffs.Vengeance) ||
                                 HasStatusEffect(Buffs.Damnation) ||
                                 HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
-        
+
         var justMitted = JustUsed(OriginalHook(ThrillOfBattle)) ||
                           JustUsed(OriginalHook(Vengeance)) ||
                           JustUsed(OriginalHook(RawIntuition)) ||
@@ -517,18 +517,18 @@ internal partial class WAR : Tank
                           JustUsed(Role.Rampart) ||
                           JustUsed(Holmgang);
         #endregion
-        
+
         #region Initial Bailout
-        if (!InCombat() ||  
-            InBossEncounter() || 
-            !IsEnabled(Preset.WAR_Mitigation_NonBoss) || 
+        if (!InCombat() ||
+            InBossEncounter() ||
+            !IsEnabled(Preset.WAR_Mitigation_NonBoss) ||
             (CombatEngageDuration().TotalSeconds <= 15 && IsMoving()))
             return false;
         #endregion
-        
+
         #region HolmGang Invulnerability
         var holmgangThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 10 : WAR_Mitigation_NonBoss_Holmgang_Health;
-        
+
         if (IsEnabled(Preset.WAR_Mitigation_NonBoss_Holmgang) && ActionReady(Holmgang) &&
             PlayerHealthPercentageHp() <= holmgangThreshold)
         {
@@ -536,28 +536,28 @@ internal partial class WAR : Tank
             return true;
         }
         #endregion
-        
+
         #region Raw Intuition/Bloodwhetting
-        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_RawIntuition) && 
+        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_RawIntuition) &&
             ActionReady(OriginalHook(RawIntuition)) && CanWeave() && !justMitted)
         {
             actionID = OriginalHook(RawIntuition);
             return true;
         }
         #endregion
-        
+
         #region Mitigation Threshold Bailout Canweave/Justmitted Check
-        float mitigationThreshold = rotationFlags.HasFlag(RotationMode.simple) 
-            ? 10 
+        float mitigationThreshold = rotationFlags.HasFlag(RotationMode.simple)
+            ? 10
             : WAR_Mitigation_NonBoss_MitigationThreshold;
-        if (GetAvgEnemyHPPercentInRange(10f) <= mitigationThreshold || !CanWeave() || justMitted) 
+        if (GetAvgEnemyHPPercentInRange(10f) <= mitigationThreshold || !CanWeave() || justMitted)
             return false;
         #endregion
-        
+
         #region Equilibrium
         var equilibriumThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 65 : WAR_Mitigation_NonBoss_Equilibrium_Health;
-        
-        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_Equilibrium) && 
+
+        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_Equilibrium) &&
             ActionReady(Equilibrium) &&
             PlayerHealthPercentageHp() <= equilibriumThreshold)
         {
@@ -565,12 +565,12 @@ internal partial class WAR : Tank
             return true;
         }
         #endregion
-        
+
         #region Shake It Off
         var shakeItOffThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 80 : WAR_Mitigation_NonBoss_ShakeItOff_Health;
-        var safeToShakeItOff = !HasAnyStatusEffects([Buffs.ThrillOfBattle, Buffs.Damnation, Buffs.Vengeance, Buffs.BloodwhettingDefenseLong]);
-        
-        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_ShakeItOff) && 
+        var safeToShakeItOff = !HasStatusEffects([Buffs.ThrillOfBattle, Buffs.Damnation, Buffs.Vengeance, Buffs.BloodwhettingDefenseLong]);
+
+        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_ShakeItOff) &&
             ActionReady(ShakeItOff) && safeToShakeItOff &&
             PlayerHealthPercentageHp() <= shakeItOffThreshold)
         {
@@ -578,9 +578,9 @@ internal partial class WAR : Tank
             return true;
         }
         #endregion
-        
+
         if (mitigationRunning || numberOfEnemies <= 2) return false; //Bail if already Mitted or too few enemies
-        
+
         #region Mitigation 5+
         if (numberOfEnemies >= 5 || pre56Mitigation)
         {
@@ -601,48 +601,48 @@ internal partial class WAR : Tank
             }
         }
         #endregion
-        
+
         #region Mitigation 3+
         if (Role.CanRampart() && IsEnabled(Preset.WAR_Mitigation_NonBoss_Rampart))
         {
             actionID = Role.Rampart;
             return true;
         }
-            
+
         if (ActionReady(ThrillOfBattle) && IsEnabled(Preset.WAR_Mitigation_NonBoss_ThrillOfBattle))
         {
             actionID = ThrillOfBattle;
             return true;
         }
         #endregion
-        
+
         return false;
-        
+
         bool IsEnabled(Preset preset)
         {
             if (rotationFlags.HasFlag(RotationMode.simple))
                 return true;
-            
+
             return CustomComboFunctions.IsEnabled(preset);
         }
     }
-    
+
     private static bool CanUseBossMits(RotationMode rotationFlags, ref uint actionID)
     {
         #region Initial Bailout
         if (!InCombat() || !CanWeave() || !InBossEncounter() || !IsEnabled(Preset.WAR_Mitigation_Boss)) return false;
         #endregion
-        
+
         #region Vengeance
         var vengeanceFirst = rotationFlags.HasFlag(RotationMode.simple)
             ? false
             : WAR_Mitigation_Boss_Vengeance_First;
-        
-        var vengeanceInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) || 
+
+        var vengeanceInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
                                            ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_Vengeance_Difficulty, WAR_Boss_Mit_DifficultyListSet);
-        
-        if (IsEnabled(Preset.WAR_Mitigation_Boss_Vengeance) && 
-            ActionReady(OriginalHook(Vengeance)) && vengeanceInMitigationContent && HasIncomingTankBusterEffect() 
+
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_Vengeance) &&
+            ActionReady(OriginalHook(Vengeance)) && vengeanceInMitigationContent && HasIncomingTankBusterEffect()
             && !JustUsed(Role.Rampart, 20f) && // Prevent double big mits
             (!ActionReady(Role.Rampart) || vengeanceFirst)) //Vengeance First or don't use unless rampart is on cd.
         {
@@ -650,61 +650,61 @@ internal partial class WAR : Tank
             return true;
         }
         #endregion
-        
+
         #region Rampart
-        var rampartInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) || 
+        var rampartInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
                                          ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_Rampart_Difficulty, WAR_Boss_Mit_DifficultyListSet);
-        
-        if (IsEnabled(Preset.WAR_Mitigation_Boss_Rampart) && 
-            ActionReady(Role.Rampart) && rampartInMitigationContent && HasIncomingTankBusterEffect() && 
+
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_Rampart) &&
+            ActionReady(Role.Rampart) && rampartInMitigationContent && HasIncomingTankBusterEffect() &&
             !JustUsed(OriginalHook(Vengeance), 15f)) // Prevent double big mits
         {
             actionID = Role.Rampart;
             return true;
         }
         #endregion
-        
+
         #region Raw Intuition/Bloodwhetting
         var RawIntuitionOnCDInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
                                               ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_RawIntuition_OnCD_Difficulty, WAR_Boss_Mit_DifficultyListSet);
-        
+
         var RawIntuitionTankBusterInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
                                               ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_RawIntuition_TankBuster_Difficulty, WAR_Boss_Mit_DifficultyListSet);
-        var RawIntuitionHealthThreshold = rotationFlags.HasFlag(RotationMode.simple) 
+        var RawIntuitionHealthThreshold = rotationFlags.HasFlag(RotationMode.simple)
             ? 80
             : WAR_Mitigation_Boss_RawIntuition_Health;
-        
-        var rawIntuitionDelay = rotationFlags.HasFlag(RotationMode.simple) 
+
+        var rawIntuitionDelay = rotationFlags.HasFlag(RotationMode.simple)
             ? 0
             : WAR_Mitigation_Boss_RawIntuitionDelay;
-        
+
         bool rawIntuitionOnCD = IsEnabled(Preset.WAR_Mitigation_Boss_RawIntuition_OnCD) &&  PlayerHealthPercentageHp() <= RawIntuitionHealthThreshold && IsPlayerTargeted() && RawIntuitionOnCDInMitigationContent;
-        bool rawIntuitionTankbuster = IsEnabled(Preset.WAR_Mitigation_Boss_RawIntuition_TankBuster) && RawIntuitionTankBusterInMitigationContent && 
+        bool rawIntuitionTankbuster = IsEnabled(Preset.WAR_Mitigation_Boss_RawIntuition_TankBuster) && RawIntuitionTankBusterInMitigationContent &&
                                       HasIncomingTankBusterEffect(out var incomingBusterAge) && incomingBusterAge >= rawIntuitionDelay;
-            
+
         if (ActionReady(OriginalHook(RawIntuition)) && (rawIntuitionOnCD || rawIntuitionTankbuster))
         {
             actionID = OriginalHook(RawIntuition);
             return true;
         }
         #endregion
-        
+
         #region Thrill of Battle
         float emergencyThrillThreshold = rotationFlags.HasFlag(RotationMode.simple)
             ? 80
             : WAR_Mitigation_Boss_ThrillOfBattle_Threshold;
-        
+
         var alignThrillOfBattle = rotationFlags.HasFlag(RotationMode.simple)
             ? true
             : WAR_Mitigation_Boss_ThrillOfBattle_Align;
-        
-        var ThrillOfBattleInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) || 
+
+        var ThrillOfBattleInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
                                          ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_ThrillOfBattle_Difficulty, WAR_Boss_Mit_DifficultyListSet);
 
         bool emergencyThrillOfBattle = PlayerHealthPercentageHp() <= emergencyThrillThreshold;
         bool noOtherMitsToUse = !ActionReady(OriginalHook(Vengeance)) && !JustUsed(OriginalHook(Vengeance), 13f) && !ActionReady(Role.Rampart) && !JustUsed(Role.Rampart, 18f);
         bool alignThrillOfBattleWithRampart = JustUsed(Role.Rampart, 20f) && alignThrillOfBattle;
-        
+
         if (IsEnabled(Preset.WAR_Mitigation_Boss_ThrillOfBattle) && ActionReady(ThrillOfBattle) && HasIncomingTankBusterEffect() && ThrillOfBattleInMitigationContent &&
             (emergencyThrillOfBattle || noOtherMitsToUse || alignThrillOfBattleWithRampart))
         {
@@ -712,25 +712,25 @@ internal partial class WAR : Tank
             return true;
         }
         #endregion
-        
+
         #region Equilibrium
         var equilibriumEmergencyThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 30 : WAR_Mitigation_Boss_Equilibrium_Health;
         var equilibriumTankbusterThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 80 : WAR_Mitigation_Boss_Tankbuster_Equilibrium_Health;
-        if (IsEnabled(Preset.WAR_Mitigation_Boss_Equilibrium) && 
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_Equilibrium) &&
             ActionReady(Equilibrium) &&
-            (PlayerHealthPercentageHp() <= equilibriumEmergencyThreshold || 
+            (PlayerHealthPercentageHp() <= equilibriumEmergencyThreshold ||
             (PlayerHealthPercentageHp() <= equilibriumTankbusterThreshold && HasIncomingTankBusterEffect())))
         {
             actionID = Equilibrium;
             return true;
         }
         #endregion
-        
+
         #region Reprisal
         var ReprisalInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
                                           ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_Reprisal_Difficulty, WAR_Boss_Mit_DifficultyListSet);
-        
-        if (IsEnabled(Preset.WAR_Mitigation_Boss_Reprisal) && 
+
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_Reprisal) &&
             Role.CanReprisal(enemyCount:1) && GroupDamageIncoming() && ReprisalInMitigationContent &&
             !JustUsed(ShakeItOff, 10f))
         {
@@ -738,12 +738,12 @@ internal partial class WAR : Tank
             return true;
         }
         #endregion
-        
+
         #region Shake it Off
         var ShakeItOffInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
                                             ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_ShakeItOff_Difficulty, WAR_Boss_Mit_DifficultyListSet);
-        
-        if (IsEnabled(Preset.WAR_Mitigation_Boss_ShakeItOff) && 
+
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_ShakeItOff) &&
             !JustUsed(Role.Reprisal, 10f) && GroupDamageIncoming() && ShakeItOffInMitigationContent &&
             ActionReady(ShakeItOff))
         {
@@ -751,18 +751,18 @@ internal partial class WAR : Tank
             return true;
         }
         #endregion
-       
+
         return false;
-        
+
         bool IsEnabled(Preset preset)
         {
             if (rotationFlags.HasFlag(RotationMode.simple))
                 return true;
-            
+
             return CustomComboFunctions.IsEnabled(preset);
         }
     }
-    
+
     #endregion
 
     #region IDs
