@@ -1265,16 +1265,22 @@ internal partial class OccultCrescent
     {
         if (!IsEnabled(Preset.Phantom_RedMage))
             return false;
+        bool hasWeakness = HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true) ||
+                            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true) ||
+                            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true) ||
+                            HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true);
+        bool weaknessExpiringSoon =
+            HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true) &&
+            GetStatusEffectRemainingTime(Debuffs.FireWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
+            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true) &&
+            GetStatusEffectRemainingTime(Debuffs.IceWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
+            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true) &&
+            GetStatusEffectRemainingTime(Debuffs.LightningWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
+            HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true) &&
+            GetStatusEffectRemainingTime(Debuffs.WindWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime;
+
         if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultLibra, OccultLibra) && InCombat() && CanWeave() &&
-            HasBattleTarget() &&
-            (HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true) &&
-             GetStatusEffectRemainingTime(Debuffs.FireWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
-             HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true) &&
-             GetStatusEffectRemainingTime(Debuffs.IceWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
-             HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true) &&
-             GetStatusEffectRemainingTime(Debuffs.LightningWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
-             HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true) &&
-             GetStatusEffectRemainingTime(Debuffs.WindWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime))
+            HasBattleTarget() && (!hasWeakness || weaknessExpiringSoon))
         {
             if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
             {
@@ -1295,28 +1301,28 @@ internal partial class OccultCrescent
 
         if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
             return false;
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultBlizzardII, OccultBlizzardII) && HasBattleTarget() &&
+        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultBlizzardII, OccultBlizzardII) && HasBattleTarget() && !IsMoving() &&
             HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
         {
             actionID = OccultBlizzardII;
             return true;
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultThunderII, OccultThunderII) && HasBattleTarget() &&
+        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultThunderII, OccultThunderII) && HasBattleTarget() && !IsMoving() &&
             HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
         {
             actionID = OccultThunderII;
             return true;
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget() &&
+        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget() && !IsMoving() &&
             HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
         {
             actionID = OccultFireII;
             return true;
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget())
+        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget() && !IsMoving())
         {
             actionID = OccultFireII;
             return true;
