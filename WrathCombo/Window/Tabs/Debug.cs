@@ -988,310 +988,310 @@ internal class Debug : ConfigWindow, IDisposable
                 ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
                 ImGui.TreePop();
             }
+
+            if (ImGui.TreeNode("SimpleTarget Core Targets"))
+            {
+                // Self
+                if (ImGui.TreeNode("Self"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.Self?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.Self is ICharacter self ? $"{self.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.Self != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.Self), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.Self, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // HardTarget
+                if (ImGui.TreeNode("HardTarget"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.HardTarget?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.HardTarget is ICharacter ht ? $"{ht.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.HardTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.HardTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.HardTarget, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // SoftTarget
+                if (ImGui.TreeNode("SoftTarget"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.SoftTarget?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.SoftTarget is ICharacter st ? $"{st.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.SoftTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.SoftTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.SoftTarget, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // SoftTargetIfMissingHP
+                if (ImGui.TreeNode("SoftTargetIfMissingHP"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.SoftTargetIfMissingHP?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.SoftTargetIfMissingHP is ICharacter stmhp ? $"{stmhp.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.SoftTargetIfMissingHP != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.SoftTargetIfMissingHP), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.SoftTargetIfMissingHP, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // FocusTarget
+                if (ImGui.TreeNode("FocusTarget"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.FocusTarget?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.FocusTarget is ICharacter ft ? $"{ft.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.FocusTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.FocusTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.FocusTarget, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // FocusTargetIfMissingHP
+                if (ImGui.TreeNode("FocusTargetIfMissingHP"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.FocusTargetIfMissingHP?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.FocusTargetIfMissingHP is ICharacter ftmhp ? $"{ftmhp.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.FocusTargetIfMissingHP != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.FocusTargetIfMissingHP), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.FocusTargetIfMissingHP, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // TargetsTarget
+                if (ImGui.TreeNode("TargetsTarget"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.TargetsTarget?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.TargetsTarget is ICharacter tt ? $"{tt.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.TargetsTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.TargetsTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.TargetsTarget, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // UIMouseOverTarget
+                if (ImGui.TreeNode("UIMouseOverTarget"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.UIMouseOverTarget?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.UIMouseOverTarget is ICharacter uimt ? $"{uimt.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.UIMouseOverTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.UIMouseOverTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.UIMouseOverTarget, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // ModelMouseOverTarget
+                if (ImGui.TreeNode("ModelMouseOverTarget"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.ModelMouseOverTarget?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.ModelMouseOverTarget is ICharacter mmot ? $"{mmot.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.ModelMouseOverTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.ModelMouseOverTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.ModelMouseOverTarget, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // Chocobo
+                if (ImGui.TreeNode("Chocobo"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.Chocobo?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.Chocobo is ICharacter choco ? $"{choco.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.Chocobo != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.Chocobo), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.Chocobo, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // AnyEnemy
+                if (ImGui.TreeNode("AnyEnemy"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.AnyEnemy?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.AnyEnemy is ICharacter ae ? $"{ae.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.AnyEnemy != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.AnyEnemy), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.AnyEnemy, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
+            }
+
+            if (ImGui.TreeNode("SimpleTarget Enemy Targets"))
+            {
+                // NearestEnemyTarget
+                if (ImGui.TreeNode("NearestEnemyTarget"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.NearestEnemyTarget?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.NearestEnemyTarget is ICharacter net ? $"{net.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.NearestEnemyTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.NearestEnemyTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.NearestEnemyTarget, true), 2)}% (+Shield)" : "N/A");
+                    CustomStyleText("Distance:", SimpleTarget.NearestEnemyTarget != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.NearestEnemyTarget), 2)}y" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // NearestEnemyOver5YalmsAway
+                if (ImGui.TreeNode("NearestEnemyOver5YalmsAway"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.NearestEnemyOver5YalmsAway?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.NearestEnemyOver5YalmsAway is ICharacter neo5ya ? $"{neo5ya.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.NearestEnemyOver5YalmsAway != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.NearestEnemyOver5YalmsAway), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.NearestEnemyOver5YalmsAway, true), 2)}% (+Shield)" : "N/A");
+                    CustomStyleText("Distance:", SimpleTarget.NearestEnemyOver5YalmsAway != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.NearestEnemyOver5YalmsAway), 2)}y" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPEnemy
+                if (ImGui.TreeNode("LowestHPEnemy"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPEnemy?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPEnemy is ICharacter lhpe ? $"{lhpe.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPEnemy != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPEnemy), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPEnemy, true), 2)}% (+Shield)" : "N/A");
+                    CustomStyleText("Distance:", SimpleTarget.LowestHPEnemy != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.LowestHPEnemy), 2)}y" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPEnemyIfNotInvuln
+                if (ImGui.TreeNode("LowestHPEnemyIfNotInvuln"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPEnemyIfNotInvuln?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPEnemyIfNotInvuln is ICharacter lhpeni ? $"{lhpeni.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPEnemyIfNotInvuln != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPEnemyIfNotInvuln), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPEnemyIfNotInvuln, true), 2)}% (+Shield)" : "N/A");
+                    CustomStyleText("Distance:", SimpleTarget.LowestHPEnemyIfNotInvuln != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.LowestHPEnemyIfNotInvuln), 2)}y" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPPEnemy
+                if (ImGui.TreeNode("LowestHPPEnemy"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPPEnemy?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPPEnemy is ICharacter lhppe ? $"{lhppe.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPPEnemy != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPEnemy), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPEnemy, true), 2)}% (+Shield)" : "N/A");
+                    CustomStyleText("Distance:", SimpleTarget.LowestHPPEnemy != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.LowestHPPEnemy), 2)}y" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPPEnemyIfNotInvuln
+                if (ImGui.TreeNode("LowestHPPEnemyIfNotInvuln"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPPEnemyIfNotInvuln?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPPEnemyIfNotInvuln is ICharacter lhppeni ? $"{lhppeni.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPPEnemyIfNotInvuln != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPEnemyIfNotInvuln), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPEnemyIfNotInvuln, true), 2)}% (+Shield)" : "N/A");
+                    CustomStyleText("Distance:", SimpleTarget.LowestHPPEnemyIfNotInvuln != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.LowestHPPEnemyIfNotInvuln), 2)}y" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // InterruptableEnemy
+                if (ImGui.TreeNode("InterruptableEnemy"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.InterruptableEnemy?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.InterruptableEnemy is ICharacter ie ? $"{ie.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.InterruptableEnemy != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.InterruptableEnemy), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.InterruptableEnemy, true), 2)}% (+Shield)" : "N/A");
+                    CustomStyleText("Distance:", SimpleTarget.InterruptableEnemy != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.InterruptableEnemy), 2)}y" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
+            }
+
+            if (ImGui.TreeNode("SimpleTarget Party Targets"))
+            {
+                // KardionTarget
+                if (ImGui.TreeNode("KardionTarget"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.KardionTarget?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.KardionTarget is ICharacter kt ? $"{kt.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.KardionTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.KardionTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.KardionTarget, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // AnyDeadPartyMember
+                if (ImGui.TreeNode("AnyDeadPartyMember"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.AnyDeadPartyMember?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.AnyDeadPartyMember is ICharacter adpm ? $"{adpm.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.AnyDeadPartyMember != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.AnyDeadPartyMember), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.AnyDeadPartyMember, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // AnyDeadNonPartyMember
+                if (ImGui.TreeNode("AnyDeadNonPartyMember"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.AnyDeadNonPartyMember?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.AnyDeadNonPartyMember is ICharacter adnpm ? $"{adnpm.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.AnyDeadNonPartyMember != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.AnyDeadNonPartyMember), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.AnyDeadNonPartyMember, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // AnyCleansableAlly
+                if (ImGui.TreeNode("AnyCleansableAlly"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.AnyCleansableAlly?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.AnyCleansableAlly is ICharacter aca ? $"{aca.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.AnyCleansableAlly != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.AnyCleansableAlly), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.AnyCleansableAlly, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
+            }
+
+            if (ImGui.TreeNode("SimpleTarget HP-Based Targets"))
+            {
+                // LowestHPAlly
+                if (ImGui.TreeNode("LowestHPAlly"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPAlly?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPAlly is ICharacter lhpa ? $"{lhpa.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPAlly != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAlly), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAlly, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPAllyIfMissingHP
+                if (ImGui.TreeNode("LowestHPAllyIfMissingHP"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPAllyIfMissingHP?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPAllyIfMissingHP is ICharacter lhpaimhp ? $"{lhpaimhp.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPAllyIfMissingHP != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyIfMissingHP), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyIfMissingHP, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPPAlly
+                if (ImGui.TreeNode("LowestHPPAlly"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPPAlly?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPPAlly is ICharacter lhppa ? $"{lhppa.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPPAlly != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAlly), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAlly, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPPAllyIfMissingHP
+                if (ImGui.TreeNode("LowestHPPAllyIfMissingHP"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPPAllyIfMissingHP?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPPAllyIfMissingHP is ICharacter lhppaimhp ? $"{lhppaimhp.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPPAllyIfMissingHP != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyIfMissingHP), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyIfMissingHP, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPAllyOutOfParty
+                if (ImGui.TreeNode("LowestHPAllyOutOfParty"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPAllyOutOfParty?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPAllyOutOfParty is ICharacter lhpaop ? $"{lhpaop.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPAllyOutOfParty != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyOutOfParty), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyOutOfParty, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPAllyIfMissingHPOutOfParty
+                if (ImGui.TreeNode("LowestHPAllyIfMissingHPOutOfParty"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPAllyIfMissingHPOutOfParty?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPAllyIfMissingHPOutOfParty is ICharacter lhpaimhpop ? $"{lhpaimhpop.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPAllyIfMissingHPOutOfParty != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyIfMissingHPOutOfParty), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyIfMissingHPOutOfParty, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPPAllyOutOfParty
+                if (ImGui.TreeNode("LowestHPPAllyOutOfParty"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPPAllyOutOfParty?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPPAllyOutOfParty is ICharacter lhppop ? $"{lhppop.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPPAllyOutOfParty != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyOutOfParty), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyOutOfParty, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                // LowestHPPAllyIfMissingHPOutOfParty
+                if (ImGui.TreeNode("LowestHPPAllyIfMissingHPOutOfParty"))
+                {
+                    CustomStyleText("Current:", SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty?.Name ?? "None");
+                    CustomStyleText("Shield:", SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty is ICharacter lhppaimhpop ? $"{lhppaimhpop.ShieldPercentage}%" : "N/A");
+                    CustomStyleText("Health:", SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty, true), 2)}% (+Shield)" : "N/A");
+                    ImGui.TreePop();
+                }
+
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
+            }
         }
 
         #endregion
-
-        if (ImGui.TreeNode("SimpleTarget Core Targets"))
-        {
-            // Self
-            if (ImGui.TreeNode("Self"))
-            {
-                CustomStyleText("Current:", SimpleTarget.Self?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.Self is ICharacter self ? $"{self.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.Self != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.Self), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.Self, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // HardTarget
-            if (ImGui.TreeNode("HardTarget"))
-            {
-                CustomStyleText("Current:", SimpleTarget.HardTarget?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.HardTarget is ICharacter ht ? $"{ht.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.HardTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.HardTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.HardTarget, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // SoftTarget
-            if (ImGui.TreeNode("SoftTarget"))
-            {
-                CustomStyleText("Current:", SimpleTarget.SoftTarget?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.SoftTarget is ICharacter st ? $"{st.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.SoftTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.SoftTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.SoftTarget, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // SoftTargetIfMissingHP
-            if (ImGui.TreeNode("SoftTargetIfMissingHP"))
-            {
-                CustomStyleText("Current:", SimpleTarget.SoftTargetIfMissingHP?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.SoftTargetIfMissingHP is ICharacter stmhp ? $"{stmhp.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.SoftTargetIfMissingHP != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.SoftTargetIfMissingHP), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.SoftTargetIfMissingHP, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // FocusTarget
-            if (ImGui.TreeNode("FocusTarget"))
-            {
-                CustomStyleText("Current:", SimpleTarget.FocusTarget?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.FocusTarget is ICharacter ft ? $"{ft.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.FocusTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.FocusTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.FocusTarget, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // FocusTargetIfMissingHP
-            if (ImGui.TreeNode("FocusTargetIfMissingHP"))
-            {
-                CustomStyleText("Current:", SimpleTarget.FocusTargetIfMissingHP?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.FocusTargetIfMissingHP is ICharacter ftmhp ? $"{ftmhp.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.FocusTargetIfMissingHP != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.FocusTargetIfMissingHP), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.FocusTargetIfMissingHP, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // TargetsTarget
-            if (ImGui.TreeNode("TargetsTarget"))
-            {
-                CustomStyleText("Current:", SimpleTarget.TargetsTarget?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.TargetsTarget is ICharacter tt ? $"{tt.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.TargetsTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.TargetsTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.TargetsTarget, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // UIMouseOverTarget
-            if (ImGui.TreeNode("UIMouseOverTarget"))
-            {
-                CustomStyleText("Current:", SimpleTarget.UIMouseOverTarget?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.UIMouseOverTarget is ICharacter uimt ? $"{uimt.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.UIMouseOverTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.UIMouseOverTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.UIMouseOverTarget, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // ModelMouseOverTarget
-            if (ImGui.TreeNode("ModelMouseOverTarget"))
-            {
-                CustomStyleText("Current:", SimpleTarget.ModelMouseOverTarget?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.ModelMouseOverTarget is ICharacter mmot ? $"{mmot.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.ModelMouseOverTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.ModelMouseOverTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.ModelMouseOverTarget, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // Chocobo
-            if (ImGui.TreeNode("Chocobo"))
-            {
-                CustomStyleText("Current:", SimpleTarget.Chocobo?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.Chocobo is ICharacter choco ? $"{choco.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.Chocobo != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.Chocobo), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.Chocobo, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // AnyEnemy
-            if (ImGui.TreeNode("AnyEnemy"))
-            {
-                CustomStyleText("Current:", SimpleTarget.AnyEnemy?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.AnyEnemy is ICharacter ae ? $"{ae.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.AnyEnemy != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.AnyEnemy), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.AnyEnemy, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
-            ImGui.TreePop();
-        }
-
-        if (ImGui.TreeNode("SimpleTarget Enemy Targets"))
-        {
-            // NearestEnemyTarget
-            if (ImGui.TreeNode("NearestEnemyTarget"))
-            {
-                CustomStyleText("Current:", SimpleTarget.NearestEnemyTarget?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.NearestEnemyTarget is ICharacter net ? $"{net.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.NearestEnemyTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.NearestEnemyTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.NearestEnemyTarget, true), 2)}% (+Shield)" : "N/A");
-                CustomStyleText("Distance:", SimpleTarget.NearestEnemyTarget != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.NearestEnemyTarget), 2)}y" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // NearestEnemyOver5YalmsAway
-            if (ImGui.TreeNode("NearestEnemyOver5YalmsAway"))
-            {
-                CustomStyleText("Current:", SimpleTarget.NearestEnemyOver5YalmsAway?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.NearestEnemyOver5YalmsAway is ICharacter neo5ya ? $"{neo5ya.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.NearestEnemyOver5YalmsAway != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.NearestEnemyOver5YalmsAway), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.NearestEnemyOver5YalmsAway, true), 2)}% (+Shield)" : "N/A");
-                CustomStyleText("Distance:", SimpleTarget.NearestEnemyOver5YalmsAway != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.NearestEnemyOver5YalmsAway), 2)}y" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPEnemy
-            if (ImGui.TreeNode("LowestHPEnemy"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPEnemy?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPEnemy is ICharacter lhpe ? $"{lhpe.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPEnemy != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPEnemy), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPEnemy, true), 2)}% (+Shield)" : "N/A");
-                CustomStyleText("Distance:", SimpleTarget.LowestHPEnemy != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.LowestHPEnemy), 2)}y" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPEnemyIfNotInvuln
-            if (ImGui.TreeNode("LowestHPEnemyIfNotInvuln"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPEnemyIfNotInvuln?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPEnemyIfNotInvuln is ICharacter lhpeni ? $"{lhpeni.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPEnemyIfNotInvuln != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPEnemyIfNotInvuln), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPEnemyIfNotInvuln, true), 2)}% (+Shield)" : "N/A");
-                CustomStyleText("Distance:", SimpleTarget.LowestHPEnemyIfNotInvuln != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.LowestHPEnemyIfNotInvuln), 2)}y" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPPEnemy
-            if (ImGui.TreeNode("LowestHPPEnemy"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPPEnemy?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPPEnemy is ICharacter lhppe ? $"{lhppe.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPPEnemy != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPEnemy), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPEnemy, true), 2)}% (+Shield)" : "N/A");
-                CustomStyleText("Distance:", SimpleTarget.LowestHPPEnemy != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.LowestHPPEnemy), 2)}y" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPPEnemyIfNotInvuln
-            if (ImGui.TreeNode("LowestHPPEnemyIfNotInvuln"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPPEnemyIfNotInvuln?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPPEnemyIfNotInvuln is ICharacter lhppeni ? $"{lhppeni.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPPEnemyIfNotInvuln != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPEnemyIfNotInvuln), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPEnemyIfNotInvuln, true), 2)}% (+Shield)" : "N/A");
-                CustomStyleText("Distance:", SimpleTarget.LowestHPPEnemyIfNotInvuln != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.LowestHPPEnemyIfNotInvuln), 2)}y" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // InterruptableEnemy
-            if (ImGui.TreeNode("InterruptableEnemy"))
-            {
-                CustomStyleText("Current:", SimpleTarget.InterruptableEnemy?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.InterruptableEnemy is ICharacter ie ? $"{ie.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.InterruptableEnemy != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.InterruptableEnemy), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.InterruptableEnemy, true), 2)}% (+Shield)" : "N/A");
-                CustomStyleText("Distance:", SimpleTarget.InterruptableEnemy != null ? $"{MathF.Round(GetTargetDistance(SimpleTarget.InterruptableEnemy), 2)}y" : "N/A");
-                ImGui.TreePop();
-            }
-
-            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
-            ImGui.TreePop();
-        }
-
-        if (ImGui.TreeNode("SimpleTarget Party Targets"))
-        {
-            // KardionTarget
-            if (ImGui.TreeNode("KardionTarget"))
-            {
-                CustomStyleText("Current:", SimpleTarget.KardionTarget?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.KardionTarget is ICharacter kt ? $"{kt.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.KardionTarget != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.KardionTarget), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.KardionTarget, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // AnyDeadPartyMember
-            if (ImGui.TreeNode("AnyDeadPartyMember"))
-            {
-                CustomStyleText("Current:", SimpleTarget.AnyDeadPartyMember?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.AnyDeadPartyMember is ICharacter adpm ? $"{adpm.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.AnyDeadPartyMember != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.AnyDeadPartyMember), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.AnyDeadPartyMember, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // AnyDeadNonPartyMember
-            if (ImGui.TreeNode("AnyDeadNonPartyMember"))
-            {
-                CustomStyleText("Current:", SimpleTarget.AnyDeadNonPartyMember?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.AnyDeadNonPartyMember is ICharacter adnpm ? $"{adnpm.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.AnyDeadNonPartyMember != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.AnyDeadNonPartyMember), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.AnyDeadNonPartyMember, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // AnyCleansableAlly
-            if (ImGui.TreeNode("AnyCleansableAlly"))
-            {
-                CustomStyleText("Current:", SimpleTarget.AnyCleansableAlly?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.AnyCleansableAlly is ICharacter aca ? $"{aca.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.AnyCleansableAlly != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.AnyCleansableAlly), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.AnyCleansableAlly, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
-            ImGui.TreePop();
-        }
-
-        if (ImGui.TreeNode("SimpleTarget HP-Based Targets"))
-        {
-            // LowestHPAlly
-            if (ImGui.TreeNode("LowestHPAlly"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPAlly?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPAlly is ICharacter lhpa ? $"{lhpa.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPAlly != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAlly), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAlly, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPAllyIfMissingHP
-            if (ImGui.TreeNode("LowestHPAllyIfMissingHP"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPAllyIfMissingHP?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPAllyIfMissingHP is ICharacter lhpaimhp ? $"{lhpaimhp.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPAllyIfMissingHP != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyIfMissingHP), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyIfMissingHP, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPPAlly
-            if (ImGui.TreeNode("LowestHPPAlly"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPPAlly?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPPAlly is ICharacter lhppa ? $"{lhppa.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPPAlly != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAlly), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAlly, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPPAllyIfMissingHP
-            if (ImGui.TreeNode("LowestHPPAllyIfMissingHP"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPPAllyIfMissingHP?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPPAllyIfMissingHP is ICharacter lhppaimhp ? $"{lhppaimhp.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPPAllyIfMissingHP != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyIfMissingHP), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyIfMissingHP, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPAllyOutOfParty
-            if (ImGui.TreeNode("LowestHPAllyOutOfParty"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPAllyOutOfParty?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPAllyOutOfParty is ICharacter lhpaop ? $"{lhpaop.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPAllyOutOfParty != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyOutOfParty), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyOutOfParty, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPAllyIfMissingHPOutOfParty
-            if (ImGui.TreeNode("LowestHPAllyIfMissingHPOutOfParty"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPAllyIfMissingHPOutOfParty?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPAllyIfMissingHPOutOfParty is ICharacter lhpaimhpop ? $"{lhpaimhpop.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPAllyIfMissingHPOutOfParty != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyIfMissingHPOutOfParty), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPAllyIfMissingHPOutOfParty, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPPAllyOutOfParty
-            if (ImGui.TreeNode("LowestHPPAllyOutOfParty"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPPAllyOutOfParty?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPPAllyOutOfParty is ICharacter lhppop ? $"{lhppop.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPPAllyOutOfParty != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyOutOfParty), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyOutOfParty, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            // LowestHPPAllyIfMissingHPOutOfParty
-            if (ImGui.TreeNode("LowestHPPAllyIfMissingHPOutOfParty"))
-            {
-                CustomStyleText("Current:", SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty?.Name ?? "None");
-                CustomStyleText("Shield:", SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty is ICharacter lhppaimhpop ? $"{lhppaimhpop.ShieldPercentage}%" : "N/A");
-                CustomStyleText("Health:", SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty != null ? $"{MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty), 2)}% / {MathF.Round(GetTargetHPPercent(SimpleTarget.LowestHPPAllyIfMissingHPOutOfParty, true), 2)}% (+Shield)" : "N/A");
-                ImGui.TreePop();
-            }
-
-            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
-            ImGui.TreePop();
-        }
 
         ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 

@@ -326,4 +326,6 @@ internal abstract partial class CustomComboFunctions
         return StatusCache.HasCleansableDoom(target);
     }
 
+    public static bool ImmuneToStatus(IGameObject? target, uint status) => Service.Configuration.StatusBlacklist.Any(x => x.Status == status && x.BaseId == target?.BaseId);
+
 }

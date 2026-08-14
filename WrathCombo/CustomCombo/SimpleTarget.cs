@@ -612,7 +612,7 @@ internal static class SimpleTarget
 
     public static IGameObject? LowestHPAllyOutOfParty =>
         Svc.Objects.GetBattleCharas()
-            .Where(x => x is not null && !x.IsInParty() && x.IsDead() == false)
+            .Where(x => x is not null && x.IsAPlayer() && !x.IsInParty() && x.IsDead() == false)
             .OrderBy(x => x.CurrentHp)
             .FirstOrDefault();
 
@@ -621,7 +621,7 @@ internal static class SimpleTarget
 
     public static IGameObject? LowestHPPAllyOutOfParty =>
         Svc.Objects.GetBattleCharas()
-            .Where(x => x is not null && !x.IsInParty() && x.IsDead() == false)
+            .Where(x => x is not null && x.IsAPlayer() && !x.IsInParty() && x.IsDead() == false)
             .OrderBy(x => (float)x.CurrentHp / x.MaxHp)
             .FirstOrDefault();
 

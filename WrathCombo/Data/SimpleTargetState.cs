@@ -60,6 +60,8 @@ namespace WrathCombo.Data
 
                     long currentHp = t.CurrentHp;
                     o.CurrentHP = (uint)Math.Clamp(currentHp + hpDelta, 0L, (long)t.MaxHp);
+                    if (t.NameId == 541 && o.CurrentHP == 0)
+                        o.CurrentHP = o.MaxHP;
                 }
             }
         }
@@ -81,7 +83,12 @@ namespace WrathCombo.Data
                 {
                     var val = damage ? -diff : diff;
                     if (p.CurrentHP + val < 0)
-                        p.CurrentHP = 0;
+                    {
+                        if (p.GameObjectID.GetObject()?.GetNameId() == 541)
+                            p.CurrentHP = p.MaxHP;
+                        else
+                            p.CurrentHP = 0;
+                    }
                     else
                         p.CurrentHP = (uint)Math.Clamp(p.CurrentHP + val, 0, p.MaxHP);
                 }

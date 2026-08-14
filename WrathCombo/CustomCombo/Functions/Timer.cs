@@ -70,6 +70,8 @@ internal abstract partial class CustomComboFunctions
 
     private static void CheckGCD(IFramework framework)
     {
+        if (RemainingGCD == GCDTotal) return;
+
         if (!GCDRolling)
         {
             if (RemainingGCD >= 0.1)
@@ -78,7 +80,8 @@ internal abstract partial class CustomComboFunctions
                 OnGCDRoll.Invoke(GCDRolling);
             }
 
-        } else
+        }
+        else
         {
             if (RemainingGCD < 0.1)
             {

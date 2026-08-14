@@ -1,27 +1,28 @@
 #region
 
+using Dalamud.Configuration;
+using ECommons.DalamudServices;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using Dalamud.Configuration;
-using Newtonsoft.Json;
-using WrathCombo.AutoRotation;
-using WrathCombo.Window;
+using System.Reflection.Emit;
 using WrathCombo.Attributes;
-using WrathCombo.Window.Functions;
-using WrathCombo.Window.Tabs;
+using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Native;
+using WrathCombo.Window;
+using WrathCombo.Window.Functions;
+using WrathCombo.Window.Tabs;
 using static WrathCombo.Attributes.SettingCategory.Category;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Setting = WrathCombo.Attributes.Setting;
-using Space = WrathCombo.Attributes.SettingUI_Space;
+using static WrathCombo.Data.ActionWatching;
 using Or = WrathCombo.Attributes.SettingUI_Or;
 using Retarget = WrathCombo.Attributes.SettingUI_RetargetIcon;
-using WrathCombo.Native;
-using System.Reflection.Emit;
-using static WrathCombo.Data.ActionWatching;
+using Setting = WrathCombo.Attributes.Setting;
+using Space = WrathCombo.Attributes.SettingUI_Space;
 
 #endregion
 
@@ -464,7 +465,7 @@ public partial class Configuration : IPluginConfiguration
     /// </summary>
     /// <seealso cref="MajorChangesWindow" />
     public Version HideMajorChangesForVersion =
-        System.Version.Parse("0.0.0");
+        Svc.PluginInterface.Manifest.AssemblyVersion;
 
     #endregion
 

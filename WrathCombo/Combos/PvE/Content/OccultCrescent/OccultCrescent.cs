@@ -380,11 +380,13 @@ internal partial class OccultCrescent
             }
         }
 
+        var canDebuff = EnemiesInRange(OccultSlowga).Any(x => !ImmuneToStatus(x, Debuffs.Slow)
+        && !HasStatusEffect(Debuffs.Slow, x)
+        && (ICDTracker.StatusIsExpired(Debuffs.Slow, x.GameObjectId)
+        || (ICDTracker.NumberOfTimesApplied(Debuffs.Slow, x.GameObjectId) < 3) && IsNotEnabled(Preset.Phantom_TimeMage_OccultSlowga_Wait)));
+
         if (IsEnabledAndUsable(Preset.Phantom_TimeMage_OccultSlowga, OccultSlowga) &&
-            HasTargetNow && !HasStatusEffect(Debuffs.Slow, CurrentTarget) &&
-            (IsNotEnabled(Preset.Phantom_TimeMage_OccultSlowga_Wait) ||
-             (ICDTracker.TimeUntilExpired(Debuffs.Slow, CurrentTarget.GameObjectId) < TimeSpan.FromSeconds(1.5) ||
-              ICDTracker.NumberOfTimesApplied(Debuffs.Slow, CurrentTarget.GameObjectId) < 3)))
+            canDebuff)
         {
             actionID = OccultSlowga; // aoe slow
             return true;
