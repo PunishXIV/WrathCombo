@@ -310,6 +310,7 @@ internal partial class OccultCrescent
             Phantom_WhiteMage_OccultCureIII_Health = new("Phantom_WhiteMage_OccultCureIII_Health", 40),
             Phantom_BlueMage_OccultWhiteWind_Health = new("Phantom_BlueMage_OccultWhiteWind_Health", 50),
             Phantom_RedMage_OccultCureII_Health = new("Phantom_RedMage_OccultCureII_Health", 50),
+            Phantom_RedMage_OccultLibra_RemainingTime = new("Phantom_RedMage_OccultLibra_RemainingTime", 15),
             Phantom_Necromancer_DrainTouch_Health = new("Phantom_Necromancer_DrainTouch_Health", 50),
             Phantom_Necromancer_DrainTouch_EmergencyHealth = new("Phantom_Necromancer_DrainTouch_EmergencyHealth", 25),
             Phantom_Necromancer_DrainTouch_Mode = new("Phantom_Necromancer_DrainTouch_Mode", 0),
