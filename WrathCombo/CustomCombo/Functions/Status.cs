@@ -24,7 +24,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <param name="target">Optional target</param>
     /// <returns>Status object or null.</returns>
-    public static IStatus? GetStatusEffect(ushort statusId, IGameObject? target = null, bool anyOwner = false)
+    public static IStatus? GetStatusEffect(uint statusId, IGameObject? target = null, bool anyOwner = false)
     {
         // Default to LocalPlayer if no target/bad target
         target ??= LocalPlayer;
@@ -42,7 +42,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target">Optional Target</param>
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <returns>Boolean if the status effect exists or not</returns>
-    public static bool HasStatusEffect(ushort statusId, IGameObject? target = null, bool anyOwner = false)
+    public static bool HasStatusEffect(uint statusId, IGameObject? target = null, bool anyOwner = false)
     {
         // Default to LocalPlayer if no target provided
         target ??= LocalPlayer;
@@ -118,7 +118,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target">Optional Target</param>
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <returns>Float representing remaining status effect time</returns>
-    public unsafe static float GetStatusEffectRemainingTime(ushort effectId, IGameObject? target = null, bool anyOwner = false) =>
+    public unsafe static float GetStatusEffectRemainingTime(uint effectId, IGameObject? target = null, bool anyOwner = false) =>
         GetStatusEffectRemainingTime(GetStatusEffect(effectId, target, anyOwner));
 
     /// <summary>
@@ -148,7 +148,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target">Optional Target</param>
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <returns>Integer representing status effect stack count</returns>
-    public static ushort GetStatusEffectStacks(ushort effectId, IGameObject? target = null, bool anyOwner = false) =>
+    public static ushort GetStatusEffectStacks(uint effectId, IGameObject? target = null, bool anyOwner = false) =>
         GetStatusEffectStacks(GetStatusEffect(effectId, target, anyOwner));
 
 
@@ -291,7 +291,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target"></param>
     /// <param name="statusId"></param>
     /// <returns></returns>
-    public static bool CanApplyStatus(IGameObject? target, ushort statusId)
+    public static bool CanApplyStatus(IGameObject? target, uint statusId)
     {
         target ??= LocalPlayer;
         if (target is null)
@@ -325,5 +325,7 @@ internal abstract partial class CustomComboFunctions
 
         return StatusCache.HasCleansableDoom(target);
     }
+
+    public static bool ImmuneToStatus(IGameObject? target, uint status) => Service.Configuration.StatusBlacklist.Any(x => x.Status == status && x.BaseId == target?.BaseId);
 
 }

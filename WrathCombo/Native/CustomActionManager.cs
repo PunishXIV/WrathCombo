@@ -251,7 +251,7 @@ public sealed unsafe class CustomActionManager : IDisposable
                                     uint actionId)
     {
         if (type == RaptureHotbarModule.HotbarSlotType.Action &&
-            _actions.ContainsKey(actionId))
+            _actions.ContainsKey(actionId) && actionId != All.Cease)
         {
             return true;
         }

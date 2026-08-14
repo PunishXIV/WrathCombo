@@ -634,30 +634,30 @@ internal partial class DNC
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            StandardStep,
-            Emboite,
-            Emboite,
-            Peloton,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            StandardFinish2, //6
-            TechnicalStep,
-            Emboite,
-            Emboite,
-            Emboite,
-            Emboite, //11
-            TechnicalFinish4,
-            Devilment,
-            Tillana,
-            Flourish,
-            DanceOfTheDawn, //16
-            FanDance4,
-            LastDance,
-            FanDance3,
-            FinishingMove,
-            StarfallDance, //21
-            ReverseCascade,
-            ReverseCascade,
-            ReverseCascade,
+            StandardStep, // 1
+            Emboite, // 2
+            Emboite, // 3
+            Peloton, // 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            StandardFinish2, // 6
+            TechnicalStep, // 7
+            Emboite, // 8
+            Emboite, // 9
+            Emboite, // 10
+            Emboite, // 11
+            TechnicalFinish4, // 12
+            Devilment, // 13
+            Tillana, // 14
+            Flourish, // 15
+            DanceOfTheDawn, // 16
+            FanDance4, // 17
+            LastDance, // 18
+            FanDance3, // 19
+            FinishingMove, // 20
+            StarfallDance, // 21
+            ReverseCascade, // 22
+            ReverseCascade, // 23
+            ReverseCascade, // 24
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
@@ -736,30 +736,30 @@ internal partial class DNC
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            StandardStep,
-            Emboite,
-            Emboite,
-            Peloton,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            StandardFinish2, //6
-            TechnicalStep,
-            Emboite,
-            Emboite,
-            Emboite,
-            Emboite, //11
-            TechnicalFinish4,
-            Devilment,
-            Tillana,
-            Flourish,
-            DanceOfTheDawn, //16
-            FanDance4,
-            LastDance,
-            FanDance3,
-            StarfallDance,
-            ReverseCascade, //21
-            ReverseCascade,
-            FinishingMove,
-            ReverseCascade,
+            StandardStep, // 1
+            Emboite, // 2
+            Emboite, // 3
+            Peloton, // 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            StandardFinish2, // 6
+            TechnicalStep, // 7
+            Emboite, // 8
+            Emboite, // 9
+            Emboite, // 10
+            Emboite, // 11
+            TechnicalFinish4, // 12
+            Devilment, // 13
+            Tillana, // 14
+            Flourish, // 15
+            DanceOfTheDawn, // 16
+            FanDance4, // 17
+            LastDance, // 18
+            FanDance3, // 19
+            StarfallDance, // 20
+            ReverseCascade, // 21
+            ReverseCascade, // 22
+            FinishingMove, // 23
+            ReverseCascade, // 24
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
@@ -841,30 +841,30 @@ internal partial class DNC
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            StandardStep,
-            Emboite,
-            Emboite,
-            StandardFinish2,
-            Peloton, //5
-            TechnicalStep,
-            Emboite,
-            Emboite,
-            Emboite,
-            Emboite, //10
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            TechnicalFinish4,
-            Devilment,
-            LastDance,
-            Flourish,
-            FinishingMove, //16
-            Tillana,
-            DanceOfTheDawn,
-            FanDance4,
-            StarfallDance,
-            FanDance3, //21
-            ReverseCascade,
-            ReverseCascade,
-            ReverseCascade,
+            StandardStep, // 1
+            Emboite, // 2
+            Emboite, // 3
+            StandardFinish2, // 4
+            Peloton, // 5
+            TechnicalStep, // 6
+            Emboite, // 7
+            Emboite, // 8
+            Emboite, // 9
+            Emboite, // 10
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 11
+            TechnicalFinish4, // 12
+            Devilment, // 13
+            LastDance, // 14
+            Flourish, // 15
+            FinishingMove, // 16
+            Tillana, // 17
+            DanceOfTheDawn, // 18
+            FanDance4, // 19
+            StarfallDance, // 20
+            FanDance3, // 21
+            ReverseCascade, // 22
+            ReverseCascade, // 23
+            ReverseCascade, // 24
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
@@ -943,25 +943,25 @@ internal partial class DNC
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            TechnicalStep,
-            Emboite,
-            Emboite,
-            Emboite,
-            Emboite, //5
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            TechnicalFinish4,
-            Devilment,
-            LastDance,
-            Flourish,
-            FinishingMove, //11
-            Tillana,
-            DanceOfTheDawn,
-            FanDance4,
-            StarfallDance,
-            FanDance3, //16
-            ReverseCascade,
-            ReverseCascade,
-            ReverseCascade,
+            TechnicalStep, // 1
+            Emboite, // 2
+            Emboite, // 3
+            Emboite, // 4
+            Emboite, // 5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            TechnicalFinish4, // 7
+            Devilment, // 8
+            LastDance, // 9
+            Flourish, // 10
+            FinishingMove, // 11
+            Tillana, // 12
+            DanceOfTheDawn, // 13
+            FanDance4, // 14
+            StarfallDance, // 15
+            FanDance3, // 16
+            ReverseCascade, // 17
+            ReverseCascade, // 18
+            ReverseCascade, // 19
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
@@ -1028,25 +1028,25 @@ internal partial class DNC
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            TechnicalStep,
-            Emboite,
-            Emboite,
-            Emboite,
-            Emboite, //5
-            Peloton,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            TechnicalFinish4,
-            Devilment,
-            Tillana,
-            Flourish, //11
-            FinishingMove,
-            DanceOfTheDawn,
-            FanDance4,
-            StarfallDance,
-            FanDance3, //16
-            ReverseCascade,
-            ReverseCascade,
-            ReverseCascade,
+            TechnicalStep, // 1
+            Emboite, // 2
+            Emboite, // 3
+            Emboite, // 4
+            Emboite, // 5
+            Peloton, // 6
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 7
+            TechnicalFinish4, // 8
+            Devilment, // 9
+            Tillana, // 10
+            Flourish, // 11
+            FinishingMove, // 12
+            DanceOfTheDawn, // 13
+            FanDance4, // 14
+            StarfallDance, // 15
+            FanDance3, // 16
+            ReverseCascade, // 17
+            ReverseCascade, // 18
+            ReverseCascade, // 19
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays

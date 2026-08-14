@@ -274,29 +274,29 @@ internal partial class SCH
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Broil4,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
-            Biolysis,
-            Dissipation,
-            Broil4,
-            ChainStratagem,
-            Broil4,
-            EnergyDrain,
-            Broil4,
-            EnergyDrain,
-            Broil4,
-            EnergyDrain,
-            Broil4,
-            Aetherflow,
-            Broil4,
-            BanefulImpaction,
-            Broil4,
-            EnergyDrain,
-            Broil4,
-            EnergyDrain,
-            Broil4,
-            EnergyDrain,
-            Biolysis
+            Broil4, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
+            Biolysis, // 3
+            Dissipation, // 4
+            Broil4, // 5
+            ChainStratagem, // 6
+            Broil4, // 7
+            EnergyDrain, // 8
+            Broil4, // 9
+            EnergyDrain, // 10
+            Broil4, // 11
+            EnergyDrain, // 12
+            Broil4, // 13
+            Aetherflow, // 14
+            Broil4, // 15
+            BanefulImpaction, // 16
+            Broil4, // 17
+            EnergyDrain, // 18
+            Broil4, // 19
+            EnergyDrain, // 20
+            Broil4, // 21
+            EnergyDrain, // 22
+            Biolysis // 23
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =

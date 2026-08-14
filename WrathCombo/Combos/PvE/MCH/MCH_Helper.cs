@@ -689,40 +689,40 @@ internal partial class MCH
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Reassemble,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            AirAnchor,
-            CheckMate,
-            DoubleCheck,
-            Drill,
-            BarrelStabilizer,
-            Chainsaw,
-            Excavator,
-            AutomatonQueen,
-            Reassemble,
-            Drill,
-            CheckMate,
-            Wildfire,
-            FullMetalField,
-            Hypercharge,
-            DoubleCheck,
-            BlazingShot,
-            CheckMate,
-            BlazingShot,
-            DoubleCheck,
-            BlazingShot,
-            CheckMate,
-            BlazingShot,
-            DoubleCheck,
-            BlazingShot,
-            CheckMate,
-            Drill,
-            DoubleCheck,
-            CheckMate,
-            HeatedSplitShot,
-            DoubleCheck,
-            HeatedSlugShot,
-            HeatedCleanShot
+            Reassemble, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
+            AirAnchor, // 3
+            CheckMate, // 4
+            DoubleCheck, // 5
+            Drill, // 6
+            BarrelStabilizer, // 7
+            Chainsaw, // 8
+            Excavator, // 9
+            AutomatonQueen, // 10
+            Reassemble, // 11
+            Drill, // 12
+            CheckMate, // 13
+            Wildfire, // 14
+            FullMetalField, // 15
+            Hypercharge, // 16
+            DoubleCheck, // 17
+            BlazingShot, // 18
+            CheckMate, // 19
+            BlazingShot, // 20
+            DoubleCheck, // 21
+            BlazingShot, // 22
+            CheckMate, // 23
+            BlazingShot, // 24
+            DoubleCheck, // 25
+            BlazingShot, // 26
+            CheckMate, // 27
+            Drill, // 28
+            DoubleCheck, // 29
+            CheckMate, // 30
+            HeatedSplitShot, // 31
+            DoubleCheck, // 32
+            HeatedSlugShot, // 33
+            HeatedCleanShot // 34
         ];
     }
 
@@ -730,40 +730,40 @@ internal partial class MCH
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Reassemble,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            AirAnchor,
-            CheckMate,
-            DoubleCheck,
-            Drill,
-            BarrelStabilizer,
-            Reassemble,
-            Chainsaw,
-            DoubleCheck,
-            Wildfire,
-            Excavator,
-            Hypercharge,
-            AutomatonQueen,
-            BlazingShot,
-            CheckMate,
-            BlazingShot,
-            DoubleCheck,
-            BlazingShot,
-            CheckMate,
-            BlazingShot,
-            DoubleCheck,
-            BlazingShot,
-            CheckMate,
-            Drill,
-            DoubleCheck,
-            CheckMate,
-            FullMetalField,
-            DoubleCheck,
-            CheckMate,
-            Drill,
-            HeatedSplitShot,
-            HeatedSlugShot,
-            HeatedCleanShot
+            Reassemble, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
+            AirAnchor, // 3
+            CheckMate, // 4
+            DoubleCheck, // 5
+            Drill, // 6
+            BarrelStabilizer, // 7
+            Reassemble, // 8
+            Chainsaw, // 9
+            DoubleCheck, // 10
+            Wildfire, // 11
+            Excavator, // 12
+            Hypercharge, // 13
+            AutomatonQueen, // 14
+            BlazingShot, // 15
+            CheckMate, // 16
+            BlazingShot, // 17
+            DoubleCheck, // 18
+            BlazingShot, // 19
+            CheckMate, // 20
+            BlazingShot, // 21
+            DoubleCheck, // 22
+            BlazingShot, // 23
+            CheckMate, // 24
+            Drill, // 25
+            DoubleCheck, // 26
+            CheckMate, // 27
+            FullMetalField, // 28
+            DoubleCheck, // 29
+            CheckMate, // 30
+            Drill, // 31
+            HeatedSplitShot, // 32
+            HeatedSlugShot, // 33
+            HeatedCleanShot // 34
         ];
     }
 
@@ -774,35 +774,35 @@ internal partial class MCH
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            Reassemble,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)),
-            AirAnchor,
-            GaussRound,
-            Ricochet,
-            Drill,
-            BarrelStabilizer,
-            Chainsaw,
-            GaussRound,
-            Ricochet,
-            HeatedSplitShot,
-            GaussRound,
-            Ricochet,
-            HeatedSlugShot,
-            Wildfire,
-            HeatedCleanShot,
-            AutomatonQueen,
-            Hypercharge,
-            BlazingShot,
-            Ricochet,
-            BlazingShot,
-            GaussRound,
-            BlazingShot,
-            Ricochet,
-            BlazingShot,
-            GaussRound,
-            BlazingShot,
-            Reassemble,
-            Drill
+            Reassemble, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
+            AirAnchor, // 3
+            GaussRound, // 4
+            Ricochet, // 5
+            Drill, // 6
+            BarrelStabilizer, // 7
+            Chainsaw, // 8
+            GaussRound, // 9
+            Ricochet, // 10
+            HeatedSplitShot, // 11
+            GaussRound, // 12
+            Ricochet, // 13
+            HeatedSlugShot, // 14
+            Wildfire, // 15
+            HeatedCleanShot, // 16
+            AutomatonQueen, // 17
+            Hypercharge, // 18
+            BlazingShot, // 19
+            Ricochet, // 20
+            BlazingShot, // 21
+            GaussRound, // 22
+            BlazingShot, // 23
+            Ricochet, // 24
+            BlazingShot, // 25
+            GaussRound, // 26
+            BlazingShot, // 27
+            Reassemble, // 28
+            Drill // 29
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } =

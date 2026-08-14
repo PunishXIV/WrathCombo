@@ -42,32 +42,32 @@ internal partial class WAR : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Tomahawk,
-            Infuriate,
-            HeavySwing,
-            Maim,
-            StormsEye,
-            InnerRelease,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            InnerChaos,
-            Upheaval,
-            Onslaught, //10
-            FellCleave,
-            Onslaught, //12
-            FellCleave,
-            Onslaught, //14
-            FellCleave,
-            PrimalWrath,
-            Infuriate,
-            PrimalRend,
-            PrimalRuination,
-            InnerChaos,
-            HeavySwing,
-            Maim,
-            StormsPath,
-            FellCleave,
-            Infuriate,
-            InnerChaos
+            Tomahawk, // 1
+            Infuriate, // 2
+            HeavySwing, // 3
+            Maim, // 4
+            StormsEye, // 5
+            InnerRelease, // 6
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 7
+            InnerChaos, // 8
+            Upheaval, // 9
+            Onslaught, // 10
+            FellCleave, // 11
+            Onslaught, // 12
+            FellCleave, // 13
+            Onslaught, // 14
+            FellCleave, // 15
+            PrimalWrath, // 16
+            Infuriate, // 17
+            PrimalRend, // 18
+            PrimalRuination, // 19
+            InnerChaos, // 20
+            HeavySwing, // 21
+            Maim, // 22
+            StormsPath, // 23
+            FellCleave, // 24
+            Infuriate, // 25
+            InnerChaos // 26
         ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;

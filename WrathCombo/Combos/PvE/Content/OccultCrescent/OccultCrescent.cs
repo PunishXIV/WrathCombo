@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.OccultCrescent.Config;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using ContentHelper = ECommons.GameHelpers;
 using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
 namespace WrathCombo.Combos.PvE;
@@ -351,7 +354,7 @@ internal partial class OccultCrescent
                 !HasStatusEffect(RDM.Buffs.Dualcast) &&
                 !HasStatusEffect(Buffs.Dualcast))
             {
-                if (HasActionEquipped(OccultQuick) && ActionReady(OccultQuick))
+                if (ActionReady(OccultQuick))
                 {
                     actionID = OccultQuick;
                     return true;
@@ -377,11 +380,13 @@ internal partial class OccultCrescent
             }
         }
 
+        var canDebuff = EnemiesInRange(OccultSlowga).Any(x => !ImmuneToStatus(x, Debuffs.Slow)
+        && !HasStatusEffect(Debuffs.Slow, x)
+        && (ICDTracker.StatusIsExpired(Debuffs.Slow, x.GameObjectId)
+        || (ICDTracker.NumberOfTimesApplied(Debuffs.Slow, x.GameObjectId) < 3) && IsNotEnabled(Preset.Phantom_TimeMage_OccultSlowga_Wait)));
+
         if (IsEnabledAndUsable(Preset.Phantom_TimeMage_OccultSlowga, OccultSlowga) &&
-            HasTargetNow && !HasStatusEffect(Debuffs.Slow, CurrentTarget) &&
-            (IsNotEnabled(Preset.Phantom_TimeMage_OccultSlowga_Wait) ||
-             (ICDTracker.TimeUntilExpired(Debuffs.Slow, CurrentTarget.GameObjectId) < TimeSpan.FromSeconds(1.5) ||
-              ICDTracker.NumberOfTimesApplied(Debuffs.Slow, CurrentTarget.GameObjectId) < 3)))
+            canDebuff)
         {
             actionID = OccultSlowga; // aoe slow
             return true;
@@ -494,7 +499,7 @@ internal partial class OccultCrescent
         bool canStillInvulnForStarfall =
             Phantom_Oracle_SaveInvulnForStarfall &&
             IsEnabled(Preset.Phantom_Oracle_Invulnerability) &&
-            HasActionEquipped(Invulnerability) && ActionReady(Invulnerability) &&
+            ActionReady(Invulnerability) &&
             !HasStatusEffect(Buffs.Invulnerability);
         bool holdForStarfall = !lastCard && starfallStillInDeck && canStillInvulnForStarfall &&
                                GetStatusEffectRemainingTime(OracleCurrentCard) > 3f;
@@ -1265,68 +1270,80 @@ internal partial class OccultCrescent
     {
         if (!IsEnabled(Preset.Phantom_RedMage))
             return false;
-        bool hasWeakness = HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true) ||
-                            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true) ||
-                            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true) ||
-                            HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true);
-        bool weaknessExpiringSoon =
-            HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true) &&
-            GetStatusEffectRemainingTime(Debuffs.FireWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
-            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true) &&
-            GetStatusEffectRemainingTime(Debuffs.IceWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
-            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true) &&
-            GetStatusEffectRemainingTime(Debuffs.LightningWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime ||
-            HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true) &&
-            GetStatusEffectRemainingTime(Debuffs.WindWeakness, CurrentTarget, true) < Phantom_RedMage_OccultLibra_RemainingTime;
-
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultLibra, OccultLibra) && InCombat() && CanWeave() &&
-            HasBattleTarget() && (!hasWeakness || weaknessExpiringSoon))
+        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultLibra, OccultLibra))
         {
-            if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
+            var canDebuff = EnemiesInRange(OccultLibra).Any(x => x.IsInCombat() && x.IsTargetable && !HasLibraWeakness(x) && CanApplyLibraWeakness(x));
+            if (canDebuff && (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed))
             {
                 actionID = OccultLibra;
                 return true;
             }
         }
 
-        if (CanWeaveNow)
-            return false;
-
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultCureII, OccultCureII_RDM) &&
-            PlayerHP <= Phantom_RedMage_OccultCureII_Health)
+        if (!IsMoving())
         {
-            actionID = OccultCureII_RDM;
-            return true;
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultCureII, OccultCureII_RDM) &&
+                TryRetargetPhantomCure(ref actionID,
+                OccultCureII_RDM, Phantom_RedMage_OccultCureII_Health,
+                IsEnabled(Preset.Phantom_RedMage_OccultCureII_Retarget),
+                Phantom_RedMage_Retarget_OutOfParty))
+            {
+                return true;
+            }
+
+            if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
+                return false;
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultBlizzardII, OccultBlizzardII) && HasBattleTarget() &&
+                HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
+            {
+                actionID = OccultBlizzardII;
+                return true;
+            }
+
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultThunderII, OccultThunderII) && HasBattleTarget() &&
+                HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+            {
+                actionID = OccultThunderII;
+                return true;
+            }
+
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget() &&
+                HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+            {
+                actionID = OccultFireII;
+                return true;
+            }
+
+            if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget())
+            {
+                actionID = OccultFireII;
+                return true;
+            }
         }
 
-        if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
-            return false;
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultBlizzardII, OccultBlizzardII) && HasBattleTarget() && !IsMoving() &&
-            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
-        {
-            actionID = OccultBlizzardII;
-            return true;
-        }
+        return false;
+    }
 
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultThunderII, OccultThunderII) && HasBattleTarget() && !IsMoving() &&
-            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
-        {
-            actionID = OccultThunderII;
-            return true;
-        }
+    private static bool HasLibraWeakness(IGameObject? tar)
+    {
+        var statuses = tar?.SafeStatusList;
+        if (statuses == null) return false;
 
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget() && !IsMoving() &&
-            HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+        foreach (var s in statuses)
         {
-            actionID = OccultFireII;
-            return true;
+            if (s.StatusId is Debuffs.FireWeakness or Debuffs.IceWeakness or Debuffs.WindWeakness or Debuffs.LightningWeakness)
+                return true;
         }
+        return false;
+    }
 
-        if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget() && !IsMoving())
-        {
-            actionID = OccultFireII;
+    private static bool CanApplyLibraWeakness(IGameObject? tar)
+    {
+        var statuses = tar?.SafeStatusList;
+        if (statuses == null) return false;
+
+        if (CanApplyStatus(tar, Debuffs.FireWeakness) || CanApplyStatus(tar, Debuffs.IceWeakness) || CanApplyStatus(tar, Debuffs.LightningWeakness) || CanApplyStatus(tar, Debuffs.WindWeakness))
             return true;
-        }
 
         return false;
     }
@@ -1454,13 +1471,50 @@ internal partial class OccultCrescent
         return true;
     }
 
+    private static bool TryRetargetPhantomCure(ref uint actionID, uint cureAction, float HPThreshold, bool retargeting, bool outOfParty)
+    {
+        var originalId = actionID;
+        // If player HP is at or below threshold, heal self
+        if (PlayerHP <= HPThreshold)
+        {
+            actionID = cureAction.Retarget(originalId, SimpleTarget.Self);
+            return true;
+        }
+
+        // If retargeting is disabled, no action taken
+        if (!retargeting)
+            return false;
+
+        // Try to find lowest HP ally at or below threshold
+        var allyTarget = SimpleTarget.LowestHPAlly?.IfMissingHP(HPThreshold).IfInSightInRangeCanUseOn(cureAction);
+        if (allyTarget != null)
+        {
+            actionID = cureAction.Retarget(originalId, allyTarget);
+            return true;
+        }
+
+        // If no in-party ally found and out-of-party is allowed, try out-of-party allies
+        if (outOfParty)
+        {
+            var outOfPartyTarget = SimpleTarget.LowestHPAllyOutOfParty?.IfMissingHP(HPThreshold).IfInSightInRangeCanUseOn(cureAction);
+            if (outOfPartyTarget != null)
+            {
+                Svc.Log.Debug($"Healing OOP {outOfPartyTarget.Name}");
+                actionID = cureAction.Retarget(originalId, outOfPartyTarget);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static bool CanPhantomRaise() =>
         IsInOccult &&
         (IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, Revive) ||
          IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultRaise, OccultRaise));
 
-    private static readonly HashSet<ushort> OracleRemainingCards = [];
-    private static ushort OracleCurrentCard;
+    private static readonly HashSet<uint> OracleRemainingCards = [];
+    private static uint OracleCurrentCard;
 
     private static void ResetOracleDeck()
     {
@@ -1474,7 +1528,7 @@ internal partial class OccultCrescent
 
     private static void UpdateOracleDeck()
     {
-        ushort card = 0;
+        uint card = 0;
         if (HasStatusEffect(Buffs.PredictionOfBlessing))
             card = Buffs.PredictionOfBlessing;
         else if (HasStatusEffect(Buffs.PredictionOfCleansing))
@@ -1503,7 +1557,7 @@ internal partial class OccultCrescent
         OracleCurrentCard = card;
     }
 
-    private static void MarkOracleCardPlayed(ushort card)
+    private static void MarkOracleCardPlayed(uint card)
     {
         OracleRemainingCards.Remove(card);
         if (OracleCurrentCard == card)

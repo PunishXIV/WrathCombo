@@ -839,38 +839,38 @@ internal partial class BLM
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Fire3,
-            HighThunder,
-            Role.Swiftcast,
-            Amplifier,
-            Fire4,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            LeyLines, //7
-            Fire4,
-            Fire4,
-            Fire4,
-            Fire4,
-            Xenoglossy,
-            Manafont,
-            Fire4,
-            FlareStar,
-            Fire4,
-            Fire4,
-            HighThunder,
-            Fire4,
-            Fire4,
-            Fire4,
-            Fire4,
-            FlareStar,
-            Despair,
-            Transpose,
-            Triplecast,
-            Blizzard3,
-            Blizzard4,
-            Paradox,
-            Transpose,
-            Paradox,
-            Fire3
+            Fire3, // 1
+            HighThunder, // 2
+            Role.Swiftcast, // 3
+            Amplifier, // 4
+            Fire4, // 5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 6
+            LeyLines, // 7
+            Fire4, // 8
+            Fire4, // 9
+            Fire4, // 10
+            Fire4, // 11
+            Xenoglossy, // 12
+            Manafont, // 13
+            Fire4, // 14
+            FlareStar, // 15
+            Fire4, // 16
+            Fire4, // 17
+            HighThunder, // 18
+            Fire4, // 19
+            Fire4, // 20
+            Fire4, // 21
+            Fire4, // 22
+            FlareStar, // 23
+            Despair, // 24
+            Transpose, // 25
+            Triplecast, // 26
+            Blizzard3, // 27
+            Blizzard4, // 28
+            Paradox, // 29
+            Transpose, // 30
+            Paradox, // 31
+            Fire3 // 32
         ];
     }
 
@@ -878,37 +878,37 @@ internal partial class BLM
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Fire3,
-            HighThunder,
-            Role.Swiftcast,
-            Amplifier,
-            Fire4,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            LeyLines, //7
-            Fire4,
-            Xenoglossy,
-            Fire4,
-            Fire4,
-            Despair,
-            Manafont,
-            Fire4,
-            Fire4,
-            FlareStar,
-            Fire4,
-            HighThunder,
-            Fire4,
-            Fire4,
-            Fire4,
-            Paradox,
-            Triplecast,
-            Flare,
-            FlareStar,
-            Transpose,
-            Blizzard3,
-            Blizzard4,
-            Paradox,
-            Transpose,
-            Fire3
+            Fire3, // 1
+            HighThunder, // 2
+            Role.Swiftcast, // 3
+            Amplifier, // 4
+            Fire4, // 5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 6
+            LeyLines, // 7
+            Fire4, // 8
+            Xenoglossy, // 9
+            Fire4, // 10
+            Fire4, // 11
+            Despair, // 12
+            Manafont, // 13
+            Fire4, // 14
+            Fire4, // 15
+            FlareStar, // 16
+            Fire4, // 17
+            HighThunder, // 18
+            Fire4, // 19
+            Fire4, // 20
+            Fire4, // 21
+            Paradox, // 22
+            Triplecast, // 23
+            Flare, // 24
+            FlareStar, // 25
+            Transpose, // 26
+            Blizzard3, // 27
+            Blizzard4, // 28
+            Paradox, // 29
+            Transpose, // 30
+            Fire3 // 31
         ];
     }
 

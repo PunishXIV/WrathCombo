@@ -249,30 +249,30 @@ internal partial class DRK
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            Unmend,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            HardSlash,
-            EdgeOfShadow, // Not handled like a procc, since it sets up Darkside
-            LivingShadow,
-            SyphonStrike, // 5
-            LivingShadow,
-            Souleater,
-            Delirium,
-            HardSlash,
-            Disesteem, // 10
-            SaltedEarth,
+            Unmend, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 2
+            HardSlash, // 3
+            EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 4
+            LivingShadow, // 5
+            SyphonStrike, // 6
+            LivingShadow, // 7
+            Souleater, // 8
+            Delirium, // 9
+            HardSlash, // 10
+            Disesteem, // 11
+            SaltedEarth, // 12
             //EdgeOfShadow, // Handled like a procc
-            ScarletDelirium,
-            Shadowbringer,
+            ScarletDelirium, // 13
+            Shadowbringer, // 14
             //EdgeOfShadow, // Handled like a procc
-            Comeuppance,
-            CarveAndSpit, // 15
+            Comeuppance, // 15
+            CarveAndSpit, // 16
             //EdgeOfShadow, // Handled like a procc
-            Torcleaver,
-            Shadowbringer,
+            Torcleaver, // 17
+            Shadowbringer, // 18
             //EdgeOfShadow, // Handled like a procc
-            Bloodspiller,
-            SaltAndDarkness,
+            Bloodspiller, // 19
+            SaltAndDarkness, // 20
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps
@@ -338,30 +338,30 @@ internal partial class DRK
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            LivingShadow,
-            Unmend,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            EdgeOfShadow, // Not handled like a procc, since it sets up Darkside
+            LivingShadow, // 1
+            Unmend, // 2
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
+            EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 4
             HardSlash, // 5
-            Delirium,
-            SaltedEarth,
-            HardSlash,
-            Disesteem,
+            Delirium, // 6
+            SaltedEarth, // 7
+            HardSlash, // 8
+            Disesteem, // 9
             //EdgeOfShadow, // Handled like a procc
             CarveAndSpit, // 10
-            ScarletDelirium,
-            Shadowbringer,
-            Comeuppance,
-            Shadowbringer,
+            ScarletDelirium, // 11
+            Shadowbringer, // 12
+            Comeuppance, // 13
+            Shadowbringer, // 14
             Torcleaver, // 15
-            SaltAndDarkness,
-            SyphonStrike,
+            SaltAndDarkness, // 16
+            SyphonStrike, // 17
             //EdgeOfShadow, // Handled like a procc
-            Souleater,
+            Souleater, // 18
             //EdgeOfShadow, // Handled like a procc
-            Bloodspiller, // 20
+            Bloodspiller, // 19
             //EdgeOfShadow, // Handled like a procc
-            HardSlash,
+            HardSlash, // 20
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays

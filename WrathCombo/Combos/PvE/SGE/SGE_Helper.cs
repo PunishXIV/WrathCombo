@@ -358,25 +358,25 @@ internal partial class SGE
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            Toxikon2,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
-            Eukrasia,
-            EukrasianDosis3,
-            Dosis3,
-            Dosis3,
-            Dosis3,
-            Phlegma3,
-            Psyche,
-            Phlegma3,
-            Dosis3,
-            Dosis3,
-            Dosis3,
-            Dosis3,
-            Eukrasia,
-            EukrasianDosis3,
-            Dosis3,
-            Dosis3,
-            Dosis3
+            Toxikon2, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
+            Eukrasia, // 3
+            EukrasianDosis3, // 4
+            Dosis3, // 5
+            Dosis3, // 6
+            Dosis3, // 7
+            Phlegma3, // 8
+            Psyche, // 9
+            Phlegma3, // 10
+            Dosis3, // 11
+            Dosis3, // 12
+            Dosis3, // 13
+            Dosis3, // 14
+            Eukrasia, // 15
+            EukrasianDosis3, // 16
+            Dosis3, // 17
+            Dosis3, // 18
+            Dosis3 // 19
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
@@ -401,25 +401,25 @@ internal partial class SGE
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            Pneuma,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
-            Eukrasia,
-            EukrasianDosis3,
-            Dosis3,
-            Dosis3,
-            Dosis3,
-            Phlegma3,
-            Psyche,
-            Phlegma3,
-            Dosis3,
-            Dosis3,
-            Dosis3,
-            Dosis3,
-            Eukrasia,
-            EukrasianDosis3,
-            Dosis3,
-            Dosis3,
-            Dosis3
+            Pneuma, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
+            Eukrasia, // 3
+            EukrasianDosis3, // 4
+            Dosis3, // 5
+            Dosis3, // 6
+            Dosis3, // 7
+            Phlegma3, // 8
+            Psyche, // 9
+            Phlegma3, // 10
+            Dosis3, // 11
+            Dosis3, // 12
+            Dosis3, // 13
+            Dosis3, // 14
+            Eukrasia, // 15
+            EukrasianDosis3, // 16
+            Dosis3, // 17
+            Dosis3, // 18
+            Dosis3 // 19
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =

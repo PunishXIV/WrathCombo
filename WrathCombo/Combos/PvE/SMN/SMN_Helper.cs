@@ -784,34 +784,34 @@ internal partial class SMN
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            Ruin3,
-            SummonSolarBahamut,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)),
-            UmbralImpulse,
-            SearingLight,
-            UmbralImpulse,
-            UmbralImpulse,
-            EnergyDrain,
-            UmbralImpulse,
-            EnkindleSolarBahamut,
-            Necrotize,
-            UmbralImpulse,
-            Sunflare,
-            Necrotize,
-            UmbralImpulse,
-            SearingFlash,
-            SummonTitan2,
-            TopazRite,
-            MountainBuster,
-            TopazRite,
-            MountainBuster,
-            TopazRite,
-            MountainBuster,
-            TopazRite,
-            MountainBuster,
-            SummonGaruda2,
-            Role.Swiftcast,
-            Slipstream,
+            Ruin3, // 1
+            SummonSolarBahamut, // 2
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 3
+            UmbralImpulse, // 4
+            SearingLight, // 5
+            UmbralImpulse, // 6
+            UmbralImpulse, // 7
+            EnergyDrain, // 8
+            UmbralImpulse, // 9
+            EnkindleSolarBahamut, // 10
+            Necrotize, // 11
+            UmbralImpulse, // 12
+            Sunflare, // 13
+            Necrotize, // 14
+            UmbralImpulse, // 15
+            SearingFlash, // 16
+            SummonTitan2, // 17
+            TopazRite, // 18
+            MountainBuster, // 19
+            TopazRite, // 20
+            MountainBuster, // 21
+            TopazRite, // 22
+            MountainBuster, // 23
+            TopazRite, // 24
+            MountainBuster, // 25
+            SummonGaruda2, // 26
+            Role.Swiftcast, // 27
+            Slipstream, // 28
 
         ];
 

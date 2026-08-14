@@ -397,29 +397,29 @@ internal partial class GNB : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LightningShot,
-            Bloodfest, //+3 (3)
-            KeenEdge,
-            BrutalShell,
-            NoMercy, //LateWeave
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            GnashingFang, //-1 (2)
-            JugularRip,
-            DoubleDown, //-1 (0)
-            BlastingZone,
-            BowShock,
-            SonicBreak,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            SolidBarrel, //+1 (1)
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge
+            LightningShot, // 1
+            Bloodfest, // +3 (3) | 2
+            KeenEdge, // 3
+            BrutalShell, // 4
+            NoMercy, // LateWeave | 5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
+            GnashingFang, // -1 (2) | 7
+            JugularRip, // 8
+            DoubleDown, // -1 (0) | 9
+            BlastingZone, // 10
+            BowShock, // 11
+            SonicBreak, // 12
+            SavageClaw, // 13
+            AbdomenTear, // 14
+            WickedTalon, // 15
+            EyeGouge, // 16
+            SolidBarrel, // +1 (1) | 17
+            GnashingFang, // -1 (0) | 18
+            JugularRip, // 19
+            SavageClaw, // 20
+            AbdomenTear, // 21
+            WickedTalon, // 22
+            EyeGouge // 23
         ];
         public override Preset Preset => Preset.GNB_ST_Opener;
         
@@ -429,29 +429,29 @@ internal partial class GNB : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LightningShot,
-            Bloodfest, //+3 (3)
-            KeenEdge,
-            BrutalShell,
-            NoMercy,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            GnashingFang, //-1 (2)
-            JugularRip,
-            DoubleDown, //-1 (0)
-            BlastingZone,
-            BowShock,
-            SonicBreak,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            SolidBarrel, //+1 (1)
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge
+            LightningShot, // 1
+            Bloodfest, // +3 (3) | 2
+            KeenEdge, // 3
+            BrutalShell, // 4
+            NoMercy, // 5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
+            GnashingFang, // -1 (2) | 7
+            JugularRip, // 8
+            DoubleDown, // -1 (0) | 9
+            BlastingZone, // 10
+            BowShock, // 11
+            SonicBreak, // 12
+            SavageClaw, // 13
+            AbdomenTear, // 14
+            WickedTalon, // 15
+            EyeGouge, // 16
+            SolidBarrel, // +1 (1) | 17
+            GnashingFang, // -1 (0) | 18
+            JugularRip, // 19
+            SavageClaw, // 20
+            AbdomenTear, // 21
+            WickedTalon, // 22
+            EyeGouge // 23
         ];
         public override Preset Preset => Preset.GNB_ST_Opener;
     }
@@ -459,29 +459,29 @@ internal partial class GNB : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LightningShot,
-            Bloodfest, //+3 (3)
-            KeenEdge,
-            NoMercy, //LateWeave
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            GnashingFang, //-1 (2)
-            JugularRip,
-            DoubleDown, //-1 (0)
-            BlastingZone,
-            BowShock,
-            SonicBreak,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge
+            LightningShot, // 1
+            Bloodfest, // +3 (3) | 2
+            KeenEdge, // 3
+            NoMercy, // LateWeave | 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            GnashingFang, // -1 (2) | 6
+            JugularRip, // 7
+            DoubleDown, // -1 (0) | 8
+            BlastingZone, // 9
+            BowShock, // 10
+            SonicBreak, // 11
+            SavageClaw, // 12
+            AbdomenTear, // 13
+            WickedTalon, // 14
+            EyeGouge, // 15
+            BrutalShell, // 16
+            SolidBarrel, // +1 (1) | 17
+            GnashingFang, // -1 (0) | 18
+            JugularRip, // 19
+            SavageClaw, // 20
+            AbdomenTear, // 21
+            WickedTalon, // 22
+            EyeGouge // 23
         ];
         public override Preset Preset => Preset.GNB_ST_Opener;
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [4];
@@ -490,29 +490,29 @@ internal partial class GNB : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LightningShot,
-            Bloodfest, //+3 (3)
-            KeenEdge,
-            NoMercy,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            GnashingFang, //-1 (2)
-            JugularRip,
-            DoubleDown, //-1 (0)
-            BlastingZone,
-            BowShock,
-            SonicBreak,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge
+            LightningShot, // 1
+            Bloodfest, // +3 (3) | 2
+            KeenEdge, // 3
+            NoMercy, // 4
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            GnashingFang, // -1 (2) | 6
+            JugularRip, // 7
+            DoubleDown, // -1 (0) | 8
+            BlastingZone, // 9
+            BowShock, // 10
+            SonicBreak, // 11
+            SavageClaw, // 12
+            AbdomenTear, // 13
+            WickedTalon, // 14
+            EyeGouge, // 15
+            BrutalShell, // 16
+            SolidBarrel, // +1 (1) | 17
+            GnashingFang, // -1 (0) | 18
+            JugularRip, // 19
+            SavageClaw, // 20
+            AbdomenTear, // 21
+            WickedTalon, // 22
+            EyeGouge // 23
         ];
         public override Preset Preset => Preset.GNB_ST_Opener;
     }
@@ -532,32 +532,32 @@ internal partial class GNB : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LightningShot,
-            Bloodfest, //+3 (3)
-            KeenEdge,
-            BrutalShell,
-            NoMercy, //LateWeave
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            GnashingFang, //-1 (2)
-            JugularRip,
-            DoubleDown, //-1 (0)
-            BlastingZone,
-            BowShock,
-            SonicBreak,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            ReignOfBeasts,
-            NobleBlood,
-            LionHeart,
-            SolidBarrel, //+1 (1)
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge
+            LightningShot, // 1
+            Bloodfest, // +3 (3) | 2
+            KeenEdge, // 3
+            BrutalShell, // 4
+            NoMercy, // LateWeave | 5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
+            GnashingFang, // -1 (2) | 7
+            JugularRip, // 8
+            DoubleDown, // -1 (0) | 9
+            BlastingZone, // 10
+            BowShock, // 11
+            SonicBreak, // 12
+            SavageClaw, // 13
+            AbdomenTear, // 14
+            WickedTalon, // 15
+            EyeGouge, // 16
+            ReignOfBeasts, // 17
+            NobleBlood, // 18
+            LionHeart, // 19
+            SolidBarrel, // +1 (1) | 20
+            GnashingFang, // -1 (0) | 21
+            JugularRip, // 22
+            SavageClaw, // 23
+            AbdomenTear, // 24
+            WickedTalon, // 25
+            EyeGouge // 26
         ];
         public override Preset Preset => Preset.GNB_ST_Opener;
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [5];
@@ -566,32 +566,32 @@ internal partial class GNB : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LightningShot,
-            Bloodfest, //+3 (3)
-            KeenEdge,
-            BrutalShell,
-            NoMercy,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            GnashingFang, //-1 (2)
-            JugularRip,
-            BowShock,
-            DoubleDown, //-1 (0)
-            BlastingZone,
-            SonicBreak,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            ReignOfBeasts,
-            NobleBlood,
-            LionHeart,
-            SolidBarrel, //+1 (1)
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge
+            LightningShot, // 1
+            Bloodfest, // +3 (3) | 2
+            KeenEdge, // 3
+            BrutalShell, // 4
+            NoMercy, // 5
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
+            GnashingFang, // -1 (2) | 7
+            JugularRip, // 8
+            BowShock, // 9
+            DoubleDown, // -1 (0) | 10
+            BlastingZone, // 11
+            SonicBreak, // 12
+            SavageClaw, // 13
+            AbdomenTear, // 14
+            WickedTalon, // 15
+            EyeGouge, // 16
+            ReignOfBeasts, // 17
+            NobleBlood, // 18
+            LionHeart, // 19
+            SolidBarrel, // +1 (1) | 20
+            GnashingFang, // -1 (0) | 21
+            JugularRip, // 22
+            SavageClaw, // 23
+            AbdomenTear, // 24
+            WickedTalon, // 25
+            EyeGouge // 26
         ];
         public override Preset Preset => Preset.GNB_ST_Opener;
     }
@@ -599,32 +599,32 @@ internal partial class GNB : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LightningShot,
-            Bloodfest, //+3 (3)
-            NoMercy, //LateWeave
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            GnashingFang, //-1 (2)
-            JugularRip,
-            DoubleDown, //-1 (0)
-            BlastingZone,
-            BowShock,
-            SonicBreak,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            ReignOfBeasts,
-            NobleBlood,
-            LionHeart,
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge
+            LightningShot, // 1
+            Bloodfest, // +3 (3) | 2
+            NoMercy, // LateWeave | 3
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            GnashingFang, // -1 (2) | 5
+            JugularRip, // 6
+            DoubleDown, // -1 (0) | 7
+            BlastingZone, // 8
+            BowShock, // 9
+            SonicBreak, // 10
+            SavageClaw, // 11
+            AbdomenTear, // 12
+            WickedTalon, // 13
+            EyeGouge, // 14
+            ReignOfBeasts, // 15
+            NobleBlood, // 16
+            LionHeart, // 17
+            KeenEdge, // 18
+            BrutalShell, // 19
+            SolidBarrel, // +1 (1) | 20
+            GnashingFang, // -1 (0) | 21
+            JugularRip, // 22
+            SavageClaw, // 23
+            AbdomenTear, // 24
+            WickedTalon, // 25
+            EyeGouge // 26
         ];
         public override Preset Preset => Preset.GNB_ST_Opener;
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [3];
@@ -633,32 +633,32 @@ internal partial class GNB : Tank
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LightningShot,
-            Bloodfest, //+3 (3)
-            NoMercy,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            GnashingFang, //-1 (2)
-            JugularRip,
-            BowShock,
-            DoubleDown, //-1 (0)
-            BlastingZone,
-            SonicBreak,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            ReignOfBeasts,
-            NobleBlood,
-            LionHeart,
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge
+            LightningShot, // 1
+            Bloodfest, // +3 (3) | 2
+            NoMercy, // 3
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            GnashingFang, // -1 (2) | 5
+            JugularRip, // 6
+            BowShock, // 7
+            DoubleDown, // -1 (0) | 8
+            BlastingZone, // 9
+            SonicBreak, // 10
+            SavageClaw, // 11
+            AbdomenTear, // 12
+            WickedTalon, // 13
+            EyeGouge, // 14
+            ReignOfBeasts, // 15
+            NobleBlood, // 16
+            LionHeart, // 17
+            KeenEdge, // 18
+            BrutalShell, // 19
+            SolidBarrel, // +1 (1) | 20
+            GnashingFang, // -1 (0) | 21
+            JugularRip, // 22
+            SavageClaw, // 23
+            AbdomenTear, // 24
+            WickedTalon, // 25
+            EyeGouge // 26
         ];
 
         public override Preset Preset => Preset.GNB_ST_Opener;

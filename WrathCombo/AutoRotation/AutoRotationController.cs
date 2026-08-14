@@ -1228,7 +1228,7 @@ internal unsafe class AutoRotationController
                             x.BattleChara.IsTargetable &&
                             GetTargetDistance(x.BattleChara) <= QueryRange &&
                             !TargetHasImmortality(x.BattleChara) &&
-                            !StatusCache.HasStatusInCacheList(StatusCache.DoNotHealStatuses,x.BattleChara) &&
+                            !StatusCache.HasStatusInCacheList(StatusCache.DoNotHealStatuses, x.BattleChara) &&
                             GetTargetHPPercent(x.BattleChara, cfg.HealerSettings.IncludeShields) <=
                             (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP :
                                 TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP :

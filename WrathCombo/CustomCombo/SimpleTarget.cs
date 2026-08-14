@@ -246,8 +246,8 @@ internal static class SimpleTarget
 
                 // Fall back to Hard Target, if the stack is small and returned nothing
                 if (Service.Configuration.RaiseStack.Length <= 4)
-                    return HardTarget.IfCanUseOn(WHM.Raise).IfDead() ??
-                           AnyDeadPartyMember;
+                    return CustomLogic(HardTarget.IfDead()) ??
+                           CustomLogic(AnyDeadPartyMember);
             }
 
             #endregion
@@ -340,33 +340,33 @@ internal static class SimpleTarget
             .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsInCombat() && x.IsNotInvincible())
             .OrderBy(x => GetTargetDistance(x))
             .FirstOrDefault();
-    
-    public static IGameObject? NearestEnemyOver5YalmsAway  =>
+
+    public static IGameObject? NearestEnemyOver5YalmsAway =>
         Svc.Objects
             .OfType<IBattleChara>()
             .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway())
             .OrderBy(x => GetTargetDistance(x))
             .FirstOrDefault();
-    
-    public static IGameObject? NearestEnemyOver5YalmsAwayNotTargetingPlayer  =>
+
+    public static IGameObject? NearestEnemyOver5YalmsAwayNotTargetingPlayer =>
         Svc.Objects
             .OfType<IBattleChara>()
-            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway() && 
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway() &&
                         x.TargetObjectId != LocalPlayer?.GameObjectId)
             .OrderBy(x => GetTargetDistance(x))
             .FirstOrDefault();
-    
-    public static IGameObject? FurthestEnemyOver5YalmsAway  =>
+
+    public static IGameObject? FurthestEnemyOver5YalmsAway =>
         Svc.Objects
             .OfType<IBattleChara>()
             .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway())
             .OrderByDescending(x => GetTargetDistance(x))
             .FirstOrDefault();
-    
-    public static IGameObject? FurthestEnemyOver5YalmsAwayNotTargetingPlayer  =>
+
+    public static IGameObject? FurthestEnemyOver5YalmsAwayNotTargetingPlayer =>
         Svc.Objects
             .OfType<IBattleChara>()
-            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway() && 
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsNotInvincible() && x.IsAtLeastFiveYalmsAway() &&
                         x.TargetObjectId != LocalPlayer?.GameObjectId)
             .OrderByDescending(x => GetTargetDistance(x))
             .FirstOrDefault();
@@ -609,6 +609,25 @@ internal static class SimpleTarget
 
     public static IGameObject? LowestHPPAllyIfMissingHP =>
         LowestHPPAlly?.IfMissingHP();
+
+    public static IGameObject? LowestHPAllyOutOfParty =>
+        Svc.Objects.GetBattleCharas()
+            .Where(x => x is not null && x.IsAPlayer() && !x.IsInParty() && x.IsDead() == false)
+            .OrderBy(x => x.CurrentHp)
+            .FirstOrDefault();
+
+    public static IGameObject? LowestHPAllyIfMissingHPOutOfParty =>
+        LowestHPAllyOutOfParty?.IfMissingHP();
+
+    public static IGameObject? LowestHPPAllyOutOfParty =>
+        Svc.Objects.GetBattleCharas()
+            .Where(x => x is not null && x.IsAPlayer() && !x.IsInParty() && x.IsDead() == false)
+            .OrderBy(x => (float)x.CurrentHp / x.MaxHp)
+            .FirstOrDefault();
+
+    public static IGameObject? LowestHPPAllyIfMissingHPOutOfParty =>
+        LowestHPPAllyOutOfParty?.IfMissingHP();
+
 
     #endregion
 

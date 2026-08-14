@@ -436,31 +436,31 @@ internal partial class DRG
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            TrueThrust,
-            SpiralBlow,
-            LanceCharge,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            ChaoticSpring,
-            BattleLitany,
-            Geirskogul,
-            WheelingThrust,
-            HighJump,
-            LifeSurge,
-            Drakesbane,
-            DragonfireDive,
-            Nastrond,
-            RaidenThrust,
-            Stardiver,
-            LanceBarrage,
-            Starcross,
-            LifeSurge,
-            HeavensThrust,
-            RiseOfTheDragon,
-            MirageDive,
-            FangAndClaw,
-            Drakesbane,
-            RaidenThrust,
-            WyrmwindThrust
+            TrueThrust, // 1
+            SpiralBlow, // 2
+            LanceCharge, // 3
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            ChaoticSpring, // 5
+            BattleLitany, // 6
+            Geirskogul, // 7
+            WheelingThrust, // 8
+            HighJump, // 9
+            LifeSurge, // 10
+            Drakesbane, // 11
+            DragonfireDive, // 12
+            Nastrond, // 13
+            RaidenThrust, // 14
+            Stardiver, // 15
+            LanceBarrage, // 16
+            Starcross, // 17
+            LifeSurge, // 18
+            HeavensThrust, // 19
+            RiseOfTheDragon, // 20
+            MirageDive, // 21
+            FangAndClaw, // 22
+            Drakesbane, // 23
+            RaidenThrust, // 24
+            WyrmwindThrust // 25
         ];
     }
 
@@ -468,32 +468,32 @@ internal partial class DRG
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            PiercingTalon,
-            TrueThrust,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            SpiralBlow,
-            LanceCharge,
-            BattleLitany,
-            ChaoticSpring,
-            Geirskogul,
-            WheelingThrust,
-            HighJump,
-            LifeSurge,
-            Drakesbane,
-            DragonfireDive,
-            Nastrond,
-            RaidenThrust,
-            Stardiver,
-            LanceBarrage,
-            Starcross,
-            LifeSurge,
-            HeavensThrust,
-            RiseOfTheDragon,
-            MirageDive,
-            FangAndClaw,
-            Drakesbane,
-            RaidenThrust,
-            WyrmwindThrust
+            PiercingTalon, // 1
+            TrueThrust, // 2
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
+            SpiralBlow, // 4
+            LanceCharge, // 5
+            BattleLitany, // 6
+            ChaoticSpring, // 7
+            Geirskogul, // 8
+            WheelingThrust, // 9
+            HighJump, // 10
+            LifeSurge, // 11
+            Drakesbane, // 12
+            DragonfireDive, // 13
+            Nastrond, // 14
+            RaidenThrust, // 15
+            Stardiver, // 16
+            LanceBarrage, // 17
+            Starcross, // 18
+            LifeSurge, // 19
+            HeavensThrust, // 20
+            RiseOfTheDragon, // 21
+            MirageDive, // 22
+            FangAndClaw, // 23
+            Drakesbane, // 24
+            RaidenThrust, // 25
+            WyrmwindThrust // 26
         ];
     }
 
@@ -501,31 +501,31 @@ internal partial class DRG
     {
         public override List<uint> OpenerActions { get; set; } =
         [
-            LanceCharge,
-            BattleLitany,
-            TrueThrust,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)),
-            Geirskogul,
-            SpiralBlow,
-            HighJump,
-            Nastrond,
-            ChaoticSpring,
-            DragonfireDive,
-            MirageDive,
-            WheelingThrust,
-            LifeSurge,
-            RiseOfTheDragon,
-            Drakesbane,
-            Stardiver,
-            RaidenThrust,
-            Starcross,
-            LanceBarrage,
-            LifeSurge,
-            HeavensThrust,
-            FangAndClaw,
-            Drakesbane,
-            RaidenThrust,
-            WyrmwindThrust
+            LanceCharge, // 1
+            BattleLitany, // 2
+            TrueThrust, // 3
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            Geirskogul, // 5
+            SpiralBlow, // 6
+            HighJump, // 7
+            Nastrond, // 8
+            ChaoticSpring, // 9
+            DragonfireDive, // 10
+            MirageDive, // 11
+            WheelingThrust, // 12
+            LifeSurge, // 13
+            RiseOfTheDragon, // 14
+            Drakesbane, // 15
+            Stardiver, // 16
+            RaidenThrust, // 17
+            Starcross, // 18
+            LanceBarrage, // 19
+            LifeSurge, // 20
+            HeavensThrust, // 21
+            FangAndClaw, // 22
+            Drakesbane, // 23
+            RaidenThrust, // 24
+            WyrmwindThrust // 25
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =

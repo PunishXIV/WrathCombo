@@ -87,13 +87,6 @@ internal abstract partial class CustomComboFunctions
     public static uint Action4 => DutyActionManager.GetDutyActionId(3);
     public static uint Action5 => DutyActionManager.GetDutyActionId(4);
 
-    public static bool HasActionEquipped(uint actionId) =>
-        (Action1 == actionId && HasCharges(actionId)) ||
-        (Action2 == actionId && HasCharges(actionId)) ||
-        (Action3 == actionId && HasCharges(actionId)) ||
-        (Action4 == actionId && HasCharges(actionId)) ||
-        (Action5 == actionId && HasCharges(actionId));
-
     private static unsafe RecastDetail* GCD => ActionManager.Instance()->GetRecastGroupDetail(57);
 
     public static unsafe float GCDTotal => GCD->Total;

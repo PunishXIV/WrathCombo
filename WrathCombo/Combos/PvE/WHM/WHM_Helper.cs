@@ -322,23 +322,23 @@ internal partial class WHM
 
         public override List<uint> OpenerActions { get; set; } =
         [
-            Glare3,
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)),
-            Dia,
-            Glare3,
-            Glare3,
-            PresenceOfMind, //6
-            Glare4,
-            AfflatusMisery,
-            Assize,
-            Glare4,
-            Glare4, //11
-            Glare3,
-            Glare3,
-            Glare3,
-            Glare3,
-            Glare3, //16
-            Dia
+            Glare3, // 1
+            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
+            Dia, // 3
+            Glare3, // 4
+            Glare3, // 5
+            PresenceOfMind, // 6
+            Glare4, // 7
+            AfflatusMisery, // 8
+            Assize, // 9
+            Glare4, // 10
+            Glare4, // 11
+            Glare3, // 12
+            Glare3, // 13
+            Glare3, // 14
+            Glare3, // 15
+            Glare3, // 16
+            Dia // 17
         ];
 
         internal override UserData ContentCheckConfig => WHM_Balance_Content;
