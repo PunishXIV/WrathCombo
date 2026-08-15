@@ -79,7 +79,6 @@ public partial class Helper(ref Leasing leasing)
     /// <returns>The Opposite-mode preset.</returns>
     internal static Preset? GetOppositeModeCombo(Preset preset)
     {
-        const StringComparison lower = StringComparison.CurrentCultureIgnoreCase;
         var presetData = preset.Attributes();
 
         // Bail if it is not one of the main combos
@@ -112,11 +111,13 @@ public partial class Helper(ref Leasing leasing)
                         [presetData.JobInfo.Job]
                     [targetType][simplicityLevelToSearchFor];
 
+            // Bail if there's no opposite-mode preset for this target type
+            // (e.g. no Advanced healer combos for the same target type)
+            if (categorizedPreset.Count == 0)
+                return null;
+
             // Return the opposite mode, as a proper preset
-            var oppositeMode = categorizedPreset.FirstOrDefault().Key;
-            var oppositeModePreset = (Preset)
-                Enum.Parse(typeof(Preset), oppositeMode, true);
-            return oppositeModePreset;
+            return categorizedPreset.Keys.First();
         }
         catch (Exception ex)
         {
@@ -179,29 +180,23 @@ public partial class Helper(ref Leasing leasing)
 
         #region Override the Values with any IPC-control
 
-        Preset? simpleComboPreset = simpleHigher is null
-            ? null
-            : (Preset)
-            Enum.Parse(typeof(Preset), simpleHigher.Value.Key, true);
+        var simpleComboPreset = simpleHigher?.Key;
         if (simpleComboPreset is not null)
         {
             simple[ComboStateKeys.AutoMode] =
-                P.IPCSearch.AutoActions[(Preset)simpleComboPreset];
+                P.IPCSearch.AutoActions[simpleComboPreset.Value];
             simple[ComboStateKeys.Enabled] =
-                P.IPCSearch.EnabledActions.Contains(
-                    (Preset)simpleComboPreset);
+                P.IPCSearch.EnabledActions.Contains(simpleComboPreset.Value);
         }
 
         #endregion
 
         // Get the Advanced Mode settings
-        var (advancedKey, advancedValue) =
+        var (advancedComboPreset, advancedValue) =
             comboStates[mode][ComboSimplicityLevelKeys.Advanced].First();
 
         #region Override the Values with any IPC-control
 
-        var advancedComboPreset = (Preset)
-            Enum.Parse(typeof(Preset), advancedKey, true);
         advancedValue[ComboStateKeys.AutoMode] =
             P.IPCSearch.AutoActions[advancedComboPreset];
         advancedValue[ComboStateKeys.Enabled] =
@@ -271,14 +266,15 @@ public partial class Helper(ref Leasing leasing)
 
         if (stSimple is not null)
             combos.Add(comboStates[ComboTargetTypeKeys.SingleTarget]
-                [ComboSimplicityLevelKeys.Simple].First().Key);
+                [ComboSimplicityLevelKeys.Simple].First().Key.ToString());
         else
         {
             var stAdvanced = comboStates[ComboTargetTypeKeys.SingleTarget]
                 [ComboSimplicityLevelKeys.Advanced].First().Key;
-            combos.Add(stAdvanced);
+            var stAdvancedName = stAdvanced.ToString();
+            combos.Add(stAdvancedName);
             if (includeOptions)
-                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][stAdvanced]);
+                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][stAdvancedName]);
         }
 
         #endregion
@@ -292,14 +288,15 @@ public partial class Helper(ref Leasing leasing)
 
         if (mtSimple is not null)
             combos.Add(comboStates[ComboTargetTypeKeys.MultiTarget]
-                [ComboSimplicityLevelKeys.Simple].First().Key);
+                [ComboSimplicityLevelKeys.Simple].First().Key.ToString());
         else
         {
             var mtAdvanced = comboStates[ComboTargetTypeKeys.MultiTarget]
                 [ComboSimplicityLevelKeys.Advanced].First().Key;
-            combos.Add(mtAdvanced);
+            var mtAdvancedName = mtAdvanced.ToString();
+            combos.Add(mtAdvancedName);
             if (includeOptions)
-                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][mtAdvanced]);
+                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][mtAdvancedName]);
         }
 
         #endregion
@@ -308,26 +305,28 @@ public partial class Helper(ref Leasing leasing)
 
         if (comboStates.TryGetValue(ComboTargetTypeKeys.HealST, out var healResults))
             combos.Add(healResults
-                [ComboSimplicityLevelKeys.Other].First().Key);
+                [ComboSimplicityLevelKeys.Other].First().Key.ToString());
         var healST = healResults?.FirstOrDefault().Key;
         if (healST is not null)
         {
             var healSTPreset = comboStates[ComboTargetTypeKeys.HealST]
                 [ComboSimplicityLevelKeys.Other].First().Key;
             if (includeOptions)
-                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][healSTPreset]);
+                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][
+                    healSTPreset.ToString()]);
         }
 
         if (comboStates.TryGetValue(ComboTargetTypeKeys.HealMT, out healResults))
             combos.Add(healResults
-                [ComboSimplicityLevelKeys.Other].First().Key);
+                [ComboSimplicityLevelKeys.Other].First().Key.ToString());
         var healMT = healResults?.FirstOrDefault().Key;
         if (healMT is not null)
         {
             var healMTPreset = comboStates[ComboTargetTypeKeys.HealMT]
                 [ComboSimplicityLevelKeys.Other].First().Key;
             if (includeOptions)
-                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][healMTPreset]);
+                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][
+                    healMTPreset.ToString()]);
         }
 
         #endregion

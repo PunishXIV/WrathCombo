@@ -758,5 +758,46 @@ public partial class Provider : IDisposable
         return Leasing.AddRegistrationForVariant(lease, jobID, enabled);
     }
 
+    /// <summary>
+    ///     Gets the internal name of the Occult Crescent Phantom Job parent combo
+    ///     (e.g. <c>Phantom_Knight</c> for phantom job ID <c>1</c>).
+    ///     <paramref name="phantomJobID" /> is an Occult Crescent Phantom Job ID
+    ///     (0–23), not a ClassJob ID.
+    /// </summary>
+    [EzIPC]
+    [SuppressMessage("Performance", "CA1822:Mark members as static")]
+    public string? GetOccultParentComboName(uint phantomJobID) =>
+        P.IPCSearch.TryGetOccultParentComboName(phantomJobID, out var parent)
+            ? parent
+            : null;
+
+    /// <summary>
+    ///     Gets the internal names of all Occult Crescent options for a Phantom Job.
+    ///     Names are valid for <see cref="SetComboOptionState" />.
+    ///     Does not include <c>Phantom_RestrictToBuff</c>.
+    /// </summary>
+    [EzIPC]
+    [SuppressMessage("Performance", "CA1822:Mark members as static")]
+    public List<string>? GetOccultOptionNames(uint phantomJobID) =>
+        P.IPCSearch.TryGetOccultParentComboName(phantomJobID, out _)
+            ? P.IPCSearch.GetOccultOptionNames(phantomJobID)
+            : null;
+
+    /// <summary>
+    ///     Enables or disables the Occult Crescent parent combo and all of its options
+    ///     for a Phantom Job under your lease. Does not enable
+    ///     <c>Phantom_RestrictToBuff</c> or change config sliders.
+    ///     Returns <see cref="SetResult.OkayWorking" /> when all sets succeed.
+    /// </summary>
+    [EzIPC]
+    public SetResult SetOccultReadyForPhantomJob
+        (Guid lease, uint phantomJobID, bool enabled = true)
+    {
+        if (Helper.CheckForBailConditionsAtSetTime(out var result, lease))
+            return result;
+
+        return Leasing.AddRegistrationForOccult(lease, phantomJobID, enabled);
+    }
+
     #endregion
 }

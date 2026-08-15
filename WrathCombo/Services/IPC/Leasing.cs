@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using WrathCombo.API.Enum;
 using WrathCombo.Combos;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using CancellationReasonEnum = WrathCombo.API.Enum.CancellationReason;
@@ -410,6 +411,60 @@ public partial class Leasing
         return ready ? SetResult.OkayWorking : lastResult;
     }
 
+    /// <summary>
+    ///     Enables or disables an Occult Crescent Phantom Job parent combo and
+    ///     all of its options under a lease.
+    /// </summary>
+    /// <param name="lease">
+    ///     Your lease ID from <see cref="Provider.RegisterForLease(string,string)" />
+    /// </param>
+    /// <param name="phantomJobID">
+    ///     Occult Crescent Phantom Job ID (0–23), not a ClassJob ID.
+    /// </param>
+    /// <param name="enabled">Whether to enable or disable the pack.</param>
+    /// <seealso cref="Provider.SetOccultReadyForPhantomJob" />
+    internal SetResult AddRegistrationForOccult
+        (Guid lease, uint phantomJobID, bool enabled)
+    {
+        if (!Registrations.TryGetValue(lease, out var registration))
+            return SetResult.InvalidLease;
+
+        if (!P.IPCSearch.TryGetOccultParentComboName(phantomJobID, out var parent))
+            return SetResult.InvalidValue;
+
+        var ready = true;
+        var lastResult = SetResult.OkayWorking;
+
+        var setParent = AddRegistrationForCombo(lease, parent, enabled, false);
+        if (setParent is SetResult.BlacklistedLease or SetResult.InvalidLease)
+            return setParent;
+
+        if (setParent is not SetResult.Okay)
+        {
+            ready = false;
+            lastResult = setParent;
+        }
+
+        foreach (var option in P.IPCSearch.GetOccultOptionNames(phantomJobID))
+        {
+            var setOption = AddRegistrationForOption(lease, option, enabled);
+            if (setOption is SetResult.BlacklistedLease or SetResult.InvalidLease)
+                return setOption;
+
+            if (setOption is not SetResult.Okay)
+            {
+                ready = false;
+                lastResult = setOption;
+            }
+        }
+
+        registration.LastUpdated = DateTime.Now;
+        CombosUpdated = DateTime.Now;
+        OptionsUpdated = DateTime.Now;
+
+        return ready ? SetResult.OkayWorking : lastResult;
+    }
+
     internal SetResult AddRegistrationForCurrentJob
         (Guid lease, Job? jobOverride = null)
     {
@@ -467,7 +522,7 @@ public partial class Leasing
         else
         {
             locking = false;
-            stringKeys = combos.Select(k => k.ToString())
+            stringKeys = combos
                 .Concat(registration.CombosControlled.Keys
                     .Select(k => k.ToString()).ToArray())
                 .ToArray();
@@ -484,12 +539,8 @@ public partial class Leasing
 
             // Enable the option, or lock the option to its current state
             var state = true;
-            if (locking)
-            {
-                var ccpOption = (Preset)
-                    Enum.Parse(typeof(Preset), option);
+            if (locking && PresetStorage.GetPresetByIdentifier(option) is { } ccpOption)
                 state = CustomComboFunctions.IsEnabled(ccpOption);
-            }
 
             AddRegistrationForOption(lease, option, state);
         }
@@ -569,23 +620,15 @@ public partial class Leasing
     /// <seealso cref="Provider.GetComboState" />
     internal (bool enabled, bool autoMode)? CheckComboControlled(string combo)
     {
-        Preset Preset;
-        try
-        {
-            Preset = (Preset)
-                Enum.Parse(typeof(Preset), combo, true);
-        }
-        catch
-        {
+        if (PresetStorage.GetPresetByIdentifier(combo) is not { } preset)
             return null;
-        }
 
         var lease = Registrations.Values
-            .Where(l => l.CombosControlled.ContainsKey(Preset))
+            .Where(l => l.CombosControlled.ContainsKey(preset))
             .OrderByDescending(l => l.LastUpdated)
             .FirstOrDefault();
 
-        return lease?.CombosControlled[Preset];
+        return lease?.CombosControlled[preset];
     }
 
     /// <summary>
@@ -602,8 +645,13 @@ public partial class Leasing
         (Guid lease, string combo, bool newState, bool newAutoState)
     {
         var registration = Registrations[lease];
-        var preset = (Preset)
-            Enum.Parse(typeof(Preset), combo, true);
+
+        if (PresetStorage.GetPresetByIdentifier(combo) is not { } preset)
+        {
+            Logging.Warn($"{registration.PluginName}: Invalid combo name " +
+                         $"'{combo}'.");
+            return SetResult.InvalidConfiguration;
+        }
 
         // Disable the combo of the opposite type mode, if one exists
         var oppositeModeCombo = Helper.GetOppositeModeCombo(preset);
@@ -627,6 +675,7 @@ public partial class Leasing
 
         registration.LastUpdated = DateTime.Now;
         CombosUpdated = DateTime.Now;
+        P.IPCSearch.UpdateDue = true;
 
         Logging.Log(
             $"{registration.PluginName}: Registered Combo ({combo}){oppositeText}");
@@ -643,23 +692,15 @@ public partial class Leasing
     /// <seealso cref="Provider.GetComboOptionState" />
     internal bool? CheckComboOptionControlled(string option)
     {
-        Preset Preset;
-        try
-        {
-            Preset = (Preset)
-                Enum.Parse(typeof(Preset), option, true);
-        }
-        catch
-        {
+        if (PresetStorage.GetPresetByIdentifier(option) is not { } preset)
             return null;
-        }
 
         var lease = Registrations.Values
-            .Where(l => l.OptionsControlled.ContainsKey(Preset))
+            .Where(l => l.OptionsControlled.ContainsKey(preset))
             .OrderByDescending(l => l.LastUpdated)
             .FirstOrDefault();
 
-        return lease?.OptionsControlled[Preset];
+        return lease?.OptionsControlled[preset];
     }
 
     /// <summary>
@@ -675,8 +716,13 @@ public partial class Leasing
         (Guid lease, string option, bool newState)
     {
         var registration = Registrations[lease];
-        var preset = (Preset)
-            Enum.Parse(typeof(Preset), option, true);
+
+        if (PresetStorage.GetPresetByIdentifier(option) is not { } preset)
+        {
+            Logging.Warn($"{registration.PluginName}: Invalid option name " +
+                         $"'{option}'.");
+            return SetResult.InvalidConfiguration;
+        }
 
         registration.OptionsControlled[preset] = newState;
 
@@ -691,6 +737,7 @@ public partial class Leasing
 
         registration.LastUpdated = DateTime.Now;
         OptionsUpdated = DateTime.Now;
+        P.IPCSearch.UpdateDue = true;
 
         Logging.Log($"{registration.PluginName}: Registered Option ({option})");
         return SetResult.Okay;

@@ -29,11 +29,33 @@ internal static class PresetStorage
     /// </summary>
     internal static readonly FrozenSet<Preset> ConflictingCombos = BuildConflictingCombos();
 
+    /// <summary>
+    ///     A frozen lookup from a preset's internal name (case-insensitive) to
+    ///     the <see cref="Preset" /> itself, used by <see cref="GetPresetByName" />
+    ///     so that resolving a name doesn't require scanning every preset.
+    /// </summary>
+    private static readonly FrozenDictionary<string, Preset> PresetsByName =
+        AllPresets.Values.ToFrozenDictionary(
+            data => data.InternalName,
+            data => data.Preset,
+            StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     A frozen lookup from a preset's underlying integer ID to the
+    ///     <see cref="Preset" /> itself, used by <see cref="GetPresetByInt" />
+    ///     so that resolving an ID doesn't require scanning every preset.
+    /// </summary>
+    private static readonly FrozenDictionary<int, Preset> PresetsById =
+        AllPresets.Keys.ToFrozenDictionary(preset => (int)preset, preset => preset);
+
     internal class PresetData
     {
         public Preset Preset { get; }
+        //UI Facing Name and Description
         public string Name => PresetLocalization.GetName(Preset);
         public string Description => PresetLocalization.GetDescription(Preset);
+        //The Enum Name
+        public string InternalName { get; }
         public bool IsPvP { get; }
         public bool IsAoE { get; }
         public Preset[] Conflicts;
@@ -62,6 +84,7 @@ internal static class PresetStorage
         public PresetData(Preset preset)
         {
             Preset = preset;
+            InternalName = preset.ToString();
             IsPvP = preset.GetAttribute<PvPCustomComboAttribute>() != null;
             Conflicts = preset.GetAttribute<ConflictingCombosAttribute>()?.ConflictingPresets ?? [];
             Parent = preset.GetAttribute<ParentComboAttribute>()?.ParentPreset;
@@ -76,7 +99,7 @@ internal static class PresetStorage
             JobInfo = preset.GetAttribute<JobInfoAttribute>();
             AutoAction = preset.GetAttribute<AutoActionAttribute>();
             IsAoE = AutoAction?.IsAoE
-                ?? preset.ToString().Contains("_AoE_", StringComparison.OrdinalIgnoreCase);
+                ?? InternalName.Contains("_AoE_", StringComparison.OrdinalIgnoreCase);
             IsHidden = preset.GetAttribute<HiddenAttribute>() != null;
             ComboType = GetComboType(preset);
             if (AutoAction != null)
@@ -275,28 +298,30 @@ internal static class PresetStorage
     /// <returns> The conflicting presets. </returns>
     public static Preset[] GetConflicts(Preset preset) => AllPresets[preset].Conflicts;
 
-    public static Preset? GetPresetByString(string value)
+    public static Preset? GetPresetByName(string value) =>
+        !string.IsNullOrEmpty(value) &&
+        PresetsByName.TryGetValue(value, out var preset)
+            ? preset
+            : null;
+
+    public static Preset? GetPresetByInt(int value) =>
+        PresetsById.TryGetValue(value, out var preset) ? preset : null;
+
+    /// <summary>
+    ///     Gets a preset by either its internal name or numeric ID.
+    /// </summary>
+    /// <param name="value">
+    ///     The preset identifier - either the enum member name (e.g., "DRK_Delirium")
+    ///     or its numeric ID (e.g., "123").
+    /// </param>
+    /// <returns>
+    ///     The Preset if found, or null if neither the name nor ID match any preset.
+    /// </returns>
+    public static Preset? GetPresetByIdentifier(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            return null;
-
-        foreach (var preset in AllPresets.Keys)
-        {
-            if (string.Equals(preset.ToString(), value, StringComparison.OrdinalIgnoreCase))
-                return preset;
-        }
-
-        return null;
-    }
-
-    public static Preset? GetPresetByInt(int value)
-    {
-        foreach (var preset in AllPresets.Keys)
-        {
-            if ((int)preset == value)
-                return preset;
-        }
-        return null;
+        return int.TryParse(value, out var numericId)
+                ? PresetStorage.GetPresetByInt(numericId)
+                : PresetStorage.GetPresetByName(value);
     }
 
     private static object GetControlledText(Preset preset)
@@ -392,7 +417,7 @@ internal static class PresetStorage
 
     public static bool EnablePreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         EnablePreset(pre, source);
 
     public static bool EnablePreset
@@ -419,7 +444,7 @@ internal static class PresetStorage
 
     public static bool DisablePreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         DisablePreset(pre, source);
 
     public static bool DisablePreset
@@ -443,7 +468,7 @@ internal static class PresetStorage
 
     public static bool TogglePreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         TogglePreset(pre, source);
 
     public static bool TogglePreset
@@ -473,7 +498,7 @@ internal static class PresetStorage
 
     public static bool EnableAutoModeForPreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         EnableAutoModeForPreset(pre, source);
 
     public static bool EnableAutoModeForPreset
@@ -501,7 +526,7 @@ internal static class PresetStorage
 
     public static bool DisableAutoModeForPreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         DisableAutoModeForPreset(pre, source);
 
     public static bool DisableAutoModeForPreset
@@ -529,7 +554,7 @@ internal static class PresetStorage
 
     public static bool ToggleAutoModeForPreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         ToggleAutoModeForPreset(pre, source);
 
     public static bool ToggleAutoModeForPreset
