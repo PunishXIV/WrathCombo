@@ -403,33 +403,35 @@ internal partial class SCH
 
             SCH_AoE_Heal_LucidOption = new("SCH_AoE_Heal_LucidOption", 8000),
             SCH_AoE_Heal_SuccorShieldOption = new("SCH_AoE_Heal_SuccorShieldCount", 50),
-            SCH_AoE_Heal_WhisperingDawnOption = new("SCH_AoE_Heal_WhisperingDawnOption", 70),
-            SCH_AoE_Heal_FeyIlluminationOption = new("SCH_AoE_Heal_FeyIlluminationOption", 70),
-            SCH_AoE_Heal_ConsolationOption = new("SCH_AoE_Heal_ConsolationOption", 70),
+            SCH_AoE_Heal_WhisperingDawnOption = new("SCH_AoE_Heal_WhisperingDawnOption", 80),
+            SCH_AoE_Heal_FeyIlluminationOption = new("SCH_AoE_Heal_FeyIlluminationOption", 80),
+            SCH_AoE_Heal_ConsolationOption = new("SCH_AoE_Heal_ConsolationOption", 65),
             SCH_AoE_Heal_FeyBlessingOption = new("SCH_AoE_Heal_FeyBlessingOption", 70),
-            SCH_AoE_Heal_SeraphismOption = new("SCH_AoE_Heal_SeraphismOption", 70),
-            SCH_AoE_Heal_IndomitabilityOption = new("SCH_AoE_Heal_IndomitabilityOption", 70),
-            SCH_AoE_Heal_SummonSeraph = new("SCH_AoE_Heal_SummonSeraph", 70),
+            SCH_AoE_Heal_SeraphismOption = new("SCH_AoE_Heal_SeraphismOption", 50),
+            SCH_AoE_Heal_IndomitabilityOption = new("SCH_AoE_Heal_IndomitabilityOption", 60),
+            SCH_AoE_Heal_SummonSeraph = new("SCH_AoE_Heal_SummonSeraph", 50),
             SCH_ST_Heal_LucidOption = new("SCH_ST_Heal_LucidOption", 8000),
             SCH_ST_Heal_AdloquiumOption = new("SCH_ST_Heal_AdloquiumOption", 70),
             SCH_ST_Heal_AdloquiumOption_Emergency = new("SCH_ST_Heal_AdloquiumOption_Emergency", 30),
-            SCH_ST_Heal_LustrateOption = new("SCH_ST_Heal_LustrateOption", 70),
+            SCH_ST_Heal_LustrateOption = new("SCH_ST_Heal_LustrateOption", 55),
             SCH_ST_Heal_ExcogitationOption = new("SCH_ST_Heal_ExcogitationOption", 70),
             SCH_ST_Heal_ProtractionOption = new("SCH_ST_Heal_ProtractionOption", 70),
-            SCH_ST_Heal_AetherpactOption = new("SCH_ST_Heal_AetherpactOption", 70),
+            SCH_ST_Heal_AetherpactOption = new("SCH_ST_Heal_AetherpactOption", 50),
             SCH_ST_Heal_AetherpactDissolveOption = new("SCH_ST_Heal_AetherpactDissolveOption", 90),
             SCH_ST_Heal_AetherpactFairyGauge = new("SCH_ST_Heal_AetherpactFairyGauge", 50),
-            SCH_ST_Heal_WhisperingDawnOption = new("SCH_ST_Heal_WhisperingDawnOption", 70),
-            SCH_ST_Heal_FeyIlluminationOption = new("SCH_ST_Heal_FeyIlluminationOption", 70),
-            SCH_ST_Heal_FeyBlessingOption = new("SCH_ST_Heal_FeyBlessingOption", 70),
-            SCH_ST_Heal_SeraphismOption = new("SCH_ST_Heal_SeraphismOption", 70),
-            SCH_ST_Heal_ExpedientOption = new("SCH_ST_Heal_ExpedientOption", 70),
-            SCH_ST_Heal_SummonSeraphOption = new("SCH_ST_Heal_SummonSeraphOption", 70),
-            SCH_ST_Heal_ConsolationOption = new("SCH_ST_Heal_ConsolationOption", 70),
+            SCH_ST_Heal_WhisperingDawnOption = new("SCH_ST_Heal_WhisperingDawnOption", 55),
+            SCH_ST_Heal_FeyIlluminationOption = new("SCH_ST_Heal_FeyIlluminationOption", 55),
+            SCH_ST_Heal_FeyBlessingOption = new("SCH_ST_Heal_FeyBlessingOption", 55),
+            SCH_ST_Heal_SeraphismOption = new("SCH_ST_Heal_SeraphismOption", 45),
+            SCH_ST_Heal_ExpedientOption = new("SCH_ST_Heal_ExpedientOption", 50),
+            SCH_ST_Heal_SummonSeraphOption = new("SCH_ST_Heal_SummonSeraphOption", 45),
+            SCH_ST_Heal_ConsolationOption = new("SCH_ST_Heal_ConsolationOption", 55),
             SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption", 40);
         public static UserIntArray
-            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority", [11,10,9,8,12,7,6,5,4,1,2,3]),
-            SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority", [3,2,4,1,6,7,5,8]);
+            // ST: Protraction → Excog → Lustrate → Aetherpact → Adlo → FeyBless → Dawn → Illum → Consolation → Seraph → Seraphism → Expedient
+            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority", [3, 2, 1, 4, 5, 7, 8, 6, 11, 12, 10, 9]),
+            // AoE: Illum → Dawn → Bless → Indom → Consolation → Seraph → Seraphism → Succor
+            SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority", [2, 1, 3, 5, 7, 4, 6, 8]);
 
         public static UserBool
             SCH_ST_Heal_IncludeShields = new("SCH_ST_Heal_IncludeShields"),

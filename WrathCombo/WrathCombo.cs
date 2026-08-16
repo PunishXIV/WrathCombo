@@ -431,6 +431,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.Configuration.ResetFeatures("1.0.0.11_DRKRework", Enumerable.Range(5000, 200).ToArray());
         Service.Configuration.ResetFeatures("1.0.1.11_RDMRework", Enumerable.Range(13000, 999).ToArray());
         Service.Configuration.ResetFeatures("1.0.2.3_NINRework", Enumerable.Range(10000, 100).ToArray());
+        Service.Configuration.ResetFeatures("1.0.4.21_SAMRework", Enumerable.Range(15000, 301).ToArray());
+        Service.Configuration.ResetFeatures("1.0.4.21_SGERework", Enumerable.Range(14000, 100).ToArray());
     }
 
     private void DrawUI()

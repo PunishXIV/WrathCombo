@@ -15,36 +15,38 @@ internal partial class AST
     {
         #region Options
         public static UserIntArray
-            AST_ST_SimpleHeals_Priority = new("AST_ST_SimpleHeals_Priority", [13, 12, 10, 6, 7, 8, 9, 11, 5, 4, 3, 1, 2]),
-            AST_AoE_SimpleHeals_Priority = new("AST_AoE_SimpleHeals_Priority", [3, 6, 1, 4, 7, 2, 8, 9, 5]);
+            // ST: EmerED → NeutralSect → Exalt → CI → ED → Bole → Arrow → Spire → Ewer → Aspected → CelOpp → CU → Lady
+            AST_ST_SimpleHeals_Priority = new("AST_ST_SimpleHeals_Priority", [4, 5, 3, 6, 7, 9, 8, 10, 11, 12, 13, 1, 2]),
+            // AoE: NeutralSect → Horoscope → Lady → CelOpp → CU → HoroscopeHeal → Stellar → Aspected → Helios
+            AST_AoE_SimpleHeals_Priority = new("AST_AoE_SimpleHeals_Priority", [3, 4, 2, 6, 1, 7, 8, 9, 5]);
 
         public static UserInt
             //HEALS
             AST_ST_SimpleHeals_Spire = new("AST_ST_SimpleHeals_Spire", 70),
-            AST_ST_SimpleHeals_Ewer = new("AST_ST_SimpleHeals_Ewer", 70),
+            AST_ST_SimpleHeals_Ewer = new("AST_ST_SimpleHeals_Ewer", 60),
             AST_ST_SimpleHeals_Arrow = new("AST_ST_SimpleHeals_Arrow", 70),
             AST_ST_SimpleHeals_Bole = new("AST_ST_SimpleHeals_Bole", 70),
             AST_ST_SimpleHeals_CelestialIntersection = new("AST_ST_SimpleHeals_CelestialIntersection", 70),
             AST_ST_SimpleHeals_CelestialIntersectionCharges = new("AST_ST_SimpleHeals_CelestialIntersectionCharges", 0),
-            AST_ST_SimpleHeals_EssentialDignity = new("AST_ST_SimpleHeals_EssentialDignity", 70),
+            AST_ST_SimpleHeals_EssentialDignity = new("AST_ST_SimpleHeals_EssentialDignity", 55),
             AST_ST_SimpleHeals_Exaltation = new("AST_ST_SimpleHeals_Exaltation", 70),
             AST_ST_SimpleHeals_Esuna = new("AST_ST_SimpleHeals_Esuna", 40),
-            AST_ST_SimpleHeals_AspectedBeneficHigh = new("AST_ST_SimpleHeals_AspectedBeneficHigh", 100),
+            AST_ST_SimpleHeals_AspectedBeneficHigh = new("AST_ST_SimpleHeals_AspectedBeneficHigh", 80),
             AST_ST_SimpleHeals_AspectedBeneficLow = new("AST_ST_SimpleHeals_AspectedBeneficLow", 40),
             AST_ST_SimpleHeals_AspectedBeneficRefresh = new("AST_ST_SimpleHeals_AspectedBeneficRefresh", 3),
-            AST_ST_SimpleHeals_CollectiveUnconscious = new("AST_ST_SimpleHeals_CollectiveUnconscious", 70),
-            AST_ST_SimpleHeals_CelestialOpposition = new("AST_ST_SimpleHeals_CelestialOpposition", 70),
-            AST_ST_SimpleHeals_SoloLady = new("AST_ST_SimpleHeals_SoloLady", 70),
+            AST_ST_SimpleHeals_CollectiveUnconscious = new("AST_ST_SimpleHeals_CollectiveUnconscious", 55),
+            AST_ST_SimpleHeals_CelestialOpposition = new("AST_ST_SimpleHeals_CelestialOpposition", 55),
+            AST_ST_SimpleHeals_SoloLady = new("AST_ST_SimpleHeals_SoloLady", 55),
             AST_ST_SimpleHeals_EmergencyED_Threshold = new("AST_ST_SimpleHeals_EmergencyED_Threshold", 30),
-            AST_ST_Heals_NeutralSect_Threshold = new("AST_ST_Heals_NeutralSect_Threshold", 70),
+            AST_ST_Heals_NeutralSect_Threshold = new("AST_ST_Heals_NeutralSect_Threshold", 50),
             AST_AoE_SimpleHeals_AltMode = new("AST_AoE_SimpleHeals_AltMode", 1),
-            AST_AoE_SimpleHeals_LazyLady = new("AST_AoE_SimpleHeals_LazyLady", 80),
+            AST_AoE_SimpleHeals_LazyLady = new("AST_AoE_SimpleHeals_LazyLady", 70),
             AST_AoE_SimpleHeals_Horoscope = new("AST_AoE_SimpleHeals_Horoscope", 80),
             AST_AoE_SimpleHeals_CelestialOpposition = new("AST_AoE_SimpleHeals_CelestialOpposition", 80),
-            AST_AoE_SimpleHeals_CollectiveUnconscious = new("AST_AoE_SimpleHeals_CollectiveUnconscious", 80),
-            AST_AoE_SimpleHeals_NeutralSect = new("AST_AoE_SimpleHeals_NeutralSect", 80),
-            AST_AoE_SimpleHeals_HoroscopeHeal = new("AST_AoE_SimpleHeals_HoroscopeHeal", 80),
-            AST_AoE_SimpleHeals_StellarDetonation = new("AST_AoE_SimpleHeals_StellarDetonation", 80),
+            AST_AoE_SimpleHeals_CollectiveUnconscious = new("AST_AoE_SimpleHeals_CollectiveUnconscious", 55),
+            AST_AoE_SimpleHeals_NeutralSect = new("AST_AoE_SimpleHeals_NeutralSect", 60),
+            AST_AoE_SimpleHeals_HoroscopeHeal = new("AST_AoE_SimpleHeals_HoroscopeHeal", 65),
+            AST_AoE_SimpleHeals_StellarDetonation = new("AST_AoE_SimpleHeals_StellarDetonation", 60),
             AST_AoE_SimpleHeals_Aspected = new("AST_AoE_SimpleHeals_Aspected", 80),
             AST_AoE_SimpleHeals_Helios = new("AST_AoE_SimpleHeals_Helios", 80),
             AST_Mit_ST_EssentialDignityThreshold = new("AST_Mit_ST_EssentialDignityThreshold", 80),
@@ -252,13 +254,13 @@ internal partial class AST
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_CelestialIntersection, Generics.StopFriendlyHpPercent100);
                     DrawSliderInt(0, 1, AST_ST_SimpleHeals_CelestialIntersectionCharges, Generics.ChargePool);
                     DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveIntersection, Generics.OnlyWeave, "");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 13, 1, Text.FormatAndCache(Generics.Action_Priority, CelestialIntersection.ActionName()));
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 13, 0, Text.FormatAndCache(Generics.Action_Priority, CelestialIntersection.ActionName()));
                     break;
 
                 case Preset.AST_ST_Heals_EssentialDignity:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_EssentialDignity, Generics.StopFriendlyHpPercent100);
                     DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveDignity, Generics.OnlyWeave, "");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 13, 0, Text.FormatAndCache(AST_Config.Standard0Priority, EssentialDignity.ActionName()));
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 13, 1, Text.FormatAndCache(AST_Config.Standard0Priority, EssentialDignity.ActionName()));
                     break;
 
                 case Preset.AST_ST_Heals_EssentialDignity_Emergency:
@@ -355,19 +357,19 @@ internal partial class AST
                 case Preset.AST_AoE_Heals_Horoscope:
                     DrawSliderInt(0, 100, AST_AoE_SimpleHeals_Horoscope, Generics.StartUsingWhenBelowPartyAverageHPSetTo100ToDisableThisCheck);
                     DrawAdditionalBoolChoice(AST_AoE_SimpleHeals_WeaveHoroscope, Generics.OnlyWeave, Generics.WillOnlyWeaveThisAction);
-                    DrawPriorityInput(AST_AoE_SimpleHeals_Priority, 9, 1, Text.FormatAndCache(Generics.Action_Priority, Horoscope.ActionName()));
+                    DrawPriorityInput(AST_AoE_SimpleHeals_Priority, 9, 2, Text.FormatAndCache(Generics.Action_Priority, Horoscope.ActionName()));
                     break;
 
                 case Preset.AST_AoE_Heals_HoroscopeHeal:
                     DrawSliderInt(0, 100, AST_AoE_SimpleHeals_HoroscopeHeal, Generics.StartUsingWhenBelowPartyAverageHPSetTo100ToDisableThisCheck);
                     DrawAdditionalBoolChoice(AST_AoE_SimpleHeals_WeaveHoroscopeHeal, Generics.OnlyWeave, Generics.WillOnlyWeaveThisAction);
-                    DrawPriorityInput(AST_AoE_SimpleHeals_Priority, 9, 2, Text.FormatAndCache(Generics.Action_Priority, HoroscopeHeal.ActionName()));
+                    DrawPriorityInput(AST_AoE_SimpleHeals_Priority, 9, 3, Text.FormatAndCache(Generics.Action_Priority, HoroscopeHeal.ActionName()));
                     break;
 
                 case Preset.AST_AoE_Heals_CelestialOpposition:
                     DrawSliderInt(0, 100, AST_AoE_SimpleHeals_CelestialOpposition, Generics.StartUsingWhenBelowPartyAverageHPSetTo100ToDisableThisCheck);
                     DrawAdditionalBoolChoice(AST_AoE_SimpleHeals_WeaveOpposition, Generics.OnlyWeave, Generics.WillOnlyWeaveThisAction);
-                    DrawPriorityInput(AST_AoE_SimpleHeals_Priority, 9, 3, Text.FormatAndCache(Generics.Action_Priority, CelestialOpposition.ActionName()));
+                    DrawPriorityInput(AST_AoE_SimpleHeals_Priority, 9, 1, Text.FormatAndCache(Generics.Action_Priority, CelestialOpposition.ActionName()));
                     break;
 
 
