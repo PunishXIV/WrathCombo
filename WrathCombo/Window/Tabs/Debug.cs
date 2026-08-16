@@ -1607,6 +1607,25 @@ internal class Debug : ConfigWindow, IDisposable
                 CustomStyleText("No current leases.", "");
             }
 
+            for (uint i = 0; i <= 23; i++)
+            {
+                var names = P.IPCSearch.TryGetOccultParentComboName(i, out var s);
+                if (_wrathLease is { } l)
+                    if (ImGui.Button($"Set Phantom Job {s}"))
+                    {
+                        P.IPC.SetOccultReadyForPhantomJob(l, i, true);
+                    }
+                if (names)
+                {
+                    ImGui.Text($"{s}");
+                    var p = P.IPCSearch.GetOccultOptionNames(i);
+                    foreach (var st in p)
+                    {
+                        ImGui.Text($"- {st}");
+                    }
+                }
+            }
+
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
         }
 
@@ -1776,7 +1795,7 @@ internal class Debug : ConfigWindow, IDisposable
                 ImGui.TreePop();
             }
 
-            
+
 
             if (ImGui.TreeNode("Enemies Near Target"))
             {

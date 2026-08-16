@@ -12,6 +12,7 @@ using WrathCombo.Attributes;
 using WrathCombo.Core;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 
 #endregion
 
@@ -624,17 +625,17 @@ public class Search(Leasing leasing)
     /// </summary>
     [field: AllowNull, MaybeNull]
     private Dictionary<int, string> OccultParentNames =>
-        field ??= Presets
+        field ??= PresetRuntimeStates
             .Where(preset =>
-                !preset.Value.HasParentCombo &&
-                preset.Value.presetData is
+                preset.Value.Data.Parent is null &&
+                preset.Value.Data is
                 {
                     IsOccultCrescent: true,
                     OccultCrescentJob.JobId: >= 0,
                 })
             .ToDictionary(
-                preset => preset.Value.presetData.OccultCrescentJob!.JobId,
-                preset => preset.Key);
+                preset => preset.Value.Data.OccultCrescentJob!.JobId,
+                preset => preset.Value.Data.InternalName);
 
     internal bool TryGetOccultParentComboName
         (uint phantomJobID, [NotNullWhen(true)] out string? parent) =>
@@ -648,12 +649,12 @@ public class Search(Leasing leasing)
         if (!TryGetOccultParentComboName(phantomJobID, out var parent))
             return [];
 
-        return Presets
+        return PresetRuntimeStates
             .Where(preset =>
-                preset.Value is { HasParentCombo: true } &&
-                preset.Value.presetData.IsOccultCrescent &&
-                preset.Value.ParentComboName == parent)
-            .Select(preset => preset.Key)
+                preset.Value.Data is { Parent: not null } &&
+                preset.Value.Data.IsOccultCrescent &&
+                preset.Value.Data.Parent?.ToString() == parent)
+            .Select(preset => preset.Value.Data.InternalName)
             .ToList();
     }
 

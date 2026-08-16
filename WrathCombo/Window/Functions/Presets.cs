@@ -107,7 +107,7 @@ internal class Presets : ConfigWindow
         if (ipcControl is not null)
             enabled = ipcControl.Value.enabled;
 
-        if (comboType is (ComboType.Advanced or ComboType.Simple))
+        if (comboType is (ComboType.Advanced or ComboType.Simple) || (presetData.IsOccultCrescent && presetData.Parent is null))
             if (ipcControl is not null)
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded(preset);
 
