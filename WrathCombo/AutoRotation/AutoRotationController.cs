@@ -1102,21 +1102,52 @@ internal unsafe class AutoRotationController
                     .Where(Query)
                     .ToList();
 
-                if (!cfg.DPSSettings.FATEPriority && !cfg.DPSSettings.QuestPriority)
-                    return validTargets;
+                if (cfg.DPSSettings.FATEPriority || cfg.DPSSettings.QuestPriority)
+                {
+                    bool playerInFate = cfg.DPSSettings.FATEPriority && InFATE();
 
-                bool playerInFate = cfg.DPSSettings.FATEPriority && InFATE();
+                    var priorityMatches = validTargets
+                        .Where(x =>
+                            (playerInFate && x.Struct()->FateId != 0) ||
+                            (cfg.DPSSettings.QuestPriority && IsQuestMob(x)))
+                        .ToList();
 
-                var priorityMatches = validTargets
-                    .Where(x =>
-                        (playerInFate && x.Struct()->FateId != 0) ||
-                        (cfg.DPSSettings.QuestPriority && IsQuestMob(x)))
-                    .ToList();
+                    if (priorityMatches.Count > 0)
+                        validTargets = priorityMatches;
+                }
 
-                return priorityMatches.Count > 0
-                    ? priorityMatches
-                    : validTargets;
+                if (cfg.DPSSettings.TreasureHuntPriority)
+                    validTargets = RestrictToTreasureHuntKillOrder(validTargets);
+
+                return validTargets;
             }
+        }
+
+        private static List<IBattleChara> RestrictToTreasureHuntKillOrder(List<IBattleChara> targets)
+        {
+            var minOrder = 0;
+            List<IBattleChara>? atMinOrder = null;
+
+            foreach (var target in targets)
+            {
+                var order = GetTreasureHuntOrder(target);
+                if (order == 0)
+                    continue;
+
+                if (minOrder == 0 || order < minOrder)
+                {
+                    minOrder = order;
+                    atMinOrder ??= new List<IBattleChara>(targets.Count);
+                    atMinOrder.Clear();
+                    atMinOrder.Add(target);
+                }
+                else if (order == minOrder)
+                {
+                    atMinOrder!.Add(target);
+                }
+            }
+
+            return minOrder == 0 ? targets : atMinOrder!;
         }
 
         public static bool IsCombatPriority(IBattleChara x)

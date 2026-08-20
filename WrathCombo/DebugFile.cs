@@ -335,6 +335,8 @@ public static class DebugFile
         AddLine($"Is Dead: {target.IsDead}");
         AddLine($"Distance: {GetTargetDistance(target):F1}y");
         AddLine($"Nameplate: {target.GetNameplateKind()}");
+        AddLine($"NamePlate Icon ID: {GetNamePlateIconId(target)}");
+        AddLine($"Treasure Hunt Order: {GetTreasureHuntOrder(target)}");
         AddLine($"Name ID: {target.GetNameId()}");
         if (battleTarget is not null)
         {

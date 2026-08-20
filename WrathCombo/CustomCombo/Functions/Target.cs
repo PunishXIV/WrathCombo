@@ -81,6 +81,34 @@ internal abstract partial class CustomComboFunctions
         return chara.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
     }
 
+    private const uint TreasureHuntOrderIconFirst = 60687;
+    private const uint TreasureHuntOrderIconLast = 60691;
+
+    /// <summary>
+    ///     Treasure Hunt numbered markers (1–5) from the nameplate icon.
+    ///     Returns 0 when the object has no kill-order marker.
+    /// </summary>
+    internal static unsafe int GetTreasureHuntOrder(IGameObject? optionalTarget = null)
+    {
+        if ((optionalTarget ?? CurrentTarget) is not { } chara)
+            return 0;
+
+        var icon = chara.Struct()->NamePlateIconId;
+        if (icon is < TreasureHuntOrderIconFirst or > TreasureHuntOrderIconLast)
+            return 0;
+
+        return (int)(icon - TreasureHuntOrderIconFirst + 1);
+    }
+
+    /// <summary> Nameplate icon ID. Defaults to CurrentTarget unless specified. </summary>
+    internal static unsafe uint GetNamePlateIconId(IGameObject? optionalTarget = null)
+    {
+        if ((optionalTarget ?? CurrentTarget) is not { } chara)
+            return 0;
+
+        return chara.Struct()->NamePlateIconId;
+    }
+
     /// <summary> Checks if an object is friendly. Defaults to CurrentTarget unless specified. </summary>
     public unsafe static bool TargetIsFriendly(IGameObject? optionalTarget = null)
     {

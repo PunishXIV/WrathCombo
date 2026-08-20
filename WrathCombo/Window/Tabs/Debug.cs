@@ -1708,6 +1708,8 @@ internal class Debug : ConfigWindow, IDisposable
 
             CustomStyleText("Name:", target?.Name);
             CustomStyleText("Nameplate:", target?.GetNameplateKind().ToString());
+            CustomStyleText("NamePlate Icon ID:", GetNamePlateIconId(target));
+            CustomStyleText("Treasure Hunt Order:", GetTreasureHuntOrder(target));
             CustomStyleText("Rank:", $"{battleNPCRow?.Rank.ToString() ?? "null"} (found sheet: {(foundSheet is true ? "yes" : "no")})");
             CustomStyleText("Health:", $"{GetTargetCurrentHP(target, forceUsePending: false):N0} / {GetTargetMaxHP(target):N0} ({MathF.Round(GetTargetHPPercent(target, forceUsePending: false), 2)}%)");
             CustomStyleText("Health (with pending):", $"{GetTargetCurrentHP(target, forceUsePending: true):N0} / {GetTargetMaxHP(target):N0} ({MathF.Round(GetTargetHPPercent(target, forceUsePending: true), 2)}%)");
