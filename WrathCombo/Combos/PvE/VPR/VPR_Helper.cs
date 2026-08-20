@@ -571,6 +571,16 @@ internal partial class VPR
             IsOriginal(ReavingFangs) &&
             GetRemainingCharges(Vicewinder) is 2 &&
             IsOffCooldown(SerpentsIre);
+
+        private protected static bool OpenerReawakenAlreadyUsed() =>
+            HasStatusEffect(Buffs.Reawakened) || JustUsed(Reawaken);
+
+        private protected static bool OpenerTwinBiteMissed() =>
+            OpenerReawakenAlreadyUsed() ||
+            (!HasStatusEffect(Buffs.HuntersVenom) &&
+             !HasStatusEffect(Buffs.SwiftskinsVenom) &&
+             !JustUsed(HuntersCoil) &&
+             !JustUsed(SwiftskinsCoil));
     }
 
     internal class VPRStandardOpener : VPROpenerBase
@@ -629,7 +639,9 @@ internal partial class VPR
         [
             ([22, 23, 24, 25, 26, 27], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)),
             ([28], () => ComboAction is not SwiftskinsSting),
-            ([29], () => !IsDeathRattleWeave && !JustUsed(HindstingStrike))
+            ([29], () => !IsDeathRattleWeave && !JustUsed(HindstingStrike)),
+            ([7, 8, 10, 11, 32, 33, 35, 36], OpenerTwinBiteMissed),
+            ([12], OpenerReawakenAlreadyUsed)
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } = [5];
@@ -688,7 +700,9 @@ internal partial class VPR
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([20, 21, 22, 30, 31, 32, 33, 34, 35], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil))
+            ([20, 21, 22, 30, 31, 32, 33, 34, 35], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)),
+            ([5, 6, 8, 9, 25, 26, 28, 29], OpenerTwinBiteMissed),
+            ([10], OpenerReawakenAlreadyUsed)
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } = [4];

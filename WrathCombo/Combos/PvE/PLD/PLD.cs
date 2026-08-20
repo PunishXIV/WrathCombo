@@ -222,7 +222,7 @@ internal partial class PLD : Tank
 
             // Confiteor & Blades
             if (HasStatusEffect(Buffs.ConfiteorReady) || LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)
-                return OriginalHook(Confiteor);
+                return NextConfiteorBlade();
 
             // Pre-Blades
             return HasStatusEffect(Buffs.Requiescat)

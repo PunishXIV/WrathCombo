@@ -41,7 +41,7 @@ internal partial class MCH : PhysicalRanged
 
                 if (!IsOverheated)
                 {
-                    if (CanReassemble(false))
+                    if (CanReassemble(false, reassembleChoice: 0))
                         return Reassemble;
 
                     if (CanBarrelStabilizer(requireBoss: true))
@@ -74,7 +74,7 @@ internal partial class MCH : PhysicalRanged
                 return FullMetalField;
 
             // Prefer Reassemble→tool over weaving without a tool ready
-            if (CanReassemble(false) && !IsOverheated)
+            if (CanReassemble(false, reassembleChoice: 0) && !IsOverheated)
                 return Reassemble;
 
             //Tools
@@ -85,7 +85,7 @@ internal partial class MCH : PhysicalRanged
             if (IsOverheated && ActionReady(OriginalHook(Heatblast)))
                 return OverheatGCD(onAoE: false);
 
-            return DoBasicCombo(allowReassembleOnClean: true);
+            return DoBasicCombo(allowReassembleOnClean: true, reassembleChoice: 0);
         }
     }
 

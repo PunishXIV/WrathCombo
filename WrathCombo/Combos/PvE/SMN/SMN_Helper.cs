@@ -330,8 +330,8 @@ internal partial class SMN
 
         bool SearingLightBurstEnabled =
             flags.HasFlag(Combo.Simple) ||
-            IsSTEnabled(flags, Preset.SMN_AoE_Advanced_Combo_SearingLight_Burst) ||
-            IsAoEEnabled(flags, Preset.SMN_ST_Advanced_Combo_SearingLight_Burst);
+            IsSTEnabled(flags, Preset.SMN_ST_Advanced_Combo_SearingLight_Burst) ||
+            IsAoEEnabled(flags, Preset.SMN_AoE_Advanced_Combo_SearingLight_Burst);
 
         bool energyDrainEnabled =
             flags.HasFlag(Combo.Simple) ||

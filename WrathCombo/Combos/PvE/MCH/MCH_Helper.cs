@@ -339,7 +339,7 @@ internal partial class MCH
         if (reassembleChoice == 0)
             return ShouldReassemble() && ReadyTools() >= GetRemainingCharges(Reassemble);
 
-        return reassembleChoice == 1 && ShouldReassemble() && HasReassembleToolTarget(onAoE: false);
+        return reassembleChoice == 1 && HasReassembleToolTarget(onAoE: false);
     }
 
     #endregion

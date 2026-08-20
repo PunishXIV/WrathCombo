@@ -197,6 +197,7 @@ internal partial class RPR
 
     private static bool CanTrueNorthForGluttony(bool advanced = false, int tnChargePool = 0) =>
         !InPostBurstSequence &&
+        !HasStatusEffect(Buffs.Enshrouded) &&
         LevelChecked(Gluttony) && GetCooldownRemainingTime(Gluttony) <= GCD && Role.CanTrueNorth() &&
         (!advanced || GetRemainingCharges(Role.TrueNorth) > tnChargePool);
 
@@ -572,7 +573,7 @@ internal partial class RPR
             (HasStatusEffect(Buffs.SoulReaver) || HasStatusEffect(Buffs.Executioner)) &&
             LevelChecked(Guillotine))
         {
-            actionID = Guillotine;
+            actionID = OriginalHook(Guillotine);
             return true;
         }
 

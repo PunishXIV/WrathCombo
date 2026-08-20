@@ -561,7 +561,7 @@ internal partial class PLD
             }
             
             if ((requiescatEnabled && ActionReady(OriginalHook(Requiescat)) && GetCooldownRemainingTime(FightOrFlight) > 50 && InActionRange(OriginalHook(Requiescat))) || //Requiescat Logic, in action range because Imperator gets 25y range
-                (bladeOfHonorEnabled && LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor)) //Blade of Honor Logic since it shares the button
+                (bladeOfHonorEnabled && LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor && ActionReady(BladeOfHonor)))
             {
                 actionID = OriginalHook(Requiescat);
                 return true;
@@ -597,6 +597,15 @@ internal partial class PLD
     #endregion
     
     #region GCD Attacks
+    private static uint NextConfiteorBlade() =>
+        ComboAction switch
+        {
+            Confiteor when LevelChecked(BladeOfFaith) => BladeOfFaith,
+            BladeOfFaith => BladeOfTruth,
+            BladeOfTruth => BladeOfValor,
+            var _ => OriginalHook(Confiteor),
+        };
+
     private static bool TryGCDAttacks(Combo flags, ref uint actionID)
     {
         #region Enables
@@ -681,7 +690,7 @@ internal partial class PLD
             (HasStatusEffect(Buffs.ConfiteorReady) || //Confiteor
              LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)) //Its combo
         {
-            actionID = OriginalHook(Confiteor);
+            actionID = NextConfiteorBlade();
             return true;
         }
         
@@ -812,6 +821,8 @@ internal partial class PLD
             ([12, 14], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
         ];
 
+        public override List<int> AllowUpgradeSteps { get; set; } = [8, 11, 13, 15, 16];
+
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;
         internal override bool IncludePot => PLD_Opener_Potion;
@@ -865,6 +876,8 @@ internal partial class PLD
             ([10, 12], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0),
             ([19, 20, 21], () => !InMeleeRange())
         ];
+
+        public override List<int> AllowUpgradeSteps { get; set; } = [13, 14, 15, 16, 17];
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;

@@ -60,22 +60,21 @@ internal partial class SAM
             return actionID;
         }
 
-        if (useGekko &&
-            LevelChecked(Gekko) &&
-            (!LevelChecked(Kasha) || !useKasha ||
-             !HasStatusEffect(Buffs.Fugetsu) ||
-             !HasGetsu ||
-             (OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
-             OnTargetsFlank() && HasKa))
-            return WithTrueNorth(Gekko, OnTargetsRear(), useTrueNorth, trueNorthCharges);
-
         if (useKasha &&
             LevelChecked(Kasha) &&
             (!HasStatusEffect(Buffs.Fuka) ||
-             !HasKa ||
              (OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
-             OnTargetsRear() && HasGetsu))
+             OnTargetsRear() && HasGetsu && !HasKa ||
+             !HasKa && (!useGekko || !LevelChecked(Gekko) || HasGetsu)))
             return WithTrueNorth(Kasha, OnTargetsFlank(), useTrueNorth, trueNorthCharges);
+
+        if (useGekko &&
+            LevelChecked(Gekko) &&
+            (!HasStatusEffect(Buffs.Fugetsu) ||
+             (OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
+             OnTargetsFlank() && HasKa && !HasGetsu ||
+             !HasGetsu && (!useKasha || !LevelChecked(Kasha) || HasKa)))
+            return WithTrueNorth(Gekko, OnTargetsRear(), useTrueNorth, trueNorthCharges);
 
         if (useYukikaze &&
             LevelChecked(Yukikaze) &&

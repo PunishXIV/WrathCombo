@@ -270,6 +270,9 @@ internal partial class SGE : Healer
                 !HasStatusEffect(Buffs.Kardia))
                 return Kardia.Retarget(actionID, SimpleTarget.AnyLivingTank);
 
+            if (UseEukrasianDiagnosis(healTarget, simpleMode: true, ref actionID))
+                return actionID;
+
             if (ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget) >= 40 &&
                 cleansableTarget)
@@ -324,11 +327,6 @@ internal partial class SGE : Healer
             if (ActionReady(Pepsis) &&
                 HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget))
                 return Pepsis;
-
-            if (ActionReady(Eukrasia) && !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget))
-                return HasStatusEffect(Buffs.Eukrasia)
-                    ? EukrasianDiagnosis
-                    : Eukrasia;
 
             return Diagnosis.RetargetIfEnabled(actionID);
         }
@@ -411,7 +409,16 @@ internal partial class SGE : Healer
                 HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
                 HasCleansableDebuff(healTarget);
 
+            if (IsEnabled(Preset.SGE_ST_Adv_Heal_Kardia) &&
+                LevelChecked(Kardia) &&
+                !HasStatusEffect(Buffs.Kardia) &&
+                !HasStatusEffect(Buffs.Kardion, healTarget))
+                return Kardia.Retarget(actionID, Target);
+
             if (UseRaidwide(ref actionID))
+                return actionID;
+
+            if (UseEukrasianDiagnosis(healTarget, simpleMode: false, ref actionID))
                 return actionID;
 
             if (IsEnabled(Preset.SGE_ST_Adv_Heal_Esuna) &&
@@ -419,15 +426,6 @@ internal partial class SGE : Healer
                 GetTargetHPPercent(healTarget, SGE_ST_Adv_Heal_IncludeShields) >= SGE_ST_Adv_Heal_Esuna &&
                 cleansableTarget)
                 return Role.Esuna.RetargetIfEnabled(actionID);
-
-            if (HasStatusEffect(Buffs.Eukrasia))
-                return EukrasianDiagnosis.RetargetIfEnabled(actionID);
-
-            if (IsEnabled(Preset.SGE_ST_Adv_Heal_Kardia) &&
-                LevelChecked(Kardia) &&
-                !HasStatusEffect(Buffs.Kardia) &&
-                !HasStatusEffect(Buffs.Kardion, healTarget))
-                return Kardia.Retarget(actionID, Target);
 
             if (CanWeave())
             {
@@ -443,6 +441,9 @@ internal partial class SGE : Healer
             for (int i = 0; i < SGE_ST_Heals_Priority.Count; i++)
             {
                 int index = SGE_ST_Heals_Priority.IndexOf(i + 1);
+                if (index == 7)
+                    continue;
+
                 if (!TrySTHealOption(index, healTarget, out uint spell, out int config))
                     continue;
 

@@ -389,19 +389,21 @@ internal partial class SAM : Melee
                     (HasKa || !SAM_Yukikaze_Kasha))
                     return Yukikaze;
 
-                if (SAM_Yukikaze_Gekko &&
-                    LevelChecked(Gekko) &&
-                    ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
-                     OnTargetsFlank() && HasKa ||
-                     !HasStatusEffect(Buffs.Fugetsu) && !HasGetsu))
-                    return Gekko;
-
                 if (SAM_Yukikaze_Kasha &&
                     LevelChecked(Kasha) &&
-                    ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
-                     OnTargetsRear() && HasGetsu ||
-                     !HasStatusEffect(Buffs.Fuka) && !HasKa))
+                    (!HasStatusEffect(Buffs.Fuka) ||
+                     (OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
+                     OnTargetsRear() && HasGetsu && !HasKa ||
+                     !HasKa && (!SAM_Yukikaze_Gekko || !LevelChecked(Gekko) || HasGetsu)))
                     return Kasha;
+
+                if (SAM_Yukikaze_Gekko &&
+                    LevelChecked(Gekko) &&
+                    (!HasStatusEffect(Buffs.Fugetsu) ||
+                     (OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
+                     OnTargetsFlank() && HasKa && !HasGetsu ||
+                     !HasGetsu && (!SAM_Yukikaze_Kasha || !LevelChecked(Kasha) || HasKa)))
+                    return Gekko;
             }
 
             if (ComboTimer > 0)
@@ -554,15 +556,21 @@ internal partial class SAM : Melee
             if (actionID is not MeikyoShisui || !HasStatusEffect(Buffs.MeikyoShisui))
                 return actionID;
 
-            if (!HasStatusEffect(Buffs.Fugetsu) ||
-                !HasGetsu)
-                return Gekko;
-
-            if (!HasStatusEffect(Buffs.Fuka) ||
-                !HasKa)
+            if (LevelChecked(Kasha) &&
+                (!HasStatusEffect(Buffs.Fuka) ||
+                 (OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
+                 OnTargetsRear() && HasGetsu && !HasKa ||
+                 !HasKa && HasGetsu))
                 return Kasha;
 
-            if (!HasSetsu)
+            if (LevelChecked(Gekko) &&
+                (!HasStatusEffect(Buffs.Fugetsu) ||
+                 (OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
+                 OnTargetsFlank() && HasKa && !HasGetsu ||
+                 !HasGetsu))
+                return Gekko;
+
+            if (!HasSetsu && LevelChecked(Yukikaze))
                 return Yukikaze;
 
             return actionID;
