@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Throttlers;
@@ -162,12 +163,15 @@ internal abstract partial class CustomComboFunctions
         return true;
     }
 
-    /// <summary> Checks if an action is ready to use based on level required, current cooldown and unlock state. </summary>
+    /// <summary> Checks if an action is ready to use based on level required, current cooldown and unlock state. BLU also requires the spell to be in the active spellbook. </summary>
     /// <param name="actionId"> The action ID. </param>
     public static unsafe bool ActionReady(uint actionId, bool recastCheck = false, bool castCheck = false)
     {
         if (actionId >= All.SingleTargetDPS)
             return true;
+
+        if (Player.Job is Job.BLU && IsBlueMageSpellbookAction(actionId) && !IsSpellActive(actionId))
+            return false;
 
         if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, actionId) > 0)
         {
@@ -210,6 +214,13 @@ internal abstract partial class CustomComboFunctions
     /// <summary> Checks if a spell is active in the Blue Mage Spellbook. </summary>
     /// <param name="spellId"> The action ID. </param>
     public static bool IsSpellActive(uint spellId) => Service.Configuration.ActiveBLUSpells.Contains(spellId);
+
+    private static bool IsBlueMageSpellbookAction(uint actionId) =>
+        actionId is not BLU.DivineCataract &&
+        actionId is (>= 11383 and <= 11431)
+            or (>= 18295 and <= 18325)
+            or (>= 23264 and <= 23290)
+            or (>= 34563 and <= 34582);
 
     /// <summary>
     ///     Calculate the best action to use based on cooldown remaining. <br/>

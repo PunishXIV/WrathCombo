@@ -187,7 +187,7 @@ public abstract class WrathOpener
 
         if (CurrentState == OpenerState.OpenerNotReady)
         {
-            if (HasCooldowns() && !InCombat())
+            if (HasCooldowns() && (!InCombat() || AllowReopener))
             {
                 CurrentState = OpenerState.OpenerReady;
                 OpenerStep = 1;
@@ -333,6 +333,7 @@ public abstract class WrathOpener
         {
             Job.AST => AST.Opener(),
             Job.BLM => BLM.Opener(),
+            Job.BLU => BLU.Opener(),
             Job.BRD => BRD.Opener(),
             Job.DRG => DRG.Opener(),
             Job.DNC => DNC.Opener(),

@@ -126,8 +126,17 @@
   <data name="DOL" xml:space="preserve">
     <value>DOL</value>
   </data>
+  <data name="DPS" xml:space="preserve">
+    <value>DPS</value>
+  </data>
+  <data name="Healer" xml:space="preserve">
+    <value>Healer</value>
+  </data>
   <data name="Job Roles" xml:space="preserve">
     <value>Job Roles</value>
+  </data>
+  <data name="Miscellaneous" xml:space="preserve">
+    <value>Miscellaneous</value>
   </data>
   <data name="Normal" xml:space="preserve">
     <value>Normal</value>
@@ -143,6 +152,9 @@
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Setting</value>
+  </data>
+  <data name="Tank" xml:space="preserve">
+    <value>Tank</value>
   </data>
   <data name="Variant" xml:space="preserve">
     <value>Variant</value>

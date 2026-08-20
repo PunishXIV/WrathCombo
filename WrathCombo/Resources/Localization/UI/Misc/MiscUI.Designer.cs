@@ -87,11 +87,38 @@ namespace WrathCombo.Resources.Localization.UI.Misc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DPS.
+        /// </summary>
+        internal static string DPS {
+            get {
+                return ResourceManager.GetString("DPS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Healer.
+        /// </summary>
+        internal static string Healer {
+            get {
+                return ResourceManager.GetString("Healer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Job Roles.
         /// </summary>
         internal static string Job_Roles {
             get {
                 return ResourceManager.GetString("Job Roles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Miscellaneous.
+        /// </summary>
+        internal static string Miscellaneous {
+            get {
+                return ResourceManager.GetString("Miscellaneous", resourceCulture);
             }
         }
         
@@ -155,6 +182,15 @@ namespace WrathCombo.Resources.Localization.UI.Misc {
         internal static string Setting {
             get {
                 return ResourceManager.GetString("Setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tank.
+        /// </summary>
+        internal static string Tank {
+            get {
+                return ResourceManager.GetString("Tank", resourceCulture);
             }
         }
         

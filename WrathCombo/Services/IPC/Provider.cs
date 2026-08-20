@@ -478,7 +478,7 @@ public partial class Provider : IDisposable
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?> IsCurrentJobConfiguredOn()
     {
-        if (Player.Job.IsHealer())
+        if (Player.Job.IsHealer() || Player.Job is Job.BLU)
         {
             return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
             {

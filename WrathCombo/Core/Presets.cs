@@ -70,6 +70,10 @@ internal static class PresetStorage
         public uint[] RetargetedActions =>
             GetRetargetedActions(Preset, RetargetedAttribute, PossiblyRetargeted, Parent);
         public bool IsBozja { get; }
+        public bool IsBlueDPS { get; }
+        public bool IsBlueTank { get; }
+        public bool IsBlueHealer { get; }
+        public bool IsBlueRole => IsBlueDPS || IsBlueTank || IsBlueHealer;
         public bool IsOccultCrescent => OccultCrescentJob != null;
         public OccultCrescentAttribute? OccultCrescentJob;
         public string? HoverText { get; }
@@ -93,6 +97,9 @@ internal static class PresetStorage
             PossiblyRetargeted = preset.GetAttribute<PossiblyRetargetedAttribute>();
             RetargetedAttribute = preset.GetAttribute<RetargetedAttribute>();
             IsBozja = preset.GetAttribute<BozjaAttribute>() != null;
+            IsBlueDPS = preset.GetAttribute<BlueDPSAttribute>() != null;
+            IsBlueTank = preset.GetAttribute<BlueTankAttribute>() != null;
+            IsBlueHealer = preset.GetAttribute<BlueHealerAttribute>() != null;
             OccultCrescentJob = preset.GetAttribute<OccultCrescentAttribute>();
             HoverText = preset.GetAttribute<HoverInfoAttribute>()?.HoverText;
             ReplaceSkill = preset.GetAttribute<ReplaceSkillAttribute>();

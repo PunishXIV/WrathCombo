@@ -3173,6 +3173,25 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replaces Electrogenesis with a full one-button AoE rotation.
+        ///Also used with Healer Mimicry when the party does not need healing.
+        /// </summary>
+        internal static string BLU_AoE_DPS_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DPS Mode - AoE.
+        /// </summary>
+        internal static string BLU_AoE_DPS_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Turns Song of Torment into Bristle so Song of Torment is buffed..
         /// </summary>
         internal static string BLU_BuffedSoT_Desc {
@@ -3592,6 +3611,25 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string BLU_SoloMode_Name {
             get {
                 return ResourceManager.GetString("BLU_SoloMode_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Sonic Boom with a full one-button single target rotation.
+        ///Also used with Healer Mimicry when the party does not need healing.
+        /// </summary>
+        internal static string BLU_ST_DPS_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DPS Mode - Single Target.
+        /// </summary>
+        internal static string BLU_ST_DPS_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Name", resourceCulture);
             }
         }
         

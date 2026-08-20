@@ -1178,6 +1178,146 @@ Will only be used if Swiftcast is on cooldown.</value>
   <data name="BLU_Addle_Name" xml:space="preserve">
     <value>Addle &amp; Magic Hammer Debuff</value>
   </data>
+  <data name="BLU_AoE_DPS_Desc" xml:space="preserve">
+    <value>Replaces Electrogenesis with a full one-button AoE rotation.
+Also used with Healer Mimicry when the party does not need healing.</value>
+  </data>
+  <data name="BLU_AoE_DPS_Name" xml:space="preserve">
+    <value>DPS Mode - AoE</value>
+  </data>
+  <data name="BLU_AoE_DPS_BasicInstinct_Desc" xml:space="preserve">
+    <value>Adds Basic Instinct when solo in a duty.</value>
+  </data>
+  <data name="BLU_AoE_DPS_BasicInstinct_Name" xml:space="preserve">
+    <value>Basic Instinct</value>
+  </data>
+  <data name="BLU_AoE_DPS_FlyingSardine_Desc" xml:space="preserve">
+    <value>Adds Flying Sardine.</value>
+  </data>
+  <data name="BLU_AoE_DPS_FlyingSardine_Name" xml:space="preserve">
+    <value>Flying Sardine</value>
+  </data>
+  <data name="BLU_AoE_DPS_HydroPull_Desc" xml:space="preserve">
+    <value>Adds Hydro Pull.</value>
+  </data>
+  <data name="BLU_AoE_DPS_HydroPull_Name" xml:space="preserve">
+    <value>Hydro Pull</value>
+  </data>
+  <data name="BLU_AoE_DPS_Primals_Desc" xml:space="preserve">
+    <value>Adds equipped primals on cooldown.</value>
+  </data>
+  <data name="BLU_AoE_DPS_Primals_Name" xml:space="preserve">
+    <value>Primals</value>
+  </data>
+  <data name="BLU_AoE_Heal_Desc" xml:space="preserve">
+    <value>Replaces White Wind with a full one-button AoE healing utility.
+Pair with DPS Mode to damage when the party is healthy.</value>
+  </data>
+  <data name="BLU_AoE_Heal_Name" xml:space="preserve">
+    <value>Healing Mode - AoE</value>
+  </data>
+  <data name="BLU_AoE_Heal_AngelsSnack_Desc" xml:space="preserve">
+    <value>Adds Angel's Snack.</value>
+  </data>
+  <data name="BLU_AoE_Heal_AngelsSnack_Name" xml:space="preserve">
+    <value>Angel's Snack</value>
+  </data>
+  <data name="BLU_AoE_Heal_Gobskin_Desc" xml:space="preserve">
+    <value>Adds Gobskin.</value>
+  </data>
+  <data name="BLU_AoE_Heal_Gobskin_Name" xml:space="preserve">
+    <value>Gobskin</value>
+  </data>
+  <data name="BLU_AoE_Heal_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming.</value>
+  </data>
+  <data name="BLU_AoE_Heal_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming</value>
+  </data>
+  <data name="BLU_AoE_Heal_Stotram_Desc" xml:space="preserve">
+    <value>Adds Stotram.</value>
+  </data>
+  <data name="BLU_AoE_Heal_Stotram_Name" xml:space="preserve">
+    <value>Stotram</value>
+  </data>
+  <data name="BLU_AoE_Tank_Desc" xml:space="preserve">
+    <value>Replaces Right Round with a full one-button AoE tank rotation.</value>
+  </data>
+  <data name="BLU_AoE_Tank_Name" xml:space="preserve">
+    <value>Tank Mode - AoE</value>
+  </data>
+  <data name="BLU_AoE_Tank_BadBreath_Desc" xml:space="preserve">
+    <value>Adds Bad Breath.</value>
+  </data>
+  <data name="BLU_AoE_Tank_BadBreath_Name" xml:space="preserve">
+    <value>Bad Breath</value>
+  </data>
+  <data name="BLU_AoE_Tank_BasicInstinct_Desc" xml:space="preserve">
+    <value>Adds Basic Instinct when solo in a duty.</value>
+  </data>
+  <data name="BLU_AoE_Tank_BasicInstinct_Name" xml:space="preserve">
+    <value>Basic Instinct</value>
+  </data>
+  <data name="BLU_AoE_Tank_ChelonianGate_Desc" xml:space="preserve">
+    <value>Adds Chelonian Gate for tankbusters and raidwides.</value>
+  </data>
+  <data name="BLU_AoE_Tank_ChelonianGate_Name" xml:space="preserve">
+    <value>Chelonian Gate</value>
+  </data>
+  <data name="BLU_AoE_Tank_Devour_Desc" xml:space="preserve">
+    <value>Adds Devour.</value>
+  </data>
+  <data name="BLU_AoE_Tank_Devour_Name" xml:space="preserve">
+    <value>Devour</value>
+  </data>
+  <data name="BLU_AoE_Tank_DragonForce_Desc" xml:space="preserve">
+    <value>Adds Dragon Force for tankbusters and raidwides.</value>
+  </data>
+  <data name="BLU_AoE_Tank_DragonForce_Name" xml:space="preserve">
+    <value>Dragon Force</value>
+  </data>
+  <data name="BLU_AoE_Tank_FlyingSardine_Desc" xml:space="preserve">
+    <value>Adds Flying Sardine.</value>
+  </data>
+  <data name="BLU_AoE_Tank_FlyingSardine_Name" xml:space="preserve">
+    <value>Flying Sardine</value>
+  </data>
+  <data name="BLU_AoE_Tank_FrogLegs_Desc" xml:space="preserve">
+    <value>Adds Frog Legs.</value>
+  </data>
+  <data name="BLU_AoE_Tank_FrogLegs_Name" xml:space="preserve">
+    <value>Frog Legs</value>
+  </data>
+  <data name="BLU_AoE_Tank_HydroPull_Desc" xml:space="preserve">
+    <value>Adds Hydro Pull.</value>
+  </data>
+  <data name="BLU_AoE_Tank_HydroPull_Name" xml:space="preserve">
+    <value>Hydro Pull</value>
+  </data>
+  <data name="BLU_AoE_Tank_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming.</value>
+  </data>
+  <data name="BLU_AoE_Tank_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming</value>
+  </data>
+  <data name="BLU_AoE_Tank_MightyGuard_Desc" xml:space="preserve">
+    <value>Adds Mighty Guard.</value>
+  </data>
+  <data name="BLU_AoE_Tank_MightyGuard_Name" xml:space="preserve">
+    <value>Mighty Guard</value>
+  </data>
+  <data name="BLU_AoE_Tank_Primals_Desc" xml:space="preserve">
+    <value>Adds equipped primals on cooldown.</value>
+  </data>
+  <data name="BLU_AoE_Tank_Primals_Name" xml:space="preserve">
+    <value>Primals</value>
+  </data>
+  <data name="BLU_AoE_Tank_StickyTongue_Desc" xml:space="preserve">
+    <value>Adds Sticky Tongue.</value>
+  </data>
+  <data name="BLU_AoE_Tank_StickyTongue_Name" xml:space="preserve">
+    <value>Sticky Tongue</value>
+  </data>
   <data name="BLU_BuffedSoT_Desc" xml:space="preserve">
     <value>Turns Song of Torment into Bristle so Song of Torment is buffed.</value>
   </data>
@@ -1324,6 +1464,179 @@ Feather Rain is Retargeted to your target, so you don't have to place it.</value
   </data>
   <data name="BLU_SoloMode_Name" xml:space="preserve">
     <value>Solo Mode</value>
+  </data>
+  <data name="BLU_ST_DPS_Desc" xml:space="preserve">
+    <value>Replaces Sonic Boom with a full one-button single target rotation.
+Also used with Healer Mimicry when the party does not need healing.</value>
+  </data>
+  <data name="BLU_ST_DPS_Name" xml:space="preserve">
+    <value>DPS Mode - Single Target</value>
+  </data>
+  <data name="BLU_ST_DPS_Breath_Desc" xml:space="preserve">
+    <value>Adds Breath of Magic to DPS Mode.</value>
+  </data>
+  <data name="BLU_ST_DPS_Breath_Name" xml:space="preserve">
+    <value>Breath of Magic</value>
+  </data>
+  <data name="BLU_ST_DPS_Flame_Desc" xml:space="preserve">
+    <value>Adds Mortal Flame to DPS Mode.</value>
+  </data>
+  <data name="BLU_ST_DPS_Flame_Name" xml:space="preserve">
+    <value>Mortal Flame</value>
+  </data>
+  <data name="BLU_ST_DPS_BasicInstinct_Desc" xml:space="preserve">
+    <value>Adds Basic Instinct when solo in a duty.</value>
+  </data>
+  <data name="BLU_ST_DPS_BasicInstinct_Name" xml:space="preserve">
+    <value>Basic Instinct</value>
+  </data>
+  <data name="BLU_ST_DPS_FlyingSardine_Desc" xml:space="preserve">
+    <value>Adds Flying Sardine.</value>
+  </data>
+  <data name="BLU_ST_DPS_FlyingSardine_Name" xml:space="preserve">
+    <value>Flying Sardine</value>
+  </data>
+  <data name="BLU_ST_DPS_Opener_Desc" xml:space="preserve">
+    <value>Adds the Moon Flute opener, repeated every two minutes.
+Prepull: Whistle at -5, Tingle at -3, Rose of Destruction on pull.
+Keep Nightbloom or bristled Song of Torment up between bursts.
+Feather Rain is Retargeted to your target.</value>
+  </data>
+  <data name="BLU_ST_DPS_Opener_Name" xml:space="preserve">
+    <value>Moon Flute Opener</value>
+  </data>
+  <data name="BLU_ST_DPS_Primals_Desc" xml:space="preserve">
+    <value>Adds equipped primals on cooldown.</value>
+  </data>
+  <data name="BLU_ST_DPS_Primals_Name" xml:space="preserve">
+    <value>Primals</value>
+  </data>
+  <data name="BLU_ST_DPS_SharpenedKnife_Desc" xml:space="preserve">
+    <value>Adds Sharpened Knife.</value>
+  </data>
+  <data name="BLU_ST_DPS_SharpenedKnife_Name" xml:space="preserve">
+    <value>Sharpened Knife</value>
+  </data>
+  <data name="BLU_ST_DPS_SongOfTorment_Desc" xml:space="preserve">
+    <value>Adds Song of Torment.</value>
+  </data>
+  <data name="BLU_ST_DPS_SongOfTorment_Name" xml:space="preserve">
+    <value>Song of Torment</value>
+  </data>
+  <data name="BLU_ST_DPS_TripleTrident_Desc" xml:space="preserve">
+    <value>Adds Triple Trident.</value>
+  </data>
+  <data name="BLU_ST_DPS_TripleTrident_Name" xml:space="preserve">
+    <value>Triple Trident</value>
+  </data>
+  <data name="BLU_ST_Heal_Desc" xml:space="preserve">
+    <value>Replaces Pom Cure with a full one-button single target healing utility.
+Pair with DPS Mode to damage when the party is healthy.</value>
+  </data>
+  <data name="BLU_ST_Heal_Name" xml:space="preserve">
+    <value>Healing Mode - Single Target</value>
+  </data>
+  <data name="BLU_ST_Heal_AngelsSnack_Desc" xml:space="preserve">
+    <value>Adds Angel's Snack.</value>
+  </data>
+  <data name="BLU_ST_Heal_AngelsSnack_Name" xml:space="preserve">
+    <value>Angel's Snack</value>
+  </data>
+  <data name="BLU_ST_Heal_Exuviation_Desc" xml:space="preserve">
+    <value>Adds Exuviation.</value>
+  </data>
+  <data name="BLU_ST_Heal_Exuviation_Name" xml:space="preserve">
+    <value>Exuviation</value>
+  </data>
+  <data name="BLU_ST_Heal_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming.</value>
+  </data>
+  <data name="BLU_ST_Heal_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming</value>
+  </data>
+  <data name="BLU_ST_Tank_Desc" xml:space="preserve">
+    <value>Replaces Goblin Punch with a full one-button single target tank rotation.</value>
+  </data>
+  <data name="BLU_ST_Tank_Name" xml:space="preserve">
+    <value>Tank Mode - Single Target</value>
+  </data>
+  <data name="BLU_ST_Tank_BadBreath_Desc" xml:space="preserve">
+    <value>Adds Bad Breath.</value>
+  </data>
+  <data name="BLU_ST_Tank_BadBreath_Name" xml:space="preserve">
+    <value>Bad Breath</value>
+  </data>
+  <data name="BLU_ST_Tank_BasicInstinct_Desc" xml:space="preserve">
+    <value>Adds Basic Instinct when solo in a duty.</value>
+  </data>
+  <data name="BLU_ST_Tank_BasicInstinct_Name" xml:space="preserve">
+    <value>Basic Instinct</value>
+  </data>
+  <data name="BLU_ST_Tank_ChelonianGate_Desc" xml:space="preserve">
+    <value>Adds Chelonian Gate for tankbusters and raidwides.</value>
+  </data>
+  <data name="BLU_ST_Tank_ChelonianGate_Name" xml:space="preserve">
+    <value>Chelonian Gate</value>
+  </data>
+  <data name="BLU_ST_Tank_Devour_Desc" xml:space="preserve">
+    <value>Adds Devour.</value>
+  </data>
+  <data name="BLU_ST_Tank_Devour_Name" xml:space="preserve">
+    <value>Devour</value>
+  </data>
+  <data name="BLU_ST_Tank_DragonForce_Desc" xml:space="preserve">
+    <value>Adds Dragon Force for tankbusters and raidwides.</value>
+  </data>
+  <data name="BLU_ST_Tank_DragonForce_Name" xml:space="preserve">
+    <value>Dragon Force</value>
+  </data>
+  <data name="BLU_ST_Tank_FlyingSardine_Desc" xml:space="preserve">
+    <value>Adds Flying Sardine.</value>
+  </data>
+  <data name="BLU_ST_Tank_FlyingSardine_Name" xml:space="preserve">
+    <value>Flying Sardine</value>
+  </data>
+  <data name="BLU_ST_Tank_FrogLegs_Desc" xml:space="preserve">
+    <value>Adds Frog Legs.</value>
+  </data>
+  <data name="BLU_ST_Tank_FrogLegs_Name" xml:space="preserve">
+    <value>Frog Legs</value>
+  </data>
+  <data name="BLU_ST_Tank_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming.</value>
+  </data>
+  <data name="BLU_ST_Tank_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming</value>
+  </data>
+  <data name="BLU_ST_Tank_MightyGuard_Desc" xml:space="preserve">
+    <value>Adds Mighty Guard.</value>
+  </data>
+  <data name="BLU_ST_Tank_MightyGuard_Name" xml:space="preserve">
+    <value>Mighty Guard</value>
+  </data>
+  <data name="BLU_ST_Tank_Offguard_Desc" xml:space="preserve">
+    <value>Adds Off-guard.</value>
+  </data>
+  <data name="BLU_ST_Tank_Offguard_Name" xml:space="preserve">
+    <value>Off-guard</value>
+  </data>
+  <data name="BLU_ST_Tank_Primals_Desc" xml:space="preserve">
+    <value>Adds equipped primals on cooldown.</value>
+  </data>
+  <data name="BLU_ST_Tank_Primals_Name" xml:space="preserve">
+    <value>Primals</value>
+  </data>
+  <data name="BLU_ST_Tank_SongOfTorment_Desc" xml:space="preserve">
+    <value>Adds Song of Torment.</value>
+  </data>
+  <data name="BLU_ST_Tank_SongOfTorment_Name" xml:space="preserve">
+    <value>Song of Torment</value>
+  </data>
+  <data name="BLU_ST_Tank_StickyTongue_Desc" xml:space="preserve">
+    <value>Adds Sticky Tongue.</value>
+  </data>
+  <data name="BLU_ST_Tank_StickyTongue_Name" xml:space="preserve">
+    <value>Sticky Tongue</value>
   </data>
   <data name="BLU_Ultravibrate_Desc" xml:space="preserve">
     <value>Turns Ultravibration into Ram's Voice if Deep Freeze isn't on the target. Will swiftcast Ultravibration if available.</value>

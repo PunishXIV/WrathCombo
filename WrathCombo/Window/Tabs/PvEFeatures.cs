@@ -137,49 +137,99 @@ internal class PvEFeatures : FeaturesWindow
 
                 try
                 {
-                    if (!ImGui.BeginTabBar($"subTab{openJob.Value.Name()}",
-                            ImGuiTabBarFlags.Reorderable |
-                            ImGuiTabBarFlags.AutoSelectNewTabs))
+                    ImGuiTabBarFlags tabBarFlags = openJob is Job.BLU
+                        ? ImGuiTabBarFlags.None
+                        : ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs;
+                    string tabBarId = openJob is Job.BLU
+                        ? "subTabBLURoles"
+                        : $"subTab{openJob.Value.Name()}";
+                    if (!ImGui.BeginTabBar(tabBarId, tabBarFlags))
                         return;
 
-                    string mainTabName = openJob.Value is Job.ADV ? MiscUI.Job_Roles : MiscUI.Normal;
-                    if (ImGui.BeginTabItem(mainTabName))
+                    if (openJob is Job.BLU)
                     {
-                        SetCurrentTab(FeatureTab.Normal);
-                        DrawHeadingContents(openJob.Value); // This draws all the normal PvE Combos for a job
-                        ImGui.EndTabItem();
+                        if (groupedPresets[openJob.Value].Any(x => x.IsBlueTank))
+                        {
+                            if (ImGui.BeginTabItem(MiscUI.Tank))
+                            {
+                                SetCurrentTab(FeatureTab.BlueTank);
+                                DrawBlueContents(FeatureTab.BlueTank);
+                                ImGui.EndTabItem();
+                            }
+                        }
+
+                        if (groupedPresets[openJob.Value].Any(x => x.IsBlueDPS))
+                        {
+                            if (ImGui.BeginTabItem(MiscUI.DPS))
+                            {
+                                SetCurrentTab(FeatureTab.BlueDPS);
+                                DrawBlueContents(FeatureTab.BlueDPS);
+                                ImGui.EndTabItem();
+                            }
+                        }
+
+                        if (groupedPresets[openJob.Value].Any(x => x.IsBlueHealer))
+                        {
+                            if (ImGui.BeginTabItem(MiscUI.Healer))
+                            {
+                                SetCurrentTab(FeatureTab.BlueHealer);
+                                DrawBlueContents(FeatureTab.BlueHealer);
+                                ImGui.EndTabItem();
+                            }
+                        }
+
+                        if (ImGui.BeginTabItem(MiscUI.Miscellaneous))
+                        {
+                            SetCurrentTab(FeatureTab.Normal);
+                            DrawHeadingContents(openJob.Value);
+                            ImGui.EndTabItem();
+                        }
                     }
-
-                    if (openJob is Job.ADV)
+                    else
                     {
-                        if (groupedPresets[openJob.Value].Any(x => x.IsVariant))
+                        string mainTabName = openJob.Value switch
                         {
-                            if (ImGui.BeginTabItem(MiscUI.Variant_Dungeons))
-                            {
-                                SetCurrentTab(FeatureTab.Variant);
-                                DrawVariantContents(openJob.Value);
-                                ImGui.EndTabItem();
-                            }
+                            Job.ADV => MiscUI.Job_Roles,
+                            _       => MiscUI.Normal,
+                        };
+                        if (ImGui.BeginTabItem(mainTabName))
+                        {
+                            SetCurrentTab(FeatureTab.Normal);
+                            DrawHeadingContents(openJob.Value); // This draws all the normal PvE Combos for a job
+                            ImGui.EndTabItem();
                         }
 
-                        if (groupedPresets[openJob.Value].Any(x => x.IsBozja))
+                        if (openJob is Job.ADV)
                         {
-                            if (ImGui.BeginTabItem(MiscUI.Bozja))
+                            if (groupedPresets[openJob.Value].Any(x => x.IsVariant))
                             {
-                                SetCurrentTab(FeatureTab.Bozja);
-                                DrawBozjaContents(openJob.Value);
-                                ImGui.EndTabItem();
+                                if (ImGui.BeginTabItem(MiscUI.Variant_Dungeons))
+                                {
+                                    SetCurrentTab(FeatureTab.Variant);
+                                    DrawVariantContents(openJob.Value);
+                                    ImGui.EndTabItem();
+                                }
                             }
-                        }
 
-                        if (groupedPresets[openJob.Value].Any(x =>
-                                x.IsOccultCrescent))
-                        {
-                            if (ImGui.BeginTabItem(MiscUI.Occult_Crescent))
+                            if (groupedPresets[openJob.Value].Any(x => x.IsBozja))
                             {
-                                SetCurrentTab(FeatureTab.OccultCrescent);
-                                DrawOccultContents(openJob.Value);
-                                ImGui.EndTabItem();
+                                if (ImGui.BeginTabItem(MiscUI.Bozja))
+                                {
+                                    SetCurrentTab(FeatureTab.Bozja);
+                                    DrawBozjaContents(openJob.Value);
+                                    ImGui.EndTabItem();
+                                }
+                            }
+
+                            if (groupedPresets[openJob.Value].Any(x =>
+                                    x.IsOccultCrescent))
+                            {
+                                if (ImGui.BeginTabItem(MiscUI.Occult_Crescent))
+                                {
+                                    SetCurrentTab(FeatureTab.OccultCrescent);
+                                    DrawOccultContents(openJob.Value);
+                                    ImGui.EndTabItem();
+                                }
                             }
                         }
                     }
@@ -280,6 +330,43 @@ internal class PvEFeatures : FeaturesWindow
         ShowSearchErrorIfNoResults();
     }
 
+    private static void DrawBlueContents(FeatureTab tab)
+    {
+        if (!Messages.PrintBLUMessage(Job.BLU)) return;
+
+        List<Preset> alreadyShown = [];
+        foreach (var presetData in groupedPresets[Job.BLU].Where(x =>
+            MatchesBlueTab(x, tab) &&
+            !x.ShouldBeHidden))
+        {
+            if (IsSearching && !PresetMatchesSearch(presetData.Preset))
+                continue;
+            alreadyShown.Add(presetData.Preset);
+
+            InfoBox presetBox = new() { CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(presetData.Preset, presetData); } };
+            presetBox.Draw();
+            ImGuiEx.Spacing(new Vector2(0, 12));
+        }
+
+        if (IsSearching)
+            SearchMorePresets([.. PresetStorage.AllPresets!
+                .Where(kvp =>
+                    MatchesBlueTab(kvp.Value, tab) &&
+                    !kvp.Value.ShouldBeHidden &&
+                    kvp.Value.JobInfo.Job == Job.BLU)
+                .Select(kvp => kvp.Key)],
+                alreadyShown);
+        ShowSearchErrorIfNoResults();
+    }
+
+    private static bool MatchesBlueTab(PresetStorage.PresetData presetData, FeatureTab tab) => tab switch
+    {
+        FeatureTab.BlueDPS    => presetData.IsBlueDPS,
+        FeatureTab.BlueTank   => presetData.IsBlueTank,
+        FeatureTab.BlueHealer => presetData.IsBlueHealer,
+        _                     => false,
+    };
+
     // This draws all the normal PvE Combos for a job
     internal static void DrawHeadingContents(Job job)
     {
@@ -291,6 +378,7 @@ internal class PvEFeatures : FeaturesWindow
                    !presetData.IsVariant &&
                    !presetData.IsBozja &&
                    !presetData.IsOccultCrescent &&
+                   !presetData.IsBlueRole &&
                    !presetData.ShouldBeHidden;
         }
 

@@ -254,7 +254,7 @@ public partial class Helper(ref Leasing leasing)
         // Add combos for each target type category
         AddComboForTargetType(combos, comboStates, job, ComboTargetTypeKeys.SingleTargetDPS, includeOptions);
         AddComboForTargetType(combos, comboStates, job, ComboTargetTypeKeys.AoEDPS, includeOptions);
-        if (job.IsHealer())
+        if (job.IsHealer() || job is Job.BLU)
         {
             AddComboForTargetType(combos, comboStates, job, ComboTargetTypeKeys.SingleTargetHeals, includeOptions);
             AddComboForTargetType(combos, comboStates, job, ComboTargetTypeKeys.AoEHeals, includeOptions);
@@ -276,16 +276,39 @@ public partial class Helper(ref Leasing leasing)
         ComboTargetTypeKeys targetType,
         bool includeOptions)
     {
+        if (!comboStates.TryGetValue(targetType, out var bySimplicity))
+            return;
+
         // Get simple combo if available
-        if (comboStates[targetType].TryGetValue(ComboSimplicityLevelKeys.Simple, out var simpleCombo) && simpleCombo.Count > 0)
+        if (bySimplicity.TryGetValue(ComboSimplicityLevelKeys.Simple, out var simpleCombo) && simpleCombo.Count > 0)
         {
-            combos.Add(simpleCombo.First().Key.ToString());
+            if (job is Job.BLU)
+                combos.AddRange(simpleCombo.Keys.Select(k => k.ToString()));
+            else
+                combos.Add(simpleCombo.First().Key.ToString());
             return;
         }
 
         // Fall back to advanced combo
-        var advancedCombo = comboStates[targetType][ComboSimplicityLevelKeys.Advanced].First();
-        var comboName = advancedCombo.Key.ToString();
+        if (!bySimplicity.TryGetValue(ComboSimplicityLevelKeys.Advanced, out var advancedCombo) ||
+            advancedCombo.Count == 0)
+            return;
+
+        if (job is Job.BLU)
+        {
+            foreach (var preset in advancedCombo.Keys)
+            {
+                var bluComboName = preset.ToString();
+                combos.Add(bluComboName);
+                if (includeOptions &&
+                    P.IPCSearch.OptionNamesByJob.TryGetValue(job, out var bluOptions) &&
+                    bluOptions.TryGetValue(bluComboName, out var bluComboOptions))
+                    combos.AddRange(bluComboOptions);
+            }
+            return;
+        }
+
+        var comboName = advancedCombo.First().Key.ToString();
         combos.Add(comboName);
 
         // Add related options if requested

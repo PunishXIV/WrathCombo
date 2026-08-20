@@ -214,7 +214,8 @@ internal unsafe class AutoRotationController
             return;
 
         // Healer logic
-        bool isHealer = Player.Object?.Role is CombatRole.Healer;
+        bool isHealer = Player.Object?.Role is CombatRole.Healer ||
+                        (Player.Job is Job.BLU && BLU.HasHealerMimicry);
 
         if (cfg.HealerSettings.HandleRaidwides)
         {
@@ -278,7 +279,8 @@ internal unsafe class AutoRotationController
             OccultCrescent.CanPhantomRaise() ||
             Variant.CanRaise())
         {
-            if (ActionManager.Instance()->QueuedActionId == RoleActions.Healer.Esuna)
+            if (ActionManager.Instance()->QueuedActionId == RoleActions.Healer.Esuna ||
+                ActionManager.Instance()->QueuedActionId == BLU.Exuviation)
                 ActionManager.Instance()->QueuedActionId = 0;
 
             if ((!needsHeal || GetPartyMembers().Any(x => HasCleansableDoom(x.BattleChara))) && WrathOpener.CurrentOpener?.CurrentState is not
@@ -412,6 +414,23 @@ internal unsafe class AutoRotationController
         }
     }
 
+    private static bool BluAutoActionAllowed(PresetStorage.PresetData data)
+    {
+        if (Player.Job is not Job.BLU)
+            return true;
+
+        if (data.IsBlueTank)
+            return BLU.HasTankMimicry;
+
+        if (data.IsBlueDPS)
+            return !BLU.HasTankMimicry;
+
+        if (data.IsBlueHealer)
+            return BLU.HasHealerMimicry;
+
+        return true;
+    }
+
     private static bool ProcessAutoActions(ref uint _, bool canHeal, bool stOnly)
     {
         // Pre-filter and cache attributes to avoid repeated lookups
@@ -420,6 +439,7 @@ internal unsafe class AutoRotationController
             .Where(x => x.Attributes is { AutoAction: not null, ReplaceSkill: not null })
             .Where(x => x.Attributes.AutoAction.IsHeal == canHeal)
             .Where(x => !stOnly || x.Attributes.AutoAction.IsAoE == false)
+            .Where(x => BluAutoActionAllowed(x.Attributes))
             .OrderByDescending(x => x.Attributes.AutoAction.IsAoE);
 
         foreach (var entry in filteredActions)
@@ -444,7 +464,8 @@ internal unsafe class AutoRotationController
             }
 
             // Tank logic
-            if (Player.Object?.GetRole() is CombatRole.Tank)
+            if (Player.Object?.GetRole() is CombatRole.Tank ||
+                (Player.Job is Job.BLU && BLU.HasTankMimicry))
             {
                 AutomateTanking(entry.Preset, attributes, gameAct);
                 continue;
@@ -593,6 +614,7 @@ internal unsafe class AutoRotationController
                 Job.AST => AST.Ascend,
                 Job.SGE => SGE.Egeiro,
                 Job.RDM => RDM.Verraise,
+                Job.BLU => IsSpellActive(BLU.AngelWhisper) ? BLU.AngelWhisper : 0,
                 _ => 0,
             };
         }
@@ -688,13 +710,17 @@ internal unsafe class AutoRotationController
     {
         if (Player.Object is not { } || !EzThrottler.Throttle("CleanseThrottle", 50)) return;
 
+        uint cleanseSpell = Player.Job is Job.BLU ? BLU.Exuviation : RoleActions.Healer.Esuna;
+        if (Player.Job is Job.BLU && !IsSpellActive(BLU.Exuviation))
+            return;
+
         if (SimpleTarget.Stack.AllyToEsuna is IBattleChara memberBC)
         {
-            var res = ActionManager.GetActionInRangeOrLoS(Healer.Role.Esuna, Player.GameObject, memberBC.GameObject());
+            var res = ActionManager.GetActionInRangeOrLoS(cleanseSpell, Player.GameObject, memberBC.GameObject());
             if (res is 0 or 565)
             {
                 Svc.Log.Debug($"Cleansing {memberBC.Name}");
-                ActionManager.Instance()->UseAction(ActionType.Action, RoleActions.Healer.Esuna.Retarget(memberBC), memberBC.GameObjectId);
+                ActionManager.Instance()->UseAction(ActionType.Action, cleanseSpell.Retarget(memberBC), memberBC.GameObjectId);
             }
         }
     }
@@ -771,7 +797,8 @@ internal unsafe class AutoRotationController
         {
             if (rotationMode is DPSRotationMode dpsmode)
             {
-                if (Player.Object?.Role is CombatRole.Tank)
+                if (Player.Object?.Role is CombatRole.Tank ||
+                    (Player.Job is Job.BLU && BLU.HasTankMimicry))
                 {
                     IGameObject? target = dpsmode switch
                     {
@@ -806,7 +833,8 @@ internal unsafe class AutoRotationController
             }
             if (rotationMode is HealerRotationMode healermode)
             {
-                if (Player.Object?.Role != CombatRole.Healer) return null;
+                if (Player.Object?.Role != CombatRole.Healer &&
+                    !(Player.Job is Job.BLU && BLU.HasHealerMimicry)) return null;
                 IGameObject? target = healermode switch
                 {
                     HealerRotationMode.Manual => HealerTargeting.ManualTarget(),
