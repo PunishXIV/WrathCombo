@@ -789,7 +789,7 @@ internal class Debug : ConfigWindow, IDisposable
                 // Target Required
                 if (target is not null)
                 {
-                    var canUseOnTarget = ActionManager.CanUseActionOnTarget(_debugSpell.Value.RowId, target.Struct());
+                    var canUseOnTarget = ActionManager.CanUseActionOnTarget(_debugSpell.Value.RowId, target.GameObject());
                     CustomStyleText("Can Use on Target:", canUseOnTarget);
 
                     CustomStyleText($"Just Used on Target:", $"{JustUsedOn(_debugSpell.Value.RowId, target)}");
@@ -1718,7 +1718,7 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Height Difference:", $"{MathF.Round(GetTargetHeightDifference(target), 2)}y");
             CustomStyleText("Relative Position:", AngleToTarget(target).ToString());
             CustomStyleText("Requires Positionals:", TargetNeedsPositionals(target));
-            CustomStyleText("Is Invincible:", TargetIsInvincible(target!));
+            CustomStyleText("Is Invincible:", (target as IBattleChara)?.IsInvincible ?? false);
             CustomStyleText("Is Hostile:", target?.IsHostile());
             CustomStyleText("Is Friendly:", target?.IsFriendly());
             CustomStyleText("Is Boss:", target?.IsBoss());
@@ -1893,12 +1893,12 @@ internal class Debug : ConfigWindow, IDisposable
         {
             CustomStyleText($"Count:", $"{target.SafeStatusList?.Count(x => x.StatusId != 0)}");
             CustomStyleText($"NumValid:", $"{tar.Struct()->StatusManager.NumValidStatuses}");
-            CustomStyleText($"StatusCapped:", $"{CustomComboFunctions.TargetIsStatusCapped(tar)}");
+            CustomStyleText($"StatusCapped:", $"{tar.IsStatusCapped}");
             foreach (Status? status in tar.SafeStatusList)
             {
                 // Set Status
                 string statusId = status.StatusId.ToString();
-                string statusName = StatusCache.GetStatusName(status.StatusId) ?? string.Empty;
+                string statusName = status.Name ?? string.Empty;
 
                 // Set Source Name
                 string sourceName = status.SourceId != tar.GameObjectId
@@ -1906,7 +1906,7 @@ internal class Debug : ConfigWindow, IDisposable
                     : string.Empty;
 
                 // Set Duration
-                float statusDuration = GetStatusEffectRemainingTime((ushort)status.StatusId, anyOwner: true);
+                float statusDuration = status.RemainingTimeOrZero();
                 string formattedDuration = $"{SymbolDuration} {(statusDuration >= 60f
                     ? $"{(int)(statusDuration / 60f)}m"
                     : $"{statusDuration:F1}s")}";

@@ -39,7 +39,7 @@ internal abstract partial class CustomComboFunctions
     }
 
     /// <summary> Gets the current target or null. </summary>
-    public static IGameObject? CurrentTarget => OverrideTarget ?? Svc.Targets.Target;
+    public static IBattleChara? CurrentTarget => (OverrideTarget ?? SimpleTarget.HardTarget) as IBattleChara;
 
     #region Target Checks
 
@@ -379,7 +379,7 @@ internal abstract partial class CustomComboFunctions
     ///     (Optional, defaults to <see cref="CurrentTarget" />)
     /// </param>
     /// <param name="checkIgnoredList">
-    ///     Whether to check the 
+    ///     Whether to check the
     ///     <see cref="Configuration.IgnoredNPCs"/> list. <br />
     ///     (Optional, defaults to false)
     /// </param>
@@ -399,7 +399,7 @@ internal abstract partial class CustomComboFunctions
 
         if (sheetSpell.CanTargetHostile && sheetSpell.CastType == 1)
         {
-            return Svc.Objects.Where(x => x.IsHostile() && GetTargetDistance(x) <= GetActionRange(aoeSpell) && (!checkIgnoredList || !Service.Configuration.IgnoredNPCs.ContainsKey(x.BaseId)));
+            return Svc.Objects.GetBattleCharas().Where(x => x.IsHostile() && GetTargetDistance(x) <= GetActionRange(aoeSpell) && (!checkIgnoredList || !Service.Configuration.IgnoredNPCs.ContainsKey(x.BaseId)));
         }
 
         return sheetSpell.CastType switch
@@ -739,7 +739,7 @@ internal abstract partial class CustomComboFunctions
     ///     (Optional, defaults to 0, which is the value for many Line AoEs)
     /// </param>
     /// <param name="checkIgnoredList">
-    ///     Whether to check the 
+    ///     Whether to check the
     ///     <see cref="Configuration.IgnoredNPCs"/> list. <br />
     ///     (Optional, defaults to false)
     /// </param>
@@ -750,7 +750,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="checkInvincible">
     ///     Whether enemies should be checked for invincibility.<br />
     ///     Should only be set to <see langword="false" /> by
-    ///     <see cref="CustomComboFunctions.TargetIsInvincible"/>.
+    ///     <see cref="StatusExtensions.get_IsInvincible(IBattleChara)"/>
     /// </param>
     /// <returns>
     ///     Number of enemies within the specified AoE shape.
@@ -789,7 +789,7 @@ internal abstract partial class CustomComboFunctions
             return Enumerable.Empty<IGameObject>();
 
         // Get all possible enemies to search for the positions of
-        var targets = Svc.Objects.Where(x => IsValidTarget(x, enemies, checkInvincible, checkIgnoredList));
+        var targets = Svc.Objects.GetBattleCharas().Where(x => IsValidTarget(x, enemies, checkInvincible, checkIgnoredList));
 
         // Circle AoEs positioned on self
         if (typeof(T) == typeof(SelfCircle))
@@ -823,11 +823,10 @@ internal abstract partial class CustomComboFunctions
         return Enumerable.Empty<IGameObject>();
     }
 
-    static bool IsValidTarget(IGameObject o, bool enemies, bool checkInvincible, bool checkIgnoredList)
+    static bool IsValidTarget(IBattleChara o, bool enemies, bool checkInvincible, bool checkIgnoredList)
     {
         if (!enemies)
-            return o is IBattleChara &&
-                   o.IsTargetable &&
+            return o.IsTargetable &&
                    o.IsWithinRange(60f) &&
                    o.IsFriendly() &&
                    IsInLineOfSight(o);
@@ -836,7 +835,7 @@ internal abstract partial class CustomComboFunctions
                o.IsWithinRange(60f) &&
                o.IsHostile() &&
                (!checkInvincible ||
-                !TargetIsInvincible(o)) &&
+                !o.IsInvincible) &&
                (!checkIgnoredList ||
                 !Service.Configuration.IgnoredNPCs.ContainsKey(o.BaseId)) &&
                IsInLineOfSight(o);

@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using WrathCombo.API.Enum;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvE.Enums;
@@ -135,8 +136,8 @@ internal unsafe class AutoRotationController
         x.BattleChara.IsTargetable &&
         (cfg.HealerSettings.AutoRezOutOfParty || GetPartyMembers().Any(y => y.GameObjectId == x.BattleChara.GameObjectId)) &&
         GetTargetDistance(x.BattleChara) <= QueryRange &&
-        !TargetHasRaiseStatus(x.BattleChara) &&
-        !TargetHasRaiseInvincibility(x.BattleChara) &&
+        !x.BattleChara.HasRaiseStatus &&
+        !x.BattleChara.HasRaiseInvincibility &&
         TimeSpentDead(x.BattleChara.GameObjectId).TotalSeconds > 2;
 
     public static bool LockedST
@@ -174,7 +175,7 @@ internal unsafe class AutoRotationController
                || Player.Mounted
                || !EzThrottler.Throttle("Autorot", cfg.Throttler)
                || (ActionManager.Instance()->QueuedActionId > 0)
-               || TargetHasRaiseInvincibility(Player.Object)
+               || Player.Object.HasRaiseInvincibility
                || Paused;
     }
 
@@ -493,7 +494,7 @@ internal unsafe class AutoRotationController
                 if (!ActionReady(spell))
                     return;
 
-                if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.Struct()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
+                if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.GameObject()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
                 {
                     ActionManager.Instance()->UseAction(ActionType.Action, regenSpell, SimpleTarget.FocusTarget.GameObjectId);
                     return;
@@ -558,7 +559,7 @@ internal unsafe class AutoRotationController
                     ActionManager.GetAdjustedCastTime(ActionType.Action, spell) > 0 && TimeStoodStill < TimeSpan.FromSeconds(1))
                     return;
 
-                if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.Struct()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
+                if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.GameObject()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
                 {
                     ActionManager.Instance()->UseAction(ActionType.Action, spell, SimpleTarget.FocusTarget.GameObjectId);
                     return;
@@ -1089,7 +1090,7 @@ internal unsafe class AutoRotationController
             chara.IsHostile() &&
             IsInRange(chara, InBossEncounter() && cfg.DPSSettings.IgnoreRangeInBoss ? 50f : cfg.DPSSettings.MaxDistance) &&
             GetTargetHeightDifference(chara) <= (InBossEncounter() && cfg.DPSSettings.IgnoreRangeInBoss ? 100f : cfg.DPSSettings.MaxDistance) &&
-            !TargetIsInvincible(chara) &&
+            !chara.IsInvincible &&
             !Service.Configuration.IgnoredNPCs.ContainsKey(chara.BaseId) &&
             ((cfg.DPSSettings.OnlyAttackInCombat && chara.Struct()->InCombat) || !cfg.DPSSettings.OnlyAttackInCombat) &&
             IsInLineOfSight(chara);
@@ -1193,16 +1194,14 @@ internal unsafe class AutoRotationController
 
     public static class HealerTargeting
     {
-        internal static IGameObject? ManualTarget()
+        internal static IBattleChara? ManualTarget()
         {
-            if (Svc.Targets.Target == null) return null;
-            var t = Svc.Targets.Target;
-            bool goodToHeal = t is IBattleChara &&
-                              t.IsFriendly() &&
+            if (SimpleTarget.HardTarget is not { } t) return null;
+            bool goodToHeal = t.IsFriendly() &&
                               GetTargetHPPercent(t) <=
                               (TargetHasExcog(t) ? cfg.HealerSettings.SingleTargetExcogHPP :
-                                  TargetHasRegen(t) ? cfg.HealerSettings.SingleTargetRegenHPP :
-                                  cfg.HealerSettings.SingleTargetHPP);
+                               TargetHasRegen(t) ? cfg.HealerSettings.SingleTargetRegenHPP :
+                               cfg.HealerSettings.SingleTargetHPP);
             if (goodToHeal && !t.IsHostile())
             {
                 return t;
@@ -1254,36 +1253,36 @@ internal unsafe class AutoRotationController
             return healableCount >= cfg.HealerSettings.AoEHealTargetCount;
         }
 
-        private static bool TargetHasRegen(IGameObject? target)
+        private static bool TargetHasRegen(IBattleChara target)
         {
-            if (target is null) return false;
             return JobID switch
             {
-                Job.AST => HasStatusEffect(AST.Buffs.AspectedBenefic, target),
-                Job.WHM => HasStatusEffect(WHM.Buffs.Regen, target),
+                Job.AST => target.HasStatus(AST.Buffs.AspectedBenefic),
+                Job.WHM => target.HasStatus(WHM.Buffs.Regen),
                 _ => false,
             };
         }
-        private static bool TargetHasExcog(IGameObject? target)
-        {
-            return target is not null && HasStatusEffect(SCH.Buffs.Excogitation, target, true);
-        }
-        /// Used to skip the healing of tanks that are invuln but still receive damage
-        private static bool TargetHasImmortality(IBattleChara? target)
-        {
-            if (target is null) return false;
 
-            return GetStatusEffectRemainingTime(DRK.Buffs.LivingDead, target, true) >= 3 ||
-                   GetStatusEffectRemainingTime(DRK.Buffs.WalkingDead, target, true) >= 5 ||
-                   GetStatusEffectRemainingTime(WAR.Buffs.Holmgang, target, true) >= 5;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool TargetHasExcog(IBattleChara target) =>
+            target.HasStatus(SCH.Buffs.Excogitation, true);
+
+        /// Used to skip the healing of tanks that are invuln but still receive damage
+        private static bool TargetHasImmortality(IBattleChara target)
+        {
+            //if (target is null) return false;
+
+            return target.Status(DRK.Buffs.LivingDead, true).RemainingTimeOrZero() >= 3 ||
+                   target.Status(DRK.Buffs.WalkingDead, true).RemainingTimeOrZero() >= 5 ||
+                   target.Status(WAR.Buffs.Holmgang, true).RemainingTimeOrZero() >= 5;
         }
         /// Used to de-prioritize (not skip) the healing of invuln tanks
-        private static bool TargetHasTrueInvuln(IBattleChara? target)
+        private static bool TargetHasTrueInvuln(IBattleChara target)
         {
-            if (target is null) return false;
+            //if (target is null) return false;
 
-            return GetStatusEffectRemainingTime(GNB.Buffs.Superbolide, target) >= 5 ||
-                   GetStatusEffectRemainingTime(PLD.Buffs.HallowedGround, target) >= 5;
+            return target.Status(GNB.Buffs.Superbolide).RemainingTimeOrZero() >= 5 ||
+                   target.Status(PLD.Buffs.HallowedGround).RemainingTimeOrZero() >= 5;
         }
     }
 
