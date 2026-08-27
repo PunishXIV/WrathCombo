@@ -4,6 +4,7 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.LayoutEngine;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
 using System;
@@ -15,6 +16,7 @@ using WrathCombo.Core;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using static FFXIVClientStructs.FFXIV.Client.System.Input.PadDevice.Delegates;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 namespace WrathCombo.CustomComboNS.Functions;
 
@@ -489,7 +491,39 @@ internal abstract partial class CustomComboFunctions
             (&hit, &sourcePos, &direction, distance, 1, flags);
         UpdateLineOfSightCache(objID, result);
 
-        return result;
+        bool isBarrierIsUp = false;
+        foreach (var s in Framework.Instance()->BGCollisionModule->SceneManager->Scenes)
+        {
+            foreach (var col in s->Scene->Colliders)
+            {
+                if (col->GetColliderType() is ColliderType.Box && col->ObjectMaterialValue == 0x2400 && (col->VisibilityFlags & 1) != 0)
+                {
+                    var instanceLayout = LayoutExtensions.FindInstance(LayoutWorld.Instance()->ActiveLayout, (col->LayoutObjectId << 32) | (col->LayoutObjectId >> 32));
+                    if (!instanceLayout->IsActive)
+                        continue;
+                    Vector4 sPos = new(sourcePos, 1);
+                    var filter = new RaycastMaterialFilter() { Mask = col->ObjectMaterialMask, Value = col->ObjectMaterialValue };
+                    var args = new RaycastParams()
+                    {
+                        Origin = &sPos,
+                        Direction = &direction,
+                        MaxDistance = &distance,
+                        MaterialFilter = &filter
+                    };
+                    var rayhit = new RaycastHit();
+                    var res = col->Raycast(&rayhit, col->ObjectMaterialMask, &args);
+                    if (res && rayhit.Distance <= distance)
+                    {
+                        isBarrierIsUp = true;
+                        break;
+                    }
+                }
+            }
+            if (isBarrierIsUp)
+                break;
+        }
+
+        return result && !isBarrierIsUp;
     }
 
     #region LoS Caching
