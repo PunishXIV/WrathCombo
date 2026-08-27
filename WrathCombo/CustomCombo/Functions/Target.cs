@@ -487,9 +487,14 @@ internal abstract partial class CustomComboFunctions
         RaycastHit hit;
         var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
 
-        var result = !Framework.Instance()->BGCollisionModule->RaycastMaterialFilter
+        var normalLoS = !Framework.Instance()->BGCollisionModule->RaycastMaterialFilter
             (&hit, &sourcePos, &direction, distance, 1, flags);
-        UpdateLineOfSightCache(objID, result);
+
+        if (!normalLoS)
+        {
+            UpdateLineOfSightCache(objID, false);
+            return false;
+        }
 
         bool isBarrierIsUp = false;
         foreach (var s in Framework.Instance()->BGCollisionModule->SceneManager->Scenes)
@@ -523,7 +528,12 @@ internal abstract partial class CustomComboFunctions
                 break;
         }
 
-        return result && !isBarrierIsUp;
+        if (isBarrierIsUp)
+            Svc.Log.Verbose($"Line of sight blocked by barrier for {obj.Name} ({obj.GameObjectId})");
+
+        var result = normalLoS && !isBarrierIsUp;
+        UpdateLineOfSightCache(objID, result);
+        return result;
     }
 
     #region LoS Caching
