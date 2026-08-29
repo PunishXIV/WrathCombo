@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Data.BattleData
 {
@@ -18,7 +19,7 @@ namespace WrathCombo.Data.BattleData
                             // If a player is trapped, determine the right rock
                             if (GetPartyMembers() // Svc.Objects if debugging via ARR
                                 .Select(x => x.BattleChara)
-                                .FirstOrDefault(x => HasStatusEffect(292, x, true)) is { } fettered)
+                                .FirstOrDefault(x => x.HasStatus(292, true)) is { } fettered)
                             {
                                 return Result(GetTargetDistance(target, fettered) > 1);
                             }
@@ -46,14 +47,14 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 9339 or 9340) //numbers are for Regular
                         {
-                            if (HasStatusEffect(1660)) return Result(targetID == 9339); // Packet Filter M
-                            if (HasStatusEffect(1661)) return Result(targetID == 9340); // Packet Filter F
+                            if (LocalPlayer.HasStatus(1660)) return Result(targetID == 9339); // Packet Filter M
+                            if (LocalPlayer.HasStatus(1661)) return Result(targetID == 9340); // Packet Filter F
                             if (targetID is 9340 && targetStatuses.Contains(671)) return Invincible.True; // F being covered by M
                         }
 
                         //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500
-                        if ((targetStatuses.Contains(3454) is true && HasStatusEffect(3499)) ||
-                            (targetStatuses.Contains(1675) is true && HasStatusEffect(3500)))
+                        if ((targetStatuses.Contains(3454) is true && LocalPlayer.HasStatus(3499)) ||
+                            (targetStatuses.Contains(1675) is true && LocalPlayer.HasStatus(3500)))
                             return Invincible.True;
 
                         return Invincible.CheckStatuses;

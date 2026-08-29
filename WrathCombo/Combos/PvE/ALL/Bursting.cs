@@ -6,6 +6,7 @@ using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
+using WrathCombo.Extensions;
 
 #endregion
 
@@ -26,8 +27,8 @@ public class Bursting
                 ? BurstJobsInParty * 0.3
                 : BurstJobsInParty * 0.6;
             var anyDeathDebuffs = GetPartyMembers().Any(member =>
-                HasStatusEffect(43, member.GameObject, true) || // weakness
-                HasStatusEffect(44, member.GameObject, true));  // brink
+                member.GameObject.HasStatus(43, true) || // weakness
+                member.GameObject.HasStatus(44, true));  // brink
 
             field = NumberOfPartyMembersBursting > threshold &&
                     !anyDeathDebuffs;
@@ -194,13 +195,11 @@ public class Bursting
     {
         protected internal static bool Target
             (ushort buff, bool anyOwner = false) =>
-            GetPossessedStatusRemainingTime(buff, CurrentTarget,
-                anyOwner: anyOwner) > 0;
+            CurrentTarget.Status(buff, anyOwner).RemainingTimeOrNaN() > 0;
 
         protected internal static bool Self
             (ushort buff, bool anyOwner = false) =>
-            GetPossessedStatusRemainingTime(buff,
-                anyOwner: anyOwner) > 0;
+            LocalPlayer.Status(buff, anyOwner).RemainingTimeOrNaN() > 0;
     }
 
     private static int BurstJobsInParty

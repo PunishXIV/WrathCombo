@@ -4,6 +4,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.ASTPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -97,14 +98,14 @@ internal static class ASTPvP
 
             // Card Draw
             if (IsEnabled(Preset.ASTPvP_Burst_DrawCard) && IsOffCooldown(MinorArcana) &&
-                (!HasStatusEffect(Buffs.LadyOfCrowns) && !HasStatusEffect(Buffs.LordOfCrowns)))
+                (!LocalPlayer.HasStatus(Buffs.LadyOfCrowns) && !LocalPlayer.HasStatus(Buffs.LordOfCrowns)))
                 return MinorArcana;
 
             if (IsEnabled(Preset.ASTPvP_Burst_PlayCard))
             {
                 int cardPlayOption = ASTPvP_Burst_PlayCardOption;
-                bool hasLadyOfCrowns = HasStatusEffect(Buffs.LadyOfCrowns);
-                bool hasLordOfCrowns = HasStatusEffect(Buffs.LordOfCrowns);
+                bool hasLadyOfCrowns = LocalPlayer.HasStatus(Buffs.LadyOfCrowns);
+                bool hasLordOfCrowns = LocalPlayer.HasStatus(Buffs.LordOfCrowns);
 
                 // Card Playing Split so Lady can still be used if target is immune
                 if ((cardPlayOption == 1 && hasLordOfCrowns && !PvPCommon.TargetImmuneToDamage()) ||
@@ -116,7 +117,7 @@ internal static class ASTPvP
 
             if (!PvPCommon.TargetImmuneToDamage())
             {
-                if (IsEnabled(Preset.ASTPvP_Burst_Oracle) && HasStatusEffect(Buffs.Divining) && HasBattleTarget())
+                if (IsEnabled(Preset.ASTPvP_Burst_Oracle) && LocalPlayer.HasStatus(Buffs.Divining) && HasBattleTarget())
                     return Oracle;
                 
                 if (IsEnabled(Preset.ASTPvP_Diabrosis) && PvPHealer.CanDiabrosis() && HasTarget() &&
@@ -151,7 +152,7 @@ internal static class ASTPvP
                             : OriginalHook(DoubleCast);
                     
                 
-                    if (!HasStatusEffect(Buffs.DiurnalBenefic, healTarget) && GetTargetHPPercent(healTarget) <= ASTPvP_Burst_HealThreshold && ActionReady(AspectedBenefic))
+                    if (!healTarget.HasStatus(Buffs.DiurnalBenefic) && GetTargetHPPercent(healTarget) <= ASTPvP_Burst_HealThreshold && ActionReady(AspectedBenefic))
                         return ASTPvP_BurstHealRetarget
                             ? AspectedBenefic.Retarget(Malefic, healTarget)
                             : AspectedBenefic;
@@ -173,9 +174,9 @@ internal static class ASTPvP
             if (IsOffCooldown(MinorArcana))
                 return MinorArcana;
 
-            if (HasStatusEffect(Buffs.RetrogradeReady))
+            if (LocalPlayer.HasStatus(Buffs.RetrogradeReady))
             {
-                if (HasStatusEffect(Buffs.LordOfCrowns))
+                if (LocalPlayer.HasStatus(Buffs.LordOfCrowns))
                     return OriginalHook(MinorArcana);
                 if (IsOffCooldown(Macrocosmos))
                     return Macrocosmos;

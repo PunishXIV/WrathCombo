@@ -145,10 +145,10 @@ internal partial class DNC
 
         // Return the Finish if the dance is about to expire
         if (desiredFinish is StandardFinish2 &&
-            GetStatusEffectRemainingTime(Buffs.StandardStep) < GCD * 1.5)
+            LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() < GCD * 1.5)
             return desiredFinish;
         if (desiredFinish is TechnicalFinish4 &&
-            GetStatusEffectRemainingTime(Buffs.TechnicalStep) < GCD * 1.5)
+            LocalPlayer.Status(Buffs.TechnicalStep).RemainingTimeOrZero() < GCD * 1.5)
             return desiredFinish;
 
         // If there is no enemy in range, hold the finish
@@ -224,7 +224,7 @@ internal partial class DNC
         DesiredDancePartner is not null &&
         (
             // Have no partner and one is theoretically available
-            (!HasStatusEffect(Buffs.ClosedPosition) &&
+            (!LocalPlayer.HasStatus(Buffs.ClosedPosition) &&
              (IsInParty() || HasCompanionPresent())) ||
             // Have a partner, but it's not the optimal one
             (CurrentDancePartner is not null &&
@@ -250,7 +250,7 @@ internal partial class DNC
         if (IsDancePartnerReady(desired))
             return desired;
 
-        if (HasStatusEffect(Buffs.ClosedPosition))
+        if (LocalPlayer.HasStatus(Buffs.ClosedPosition))
             return null;
 
         var fallback = SimpleTarget.AnySelfishDPS ??
@@ -334,13 +334,13 @@ internal partial class DNC
         // These are here so I don't have to add a ton of methods to DNC
 
         bool DamageDownFree(IGameObject? target) =>
-            !TargetHasDamageDown(target);
+            !target.HasDamageDown;
 
         bool SicknessFree(IGameObject? target) =>
-            !TargetHasRezWeakness(target);
+            !target.HasRezWeakness();
 
         bool BrinkFree(IGameObject? target) =>
-            !TargetHasRezWeakness(target, false);
+            !target.HasRezWeakness(false);
 
         #endregion
 
@@ -431,10 +431,10 @@ internal partial class DNC
     #region DP-checking shortcut methods
 
     private static bool HasAnyPartner(WrathPartyMember target) =>
-        HasStatusEffect(Buffs.Partner, target.BattleChara, true);
+        target.BattleChara.HasStatus(Buffs.Partner, true);
 
     private static bool HasMyPartner(WrathPartyMember target) =>
-        HasStatusEffect(Buffs.Partner, target.BattleChara);
+        target.BattleChara.HasStatus(Buffs.Partner);
 
     #endregion
 
@@ -666,9 +666,9 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 5),
-            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 1),
-            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining)),
+            ([4], () => Math.Min(LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining) - 5),
+            ([5], () => Math.Min(LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining) - 1),
+            ([6], () => Math.Min(LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -683,11 +683,11 @@ internal partial class DNC
             ([21], SaberDance, () => Gauge.Esprit >= 50),
             ([22, 23, 24], SaberDance, () => Gauge.Esprit > 80),
             ([22, 23, 24], StarfallDance,
-                () => HasStatusEffect(Buffs.FlourishingStarfall)),
+                () => LocalPlayer.HasStatus(Buffs.FlourishingStarfall)),
             ([22, 23, 24], SaberDance, () => Gauge.Esprit >= 50),
-            ([22, 23, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([22, 23, 24], LastDance, () => LocalPlayer.HasStatus(Buffs.LastDanceReady)),
             ([22, 23, 24], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+                LocalPlayer.HasStatus(Buffs.SilkenFlow) || LocalPlayer.HasStatus(Buffs.FlourishingFlow)),
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
@@ -768,9 +768,9 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 3),
-            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 1),
-            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining)),
+            ([4], () => Math.Min(LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining) - 3),
+            ([5], () => Math.Min(LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining) - 1),
+            ([6], () => Math.Min(LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -785,11 +785,11 @@ internal partial class DNC
             ([23], SaberDance, () => Gauge.Esprit >= 50),
             ([21, 22, 24], SaberDance, () => Gauge.Esprit > 80),
             ([21, 22, 24], StarfallDance,
-                () => HasStatusEffect(Buffs.FlourishingStarfall)),
+                () => LocalPlayer.HasStatus(Buffs.FlourishingStarfall)),
             ([21, 22, 24], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([21, 22, 24], LastDance, () => LocalPlayer.HasStatus(Buffs.LastDanceReady)),
             ([21, 22, 24], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+                LocalPlayer.HasStatus(Buffs.SilkenFlow) || LocalPlayer.HasStatus(Buffs.FlourishingFlow)),
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
@@ -873,10 +873,10 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 15),
-            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 13),
-            ([11], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining) - 1),
-            ([12], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining)),
+            ([4], () => Math.Min(LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining) - 15),
+            ([5], () => Math.Min(LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining) - 13),
+            ([11], () => Math.Min(LocalPlayer.Status(Buffs.TechnicalStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining) - 1),
+            ([12], () => Math.Min(LocalPlayer.Status(Buffs.TechnicalStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -891,11 +891,11 @@ internal partial class DNC
             ([20], SaberDance, () => Gauge.Esprit >= 50),
             ([22, 23, 24], SaberDance, () => Gauge.Esprit > 80),
             ([22, 23, 24], StarfallDance,
-                () => HasStatusEffect(Buffs.FlourishingStarfall)),
+                () => LocalPlayer.HasStatus(Buffs.FlourishingStarfall)),
             ([22, 23, 24], SaberDance, () => Gauge.Esprit >= 50),
-            ([22, 23, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([22, 23, 24], LastDance, () => LocalPlayer.HasStatus(Buffs.LastDanceReady)),
             ([22, 23, 24], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+                LocalPlayer.HasStatus(Buffs.SilkenFlow) || LocalPlayer.HasStatus(Buffs.FlourishingFlow)),
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
@@ -970,7 +970,7 @@ internal partial class DNC
             set;
         } =
         [
-            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 1)),
+            ([6], () => Math.Min(LocalPlayer.Status(Buffs.TechnicalStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining - 1)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -985,11 +985,11 @@ internal partial class DNC
             ([15], SaberDance, () => Gauge.Esprit >= 50),
             ([17, 18, 19], SaberDance, () => Gauge.Esprit > 80),
             ([17, 18, 19], StarfallDance, () =>
-                HasStatusEffect(Buffs.FlourishingStarfall)),
+                LocalPlayer.HasStatus(Buffs.FlourishingStarfall)),
             ([17, 18, 19], SaberDance, () => Gauge.Esprit >= 50),
-            ([17, 18, 19], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([17, 18, 19], LastDance, () => LocalPlayer.HasStatus(Buffs.LastDanceReady)),
             ([17, 18, 19], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+                LocalPlayer.HasStatus(Buffs.SilkenFlow) || LocalPlayer.HasStatus(Buffs.FlourishingFlow)),
         ];
 
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
@@ -1055,9 +1055,9 @@ internal partial class DNC
             set;
         } =
         [
-            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 2)),
-            ([7], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 1)),
-            ([8], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining)),
+            ([6], () => Math.Min(LocalPlayer.Status(Buffs.TechnicalStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining - 2)),
+            ([7], () => Math.Min(LocalPlayer.Status(Buffs.TechnicalStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining - 1)),
+            ([8], () => Math.Min(LocalPlayer.Status(Buffs.TechnicalStep).RemainingTimeOrZero() - 0.5f, CountdownRemaining)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -1072,11 +1072,11 @@ internal partial class DNC
             ([15], SaberDance, () => Gauge.Esprit >= 50),
             ([17, 18, 19], SaberDance, () => Gauge.Esprit > 80),
             ([17, 18, 19], StarfallDance, () =>
-                HasStatusEffect(Buffs.FlourishingStarfall)),
+                LocalPlayer.HasStatus(Buffs.FlourishingStarfall)),
             ([17, 18, 19], SaberDance, () => Gauge.Esprit >= 50),
-            ([17, 18, 19], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
+            ([17, 18, 19], LastDance, () => LocalPlayer.HasStatus(Buffs.LastDanceReady)),
             ([17, 18, 19], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+                LocalPlayer.HasStatus(Buffs.SilkenFlow) || LocalPlayer.HasStatus(Buffs.FlourishingFlow)),
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps

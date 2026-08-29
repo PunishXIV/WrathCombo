@@ -213,16 +213,16 @@ internal partial class WAR
                     WAR_FC_Onslaught_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(WAR_FC_Onslaught_TimeStill))
                     return Onslaught;
             
-                if (IsEnabled(Preset.WAR_FC_PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) && 
+                if (IsEnabled(Preset.WAR_FC_PrimalRend) && LocalPlayer.HasStatus(Buffs.PrimalRendReady) && 
                     HasSurgingTempest &&
                     GetTargetDistance() <= WAR_FC_PrimalRend_Distance && 
                     (WAR_FC_PrimalRend_Movement == 1 || 
                      WAR_FC_PrimalRend_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(WAR_FC_PrimalRend_TimeStill)) && 
                     (WAR_FC_PrimalRend_EarlyLate == 0 || 
-                     WAR_FC_PrimalRend_EarlyLate == 1 && (GetStatusEffectRemainingTime(Buffs.PrimalRendReady) <= 15 || !HasIR.Stacks && !HasBF.Stacks && !HasWrathful)))
+                     WAR_FC_PrimalRend_EarlyLate == 1 && (LocalPlayer.Status(Buffs.PrimalRendReady).RemainingTimeOrZero() <= 15 || !HasIR.Stacks && !HasBF.Stacks && !HasWrathful)))
                     return PrimalRend;
             
-                if (IsEnabled(Preset.WAR_FC_PrimalRuination) && HasStatusEffect(Buffs.PrimalRuinationReady) &&
+                if (IsEnabled(Preset.WAR_FC_PrimalRuination) && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady) &&
                     HasSurgingTempest)
                     return PrimalRuination;
             }
@@ -239,7 +239,7 @@ internal partial class WAR
     {
         protected internal override Preset Preset => Preset.WAR_EyePath;
         protected override uint Invoke(uint actionID) => actionID != StormsPath ? actionID
-            : GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_EyePath_Refresh && ActionLearned(StormsEye) 
+            : LocalPlayer.Status(Buffs.SurgingTempest).RemainingTimeOrZero() <= WAR_EyePath_Refresh && ActionLearned(StormsEye) 
                 ? StormsEye 
                 : actionID;
     }
@@ -251,8 +251,8 @@ internal partial class WAR
         protected internal override Preset Preset => Preset.WAR_PrimalCombo_InnerRelease;
 
         protected override uint Invoke(uint action) => action is not (Berserk or InnerRelease) ? OriginalHook(action) :
-            ActionLearned(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) ? PrimalRend :
-            ActionLearned(PrimalRuination) && HasStatusEffect(Buffs.PrimalRuinationReady) ? PrimalRuination : OriginalHook(action);
+            ActionLearned(PrimalRend) && LocalPlayer.HasStatus(Buffs.PrimalRendReady) ? PrimalRend :
+            ActionLearned(PrimalRuination) && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady) ? PrimalRuination : OriginalHook(action);
     }
     #endregion
 
@@ -294,7 +294,7 @@ internal partial class WAR
             // Nascent if trying to heal an ally
             if (ActionReady(NascentFlash) &&
                 target != null &&
-                CanApplyStatus(target, Buffs.NascentFlashTarget))
+                target.CanApplyStatus(Buffs.NascentFlashTarget))
                 return NascentFlash.Retarget(NascentFlash, target);
             
             return actionID;
@@ -327,7 +327,7 @@ internal partial class WAR
             // Nascent if trying to heal an ally
             if (ActionReady(NascentFlash) &&
                 target != null &&
-                CanApplyStatus(target, Buffs.NascentFlashTarget))
+                target.CanApplyStatus(Buffs.NascentFlashTarget))
                 return NascentFlash.Retarget([RawIntuition, Bloodwhetting], target);
 
             return action;
@@ -362,7 +362,7 @@ internal partial class WAR
                 return actionID;
 
             return InBossEncounter() && 
-                   (GetPossessedStatusRemainingTime(Buffs.InnerStrength) > WAR_ArmsLengthLockout_Time || 
+                   (LocalPlayer.Status(Buffs.InnerStrength).RemainingTimeOrNaN() > WAR_ArmsLengthLockout_Time || 
                     JustUsed(InnerRelease))
                 ? All.Cease
                 : actionID;

@@ -74,12 +74,14 @@ internal partial class SGE
     {
         uint dotAction = OriginalHook(Dosis);
         int hpThreshold = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? EDosisHpThreshold(CurrentTarget) : 0;
-        EukrasianDosisList.TryGetValue(dotAction, out ushort dotDebuffID);
+        DosisList.TryGetValue(dotAction, out var debuff);
+        ushort dotDebuffID = debuff.Debuff;
         double dotRefresh = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? SGE_ST_Adv_DPS_EukrasianDosisUptime_Threshold : 2.5;
-        float dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
+        float dotRemaining = CurrentTarget.Status(dotDebuffID).RemainingTimeOrZero();
 
         return ActionReady(Eukrasia) &&
-               CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               dotDebuffID != 0 &&
+               CurrentTarget.CanApplyStatus(dotDebuffID) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
                dotRemaining <= dotRefresh;
@@ -102,7 +104,7 @@ internal partial class SGE
 
     private static bool UseKardia() =>
         ActionLearned(Kardia) &&
-        !HasStatusEffect(Buffs.Kardia) &&
+        !LocalPlayer.HasStatus(Buffs.Kardia) &&
         Target is not null;
 
     private static bool UseRaidwide(ref uint actionID)
@@ -124,7 +126,7 @@ internal partial class SGE
 
         if (RaidwideEprognosis())
         {
-            actionID = HasStatusEffect(Buffs.Eukrasia)
+            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia)
                 ? OriginalHook(Prognosis)
                 : Eukrasia;
             return true;
@@ -176,7 +178,7 @@ internal partial class SGE
         ActionReady(Rhizomata) && Addersgall < threshold;
 
     private static bool UseSoteria() =>
-        ActionReady(Soteria) && HasStatusEffect(Buffs.Kardia);
+        ActionReady(Soteria) && LocalPlayer.HasStatus(Buffs.Kardia);
 
     private static bool UsePhysis() =>
         ActionReady(OriginalHook(Physis));
@@ -193,16 +195,16 @@ internal partial class SGE
         ActionReady(Ixochole) && HasAddersgall;
 
     private static bool UsePhilosophia() =>
-        ActionReady(Philosophia) && !HasStatusEffect(Buffs.Panhaima);
+        ActionReady(Philosophia) && !LocalPlayer.HasStatus(Buffs.Panhaima);
 
     private static bool UsePanhaima() =>
-        ActionReady(Panhaima) && !HasStatusEffect(Buffs.Eudaimonia);
+        ActionReady(Panhaima) && !LocalPlayer.HasStatus(Buffs.Eudaimonia);
 
     private static bool UseZoe() =>
         ActionReady(Zoe) && (ActionReady(Pneuma) || !ActionLearned(Pneuma));
 
     private static bool UseAoEPepsis() =>
-        ActionReady(Pepsis) && HasStatusEffect(Buffs.EukrasianPrognosis);
+        ActionReady(Pepsis) && LocalPlayer.HasStatus(Buffs.EukrasianPrognosis);
 
     private static bool UsePhlegma(bool burst, int chargePool, bool psycheEnabled)
     {
@@ -268,10 +270,10 @@ internal partial class SGE
         if (simpleMode)
         {
             var target = SimpleTarget.DottableEnemy(debuff.Eukrasian, debuff.Debuff, 0, 3, 99);
-            if (target is not null && CanApplyStatus(target, debuff.Debuff) &&
+            if (target is not null && target.CanApplyStatus(debuff.Debuff) &&
                 !JustUsedOn(debuff.Eukrasian, target) && ActionLearned(Eukrasia))
             {
-                actionID = HasStatusEffect(Buffs.Eukrasia)
+                actionID = LocalPlayer.HasStatus(Buffs.Eukrasia)
                     ? dotAction.Retarget(retargetIds, target)
                     : Eukrasia;
                 return true;
@@ -285,7 +287,7 @@ internal partial class SGE
 
         if (ShouldRefreshEDosis())
         {
-            actionID = HasStatusEffect(Buffs.Eukrasia) ? dotAction : Eukrasia;
+            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia) ? dotAction : Eukrasia;
             return true;
         }
 
@@ -293,11 +295,11 @@ internal partial class SGE
             debuff.Eukrasian, debuff.Debuff, EDosisHpThreshold,
             SGE_ST_Adv_DPS_EukrasianDosisUptime_Threshold, 2);
 
-        if (multiTarget is not null && CanApplyStatus(multiTarget, debuff.Debuff) &&
+        if (multiTarget is not null && multiTarget.CanApplyStatus(debuff.Debuff) &&
             !JustUsedOn(debuff.Eukrasian, multiTarget) &&
             SGE_ST_Adv_DPS_EDosis_TwoTarget && ActionLearned(Eukrasia))
         {
-            actionID = HasStatusEffect(Buffs.Eukrasia)
+            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia)
                 ? dotAction.Retarget(retargetIds, multiTarget)
                 : Eukrasia;
             return true;
@@ -346,8 +348,8 @@ internal partial class SGE
 
     private static bool HasEDyskrasiaTargets() =>
         EnemiesInRange(EukrasianDyskrasia).Count(x =>
-            GetPossessedStatusRemainingTime(Debuffs.EukrasianDyskrasia, x) is <= 4 or float.NaN &&
-            GetPossessedStatusRemainingTime(DosisList[OriginalHook(Dosis)].Debuff, x) is <= 4 or float.NaN &&
+            x.Status(Debuffs.EukrasianDyskrasia).RemainingTimeOrNaN() is <= 4 or float.NaN &&
+            x.Status(DosisList[OriginalHook(Dosis)].Debuff).RemainingTimeOrNaN() is <= 4 or float.NaN &&
             GetTargetHPPercent(x) > 25) >= 4;
 
     private static (uint Action, Func<bool> Logic)[] PrioritizedMovement =>
@@ -363,7 +365,7 @@ internal partial class SGE
         (Eukrasia,
             () => SGE_ST_Adv_DPS_Movement[2] &&
                   ActionReady(Eukrasia) &&
-                  !HasStatusEffect(Buffs.Eukrasia))
+                  !LocalPlayer.HasStatus(Buffs.Eukrasia))
     ];
 
     private static bool TryMovementOption(int index, ref uint actionID)
@@ -384,7 +386,7 @@ internal partial class SGE
     private static bool UseEukrasianDiagnosis(IGameObject? healTarget, bool simpleMode, ref uint actionID)
     {
         if (!ActionLearned(Eukrasia) ||
-            HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget))
+            healTarget.HasStatus(Buffs.EukrasianDiagnosis))
             return false;
 
         if (!simpleMode)
@@ -393,10 +395,10 @@ internal partial class SGE
                 return false;
 
             bool shieldCheck = !SGE_ST_Adv_Heal_EDiagnosisOpts[0] ||
-                               !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) &&
-                               !HasStatusEffect(Buffs.EukrasianPrognosis, healTarget, true);
+                               !healTarget.HasStatus(Buffs.EukrasianDiagnosis, true) &&
+                               !healTarget.HasStatus(Buffs.EukrasianPrognosis, true);
             bool scholarShieldCheck = !SGE_ST_Adv_Heal_EDiagnosisOpts[1] ||
-                                      !HasStatusEffect(SCH.Buffs.Galvanize);
+                                      !LocalPlayer.HasStatus(SCH.Buffs.Galvanize);
             if (!shieldCheck || !scholarShieldCheck)
                 return false;
 
@@ -405,7 +407,7 @@ internal partial class SGE
                 return false;
         }
 
-        if (HasStatusEffect(Buffs.Eukrasia) && ActionReady(EukrasianDiagnosis))
+        if (LocalPlayer.HasStatus(Buffs.Eukrasia) && ActionReady(EukrasianDiagnosis))
         {
             actionID = EukrasianDiagnosis.RetargetIfEnabled(actionID);
             return true;
@@ -425,11 +427,11 @@ internal partial class SGE
         config = 0;
 
         bool shieldCheck = !SGE_ST_Adv_Heal_EDiagnosisOpts[0] ||
-                           !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) &&
-                           !HasStatusEffect(Buffs.EukrasianPrognosis, healTarget, true);
+                           !healTarget.HasStatus(Buffs.EukrasianDiagnosis, true) &&
+                           !healTarget.HasStatus(Buffs.EukrasianPrognosis, true);
 
         bool scholarShieldCheck = !SGE_ST_Adv_Heal_EDiagnosisOpts[1] ||
-                                  !HasStatusEffect(SCH.Buffs.Galvanize);
+                                  !LocalPlayer.HasStatus(SCH.Buffs.Galvanize);
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
 
         switch (i)
@@ -450,7 +452,7 @@ internal partial class SGE
 
             case 2:
                 if (!IsEnabled(Preset.SGE_ST_Adv_Heal_Pepsis) ||
-                    !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget))
+                    !healTarget.HasStatus(Buffs.EukrasianDiagnosis))
                     return false;
                 action = Pepsis;
                 config = SGE_ST_Adv_Heal_Pepsis;
@@ -543,7 +545,7 @@ internal partial class SGE
                            GetPartyBuffPercent(SCH.Buffs.Galvanize) <= SGE_AoE_Adv_Heal_EPrognosisOption;
 
         bool anyPanhaima = !SGE_ST_Adv_Heal_PanhaimaOpts[0] ||
-                           !HasStatusEffect(Buffs.Panhaima, null, true);
+                           !LocalPlayer.HasStatus(Buffs.Panhaima, true);
 
         switch (i)
         {
@@ -586,7 +588,7 @@ internal partial class SGE
 
             case 5:
                 if (!IsEnabled(Preset.SGE_AoE_Adv_Heal_Pepsis) ||
-                    !HasStatusEffect(Buffs.EukrasianPrognosis))
+                    !LocalPlayer.HasStatus(Buffs.EukrasianPrognosis))
                     return false;
                 action = Pepsis;
                 config = SGE_AoE_Adv_Heal_PepsisOption;
@@ -650,7 +652,7 @@ internal partial class SGE
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => HasStatusEffect(Buffs.Eukrasia))
+            ([1], () => LocalPlayer.HasStatus(Buffs.Eukrasia))
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =

@@ -21,7 +21,7 @@ namespace WrathCombo.Data.BattleData
                     //Unfooled means you can attack the Lyre
                     _invincibleCheck = (_, targetID, _) =>
                     {
-                        if (targetID is 3939 && !HasStatusEffect(386))
+                        if (targetID is 3939 && !LocalPlayer.HasStatus(386))
                             return Invincible.True; //Unfooled means you can attack the Lyre
                         return Invincible.False;
                     };
@@ -67,9 +67,9 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 11792 or 11793 or 11794)
                         {
-                            if (HasStatusEffect(2288)) return Result(targetID != 11792);
-                            if (HasStatusEffect(2289)) return Result(targetID != 11793);
-                            if (HasStatusEffect(2290)) return Result(targetID != 11794);
+                            if (LocalPlayer.HasStatus(2288)) return Result(targetID != 11792);
+                            if (LocalPlayer.HasStatus(2289)) return Result(targetID != 11793);
+                            if (LocalPlayer.HasStatus(2290)) return Result(targetID != 11794);
                         }
                         return Invincible.False;
                     };
@@ -87,7 +87,7 @@ namespace WrathCombo.Data.BattleData
                         if (targetID is 12709 or 12708)
                         {
                             bool isTank = Player.Job.IsTank();
-                            bool bossHasParry = HasStatusEffect(680, target);
+                            bool bossHasParry = target.HasStatus(680);
                             bool isFrontFacing = AngleToTarget(target) is AttackAngle.Front;
 
                             // Non Tanks should just ignore parrying boss(s)
