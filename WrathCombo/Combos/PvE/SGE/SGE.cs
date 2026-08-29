@@ -22,8 +22,13 @@ internal partial class SGE : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, DosisActions))
+            uint[] dosisActions = DosisActions;
+
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, dosisActions))
                 return actionID;
+
+            if (CustomActionHelper.CustomActionEnabled(CustomActionType.SingleTargetDPS))
+                dosisActions = [All.SingleTargetDPS];
 
             if (UseKardia())
                 return Kardia.Retarget(actionID, Target);
@@ -34,7 +39,7 @@ internal partial class SGE : Healer
             if (CanWeave() && !LocalPlayer.HasStatus(Buffs.Eukrasia))
             {
                 if (UseAddersgallProtect(3))
-                    return AddersgallProtectAction(actionID);
+                    return Druochole.RetargetIfEnabled(dosisActions);
 
                 if (UsePsyche(PhlegmaBurstPair(true, true, true)))
                     return Psyche;
@@ -71,8 +76,13 @@ internal partial class SGE : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DyskrasiaList.ToArray()))
+            uint[] dosisActions = DyskrasiaList.ToArray();
+
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, dosisActions))
                 return actionID;
+
+            if (CustomActionHelper.CustomActionEnabled(CustomActionType.AoEDPS))
+                dosisActions = [All.AoEDPS];
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
@@ -80,7 +90,7 @@ internal partial class SGE : Healer
             if (CanWeave())
             {
                 if (UseAddersgallProtect(3))
-                    return AddersgallProtectAction(actionID);
+                    return Druochole.RetargetIfEnabled(dosisActions);
 
                 if (UsePsyche(PhlegmaBurstPair(true, true, true)))
                     return Psyche;
@@ -148,7 +158,7 @@ internal partial class SGE : Healer
             {
                 if (IsEnabled(Preset.SGE_ST_Adv_DPS_AddersgallProtect) &&
                     UseAddersgallProtect(SGE_ST_Adv_DPS_AddersgallProtect))
-                    return AddersgallProtectAction(dosisActions);
+                    return Druochole.RetargetIfEnabled(dosisActions);
 
                 bool psycheEnabled = IsEnabled(Preset.SGE_ST_Adv_DPS_Psyche);
                 bool phlegmaEnabled = IsEnabled(Preset.SGE_ST_Adv_DPS_Phlegma);
@@ -196,8 +206,13 @@ internal partial class SGE : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, DyskrasiaList.ToArray()))
+            uint[] dosisActions = DyskrasiaList.ToArray();
+
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, dosisActions))
                 return actionID;
+
+            if (CustomActionHelper.CustomActionEnabled(CustomActionType.AoEDPS))
+                dosisActions = [All.AoEDPS];
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
@@ -209,7 +224,7 @@ internal partial class SGE : Healer
             {
                 if (IsEnabled(Preset.SGE_AoE_Adv_DPS_AddersgallProtect) &&
                     UseAddersgallProtect(SGE_AoE_Adv_DPS_AddersgallProtect))
-                    return AddersgallProtectAction(actionID);
+                    return Druochole.RetargetIfEnabled(dosisActions);
 
                 bool psycheEnabled = IsEnabled(Preset.SGE_AoE_Adv_DPS_Psyche);
                 bool phlegmaEnabled = IsEnabled(Preset.SGE_AoE_Adv_DPS_Phlegma);

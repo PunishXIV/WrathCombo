@@ -156,32 +156,6 @@ internal partial class SGE
     private static bool UseAddersgallProtect(int threshold) =>
         ActionReady(Druochole) && Addersgall >= threshold;
 
-    /// <summary>
-    /// Dump target for overflow Druochole: heal stack if it is an ally, otherwise
-    /// the Kardia/tank stack. Avoids always landing on self while targeting an enemy.
-    /// </summary>
-    private static IGameObject? AddersgallDumpTarget
-    {
-        get
-        {
-            var heal = HealStack;
-            if (heal is not null && heal.GameObjectId != LocalPlayer?.GameObjectId)
-                return heal;
-
-            return Target;
-        }
-    }
-
-    private static uint AddersgallProtectAction(params uint[] replaced)
-    {
-        bool retarget = HealRetargeting.RetargetSettingOn ||
-                        IsEnabled(Preset.SGE_Retarget_Druochole);
-
-        return retarget
-            ? Druochole.Retarget(replaced, AddersgallDumpTarget)
-            : Druochole;
-    }
-
     private static bool PhlegmaBurstPair(bool phlegmaEnabled, bool psycheEnabled, bool burst) =>
         ActionLearned(OriginalHook(Phlegma)) &&
         phlegmaEnabled &&
