@@ -498,5 +498,8 @@ public static class GameObjectExtensions
     public static IGameObject? GetObject(this IntPtr address) =>
         address != IntPtr.Zero ? Svc.Objects.FirstOrDefault(x => x.Address == address) : null;
 
+    public static IBattleChara? GetBattleChara(this ulong id) =>
+        Svc.Objects.SearchById(id) is IBattleChara bc ? bc : null;
+
     #endregion
 }
