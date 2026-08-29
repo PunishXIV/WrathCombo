@@ -15,6 +15,7 @@ using static WrathCombo.Combos.PvE.DRK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
+using WrathCombo.Extensions;
 
 // ReSharper disable ReturnTypeCanBeNotNullable
 // ReSharper disable InconsistentNaming
@@ -177,7 +178,7 @@ internal partial class DRK
         {
             var has = false;
             if (LocalPlayer is not null)
-                has = HasStatusEffect(Buffs.BlackestNightShield);
+                has = LocalPlayer.HasStatus(Buffs.BlackestNightShield);
 
             return has;
         }
@@ -193,7 +194,7 @@ internal partial class DRK
         {
             var has = false;
             if (LocalPlayer is not null)
-                has = HasStatusEffect(Buffs.BlackestNightShield, anyOwner: true);
+                has = LocalPlayer.HasStatus(Buffs.BlackestNightShield, true);
 
             return has;
         }
@@ -216,14 +217,14 @@ internal partial class DRK
         JustUsed(LivingDead);
 
     internal static bool MitigationRunning =>
-        HasStatusEffect(Role.Buffs.ArmsLength) ||
-        HasStatusEffect(Role.Buffs.Rampart) ||
-        HasStatusEffect(Buffs.LivingDead) ||
-        HasStatusEffect(Buffs.UndeadRebirth) ||
-        HasStatusEffect(Buffs.DarkMind) ||
-        HasStatusEffect(Buffs.ShadowedVigil) ||
-        HasStatusEffect(Buffs.ShadowWall) ||
-        HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
+        LocalPlayer.HasStatus(Role.Buffs.ArmsLength) ||
+        LocalPlayer.HasStatus(Role.Buffs.Rampart) ||
+        LocalPlayer.HasStatus(Buffs.LivingDead) ||
+        LocalPlayer.HasStatus(Buffs.UndeadRebirth) ||
+        LocalPlayer.HasStatus(Buffs.DarkMind) ||
+        LocalPlayer.HasStatus(Buffs.ShadowedVigil) ||
+        LocalPlayer.HasStatus(Buffs.ShadowWall) ||
+        CurrentTarget.HasStatus(Role.Debuffs.Reprisal);
 
     #endregion
 

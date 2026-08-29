@@ -3,6 +3,7 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.VPR.Config;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class VPR : Melee
@@ -375,12 +376,12 @@ internal partial class VPR : Melee
 
             switch (actionID)
             {
-                case Reawaken when VPR_ReawakenLegacyButton == 0 && HasStatusEffect(Buffs.Reawakened):
-                case ReavingFangs when VPR_ReawakenLegacyButton == 1 && HasStatusEffect(Buffs.Reawakened):
+                case Reawaken when VPR_ReawakenLegacyButton == 0 && LocalPlayer.HasStatus(Buffs.Reawakened):
+                case ReavingFangs when VPR_ReawakenLegacyButton == 1 && LocalPlayer.HasStatus(Buffs.Reawakened):
                     {
                         return IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
                                TraitLevelChecked(Traits.SerpentsLegacy) &&
-                               HasStatusEffect(Buffs.Reawakened) && IsLegacyWeaveReady
+                               LocalPlayer.HasStatus(Buffs.Reawakened) && IsLegacyWeaveReady
                             ? OriginalHook(SerpentsTail)
                             : ReawakenCombo(actionID);
                     }
@@ -402,14 +403,14 @@ internal partial class VPR : Melee
             if (ActionLearned(SerpentsTail) && OriginalHook(SerpentsTail) is not SerpentsTail)
                 return OriginalHook(SerpentsTail);
 
-            if (HasStatusEffect(Buffs.PoisedForTwinfang) ||
-                HasStatusEffect(Buffs.HuntersVenom) ||
-                HasStatusEffect(Buffs.FellhuntersVenom))
+            if (LocalPlayer.HasStatus(Buffs.PoisedForTwinfang) ||
+                LocalPlayer.HasStatus(Buffs.HuntersVenom) ||
+                LocalPlayer.HasStatus(Buffs.FellhuntersVenom))
                 return OriginalHook(Twinfang);
 
-            if (HasStatusEffect(Buffs.PoisedForTwinblood) ||
-                HasStatusEffect(Buffs.SwiftskinsVenom) ||
-                HasStatusEffect(Buffs.FellskinsVenom))
+            if (LocalPlayer.HasStatus(Buffs.PoisedForTwinblood) ||
+                LocalPlayer.HasStatus(Buffs.SwiftskinsVenom) ||
+                LocalPlayer.HasStatus(Buffs.FellskinsVenom))
                 return OriginalHook(Twinblood);
 
             return actionID;
@@ -422,7 +423,7 @@ internal partial class VPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (SteelFangs or ReavingFangs or HuntersCoil or SwiftskinsCoil) || !HasStatusEffect(Buffs.Reawakened))
+            if (actionID is not (SteelFangs or ReavingFangs or HuntersCoil or SwiftskinsCoil) || !LocalPlayer.HasStatus(Buffs.Reawakened))
                 return actionID;
 
             return actionID switch

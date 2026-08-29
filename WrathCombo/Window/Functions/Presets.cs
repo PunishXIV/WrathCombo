@@ -439,7 +439,10 @@ internal class Presets : ConfigWindow
                 actionIDs = att.ActionIDs;
                 actionNames = att.ActionNames;
             }
-            float iconSize = icons.Select(x => new Vector2(30f) * ImGui.GetIO().FontGlobalScale).First().X;
+            if (icons.Count == 0)
+                return;
+
+            float iconSize = 30f * ImGui.GetIO().FontGlobalScale;
             float spacing = 4f.Scale();
             float totalWidth = icons.Count * iconSize
                  + Math.Max(0, icons.Count - 1) * spacing;
@@ -454,7 +457,18 @@ internal class Presets : ConfigWindow
             ImGui.SameLine(0, spacing);
             foreach (var icon in icons)
             {
-                var img = customEnabled ? P.CustomActions.Manager.IconTextures[icon].GetWrapOrDefault() : Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
+                IDalamudTextureWrap? img = null;
+                if (customEnabled)
+                {
+                    if (P.CustomActions.Manager.IconTextures.TryGetValue(icon, out var shared))
+                        shared.TryGetWrap(out img, out _);
+                }
+                else
+                    img = Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
+
+                if (img is null)
+                    continue;
+
                 ImGui.Image(img.Handle, (new Vector2(30f)) * ImGui.GetIO().FontGlobalScale);
                 var indexOfIcon = icons.IndexOf(icon);
                 var skillName = actionNames[indexOfIcon];

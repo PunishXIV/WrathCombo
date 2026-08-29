@@ -11,6 +11,7 @@ using static FFXIVClientStructs.FFXIV.Client.Game.ActionManager;
 using static WrathCombo.Combos.PvE.SAM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using ActionType = FFXIVClientStructs.FFXIV.Client.Game.ActionType;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM
@@ -42,29 +43,29 @@ internal partial class SAM
     {
         if (onAoE)
         {
-            float fugetsuRemaining = GetStatusEffectRemainingTime(Buffs.Fugetsu);
-            float fukaRemaining = GetStatusEffectRemainingTime(Buffs.Fuka);
+            float fugetsuRemaining = LocalPlayer.Status(Buffs.Fugetsu).RemainingTimeOrZero();
+            float fukaRemaining = LocalPlayer.Status(Buffs.Fuka).RemainingTimeOrZero();
             bool refreshFugetsu = fugetsuRemaining <= fukaRemaining;
             bool refreshFuka = fukaRemaining <= fugetsuRemaining;
 
             if (useOka &&
-                (!HasKa || !HasStatusEffect(Buffs.Fuka) ||
+                (!HasKa || !LocalPlayer.HasStatus(Buffs.Fuka) ||
                  SenCount is 2 or 3 && refreshFuka) &&
                 ActionLearned(Oka))
                 return Oka;
 
             if (ActionLearned(Mangetsu) &&
-                (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !useOka || !ActionLearned(Oka) ||
+                (!HasGetsu || !LocalPlayer.HasStatus(Buffs.Fugetsu) || !useOka || !ActionLearned(Oka) ||
                  SenCount is 2 or 3 && refreshFugetsu))
                 return Mangetsu;
 
             return actionID;
         }
 
-        if (useGekko && ActionLearned(Gekko) && !HasGetsu || !HasStatusEffect(Buffs.Fugetsu))
+        if (useGekko && ActionLearned(Gekko) && !HasGetsu || !LocalPlayer.HasStatus(Buffs.Fugetsu))
             return WithTrueNorth(Gekko, OnTargetsRear(), useTrueNorth, trueNorthCharges);
 
-        if (useKasha && ActionLearned(Kasha) && !HasKa || !HasStatusEffect(Buffs.Fuka))
+        if (useKasha && ActionLearned(Kasha) && !HasKa || !LocalPlayer.HasStatus(Buffs.Fuka))
             return WithTrueNorth(Kasha, OnTargetsFlank(), useTrueNorth, trueNorthCharges);
 
         if (useYukikaze &&
@@ -84,18 +85,18 @@ internal partial class SAM
             return false;
 
         if (onAoE)
-            return HasStatusEffect(Buffs.TsubameReady) ||
-                   HasStatusEffect(Buffs.KaeshiGokenReady) ||
-                   HasStatusEffect(Buffs.TendoKaeshiGokenReady);
+            return LocalPlayer.HasStatus(Buffs.TsubameReady) ||
+                   LocalPlayer.HasStatus(Buffs.KaeshiGokenReady) ||
+                   LocalPlayer.HasStatus(Buffs.TendoKaeshiGokenReady);
 
-        if (HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady))
+        if (LocalPlayer.HasStatus(Buffs.TendoKaeshiSetsugekkaReady))
             return true;
 
-        if (!HasStatusEffect(Buffs.TsubameReady))
+        if (!LocalPlayer.HasStatus(Buffs.TsubameReady))
             return false;
 
         if (SenCount is 3 ||
-            GetStatusEffectRemainingTime(Buffs.TsubameReady) < 3 ||
+            LocalPlayer.Status(Buffs.TsubameReady).RemainingTimeOrZero() < 3 ||
             !InBossEncounter())
             return true;
 
@@ -114,8 +115,8 @@ internal partial class SAM
         if (onlyWhenStationary && IsMoving() ||
             !ActionReady(OriginalHook(Iaijutsu)) ||
             !InActionRange(OriginalHook(Iaijutsu)) ||
-            !HasStatusEffect(Buffs.Fuka) ||
-            !HasStatusEffect(Buffs.Fugetsu))
+            !LocalPlayer.HasStatus(Buffs.Fuka) ||
+            !LocalPlayer.HasStatus(Buffs.Fugetsu))
             return false;
 
         if (onAoE)
@@ -137,7 +138,7 @@ internal partial class SAM
             UseHiganbana(higanbanaHpThreshold, higanbanaDotRefresh))
             return true;
 
-        if (useMidare && SenCount is 3 && !HasStatusEffect(Buffs.TsubameReady) ||
+        if (useMidare && SenCount is 3 && !LocalPlayer.HasStatus(Buffs.TsubameReady) ||
             useTenkaGoken && SenCount is 2 && !ActionLearned(MidareSetsugekka))
             return true;
 
@@ -147,13 +148,13 @@ internal partial class SAM
     private static bool UseHiganbana(int hpThreshold = 0, int dotRefresh = 15)
     {
         if (!HasBattleTarget() ||
-            !CanApplyStatus(CurrentTarget, Debuffs.Higanbana) ||
+            !CurrentTarget.CanApplyStatus(Debuffs.Higanbana) ||
             GetTargetHPPercent() <= hpThreshold)
             return false;
 
-        float remaining = GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget);
+        float remaining = CurrentTarget.Status(Debuffs.Higanbana).RemainingTimeOrZero();
 
-        if (!HasStatusEffect(Debuffs.Higanbana, CurrentTarget))
+        if (!CurrentTarget.HasStatus(Debuffs.Higanbana))
             return true;
 
         if (remaining > dotRefresh)
@@ -182,14 +183,14 @@ internal partial class SAM
     private static bool UsePrepullMeikyo(bool requireNotJustUsed = false) =>
         !InCombat() && HasBattleTarget() &&
         ActionReady(MeikyoShisui) &&
-        !HasStatusEffect(Buffs.MeikyoShisui) &&
+        !LocalPlayer.HasStatus(Buffs.MeikyoShisui) &&
         (!requireNotJustUsed || !JustUsed(MeikyoShisui));
 
     private static bool UseMeikyo(bool onAoE, int meikyoExecuteThreshold = 5)
     {
         if (!ActionReady(MeikyoShisui) ||
-            HasStatusEffect(Buffs.MeikyoShisui) ||
-            HasStatusEffect(Buffs.Tendo) ||
+            LocalPlayer.HasStatus(Buffs.MeikyoShisui) ||
+            LocalPlayer.HasStatus(Buffs.Tendo) ||
             JustUsed(MeikyoShisui))
             return false;
 
@@ -212,12 +213,12 @@ internal partial class SAM
         bool oddMinutePreEnhanced = !HasEnhancedSenei && seneiCd is > 50 and < 65;
         uint meikyoCharges = GetRemainingCharges(MeikyoShisui);
 
-        float higanbanaRemaining = GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget);
+        float higanbanaRemaining = CurrentTarget.Status(Debuffs.Higanbana).RemainingTimeOrZero();
         bool higanbanaUrgent =
             afterFinisher &&
             SenCount < 3 &&
             SenCount is not 1 &&
-            (!HasStatusEffect(Debuffs.Higanbana, CurrentTarget) || higanbanaRemaining <= 15);
+            (!CurrentTarget.HasStatus(Debuffs.Higanbana) || higanbanaRemaining <= 15);
 
         if (higanbanaUrgent)
             return true;
@@ -244,7 +245,7 @@ internal partial class SAM
 
     private static bool UseIkishoten() =>
         ActionReady(Ikishoten) &&
-        !HasStatusEffect(Buffs.ZanshinReady) &&
+        !LocalPlayer.HasStatus(Buffs.ZanshinReady) &&
         Kenki <= 50 &&
         (!ActionLearned(Senei) ||
          JustUsed(Senei, 20f) ||
@@ -253,9 +254,9 @@ internal partial class SAM
     private static bool UseZanshin(bool holdForBurst = true) =>
         ActionReady(Zanshin) &&
         InActionRange(Zanshin) &&
-        HasStatusEffect(Buffs.ZanshinReady) &&
+        LocalPlayer.HasStatus(Buffs.ZanshinReady) &&
         (!holdForBurst || !UseSenei() && !ActionReady(Senei)) &&
-        (GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8 ||
+        (LocalPlayer.Status(Buffs.ZanshinReady).RemainingTimeOrZero() <= 8 ||
          JustUsed(Senei, 20f) ||
          !holdForBurst);
 
@@ -266,12 +267,12 @@ internal partial class SAM
         (!holdForBurst || !ActionLearned(Senei) || GetCooldownRemainingTime(Senei) >= 7f);
 
     private static bool ShouldRefreshFugetsu =>
-        GetStatusEffectRemainingTime(Buffs.Fugetsu) <=
-        GetStatusEffectRemainingTime(Buffs.Fuka);
+        LocalPlayer.Status(Buffs.Fugetsu).RemainingTimeOrZero() <=
+        LocalPlayer.Status(Buffs.Fuka).RemainingTimeOrZero();
 
     private static bool ShouldRefreshFuka =>
-        GetStatusEffectRemainingTime(Buffs.Fuka) <=
-        GetStatusEffectRemainingTime(Buffs.Fugetsu);
+        LocalPlayer.Status(Buffs.Fuka).RemainingTimeOrZero() <=
+        LocalPlayer.Status(Buffs.Fugetsu).RemainingTimeOrZero();
 
     private static bool UseFeatureKenkiOvercap(ref uint actionID, bool enabled, int amount, uint spender)
     {
@@ -301,7 +302,7 @@ internal partial class SAM
 
         if (!ActionReady(OriginalHook(OgiNamikiri)) ||
             !InActionRange(OriginalHook(OgiNamikiri)) ||
-            !HasStatusEffect(Buffs.OgiNamikiriReady) ||
+            !LocalPlayer.HasStatus(Buffs.OgiNamikiriReady) ||
             respectMovement && IsMoving() ||
             ActionWatching.NumberOfGcdsUsed < 5)
             return false;
@@ -309,15 +310,15 @@ internal partial class SAM
         if (onAoE)
             return true;
 
-        if (GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8)
+        if (LocalPlayer.Status(Buffs.OgiNamikiriReady).RemainingTimeOrZero() <= 8)
             return true;
 
         if (JustUsed(Higanbana, 8f))
             return true;
 
-        float higanbanaRemaining = GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget);
+        float higanbanaRemaining = CurrentTarget.Status(Debuffs.Higanbana).RemainingTimeOrZero();
         return JustUsed(Ikishoten, 20f) &&
-               HasStatusEffect(Debuffs.Higanbana, CurrentTarget) &&
+               CurrentTarget.HasStatus(Debuffs.Higanbana) &&
                higanbanaRemaining > 15;
     }
 
@@ -327,7 +328,7 @@ internal partial class SAM
 
     private static bool NeedKenkiRoomForIkishoten() =>
         ActionLearned(Ikishoten) &&
-        !HasStatusEffect(Buffs.ZanshinReady) &&
+        !LocalPlayer.HasStatus(Buffs.ZanshinReady) &&
         Kenki > 50 &&
         (ActionReady(Ikishoten) || GetCooldownRemainingTime(Ikishoten) <= GCD * 5);
 
@@ -336,7 +337,7 @@ internal partial class SAM
         if (Kenki >= 95)
             return true;
 
-        if (HasStatusEffect(Buffs.ZanshinReady) &&
+        if (LocalPlayer.HasStatus(Buffs.ZanshinReady) &&
             ActionLearned(Zanshin) &&
             Kenki < 75)
             return false;
@@ -361,7 +362,7 @@ internal partial class SAM
         InActionRange(Senei) &&
         ActionWatching.NumberOfGcdsUsed >= 4 &&
         (!ActionLearned(TendoSetsugekka) ||
-         HasStatusEffect(Buffs.Tendo) && SenCount >= 2 ||
+         LocalPlayer.HasStatus(Buffs.Tendo) && SenCount >= 2 ||
          JustUsed(TendoSetsugekka, GCD * 3) ||
          JustUsed(TendoKaeshiSetsugekka, GCD * 3));
 
@@ -443,20 +444,20 @@ internal partial class SAM
         {
             if (ComboTimer > 0 && ComboAction is Fuko or Fuga)
             {
-                float fugetsuRemaining = GetStatusEffectRemainingTime(Buffs.Fugetsu);
-                float fukaRemaining = GetStatusEffectRemainingTime(Buffs.Fuka);
+                float fugetsuRemaining = LocalPlayer.Status(Buffs.Fugetsu).RemainingTimeOrZero();
+                float fukaRemaining = LocalPlayer.Status(Buffs.Fuka).RemainingTimeOrZero();
                 bool refreshFugetsu = fugetsuRemaining <= fukaRemaining;
                 bool refreshFuka = fukaRemaining <= fugetsuRemaining;
 
                 if (useOka &&
-                    (!HasKa || !HasStatusEffect(Buffs.Fuka) ||
+                    (!HasKa || !LocalPlayer.HasStatus(Buffs.Fuka) ||
                      SenCount is 2 or 3 && refreshFuka) &&
                     ActionLearned(Oka))
                     return Oka;
 
                 if (ActionLearned(Mangetsu) &&
-                    HasStatusEffect(Buffs.Fuka) &&
-                    (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !useOka || !ActionLearned(Oka) ||
+                    LocalPlayer.HasStatus(Buffs.Fuka) &&
+                    (!HasGetsu || !LocalPlayer.HasStatus(Buffs.Fugetsu) || !useOka || !ActionLearned(Oka) ||
                      SenCount is 2 or 3 && refreshFugetsu))
                     return Mangetsu;
             }
@@ -468,16 +469,16 @@ internal partial class SAM
         {
             if (ComboAction is Hakaze or Gyofu)
             {
-                float fugetsuRemaining = GetStatusEffectRemainingTime(Buffs.Fugetsu);
-                float fukaRemaining = GetStatusEffectRemainingTime(Buffs.Fuka);
+                float fugetsuRemaining = LocalPlayer.Status(Buffs.Fugetsu).RemainingTimeOrZero();
+                float fukaRemaining = LocalPlayer.Status(Buffs.Fuka).RemainingTimeOrZero();
                 bool refreshFugetsu = fugetsuRemaining <= fukaRemaining;
                 bool refreshFuka = fukaRemaining <= fugetsuRemaining;
 
                 if (!ActionLearned(Gekko))
                 {
                     if (useKasha && ActionLearned(Shifu) &&
-                        (!HasStatusEffect(Buffs.Fuka) ||
-                         HasStatusEffect(Buffs.Fugetsu) && refreshFuka))
+                        (!LocalPlayer.HasStatus(Buffs.Fuka) ||
+                         LocalPlayer.HasStatus(Buffs.Fugetsu) && refreshFuka))
                         return Shifu;
 
                     if (useGekko && ActionLearned(Jinpu))
@@ -497,7 +498,7 @@ internal partial class SAM
                     ActionLearned(Shifu) &&
                     ((OnTargetsFlank() || OnTargetsFront()) && !HasKa && ActionLearned(Kasha) ||
                      OnTargetsRear() && HasGetsu && ActionLearned(Kasha) ||
-                     !HasStatusEffect(Buffs.Fuka) ||
+                     !LocalPlayer.HasStatus(Buffs.Fuka) ||
                      SenCount is 3 && refreshFuka ||
                      !ActionLearned(Gekko)))
                     return Shifu;
@@ -507,7 +508,7 @@ internal partial class SAM
                     (!ActionLearned(Kasha) && ActionLearned(Gekko) ||
                      (OnTargetsRear() || OnTargetsFront()) && !HasGetsu && ActionLearned(Gekko) ||
                      OnTargetsFlank() && HasKa && ActionLearned(Gekko) ||
-                     !HasStatusEffect(Buffs.Fugetsu) ||
+                     !LocalPlayer.HasStatus(Buffs.Fugetsu) ||
                      SenCount is 3 && refreshFugetsu))
                     return Jinpu;
             }
@@ -725,7 +726,7 @@ internal partial class SAM
             ([21], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 2),
             ([26], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 3),
             ([8, 25], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))),
-            ([10, 27], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)),
+            ([10, 27], () => !LocalPlayer.HasStatus(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)),
             ([14], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko)))
         ];
 
@@ -775,7 +776,7 @@ internal partial class SAM
         [
             ([18, 20], () => !ActionReady(Shinten)),
             ([8, 21], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))),
-            ([10, 24], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka))
+            ([10, 24], () => !LocalPlayer.HasStatus(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka))
         ];
 
         public override bool HasCooldowns() =>

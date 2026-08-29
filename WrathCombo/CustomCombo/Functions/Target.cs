@@ -135,7 +135,7 @@ internal abstract partial class CustomComboFunctions
     /// <summary> Checks if an object requires positionals. Defaults to CurrentTarget unless specified. </summary>
     public static bool TargetNeedsPositionals(IGameObject? optionalTarget = null)
     {
-        if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara || HasStatusEffect(3808, chara, true))
+        if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara || chara.HasStatus(3808, true))
             return false;
 
         return ActionWatching.BNPCSheet.TryGetValue(chara.BaseId, out var charaSheet) && !charaSheet.IsOmnidirectional;

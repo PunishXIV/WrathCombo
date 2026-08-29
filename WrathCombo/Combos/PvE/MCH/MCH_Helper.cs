@@ -8,6 +8,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.MCH.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class MCH
@@ -34,7 +35,7 @@ internal partial class MCH
             return true;
 
         if (Battery > 80 &&
-            (HasStatusEffect(Buffs.ExcavatorReady) ||
+            (LocalPlayer.HasStatus(Buffs.ExcavatorReady) ||
              ActionReady(Chainsaw) ||
              ActionReady(OriginalHook(AirAnchor))))
             return true;
@@ -61,7 +62,7 @@ internal partial class MCH
                   GetTargetHPPercent() > hpThreshold;
         }
 
-        if (!HasStatusEffect(Buffs.Wildfire) &&
+        if (!LocalPlayer.HasStatus(Buffs.Wildfire) &&
             ActionReady(OriginalHook(RookAutoturret)) &&
             !IsRobotActive &&
             GetTargetHPPercent() > hpThreshold)
@@ -104,7 +105,7 @@ internal partial class MCH
                 wildfireBossOnlyOption);
 
     private static bool IsHyperchargeReady() =>
-        (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) && !IsOverheated;
+        (ActionReady(Hypercharge) || LocalPlayer.HasStatus(Buffs.Hypercharged)) && !IsOverheated;
 
     private static bool AreHyperchargeToolsReady(
         float toolCutoff,
@@ -112,7 +113,7 @@ internal partial class MCH
         bool skipExcavatorHold) =>
         IsDrillCD(toolCutoff) && IsAirAnchorCD(toolCutoff) &&
         (IsChainSawCD(toolCutoff) || skipHyperchargeHold) &&
-        (!HasStatusEffect(Buffs.ExcavatorReady) || skipExcavatorHold);
+        (!LocalPlayer.HasStatus(Buffs.ExcavatorReady) || skipExcavatorHold);
 
     private static bool ShouldUseHyperchargeST(int wildfireBossOnlyOption) =>
         ActionReady(Wildfire) ||
@@ -135,14 +136,14 @@ internal partial class MCH
         return IsHyperchargeReady() &&
                (!IsComboExpiring(6) || skipHyperchargeHold) &&
                AreHyperchargeToolsReady(wildfireHyperchargeCutoff, skipHyperchargeHold, skipExcavatorHold) &&
-               !HasStatusEffect(Buffs.FullMetalMachinist) &&
+               !LocalPlayer.HasStatus(Buffs.FullMetalMachinist) &&
                ShouldUseHyperchargeST(wildfireBossOnlyOption);
     }
 
     private static bool UsedBioBlaster(float time = 9f) =>
         !ActionLearned(BioBlaster) ||
         IsBioBlasterCD(time) ||
-        HasStatusEffect(Debuffs.Bioblaster, CurrentTarget, true);
+        CurrentTarget.HasStatus(Debuffs.Bioblaster, true);
 
     private static bool UsedDrill(float time = 9f) =>
         !ActionLearned(Drill) || IsDrillCD(time);
@@ -163,7 +164,7 @@ internal partial class MCH
         else if (!UsedDrill(toolHoldThreshold))
             return false;
 
-        if (!IsChainSawCD(toolHoldThreshold) || HasStatusEffect(Buffs.ExcavatorReady))
+        if (!IsChainSawCD(toolHoldThreshold) || LocalPlayer.HasStatus(Buffs.ExcavatorReady))
             return false;
 
         return !useAirAnchor || IsAirAnchorCD(toolHoldThreshold);
@@ -171,7 +172,7 @@ internal partial class MCH
 
     private static bool IsWildfireAboutToBeUsed(int wildfireHpThreshold, int wildfireBossOnlyOption) =>
         (wildfireBossOnlyOption == 0 && GetTargetHPPercent() > wildfireHpThreshold || TargetIsBoss()) &&
-        CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
+        CurrentTarget.CanApplyStatus(Debuffs.Wildfire) &&
         ActionReady(Wildfire);
 
     #endregion
@@ -179,12 +180,12 @@ internal partial class MCH
     #region Misc
 
     private static bool UseFullMetalField() =>
-        HasStatusEffect(Buffs.FullMetalMachinist) &&
+        LocalPlayer.HasStatus(Buffs.FullMetalMachinist) &&
         !IsOverheated &&
         (ActionReady(Wildfire) ||
          GetCooldownRemainingTime(Wildfire) > 90 ||
          GetCooldownRemainingTime(Wildfire) <= GCD ||
-         GetStatusEffectRemainingTime(Buffs.FullMetalMachinist) <= 6);
+         LocalPlayer.Status(Buffs.FullMetalMachinist).RemainingTimeOrZero() <= 6);
 
     private static bool JustUsedOverheatGCD(float window, bool onAoE) =>
         onAoE
@@ -212,7 +213,7 @@ internal partial class MCH
         int hpThreshold = 0,
         int bossOnlyOption = 1,
         bool requireBoss = false) =>
-        ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist) &&
+        ActionReady(BarrelStabilizer) && !LocalPlayer.HasStatus(Buffs.FullMetalMachinist) &&
         (onAoE
             ? GetTargetHPPercent() > hpThreshold
             : (requireBoss
@@ -226,10 +227,10 @@ internal partial class MCH
         int bossOnlyOption = 1,
         bool requireBoss = false,
         float? hyperchargeWindow = null) =>
-        CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
+        CurrentTarget.CanApplyStatus(Debuffs.Wildfire) &&
         ActionReady(Wildfire) &&
         JustUsed(Hypercharge, hyperchargeWindow ?? GCD + 0.9f) &&
-        !HasStatusEffect(Buffs.Wildfire) &&
+        !LocalPlayer.HasStatus(Buffs.Wildfire) &&
         (requireBoss
             ? TargetIsBoss()
             : bossOnlyOption == 0 &&
@@ -259,7 +260,7 @@ internal partial class MCH
             if (ActionLearned(Excavator))
                 ready++;
         }
-        else if (HasStatusEffect(Buffs.ExcavatorReady))
+        else if (LocalPlayer.HasStatus(Buffs.ExcavatorReady))
             ready++;
 
         if (ActionReady(AirAnchor))
@@ -276,7 +277,7 @@ internal partial class MCH
 
     private static bool UseReassembleCharges(int chargePool, int hpThreshold)
     {
-        if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) ||
+        if (!ActionReady(Reassemble) || LocalPlayer.HasStatus(Buffs.Reassembled) ||
             !HasBattleTarget() || GetTargetHPPercent() <= hpThreshold ||
             !InReassembleRange() || JustUsed(Reassemble, 2f))
             return false;
@@ -287,10 +288,10 @@ internal partial class MCH
 
     private static bool HasReassembleToolTarget(bool onAoE)
     {
-        if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Excavator) && LocalPlayer.HasStatus(Buffs.ExcavatorReady))
             return true;
 
-        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Chainsaw) && !LocalPlayer.HasStatus(Buffs.ExcavatorReady))
             return true;
 
         if (ActionReady(AirAnchor) && HigherToolOnCooldown(Chainsaw))
@@ -507,7 +508,7 @@ internal partial class MCH
         int chargePool = 0,
         int hpThreshold = 25)
     {
-        if (!reassembleEnabled || HasStatusEffect(Buffs.Reassembled))
+        if (!reassembleEnabled || LocalPlayer.HasStatus(Buffs.Reassembled))
             return false;
 
         if (onAoE)
@@ -529,14 +530,14 @@ internal partial class MCH
         if (ShouldHoldToolsForReassemble(onAoE, reassembleEnabled, reassembleChoice, chargePool, hpThreshold))
             return false;
 
-        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Chainsaw) && !LocalPlayer.HasStatus(Buffs.ExcavatorReady))
         {
             actionID = Chainsaw;
             return true;
         }
 
-        if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
-            (onAoE || !holdExcavatorForWildfire || GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCD * 3))
+        if (ActionReady(Excavator) && LocalPlayer.HasStatus(Buffs.ExcavatorReady) &&
+            (onAoE || !holdExcavatorForWildfire || LocalPlayer.Status(Buffs.ExcavatorReady).RemainingTimeOrZero() <= GCD * 3))
         {
             actionID = Excavator;
             return true;
@@ -549,8 +550,8 @@ internal partial class MCH
         }
 
         if (onAoE && ActionReady(BioBlaster) &&
-            !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
-            CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
+            !CurrentTarget.HasStatus(Debuffs.Bioblaster) &&
+            CurrentTarget.CanApplyStatus(Debuffs.Bioblaster))
         {
             actionID = BioBlaster;
             return true;
@@ -562,14 +563,14 @@ internal partial class MCH
             return true;
         }
 
-        if (onAoE && HasStatusEffect(Buffs.Reassembled) && ActionReady(OriginalHook(SpreadShot)))
+        if (onAoE && LocalPlayer.HasStatus(Buffs.Reassembled) && ActionReady(OriginalHook(SpreadShot)))
         {
             actionID = OriginalHook(SpreadShot);
             return true;
         }
 
         if (!onAoE && !ActionLearned(AirAnchor) && ActionReady(HotShot) &&
-            (!ActionLearned(CleanShot) || !HasStatusEffect(Buffs.Reassembled)))
+            (!ActionLearned(CleanShot) || !LocalPlayer.HasStatus(Buffs.Reassembled)))
         {
             actionID = HotShot;
             return true;

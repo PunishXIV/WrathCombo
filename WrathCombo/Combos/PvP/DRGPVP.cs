@@ -2,6 +2,7 @@
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.DRGPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -82,7 +83,7 @@ internal static class DRGPvP
             if (actionID is not (RaidenThrust or FangAndClaw or WheelingThrust or Drakesbane)) 
                 return actionID;
             
-            if (!HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true))
+            if (!CurrentTarget.HasStatus(PvPCommon.Buffs.Guard, true))
             {
                 if (IsEnabled(Preset.DRGPvP_Smite) && PvPMelee.CanSmite() && InActionRange(PvPMelee.Smite) && HasTarget() &&
                     GetTargetHPPercent() <= DRGPvP_SmiteThreshold)
@@ -90,13 +91,13 @@ internal static class DRGPvP
 
                 if (CanWeave())
                 {
-                    if (IsEnabled(Preset.DRGPvP_HighJump) && IsOffCooldown(HighJump) && !HasStatusEffect(Buffs.StarCrossReady) && (HasStatusEffect(Buffs.LifeOfTheDragon) || GetCooldownRemainingTime(Geirskogul) > 5)) // Will high jump after Gierskogul OR if Geir will be on cd for 2 more gcds.
+                    if (IsEnabled(Preset.DRGPvP_HighJump) && IsOffCooldown(HighJump) && !LocalPlayer.HasStatus(Buffs.StarCrossReady) && (LocalPlayer.HasStatus(Buffs.LifeOfTheDragon) || GetCooldownRemainingTime(Geirskogul) > 5)) // Will high jump after Gierskogul OR if Geir will be on cd for 2 more gcds.
                         return HighJump;
 
                     if (IsEnabled(Preset.DRGPvP_Nastrond)) // Nastrond Finisher logic
                     {
-                        if (HasStatusEffect(Buffs.LifeOfTheDragon) && PlayerHealthPercentageHp() < DRGPvP_LOTD_HPValue
-                            || HasStatusEffect(Buffs.LifeOfTheDragon) && GetStatusEffectRemainingTime(Buffs.LifeOfTheDragon) < DRGPvP_LOTD_Duration)
+                        if (LocalPlayer.HasStatus(Buffs.LifeOfTheDragon) && PlayerHealthPercentageHp() < DRGPvP_LOTD_HPValue
+                            || LocalPlayer.HasStatus(Buffs.LifeOfTheDragon) && LocalPlayer.Status(Buffs.LifeOfTheDragon).RemainingTimeOrZero() < DRGPvP_LOTD_Duration)
                             return Nastrond;
                     }
                     if (IsEnabled(Preset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && InActionRange(HorridRoar)) // HorridRoar Roar on cd
@@ -105,16 +106,16 @@ internal static class DRGPvP
                        
                 if (IsEnabled(Preset.DRGPvP_Geirskogul) && IsOffCooldown(Geirskogul)) 
                 {
-                    if (IsEnabled(Preset.DRGPvP_BurstProtection) && WasLastAbility(ElusiveJump) && HasStatusEffect(Buffs.FirstmindsFocus))// With evasive burst mode
+                    if (IsEnabled(Preset.DRGPvP_BurstProtection) && WasLastAbility(ElusiveJump) && LocalPlayer.HasStatus(Buffs.FirstmindsFocus))// With evasive burst mode
                         return Geirskogul;
                     if (!IsEnabled(Preset.DRGPvP_BurstProtection))// Without evasive burst mode so you can still use Gier, which will let you still use high jump
                         return Geirskogul;
                 }                       
                                                    
-                if (IsEnabled(Preset.DRGPvP_WyrmwindThrust) && HasStatusEffect(Buffs.FirstmindsFocus) && InActionRange(WyrmwindThrust) && GetTargetDistance() >= DRGPvP_Distance_Threshold)
+                if (IsEnabled(Preset.DRGPvP_WyrmwindThrust) && LocalPlayer.HasStatus(Buffs.FirstmindsFocus) && InActionRange(WyrmwindThrust) && GetTargetDistance() >= DRGPvP_Distance_Threshold)
                     return WyrmwindThrust;
 
-                if (IsEnabled(Preset.DRGPvP_Geirskogul) && HasStatusEffect(Buffs.StarCrossReady))
+                if (IsEnabled(Preset.DRGPvP_Geirskogul) && LocalPlayer.HasStatus(Buffs.StarCrossReady))
                     return Starcross;
                        
             }
@@ -137,7 +138,7 @@ internal static class DRGPvP
             if (actionID is not ElusiveJump) 
                 return actionID;
             
-            if (HasStatusEffect(Buffs.FirstmindsFocus) || IsOnCooldown(Geirskogul))
+            if (LocalPlayer.HasStatus(Buffs.FirstmindsFocus) || IsOnCooldown(Geirskogul))
             {
                 return 26;
             }

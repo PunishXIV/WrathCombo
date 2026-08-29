@@ -68,7 +68,7 @@ internal partial class RDM : Caster
                     return Role.Addle;
 
                 if (NumberOfAlliesInRange(MagickBarrier) >= GetPartyMembers().Count * .75 &&
-                    !HasStatusEffect(Buffs.MagickBarrier, anyOwner: true) && !JustUsed(Role.Addle, 6) &&
+                    !LocalPlayer.HasStatus(Buffs.MagickBarrier, true) && !JustUsed(Role.Addle, 6) &&
                     ActionReady(MagickBarrier) && GroupDamageIncoming())
                     return MagickBarrier;
             }
@@ -296,7 +296,7 @@ internal partial class RDM : Caster
 
                 if (IsEnabled(Preset.RDM_ST_MagickBarrier) &&
                     NumberOfAlliesInRange(MagickBarrier) >= GetPartyMembers().Count * .75 &&
-                    !HasStatusEffect(Buffs.MagickBarrier, anyOwner: true) &&
+                    !LocalPlayer.HasStatus(Buffs.MagickBarrier, true) &&
                     !JustUsed(Role.Addle, 6) &&
                     ActionReady(MagickBarrier) && GroupDamageIncoming())
                     return MagickBarrier;
@@ -533,8 +533,8 @@ internal partial class RDM : Caster
 
             if (ActionLearned(Verraise))
             {
-                bool schwifty = HasStatusEffect(Role.Buffs.Swiftcast);
-                if (schwifty || HasStatusEffect(Buffs.Dualcast))
+                bool schwifty = LocalPlayer.HasStatus(Role.Buffs.Swiftcast);
+                if (schwifty || LocalPlayer.HasStatus(Buffs.Dualcast))
                     return IsEnabled(Preset.RDM_Raise_Retarget)
                         ? Verraise.Retarget(Role.Swiftcast,
                             SimpleTarget.Stack.AllyToRaise)
@@ -715,7 +715,7 @@ internal partial class RDM : Caster
                     return Fleche;
                 if (RDM_Riposte_Weaves_Options[1] && ActionReady(ContreSixte))
                     return ContreSixte;
-                if (RDM_Riposte_Weaves_Options[2] && HasStatusEffect(Buffs.ThornedFlourish))
+                if (RDM_Riposte_Weaves_Options[2] && LocalPlayer.HasStatus(Buffs.ThornedFlourish))
                     return ViceOfThorns;
                 if (RDM_Riposte_Weaves_Options[3] && CanPrefulgence)
                     return Prefulgence;
@@ -769,7 +769,7 @@ internal partial class RDM : Caster
                     return Fleche;
                 if (RDM_Moulinet_Weaves_Options[1] && ActionReady(ContreSixte))
                     return ContreSixte;
-                if (RDM_Moulinet_Weaves_Options[2] && HasStatusEffect(Buffs.ThornedFlourish))
+                if (RDM_Moulinet_Weaves_Options[2] && LocalPlayer.HasStatus(Buffs.ThornedFlourish))
                     return ViceOfThorns;
                 if (RDM_Moulinet_Weaves_Options[3] && CanPrefulgence)
                     return Prefulgence;
@@ -823,11 +823,11 @@ internal partial class RDM : Caster
                 return ViceOfThorns;
 
             if (IsEnabled(Preset.RDM_EmboldenManafication) && ActionReady(Manafication) &&
-                (IsOnCooldown(Embolden) || HasStatusEffect(Buffs.Embolden, SimpleTarget.Self, true)))
+                (IsOnCooldown(Embolden) || SimpleTarget.Self.HasStatus(Buffs.Embolden, true)))
                 return Manafication;
 
             return ActionReady(Embolden) &&
-                   HasStatusEffect(Buffs.EmboldenOthers, anyOwner: true)
+                   LocalPlayer.HasStatus(Buffs.EmboldenOthers, true)
                 ? All.Cease
                 : actionID;
         }
@@ -846,10 +846,10 @@ internal partial class RDM : Caster
             {
                 if (Role.CanAddle() && CanNotMagickBarrier ||
                     GetCooldownRemainingTime(Role.Addle) < GetCooldownRemainingTime(MagickBarrier))
-                    return GetStatusEffectRemainingTime(Debuffs.Addle, CurrentTarget, anyOwner: true) > RDM_AddleDuration ? All.Cease : Role.Addle;
+                    return CurrentTarget.Status(Debuffs.Addle, true).RemainingTimeOrZero() > RDM_AddleDuration ? All.Cease : Role.Addle;
             }
 
-            if (ActionReady(MagickBarrier) && GetStatusEffectRemainingTime(Buffs.MagickBarrier, anyOwner: true) > RDM_MagickProtectionDuration)
+            if (ActionReady(MagickBarrier) && LocalPlayer.Status(Buffs.MagickBarrier, true).RemainingTimeOrZero() > RDM_MagickProtectionDuration)
                 return All.Cease;
 
             if (IsEnabled(Preset.RDM_MagickBarrierAddle) && GetCooldownRemainingTime(Role.Addle) < GetCooldownRemainingTime(MagickBarrier))
@@ -876,7 +876,7 @@ internal partial class RDM : Caster
                 return ContreSixte;
 
             if (RDM_OGCDs_Options[1] &&
-                HasStatusEffect(Buffs.ThornedFlourish))
+                LocalPlayer.HasStatus(Buffs.ThornedFlourish))
                 return ViceOfThorns;
 
             if (RDM_OGCDs_Options[2] &&
