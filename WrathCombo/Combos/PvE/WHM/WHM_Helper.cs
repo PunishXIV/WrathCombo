@@ -170,8 +170,8 @@ internal partial class WHM
                 action = OriginalHook(Medica2);
                 enabled = IsEnabled(Preset.WHM_AoEHeals_Medica2) &&
                           !IsMoving() && !JustUsed(OriginalHook(Medica2)) &&
-                          (LevelChecked(Medica3) && medica3Check ||
-                           !LevelChecked(Medica3) && medica2Check);
+                          (ActionLearned(Medica3) && medica3Check ||
+                           !ActionLearned(Medica3) && medica2Check);
                 return WHM_AoEHeals_Medica2HP;
 
             case 1:
@@ -320,25 +320,25 @@ internal partial class WHM
 
         public override int MaxOpenerLevel => 109;
 
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            Glare3, // 1
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
-            Dia, // 3
-            Glare3, // 4
-            Glare3, // 5
-            PresenceOfMind, // 6
-            Glare4, // 7
-            AfflatusMisery, // 8
-            Assize, // 9
-            Glare4, // 10
-            Glare4, // 11
-            Glare3, // 12
-            Glare3, // 13
-            Glare3, // 14
-            Glare3, // 15
-            Glare3, // 16
-            Dia // 17
+            () => Glare3, // 1
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
+            () => Dia, // 3
+            () => Glare3, // 4
+            () => Glare3, // 5
+            () => PresenceOfMind, // 6
+            () => Glare4, // 7
+            () => AfflatusMisery, // 8
+            () => Assize, // 9
+            () => Glare4, // 10
+            () => Glare4, // 11
+            () => Glare3, // 12
+            () => Glare3, // 13
+            () => Glare3, // 14
+            () => Glare3, // 15
+            () => Glare3, // 16
+            () => Dia // 17
         ];
 
         internal override UserData ContentCheckConfig => WHM_Balance_Content;
@@ -440,3 +440,5 @@ internal partial class WHM
     }
     #endregion
 }
+
+

@@ -23,31 +23,31 @@ internal partial class DRG : Melee
             {
                 if (CanDRGWeave())
                 {
-                    if (CanBattleLitany())
+                    if (UseBattleLitany())
                         return BattleLitany;
 
-                    if (CanLanceCharge())
+                    if (UseLanceCharge())
                         return LanceCharge;
 
-                    if (CanLifeSurge())
+                    if (UseLifeSurge())
                         return LifeSurge;
 
-                    if (CanMirageDive(ignoreDoubleMirageHold: true))
+                    if (UseMirageDive(ignoreDoubleMirageHold: true))
                         return MirageDive;
 
-                    if (CanUseGeirskogul())
+                    if (UseGeirskogul())
                         return Geirskogul;
 
-                    if (CanUseWyrmwind())
+                    if (UseWyrmwind())
                         return WyrmwindThrust;
 
-                    if (CanStarcross())
+                    if (UseStarcross())
                         return Starcross;
 
-                    if (CanRiseOfTheDragon())
+                    if (UseRiseOfTheDragon())
                         return RiseOfTheDragon;
 
-                    if (CanNastrond())
+                    if (UseNastrond())
                         return Nastrond;
 
                     if (Role.CanFeint() && GroupDamageIncoming())
@@ -65,14 +65,14 @@ internal partial class DRG : Melee
 
                 if (CanDRGWeave(0.8f))
                 {
-                    if (CanHighJump(allowDoubleMirageHold: false))
+                    if (UseHighJump(allowDoubleMirageHold: false))
                         return OriginalHook(Jump);
 
-                    if (CanDragonfireDive())
+                    if (UseDragonfireDive())
                         return DragonfireDive;
                 }
 
-                if (CanStardiver() && CanDRGWeave(1.5f, true))
+                if (UseStardiver() && CanDRGWeave(1.5f, true))
                     return Stardiver;
             }
 
@@ -98,31 +98,31 @@ internal partial class DRG : Melee
             {
                 if (CanDRGWeave())
                 {
-                    if (CanBattleLitany())
+                    if (UseBattleLitany())
                         return BattleLitany;
 
-                    if (CanLanceCharge())
+                    if (UseLanceCharge())
                         return LanceCharge;
 
-                    if (CanLifeSurge(true))
+                    if (UseLifeSurge(true))
                         return LifeSurge;
 
-                    if (CanMirageDive(true, true))
+                    if (UseMirageDive(true, true))
                         return MirageDive;
 
-                    if (CanUseGeirskogul())
+                    if (UseGeirskogul())
                         return Geirskogul;
 
-                    if (CanUseWyrmwind())
+                    if (UseWyrmwind())
                         return WyrmwindThrust;
 
-                    if (CanStarcross())
+                    if (UseStarcross())
                         return Starcross;
 
-                    if (CanRiseOfTheDragon())
+                    if (UseRiseOfTheDragon())
                         return RiseOfTheDragon;
 
-                    if (CanNastrond())
+                    if (UseNastrond())
                         return Nastrond;
 
                     if (Role.CanSecondWind(40))
@@ -137,14 +137,14 @@ internal partial class DRG : Melee
 
                 if (CanDRGWeave(0.8f))
                 {
-                    if (CanHighJump(true))
+                    if (UseHighJump(true))
                         return OriginalHook(Jump);
 
-                    if (CanDragonfireDive())
+                    if (UseDragonfireDive())
                         return DragonfireDive;
                 }
 
-                if (CanStardiver() && CanDRGWeave(1.5f, true))
+                if (UseStardiver() && CanDRGWeave(1.5f, true))
                     return Stardiver;
             }
 
@@ -179,42 +179,42 @@ internal partial class DRG : Melee
                     if (IsEnabled(Preset.DRG_ST_Buffs))
                     {
                         if (IsEnabled(Preset.DRG_ST_BattleLitany) &&
-                            CanBattleLitany(BattleLitanyHPThreshold))
+                            UseBattleLitany(BattleLitanyHPThreshold))
                             return BattleLitany;
 
                         if (IsEnabled(Preset.DRG_ST_LanceCharge) &&
-                            CanLanceCharge(LanceChargeHPThreshold))
+                            UseLanceCharge(LanceChargeHPThreshold))
                             return LanceCharge;
 
                         if (IsEnabled(Preset.DRG_ST_LifeSurge) &&
-                            CanLifeSurge())
+                            UseLifeSurge())
                             return LifeSurge;
                     }
 
                     if (IsEnabled(Preset.DRG_ST_Damage))
                     {
                         if (IsEnabled(Preset.DRG_ST_Mirage) &&
-                            CanMirageDive())
+                            UseMirageDive())
                             return MirageDive;
 
                         if (IsEnabled(Preset.DRG_ST_Geirskogul) &&
-                            CanUseGeirskogul(hpThreshold: GeirskogulHPThreshold()))
+                            UseGeirskogul(hpThreshold: GeirskogulHPThreshold()))
                             return Geirskogul;
 
                         if (IsEnabled(Preset.DRG_ST_Wyrmwind) &&
-                            CanUseWyrmwind())
+                            UseWyrmwind())
                             return WyrmwindThrust;
 
                         if (IsEnabled(Preset.DRG_ST_Starcross) &&
-                            CanStarcross())
+                            UseStarcross())
                             return Starcross;
 
                         if (IsEnabled(Preset.DRG_ST_RiseOfTheDragon) &&
-                            CanRiseOfTheDragon())
+                            UseRiseOfTheDragon())
                             return RiseOfTheDragon;
 
                         if (IsEnabled(Preset.DRG_ST_Nastrond) &&
-                            CanNastrond())
+                            UseNastrond())
                             return Nastrond;
                     }
 
@@ -242,17 +242,17 @@ internal partial class DRG : Melee
                     if (CanDRGWeave(0.8f))
                     {
                         if (IsEnabled(Preset.DRG_ST_HighJump) &&
-                            CanHighJump(holdOptions: DRG_ST_JumpMovingOrInRanged, allowDoubleMirageHold: false))
+                            UseHighJump(holdOptions: DRG_ST_JumpMovingOrInRanged, allowDoubleMirageHold: false))
                             return OriginalHook(Jump);
 
                         if (IsEnabled(Preset.DRG_ST_DragonfireDive) &&
-                            CanDragonfireDive(DRG_ST_DragonfireDiveMovingOrInRanged,
+                            UseDragonfireDive(DRG_ST_DragonfireDiveMovingOrInRanged,
                                 DragonfireDiveHPThreshold))
                             return DragonfireDive;
                     }
 
                     if (IsEnabled(Preset.DRG_ST_Stardiver) &&
-                        CanStardiver(holdOptions: DRG_ST_StardiverMovingOrInRanged) &&
+                        UseStardiver(holdOptions: DRG_ST_StardiverMovingOrInRanged) &&
                         CanDRGWeave(1.5f, true))
                         return Stardiver;
                 }
@@ -298,42 +298,42 @@ internal partial class DRG : Melee
                     if (IsEnabled(Preset.DRG_AoE_Buffs))
                     {
                         if (IsEnabled(Preset.DRG_AoE_BattleLitany) &&
-                            CanBattleLitany(DRG_AoE_BattleLitanyHPThreshold))
+                            UseBattleLitany(DRG_AoE_BattleLitanyHPThreshold))
                             return BattleLitany;
 
                         if (IsEnabled(Preset.DRG_AoE_LanceCharge) &&
-                            CanLanceCharge(DRG_AoE_LanceChargeHPThreshold))
+                            UseLanceCharge(DRG_AoE_LanceChargeHPThreshold))
                             return LanceCharge;
 
                         if (IsEnabled(Preset.DRG_AoE_LifeSurge) &&
-                            CanLifeSurge(true))
+                            UseLifeSurge(true))
                             return LifeSurge;
                     }
 
                     if (IsEnabled(Preset.DRG_AoE_Damage))
                     {
                         if (IsEnabled(Preset.DRG_AoE_Mirage) &&
-                            CanMirageDive(true))
+                            UseMirageDive(true))
                             return MirageDive;
 
                         if (IsEnabled(Preset.DRG_AoE_Geirskogul) &&
-                            CanUseGeirskogul(DRG_AoE_GeirskogulHPThreshold))
+                            UseGeirskogul(DRG_AoE_GeirskogulHPThreshold))
                             return Geirskogul;
 
                         if (IsEnabled(Preset.DRG_AoE_Wyrmwind) &&
-                            CanUseWyrmwind())
+                            UseWyrmwind())
                             return WyrmwindThrust;
 
                         if (IsEnabled(Preset.DRG_AoE_Starcross) &&
-                            CanStarcross())
+                            UseStarcross())
                             return Starcross;
 
                         if (IsEnabled(Preset.DRG_AoE_RiseOfTheDragon) &&
-                            CanRiseOfTheDragon())
+                            UseRiseOfTheDragon())
                             return RiseOfTheDragon;
 
                         if (IsEnabled(Preset.DRG_AoE_Nastrond) &&
-                            CanNastrond())
+                            UseNastrond())
                             return Nastrond;
                     }
 
@@ -356,16 +356,16 @@ internal partial class DRG : Melee
                     if (CanDRGWeave(0.8f))
                     {
                         if (IsEnabled(Preset.DRG_AoE_HighJump) &&
-                            CanHighJump(true))
+                            UseHighJump(true))
                             return OriginalHook(Jump);
 
                         if (IsEnabled(Preset.DRG_AoE_DragonfireDive) &&
-                            CanDragonfireDive(DRG_AoE_DragonfireDiveMovingOrInRanged, DRG_AoE_DragonfireDiveHPThreshold))
+                            UseDragonfireDive(DRG_AoE_DragonfireDiveMovingOrInRanged, DRG_AoE_DragonfireDiveHPThreshold))
                             return DragonfireDive;
                     }
 
                     if (IsEnabled(Preset.DRG_AoE_Stardiver) &&
-                        CanStardiver(DRG_AoE_StardiverMovingOrInRanged) &&
+                        UseStardiver(DRG_AoE_StardiverMovingOrInRanged) &&
                         CanDRGWeave(1.5f, true))
                         return Stardiver;
                 }
@@ -403,27 +403,27 @@ internal partial class DRG : Melee
 
             if (ComboTimer > 0)
             {
-                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
-                    return DRG_ChaoticCombo && LevelChecked(Disembowel) &&
-                           (LevelChecked(ChaosThrust) && ChaosDebuff is null &&
+                if (ComboAction is TrueThrust or RaidenThrust && ActionLearned(VorpalThrust))
+                    return DRG_ChaoticCombo && ActionLearned(Disembowel) &&
+                           (ActionLearned(ChaosThrust) && ChaosDebuff is null &&
                             CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
                             GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
                         ? OriginalHook(Disembowel)
                         : OriginalHook(VorpalThrust);
 
-                if (DRG_ChaoticCombo && ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
+                if (DRG_ChaoticCombo && ComboAction == OriginalHook(Disembowel) && ActionLearned(ChaosThrust))
                     return OriginalHook(ChaosThrust);
 
-                if (DRG_ChaoticCombo && ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
+                if (DRG_ChaoticCombo && ComboAction == OriginalHook(ChaosThrust) && ActionLearned(WheelingThrust))
                     return WheelingThrust;
 
-                if (ComboAction == OriginalHook(VorpalThrust) && LevelChecked(FullThrust))
+                if (ComboAction == OriginalHook(VorpalThrust) && ActionLearned(FullThrust))
                     return OriginalHook(FullThrust);
 
-                if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
+                if (ComboAction == OriginalHook(FullThrust) && ActionLearned(FangAndClaw))
                     return FangAndClaw;
 
-                if (ComboAction is WheelingThrust or FangAndClaw && LevelChecked(Drakesbane))
+                if (ComboAction is WheelingThrust or FangAndClaw && ActionLearned(Drakesbane))
                     return Drakesbane;
             }
 
@@ -442,16 +442,16 @@ internal partial class DRG : Melee
 
             if (ComboTimer > 0)
             {
-                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(Disembowel))
+                if (ComboAction is TrueThrust or RaidenThrust && ActionLearned(Disembowel))
                     return OriginalHook(Disembowel);
 
-                if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
+                if (ComboAction == OriginalHook(Disembowel) && ActionLearned(ChaosThrust))
                     return OriginalHook(ChaosThrust);
 
-                if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
+                if (ComboAction == OriginalHook(ChaosThrust) && ActionLearned(WheelingThrust))
                     return WheelingThrust;
 
-                if (ComboAction == WheelingThrust && LevelChecked(Drakesbane))
+                if (ComboAction == WheelingThrust && ActionLearned(Drakesbane))
                     return Drakesbane;
             }
 

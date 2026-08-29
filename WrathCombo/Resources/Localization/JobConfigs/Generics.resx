@@ -222,6 +222,10 @@ Excludes many A Realm Reborn &amp; Heavensward raids that include trash.</value>
     <value>How many charges to retain for manual use.
 Set to 0 to disable this check.</value>
   </data>
+  <data name="ChargePool0" xml:space="preserve">
+    <value>How many {0} to retain for manual use.
+Set to 0 to disable this check.</value>
+  </data>
   <data name="DelayMit" xml:space="preserve">
     <value>How long to delay after detecting incoming tankbuster to use {0}.
 Set to 0 to disable this check.</value>

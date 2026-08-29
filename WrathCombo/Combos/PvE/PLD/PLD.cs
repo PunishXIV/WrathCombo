@@ -167,10 +167,10 @@ internal partial class PLD : Tank
 
             if (ComboTimer > 0)
             {
-                if (ComboAction is FastBlade && LevelChecked(RiotBlade))
+                if (ComboAction is FastBlade && ActionLearned(RiotBlade))
                     return RiotBlade;
 
-                if (ComboAction is RiotBlade && LevelChecked(RageOfHalone))
+                if (ComboAction is RiotBlade && ActionLearned(RageOfHalone))
                 {
                     return HasDivineMight && HasDivineMagicMP && PLD_HolySpirit_Standalone
                         ? HolySpirit
@@ -191,7 +191,7 @@ internal partial class PLD : Tank
             if (actionID is not Prominence)
                 return actionID;
 
-            if (ComboAction is TotalEclipse && ComboTimer > 0 && LevelChecked(Prominence))
+            if (ComboAction is TotalEclipse && ComboTimer > 0 && ActionLearned(Prominence))
                 return HasDivineMight && HasDivineMagicMP && PLD_HolyCircle_Standalone
                     ? HolyCircle
                     : OriginalHook(Prominence);
@@ -221,13 +221,13 @@ internal partial class PLD : Tank
             }
 
             // Confiteor & Blades
-            if (HasStatusEffect(Buffs.ConfiteorReady) || LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)
-                return OriginalHook(Confiteor);
+            if (HasStatusEffect(Buffs.ConfiteorReady) || ActionLearned(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)
+                return NextConfiteorBlade();
 
             // Pre-Blades
             return HasStatusEffect(Buffs.Requiescat)
                 // AoE
-                ? LevelChecked(HolyCircle) && NumberOfEnemiesInRange(HolyCircle) > 2
+                ? ActionLearned(HolyCircle) && NumberOfEnemiesInRange(HolyCircle) > 2
                     ? HolyCircle
                     : HolySpirit
                 : actionID;
@@ -281,7 +281,7 @@ internal partial class PLD : Tank
                         : SimpleTarget.NearestEnemyOver5YalmsAway.IfWithinRange(ShieldLob.ActionRange())
                     : null);
             
-            if (PLD_ShieldLob_Feature_HolySpirit && LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && 
+            if (PLD_ShieldLob_Feature_HolySpirit && ActionLearned(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && 
                 (TimeMoving.Ticks == 0 || HasStatusEffect(Buffs.DivineMight)))
                 return target != null 
                     ? HolySpirit.Retarget(ShieldLob, target)

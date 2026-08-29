@@ -425,6 +425,12 @@ Will be targeted to your focus target, then soft and hard targets, before fallin
   <data name="AST_AoE_Heals_LazyLady_Name" xml:space="preserve">
     <value>Lazy Lady Option</value>
   </data>
+  <data name="AST_AoE_Heals_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming when MP drops below slider value.</value>
+  </data>
+  <data name="AST_AoE_Heals_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming Weave Option</value>
+  </data>
   <data name="AST_AoE_Heals_Name" xml:space="preserve">
     <value>Advanced Healing Mode - AoE</value>
   </data>
@@ -805,6 +811,12 @@ Will be targeted to any enemy, then your focus target, then soft and hard target
   <data name="AST_ST_Heals_Exaltation_Name" xml:space="preserve">
     <value>Exaltation Option</value>
   </data>
+  <data name="AST_ST_Heals_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming when MP drops below slider value.</value>
+  </data>
+  <data name="AST_ST_Heals_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming Weave Option</value>
+  </data>
   <data name="AST_ST_Heals_Name" xml:space="preserve">
     <value>Advanced Healing Mode - Single Target</value>
   </data>
@@ -1178,6 +1190,146 @@ Will only be used if Swiftcast is on cooldown.</value>
   <data name="BLU_Addle_Name" xml:space="preserve">
     <value>Addle &amp; Magic Hammer Debuff</value>
   </data>
+  <data name="BLU_AoE_DPS_Desc" xml:space="preserve">
+    <value>Replaces Electrogenesis with a full one-button AoE rotation.
+Also used with Healer Mimicry when the party does not need healing.</value>
+  </data>
+  <data name="BLU_AoE_DPS_Name" xml:space="preserve">
+    <value>DPS Mode - AoE</value>
+  </data>
+  <data name="BLU_AoE_DPS_BasicInstinct_Desc" xml:space="preserve">
+    <value>Adds Basic Instinct when solo in a duty.</value>
+  </data>
+  <data name="BLU_AoE_DPS_BasicInstinct_Name" xml:space="preserve">
+    <value>Basic Instinct</value>
+  </data>
+  <data name="BLU_AoE_DPS_FlyingSardine_Desc" xml:space="preserve">
+    <value>Adds Flying Sardine.</value>
+  </data>
+  <data name="BLU_AoE_DPS_FlyingSardine_Name" xml:space="preserve">
+    <value>Flying Sardine</value>
+  </data>
+  <data name="BLU_AoE_DPS_HydroPull_Desc" xml:space="preserve">
+    <value>Adds Hydro Pull.</value>
+  </data>
+  <data name="BLU_AoE_DPS_HydroPull_Name" xml:space="preserve">
+    <value>Hydro Pull</value>
+  </data>
+  <data name="BLU_AoE_DPS_Primals_Desc" xml:space="preserve">
+    <value>Adds equipped primals on cooldown.</value>
+  </data>
+  <data name="BLU_AoE_DPS_Primals_Name" xml:space="preserve">
+    <value>Primals</value>
+  </data>
+  <data name="BLU_AoE_Heal_Desc" xml:space="preserve">
+    <value>Replaces White Wind with a full one-button AoE healing utility.
+Pair with DPS Mode to damage when the party is healthy.</value>
+  </data>
+  <data name="BLU_AoE_Heal_Name" xml:space="preserve">
+    <value>Healing Mode - AoE</value>
+  </data>
+  <data name="BLU_AoE_Heal_AngelsSnack_Desc" xml:space="preserve">
+    <value>Adds Angel's Snack.</value>
+  </data>
+  <data name="BLU_AoE_Heal_AngelsSnack_Name" xml:space="preserve">
+    <value>Angel's Snack</value>
+  </data>
+  <data name="BLU_AoE_Heal_Gobskin_Desc" xml:space="preserve">
+    <value>Adds Gobskin.</value>
+  </data>
+  <data name="BLU_AoE_Heal_Gobskin_Name" xml:space="preserve">
+    <value>Gobskin</value>
+  </data>
+  <data name="BLU_AoE_Heal_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming.</value>
+  </data>
+  <data name="BLU_AoE_Heal_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming</value>
+  </data>
+  <data name="BLU_AoE_Heal_Stotram_Desc" xml:space="preserve">
+    <value>Adds Stotram.</value>
+  </data>
+  <data name="BLU_AoE_Heal_Stotram_Name" xml:space="preserve">
+    <value>Stotram</value>
+  </data>
+  <data name="BLU_AoE_Tank_Desc" xml:space="preserve">
+    <value>Replaces Right Round with a full one-button AoE tank rotation.</value>
+  </data>
+  <data name="BLU_AoE_Tank_Name" xml:space="preserve">
+    <value>Tank Mode - AoE</value>
+  </data>
+  <data name="BLU_AoE_Tank_BadBreath_Desc" xml:space="preserve">
+    <value>Adds Bad Breath.</value>
+  </data>
+  <data name="BLU_AoE_Tank_BadBreath_Name" xml:space="preserve">
+    <value>Bad Breath</value>
+  </data>
+  <data name="BLU_AoE_Tank_BasicInstinct_Desc" xml:space="preserve">
+    <value>Adds Basic Instinct when solo in a duty.</value>
+  </data>
+  <data name="BLU_AoE_Tank_BasicInstinct_Name" xml:space="preserve">
+    <value>Basic Instinct</value>
+  </data>
+  <data name="BLU_AoE_Tank_ChelonianGate_Desc" xml:space="preserve">
+    <value>Adds Chelonian Gate for tankbusters and raidwides.</value>
+  </data>
+  <data name="BLU_AoE_Tank_ChelonianGate_Name" xml:space="preserve">
+    <value>Chelonian Gate</value>
+  </data>
+  <data name="BLU_AoE_Tank_Devour_Desc" xml:space="preserve">
+    <value>Adds Devour.</value>
+  </data>
+  <data name="BLU_AoE_Tank_Devour_Name" xml:space="preserve">
+    <value>Devour</value>
+  </data>
+  <data name="BLU_AoE_Tank_DragonForce_Desc" xml:space="preserve">
+    <value>Adds Dragon Force for tankbusters and raidwides.</value>
+  </data>
+  <data name="BLU_AoE_Tank_DragonForce_Name" xml:space="preserve">
+    <value>Dragon Force</value>
+  </data>
+  <data name="BLU_AoE_Tank_FlyingSardine_Desc" xml:space="preserve">
+    <value>Adds Flying Sardine.</value>
+  </data>
+  <data name="BLU_AoE_Tank_FlyingSardine_Name" xml:space="preserve">
+    <value>Flying Sardine</value>
+  </data>
+  <data name="BLU_AoE_Tank_FrogLegs_Desc" xml:space="preserve">
+    <value>Adds Frog Legs.</value>
+  </data>
+  <data name="BLU_AoE_Tank_FrogLegs_Name" xml:space="preserve">
+    <value>Frog Legs</value>
+  </data>
+  <data name="BLU_AoE_Tank_HydroPull_Desc" xml:space="preserve">
+    <value>Adds Hydro Pull.</value>
+  </data>
+  <data name="BLU_AoE_Tank_HydroPull_Name" xml:space="preserve">
+    <value>Hydro Pull</value>
+  </data>
+  <data name="BLU_AoE_Tank_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming.</value>
+  </data>
+  <data name="BLU_AoE_Tank_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming</value>
+  </data>
+  <data name="BLU_AoE_Tank_MightyGuard_Desc" xml:space="preserve">
+    <value>Adds Mighty Guard.</value>
+  </data>
+  <data name="BLU_AoE_Tank_MightyGuard_Name" xml:space="preserve">
+    <value>Mighty Guard</value>
+  </data>
+  <data name="BLU_AoE_Tank_Primals_Desc" xml:space="preserve">
+    <value>Adds equipped primals on cooldown.</value>
+  </data>
+  <data name="BLU_AoE_Tank_Primals_Name" xml:space="preserve">
+    <value>Primals</value>
+  </data>
+  <data name="BLU_AoE_Tank_StickyTongue_Desc" xml:space="preserve">
+    <value>Adds Sticky Tongue.</value>
+  </data>
+  <data name="BLU_AoE_Tank_StickyTongue_Name" xml:space="preserve">
+    <value>Sticky Tongue</value>
+  </data>
   <data name="BLU_BuffedSoT_Desc" xml:space="preserve">
     <value>Turns Song of Torment into Bristle so Song of Torment is buffed.</value>
   </data>
@@ -1324,6 +1476,179 @@ Feather Rain is Retargeted to your target, so you don't have to place it.</value
   </data>
   <data name="BLU_SoloMode_Name" xml:space="preserve">
     <value>Solo Mode</value>
+  </data>
+  <data name="BLU_ST_DPS_Desc" xml:space="preserve">
+    <value>Replaces Sonic Boom with a full one-button single target rotation.
+Also used with Healer Mimicry when the party does not need healing.</value>
+  </data>
+  <data name="BLU_ST_DPS_Name" xml:space="preserve">
+    <value>DPS Mode - Single Target</value>
+  </data>
+  <data name="BLU_ST_DPS_Breath_Desc" xml:space="preserve">
+    <value>Adds Breath of Magic to DPS Mode.</value>
+  </data>
+  <data name="BLU_ST_DPS_Breath_Name" xml:space="preserve">
+    <value>Breath of Magic</value>
+  </data>
+  <data name="BLU_ST_DPS_Flame_Desc" xml:space="preserve">
+    <value>Adds Mortal Flame to DPS Mode.</value>
+  </data>
+  <data name="BLU_ST_DPS_Flame_Name" xml:space="preserve">
+    <value>Mortal Flame</value>
+  </data>
+  <data name="BLU_ST_DPS_BasicInstinct_Desc" xml:space="preserve">
+    <value>Adds Basic Instinct when solo in a duty.</value>
+  </data>
+  <data name="BLU_ST_DPS_BasicInstinct_Name" xml:space="preserve">
+    <value>Basic Instinct</value>
+  </data>
+  <data name="BLU_ST_DPS_FlyingSardine_Desc" xml:space="preserve">
+    <value>Adds Flying Sardine.</value>
+  </data>
+  <data name="BLU_ST_DPS_FlyingSardine_Name" xml:space="preserve">
+    <value>Flying Sardine</value>
+  </data>
+  <data name="BLU_ST_DPS_Opener_Desc" xml:space="preserve">
+    <value>Adds the Moon Flute opener, repeated every two minutes.
+Prepull: Whistle at -5, Tingle at -3, Rose of Destruction on pull.
+Keep Nightbloom or bristled Song of Torment up between bursts.
+Feather Rain is Retargeted to your target.</value>
+  </data>
+  <data name="BLU_ST_DPS_Opener_Name" xml:space="preserve">
+    <value>Moon Flute Opener</value>
+  </data>
+  <data name="BLU_ST_DPS_Primals_Desc" xml:space="preserve">
+    <value>Adds equipped primals on cooldown.</value>
+  </data>
+  <data name="BLU_ST_DPS_Primals_Name" xml:space="preserve">
+    <value>Primals</value>
+  </data>
+  <data name="BLU_ST_DPS_SharpenedKnife_Desc" xml:space="preserve">
+    <value>Adds Sharpened Knife.</value>
+  </data>
+  <data name="BLU_ST_DPS_SharpenedKnife_Name" xml:space="preserve">
+    <value>Sharpened Knife</value>
+  </data>
+  <data name="BLU_ST_DPS_SongOfTorment_Desc" xml:space="preserve">
+    <value>Adds Song of Torment.</value>
+  </data>
+  <data name="BLU_ST_DPS_SongOfTorment_Name" xml:space="preserve">
+    <value>Song of Torment</value>
+  </data>
+  <data name="BLU_ST_DPS_TripleTrident_Desc" xml:space="preserve">
+    <value>Adds Triple Trident.</value>
+  </data>
+  <data name="BLU_ST_DPS_TripleTrident_Name" xml:space="preserve">
+    <value>Triple Trident</value>
+  </data>
+  <data name="BLU_ST_Heal_Desc" xml:space="preserve">
+    <value>Replaces Pom Cure with a full one-button single target healing utility.
+Pair with DPS Mode to damage when the party is healthy.</value>
+  </data>
+  <data name="BLU_ST_Heal_Name" xml:space="preserve">
+    <value>Healing Mode - Single Target</value>
+  </data>
+  <data name="BLU_ST_Heal_AngelsSnack_Desc" xml:space="preserve">
+    <value>Adds Angel's Snack.</value>
+  </data>
+  <data name="BLU_ST_Heal_AngelsSnack_Name" xml:space="preserve">
+    <value>Angel's Snack</value>
+  </data>
+  <data name="BLU_ST_Heal_Exuviation_Desc" xml:space="preserve">
+    <value>Adds Exuviation.</value>
+  </data>
+  <data name="BLU_ST_Heal_Exuviation_Name" xml:space="preserve">
+    <value>Exuviation</value>
+  </data>
+  <data name="BLU_ST_Heal_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming.</value>
+  </data>
+  <data name="BLU_ST_Heal_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming</value>
+  </data>
+  <data name="BLU_ST_Tank_Desc" xml:space="preserve">
+    <value>Replaces Goblin Punch with a full one-button single target tank rotation.</value>
+  </data>
+  <data name="BLU_ST_Tank_Name" xml:space="preserve">
+    <value>Tank Mode - Single Target</value>
+  </data>
+  <data name="BLU_ST_Tank_BadBreath_Desc" xml:space="preserve">
+    <value>Adds Bad Breath.</value>
+  </data>
+  <data name="BLU_ST_Tank_BadBreath_Name" xml:space="preserve">
+    <value>Bad Breath</value>
+  </data>
+  <data name="BLU_ST_Tank_BasicInstinct_Desc" xml:space="preserve">
+    <value>Adds Basic Instinct when solo in a duty.</value>
+  </data>
+  <data name="BLU_ST_Tank_BasicInstinct_Name" xml:space="preserve">
+    <value>Basic Instinct</value>
+  </data>
+  <data name="BLU_ST_Tank_ChelonianGate_Desc" xml:space="preserve">
+    <value>Adds Chelonian Gate for tankbusters and raidwides.</value>
+  </data>
+  <data name="BLU_ST_Tank_ChelonianGate_Name" xml:space="preserve">
+    <value>Chelonian Gate</value>
+  </data>
+  <data name="BLU_ST_Tank_Devour_Desc" xml:space="preserve">
+    <value>Adds Devour.</value>
+  </data>
+  <data name="BLU_ST_Tank_Devour_Name" xml:space="preserve">
+    <value>Devour</value>
+  </data>
+  <data name="BLU_ST_Tank_DragonForce_Desc" xml:space="preserve">
+    <value>Adds Dragon Force for tankbusters and raidwides.</value>
+  </data>
+  <data name="BLU_ST_Tank_DragonForce_Name" xml:space="preserve">
+    <value>Dragon Force</value>
+  </data>
+  <data name="BLU_ST_Tank_FlyingSardine_Desc" xml:space="preserve">
+    <value>Adds Flying Sardine.</value>
+  </data>
+  <data name="BLU_ST_Tank_FlyingSardine_Name" xml:space="preserve">
+    <value>Flying Sardine</value>
+  </data>
+  <data name="BLU_ST_Tank_FrogLegs_Desc" xml:space="preserve">
+    <value>Adds Frog Legs.</value>
+  </data>
+  <data name="BLU_ST_Tank_FrogLegs_Name" xml:space="preserve">
+    <value>Frog Legs</value>
+  </data>
+  <data name="BLU_ST_Tank_Lucid_Desc" xml:space="preserve">
+    <value>Adds Lucid Dreaming.</value>
+  </data>
+  <data name="BLU_ST_Tank_Lucid_Name" xml:space="preserve">
+    <value>Lucid Dreaming</value>
+  </data>
+  <data name="BLU_ST_Tank_MightyGuard_Desc" xml:space="preserve">
+    <value>Adds Mighty Guard.</value>
+  </data>
+  <data name="BLU_ST_Tank_MightyGuard_Name" xml:space="preserve">
+    <value>Mighty Guard</value>
+  </data>
+  <data name="BLU_ST_Tank_Offguard_Desc" xml:space="preserve">
+    <value>Adds Off-guard.</value>
+  </data>
+  <data name="BLU_ST_Tank_Offguard_Name" xml:space="preserve">
+    <value>Off-guard</value>
+  </data>
+  <data name="BLU_ST_Tank_Primals_Desc" xml:space="preserve">
+    <value>Adds equipped primals on cooldown.</value>
+  </data>
+  <data name="BLU_ST_Tank_Primals_Name" xml:space="preserve">
+    <value>Primals</value>
+  </data>
+  <data name="BLU_ST_Tank_SongOfTorment_Desc" xml:space="preserve">
+    <value>Adds Song of Torment.</value>
+  </data>
+  <data name="BLU_ST_Tank_SongOfTorment_Name" xml:space="preserve">
+    <value>Song of Torment</value>
+  </data>
+  <data name="BLU_ST_Tank_StickyTongue_Desc" xml:space="preserve">
+    <value>Adds Sticky Tongue.</value>
+  </data>
+  <data name="BLU_ST_Tank_StickyTongue_Name" xml:space="preserve">
+    <value>Sticky Tongue</value>
   </data>
   <data name="BLU_Ultravibrate_Desc" xml:space="preserve">
     <value>Turns Ultravibration into Ram's Voice if Deep Freeze isn't on the target. Will swiftcast Ultravibration if available.</value>
@@ -6409,7 +6734,7 @@ NOT RECOMMENDED!</value>
     <value>Enable this to add Summoner-specific actions into the rotation.</value>
   </data>
   <data name="Phantom_Summoner_EarthenWall_Desc" xml:space="preserve">
-    <value>Adds Earthen Wall into the rotation.</value>
+    <value>Uses Earthen Wall when a raidwide is incoming.</value>
   </data>
   <data name="Phantom_Summoner_EarthenWall_Name" xml:space="preserve">
     <value>Earthen Wall</value>
@@ -8257,47 +8582,41 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="SAM_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>Advanced Mode - AoE</value>
   </data>
-  <data name="SAM_AoE_CDs_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_CDs_Desc" xml:space="preserve">
     <value>Collection of Cooldown features on main combo.</value>
   </data>
-  <data name="SAM_AoE_CDs_Ikishoten_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Ikishoten_Desc" xml:space="preserve">
     <value>Adds Ikishoten when at or below 50 Kenki.
 Will dump Kenki at 10 seconds left to allow Ikishoten to be used.</value>
   </data>
-  <data name="SAM_AoE_CDs_Ikishoten_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Ikishoten_Name" xml:space="preserve">
     <value>Ikishoten Option</value>
   </data>
-  <data name="SAM_AoE_CDs_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_CDs_Name" xml:space="preserve">
     <value>Cooldowns on Main Combo</value>
   </data>
-  <data name="SAM_AoE_ComboHeals_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_ComboHeals_Desc" xml:space="preserve">
     <value>Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.</value>
   </data>
-  <data name="SAM_AoE_ComboHeals_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_ComboHeals_Name" xml:space="preserve">
     <value>Combo Heals Option</value>
   </data>
-  <data name="SAM_AoE_Damage_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Damage_Desc" xml:space="preserve">
     <value>Collection of Damage skills on main combo.</value>
   </data>
-  <data name="SAM_AoE_Damage_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Damage_Name" xml:space="preserve">
     <value>Damage skills on Main Combo</value>
   </data>
-  <data name="SAM_AoE_Guren_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Guren_Desc" xml:space="preserve">
     <value>Adds Guren to the rotation.</value>
   </data>
-  <data name="SAM_AoE_Guren_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Guren_Name" xml:space="preserve">
     <value>Guren Option</value>
   </data>
-  <data name="SAM_AoE_Hagakure_Desc" xml:space="preserve">
-    <value>Adds Hagakure to the rotation when there are three Sen.</value>
-  </data>
-  <data name="SAM_AoE_Hagakure_Name" xml:space="preserve">
-    <value>Hagakure Option</value>
-  </data>
-  <data name="SAM_AoE_Kyuten_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Kyuten_Desc" xml:space="preserve">
     <value>Adds Kyuten to the rotation.</value>
   </data>
-  <data name="SAM_AoE_Kyuten_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Kyuten_Name" xml:space="preserve">
     <value>Kyuten Option</value>
   </data>
   <data name="SAM_AoE_MangetsuCombo_Desc" xml:space="preserve">
@@ -8307,16 +8626,16 @@ Enabling Oka combo options makes this a one button basic combo.</value>
   <data name="SAM_AoE_MangetsuCombo_Name" xml:space="preserve">
     <value>Mangetsu Combo</value>
   </data>
-  <data name="SAM_AoE_MeikyoShisui_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Meikyo_Desc" xml:space="preserve">
     <value>Adds Meikyo Shisui to the rotation.</value>
   </data>
-  <data name="SAM_AoE_MeikyoShisui_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Meikyo_Name" xml:space="preserve">
     <value>Meikyo Shisui Option</value>
   </data>
-  <data name="SAM_AoE_OgiNamikiri_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_OgiNamikiri_Desc" xml:space="preserve">
     <value>Adds Ogi Namikiri and Kaeshi: Namikiri when ready and when you're not moving to the rotation.</value>
   </data>
-  <data name="SAM_AoE_OgiNamikiri_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_OgiNamikiri_Name" xml:space="preserve">
     <value>Ogi Namikiri Option</value>
   </data>
   <data name="SAM_AoE_OkaCombo_Desc" xml:space="preserve">
@@ -8325,16 +8644,16 @@ Enabling Oka combo options makes this a one button basic combo.</value>
   <data name="SAM_AoE_OkaCombo_Name" xml:space="preserve">
     <value>Oka Combo</value>
   </data>
-  <data name="SAM_AoE_Oka_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Oka_Desc" xml:space="preserve">
     <value>Adds Oka combo to the rotation.</value>
   </data>
-  <data name="SAM_AoE_Oka_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Oka_Name" xml:space="preserve">
     <value>Oka Combo</value>
   </data>
-  <data name="SAM_AoE_Shoha_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Shoha_Desc" xml:space="preserve">
     <value>Adds Shoha when you have 3 meditation stacks.</value>
   </data>
-  <data name="SAM_AoE_Shoha_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Shoha_Name" xml:space="preserve">
     <value>Shoha Option</value>
   </data>
   <data name="SAM_AoE_SimpleMode_Desc" xml:space="preserve">
@@ -8344,22 +8663,22 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SAM_AoE_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - AoE</value>
   </data>
-  <data name="SAM_AoE_StunInterrupt_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_StunInterrupt_Desc" xml:space="preserve">
     <value>Adds Leg Sweep when target non-boss is casting.</value>
   </data>
-  <data name="SAM_AoE_StunInterrupt_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_StunInterrupt_Name" xml:space="preserve">
     <value>Leg Sweep Option</value>
   </data>
-  <data name="SAM_AoE_TenkaGoken_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_TenkaGoken_Desc" xml:space="preserve">
     <value>Adds Tenka Goken, Midare: Setsugekka, and Kaeshi: Goken when ready and when you're not moving to the rotation.</value>
   </data>
-  <data name="SAM_AoE_TenkaGoken_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_TenkaGoken_Name" xml:space="preserve">
     <value>Iaijutsu Option</value>
   </data>
-  <data name="SAM_AoE_Zanshin_Desc" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Zanshin_Desc" xml:space="preserve">
     <value>Adds Zanshin to the rotation.</value>
   </data>
-  <data name="SAM_AoE_Zanshin_Name" xml:space="preserve">
+  <data name="SAM_AoE_Adv_Zanshin_Name" xml:space="preserve">
     <value>Zanshin Option</value>
   </data>
   <data name="SAM_GyotenYaten_Desc" xml:space="preserve">
@@ -8508,102 +8827,102 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="SAM_ST_AdvancedMode_Name" xml:space="preserve">
     <value>Advanced Mode - Single Target</value>
   </data>
-  <data name="SAM_ST_CDs_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_CDs_Desc" xml:space="preserve">
     <value>Collection of Cooldown features on main combo.</value>
   </data>
-  <data name="SAM_ST_CDs_Iaijutsu_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Iaijutsu_Desc" xml:space="preserve">
     <value>Adds Midare: Setsugekka, Higanbana, and Kaeshi: Setsugekka to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_Iaijutsu_Movement_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Iaijutsu_Movement_Desc" xml:space="preserve">
     <value>Adds Midare: Setsugekka and Higanbana when you're not moving.</value>
   </data>
-  <data name="SAM_ST_CDs_Iaijutsu_Movement_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Iaijutsu_Movement_Name" xml:space="preserve">
     <value>Iajutsu movement Option</value>
   </data>
-  <data name="SAM_ST_CDs_Iaijutsu_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Iaijutsu_Name" xml:space="preserve">
     <value>Iaijutsu Option</value>
   </data>
-  <data name="SAM_ST_CDs_Ikishoten_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Ikishoten_Desc" xml:space="preserve">
     <value>Adds Ikishoten when at or below 50 Kenki.
 PRE 94: Will dump Kenki at 10 seconds left to allow Ikishoten to be used.
 POST 94: Will use during burst window.</value>
   </data>
-  <data name="SAM_ST_CDs_Ikishoten_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Ikishoten_Name" xml:space="preserve">
     <value>Ikishoten Option</value>
   </data>
-  <data name="SAM_ST_CDs_MeikyoShisui_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Meikyo_Desc" xml:space="preserve">
     <value>Adds Meikyo Shisui to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_MeikyoShisui_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Meikyo_Name" xml:space="preserve">
     <value>Meikyo Shisui Option</value>
   </data>
-  <data name="SAM_ST_CDs_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_CDs_Name" xml:space="preserve">
     <value>Cooldowns on Main Combo</value>
   </data>
-  <data name="SAM_ST_CDs_OgiNamikiri_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_OgiNamikiri_Desc" xml:space="preserve">
     <value>Adds Ogi Namikiri and Kaeshi: Namikiri to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_OgiNamikiri_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_OgiNamikiri_Name" xml:space="preserve">
     <value>Ogi Namikiri Option</value>
   </data>
-  <data name="SAM_ST_CDs_Senei_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Senei_Desc" xml:space="preserve">
     <value>Adds Senei to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_Senei_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Senei_Name" xml:space="preserve">
     <value>Senei Option</value>
   </data>
-  <data name="SAM_ST_CDs_Shoha_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Shoha_Desc" xml:space="preserve">
     <value>Adds Shoha when you have three meditation stacks.</value>
   </data>
-  <data name="SAM_ST_CDs_Shoha_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Shoha_Name" xml:space="preserve">
     <value>Shoha Option</value>
   </data>
-  <data name="SAM_ST_CDs_UseHiganbana_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Higanbana_Desc" xml:space="preserve">
     <value>Will use Higanbana depending on suboptions.</value>
   </data>
-  <data name="SAM_ST_CDs_UseHiganbana_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Higanbana_Name" xml:space="preserve">
     <value>Add Higanbana</value>
   </data>
-  <data name="SAM_ST_CDs_UseMidare_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Midare_Desc" xml:space="preserve">
     <value>Will use Midare Setsugekka and Tendo Setsugekka.</value>
   </data>
-  <data name="SAM_ST_CDs_UseMidare_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Midare_Name" xml:space="preserve">
     <value>Add Midare Setsugekka</value>
   </data>
-  <data name="SAM_ST_CDs_UseTenkaGoken_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_TenkaGoken_Desc" xml:space="preserve">
     <value>Will Use Tenka Goken when lvlsynched below lvl 50.</value>
   </data>
-  <data name="SAM_ST_CDs_UseTenkaGoken_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_TenkaGoken_Name" xml:space="preserve">
     <value>Add Tenka Goken</value>
   </data>
-  <data name="SAM_ST_CDs_UseTsubame_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Tsubame_Desc" xml:space="preserve">
     <value>Will use Tsubame-gaeshi and Tendo Kaeshi Setsugekka.</value>
   </data>
-  <data name="SAM_ST_CDs_UseTsubame_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Tsubame_Name" xml:space="preserve">
     <value>Add Tsubame-gaeshi</value>
   </data>
-  <data name="SAM_ST_CDs_Zanshin_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Zanshin_Desc" xml:space="preserve">
     <value>Adds Zanshin when ready to the rotation.</value>
   </data>
-  <data name="SAM_ST_CDs_Zanshin_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Zanshin_Name" xml:space="preserve">
     <value>Zanshin Option</value>
   </data>
-  <data name="SAM_ST_ComboHeals_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_ComboHeals_Desc" xml:space="preserve">
     <value>Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.</value>
   </data>
-  <data name="SAM_ST_ComboHeals_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_ComboHeals_Name" xml:space="preserve">
     <value>Combo Heals Option</value>
   </data>
-  <data name="SAM_ST_Damage_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Damage_Desc" xml:space="preserve">
     <value>Collection of Damage skills on main combo.</value>
   </data>
-  <data name="SAM_ST_Damage_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Damage_Name" xml:space="preserve">
     <value>Damage skills on Main Combo</value>
   </data>
-  <data name="SAM_ST_Feint_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Feint_Desc" xml:space="preserve">
     <value>Adds Feint when Raidwide is detected casting.</value>
   </data>
-  <data name="SAM_ST_Feint_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Feint_Name" xml:space="preserve">
     <value>Feint Raidwide Option</value>
   </data>
   <data name="SAM_ST_GekkoCombo_Desc" xml:space="preserve">
@@ -8612,10 +8931,10 @@ POST 94: Will use during burst window.</value>
   <data name="SAM_ST_GekkoCombo_Name" xml:space="preserve">
     <value>Gekko Combo</value>
   </data>
-  <data name="SAM_ST_Gekko_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Gekko_Desc" xml:space="preserve">
     <value>Adds Gekko combo to the rotation.</value>
   </data>
-  <data name="SAM_ST_Gekko_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Gekko_Name" xml:space="preserve">
     <value>Gekko Combo</value>
   </data>
   <data name="SAM_ST_KashaCombo_Desc" xml:space="preserve">
@@ -8624,19 +8943,19 @@ POST 94: Will use during burst window.</value>
   <data name="SAM_ST_KashaCombo_Name" xml:space="preserve">
     <value>Kasha Combo</value>
   </data>
-  <data name="SAM_ST_Kasha_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Kasha_Desc" xml:space="preserve">
     <value>Adds Kasha combo to the rotation.</value>
   </data>
-  <data name="SAM_ST_Kasha_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Kasha_Name" xml:space="preserve">
     <value>Kasha Combo</value>
   </data>
-  <data name="SAM_ST_Meditate_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Meditate_Desc" xml:space="preserve">
     <value>Adds Meditate when not moving, not having a target and being in combat.</value>
   </data>
-  <data name="SAM_ST_Meditate_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Meditate_Name" xml:space="preserve">
     <value>Meditate Option</value>
   </data>
-  <data name="SAM_ST_Opener_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Opener_Desc" xml:space="preserve">
     <value>Adds the Balance opener at level 70/80/90/100.
 Prepull:
 - Meikyo at -13
@@ -8645,21 +8964,21 @@ Prepull:
 Without a countdown, prepull steps have no delay.
 (During a countdown only: blocks action until each prepull timing)</value>
   </data>
-  <data name="SAM_ST_Opener_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 70/80/90/100)</value>
   </data>
-  <data name="SAM_ST_RangedUptime_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_RangedUptime_Desc" xml:space="preserve">
     <value>Adds Enpi to the rotation when you are out of range.
 Will use Ogi or Iaijutsu when possible and enabled.</value>
   </data>
-  <data name="SAM_ST_RangedUptime_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_RangedUptime_Name" xml:space="preserve">
     <value>Ranged Uptime Feature</value>
   </data>
-  <data name="SAM_ST_Shinten_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Shinten_Desc" xml:space="preserve">
     <value>Adds Shinten to the rotation.
 Will pool kenki for burst.</value>
   </data>
-  <data name="SAM_ST_Shinten_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Shinten_Name" xml:space="preserve">
     <value>Shinten Option</value>
   </data>
   <data name="SAM_ST_SimpleMode_Desc" xml:space="preserve">
@@ -8669,23 +8988,23 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SAM_ST_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - Single Target</value>
   </data>
-  <data name="SAM_ST_StunInterrupt_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_StunInterrupt_Desc" xml:space="preserve">
     <value>Adds Leg Sweep when target non-boss is casting.</value>
   </data>
-  <data name="SAM_ST_StunInterrupt_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_StunInterrupt_Name" xml:space="preserve">
     <value>Leg Sweep Option</value>
   </data>
-  <data name="SAM_ST_ThirdEye_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_ThirdEye_Desc" xml:space="preserve">
     <value>Adds Third Eye when Raidwide is detected casting. 
 When Solo, uses on cd.</value>
   </data>
-  <data name="SAM_ST_ThirdEye_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_ThirdEye_Name" xml:space="preserve">
     <value>Third Eye Raidwide Option</value>
   </data>
-  <data name="SAM_ST_TrueNorth_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_TrueNorth_Desc" xml:space="preserve">
     <value>Adds True North when you are not in the correct position for the enhanced potency bonus.</value>
   </data>
-  <data name="SAM_ST_TrueNorth_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_TrueNorth_Name" xml:space="preserve">
     <value>True North Feature</value>
   </data>
   <data name="SAM_ST_YukikazeCombo_Desc" xml:space="preserve">
@@ -8695,10 +9014,10 @@ Enabling Gekko and Kasha combo options makes this a one button basic combo.</val
   <data name="SAM_ST_YukikazeCombo_Name" xml:space="preserve">
     <value>Yukikaze Combo</value>
   </data>
-  <data name="SAM_ST_Yukikaze_Desc" xml:space="preserve">
+  <data name="SAM_ST_Adv_Yukikaze_Desc" xml:space="preserve">
     <value>Adds Yukikaze combo to the rotation.</value>
   </data>
-  <data name="SAM_ST_Yukikaze_Name" xml:space="preserve">
+  <data name="SAM_ST_Adv_Yukikaze_Name" xml:space="preserve">
     <value>Yukikaze Combo</value>
   </data>
   <data name="SCHPvP_Adlo_Desc" xml:space="preserve">
@@ -9296,136 +9615,136 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SGEPvP_RetargetKardia_Name" xml:space="preserve">
     <value>Kardia Retarget</value>
   </data>
-  <data name="SGE_AoE_DPS_AddersgallProtect_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_AddersgallProtect_Desc" xml:space="preserve">
     <value>Weaves Druochole when Addersgall gauge is greater than or equal to the specified value.</value>
   </data>
-  <data name="SGE_AoE_DPS_AddersgallProtect_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_AddersgallProtect_Name" xml:space="preserve">
     <value>Addersgall Overflow Protection</value>
   </data>
-  <data name="SGE_AoE_DPS_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_DPS_Desc" xml:space="preserve">
     <value>Adds various options to Dyskrasia I &amp; II. Requires a target.</value>
   </data>
-  <data name="SGE_AoE_DPS_EDyskrasia_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_EDyskrasia_Desc" xml:space="preserve">
     <value>Uses Eukrasia for Eukrasia Dyskrasia.</value>
   </data>
-  <data name="SGE_AoE_DPS_EDyskrasia_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_EDyskrasia_Name" xml:space="preserve">
     <value>Eukrasia Option</value>
   </data>
-  <data name="SGE_AoE_DPS_Lucid_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Lucid_Desc" xml:space="preserve">
     <value>Weaves Lucid Dreaming when your MP falls below the specified value.</value>
   </data>
-  <data name="SGE_AoE_DPS_Lucid_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Lucid_Name" xml:space="preserve">
     <value>Lucid Dreaming Option</value>
   </data>
-  <data name="SGE_AoE_DPS_Name" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_DPS_Name" xml:space="preserve">
     <value>Advanced DPS Mode - AoE</value>
   </data>
-  <data name="SGE_AoE_DPS_Phlegma_Desc" xml:space="preserve">
-    <value>Uses Phlegma if available.</value>
+  <data name="SGE_AoE_Adv_DPS_Phlegma_Desc" xml:space="preserve">
+    <value>Uses Phlegma if available. When Psyche is also enabled, pairs Phlegma → Psyche → Phlegma.</value>
   </data>
-  <data name="SGE_AoE_DPS_Phlegma_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Phlegma_Name" xml:space="preserve">
     <value>Phlegma Option</value>
   </data>
-  <data name="SGE_AoE_DPS_Pneuma_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Pneuma_Desc" xml:space="preserve">
     <value>Adds Pneuma if available.</value>
   </data>
-  <data name="SGE_AoE_DPS_Pneuma_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Pneuma_Name" xml:space="preserve">
     <value>Pneuma Option</value>
   </data>
-  <data name="SGE_AoE_DPS_Psyche_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Psyche_Desc" xml:space="preserve">
     <value>Weaves Psyche if available.</value>
   </data>
-  <data name="SGE_AoE_DPS_Psyche_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Psyche_Name" xml:space="preserve">
     <value>Psyche Option</value>
   </data>
-  <data name="SGE_AoE_DPS_Rhizo_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Rhizo_Desc" xml:space="preserve">
     <value>Weaves Rhizomata when Addersgall gauge falls below the specified value.</value>
   </data>
-  <data name="SGE_AoE_DPS_Rhizo_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Rhizo_Name" xml:space="preserve">
     <value>Rhizomata Option</value>
   </data>
-  <data name="SGE_AoE_DPS_Soteria_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Soteria_Desc" xml:space="preserve">
     <value>Weaves Soteria if you have the Kardia buff.</value>
   </data>
-  <data name="SGE_AoE_DPS_Soteria_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Soteria_Name" xml:space="preserve">
     <value>Soteria Option</value>
   </data>
-  <data name="SGE_AoE_DPS_Toxikon_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Toxikon_Desc" xml:space="preserve">
     <value>Use Toxikon if available.</value>
   </data>
-  <data name="SGE_AoE_DPS_Toxikon_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_DPS_Toxikon_Name" xml:space="preserve">
     <value>Toxikon Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_Heal_Desc" xml:space="preserve">
     <value>Change Prognosis into various options.</value>
   </data>
-  <data name="SGE_AoE_Heal_EPrognosis_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_EPrognosis_Desc" xml:space="preserve">
     <value>Adds Eukrasian Prognosis.</value>
   </data>
-  <data name="SGE_AoE_Heal_EPrognosis_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_EPrognosis_Name" xml:space="preserve">
     <value>Eukrasian Prognosis Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Holos_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Holos_Desc" xml:space="preserve">
     <value>Adds Holos.</value>
   </data>
-  <data name="SGE_AoE_Heal_Holos_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Holos_Name" xml:space="preserve">
     <value>Holos Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Ixochole_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Ixochole_Desc" xml:space="preserve">
     <value>Adds Ixochole.</value>
   </data>
-  <data name="SGE_AoE_Heal_Ixochole_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Ixochole_Name" xml:space="preserve">
     <value>Ixochole Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Kerachole_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Kerachole_Desc" xml:space="preserve">
     <value>Adds Kerachole.</value>
   </data>
-  <data name="SGE_AoE_Heal_Kerachole_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Kerachole_Name" xml:space="preserve">
     <value>Kerachole Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Lucid_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Lucid_Desc" xml:space="preserve">
     <value>Adds Lucid Dreaming when MP drops below slider value:</value>
   </data>
-  <data name="SGE_AoE_Heal_Lucid_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Lucid_Name" xml:space="preserve">
     <value>Lucid Dreaming Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Name" xml:space="preserve">
+  <data name="SGE_AoE_Advanced_Heal_Name" xml:space="preserve">
     <value>Advanced Healing Mode - AoE</value>
   </data>
-  <data name="SGE_AoE_Heal_Panhaima_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Panhaima_Desc" xml:space="preserve">
     <value>Adds Panhaima.</value>
   </data>
-  <data name="SGE_AoE_Heal_Panhaima_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Panhaima_Name" xml:space="preserve">
     <value>Panhaima Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Pepsis_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Pepsis_Desc" xml:space="preserve">
     <value>Triggers Pepsis if a shield is present.</value>
   </data>
-  <data name="SGE_AoE_Heal_Pepsis_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Pepsis_Name" xml:space="preserve">
     <value>Pepsis Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Philosophia_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Philosophia_Desc" xml:space="preserve">
     <value>Adds Philosophia.</value>
   </data>
-  <data name="SGE_AoE_Heal_Philosophia_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Philosophia_Name" xml:space="preserve">
     <value>Philosophia Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Physis_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Physis_Desc" xml:space="preserve">
     <value>Adds Physis.</value>
   </data>
-  <data name="SGE_AoE_Heal_Physis_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Physis_Name" xml:space="preserve">
     <value>Physis Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Rhizomata_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Rhizomata_Desc" xml:space="preserve">
     <value>Adds Rhizomata when Addersgall is 0.</value>
   </data>
-  <data name="SGE_AoE_Heal_Rhizomata_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Rhizomata_Name" xml:space="preserve">
     <value>Rhizomata Option</value>
   </data>
-  <data name="SGE_AoE_Heal_Zoe_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Zoe_Desc" xml:space="preserve">
     <value>Adds Zoe.</value>
   </data>
-  <data name="SGE_AoE_Heal_Zoe_Name" xml:space="preserve">
+  <data name="SGE_AoE_Adv_Heal_Zoe_Name" xml:space="preserve">
     <value>Zoe Option</value>
   </data>
   <data name="SGE_AoE_Simple_DPS_Desc" xml:space="preserve">
@@ -9590,186 +9909,192 @@ Will be used in all 4 main combos.</value>
   <data name="SGE_Rhizo_Name" xml:space="preserve">
     <value>Rhizomata Feature</value>
   </data>
-  <data name="SGE_Simple_AoE_Heal_Desc" xml:space="preserve">
+  <data name="SGE_AoE_Simple_Heal_Desc" xml:space="preserve">
     <value>Replaces Prognosis with a full one-button single target healing utility.
 This is the ideal option for newcomers to the job. Particularly with autorotation.</value>
   </data>
-  <data name="SGE_Simple_AoE_Heal_Name" xml:space="preserve">
+  <data name="SGE_AoE_Simple_Heal_Name" xml:space="preserve">
     <value>Simple Healing Mode - AoE</value>
   </data>
-  <data name="SGE_Simple_ST_Heal_Desc" xml:space="preserve">
+  <data name="SGE_ST_Simple_Heal_Desc" xml:space="preserve">
     <value>Replaces Diagnosis with a full one-button single target healing utility.
 This is the ideal option for newcomers to the job. Particularly with autorotation.</value>
   </data>
-  <data name="SGE_Simple_ST_Heal_Name" xml:space="preserve">
+  <data name="SGE_ST_Simple_Heal_Name" xml:space="preserve">
     <value>Simple Healing Mode - Single Target</value>
   </data>
-  <data name="SGE_ST_DPS_AddersgallProtect_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_AddersgallProtect_Desc" xml:space="preserve">
     <value>Weaves Druochole when Addersgall gauge is greater than or equal to the specified value.</value>
   </data>
-  <data name="SGE_ST_DPS_AddersgallProtect_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_AddersgallProtect_Name" xml:space="preserve">
     <value>Addersgall Overflow Protection</value>
   </data>
-  <data name="SGE_ST_DPS_Desc" xml:space="preserve">
+  <data name="SGE_ST_Advanced_DPS_Desc" xml:space="preserve">
     <value>Adds various options to Dosis I/II/III.</value>
   </data>
-  <data name="SGE_ST_DPS_EDosis_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_EDosis_Desc" xml:space="preserve">
     <value>Automatic DoT Uptime.</value>
   </data>
-  <data name="SGE_ST_DPS_EDosis_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_EDosis_Name" xml:space="preserve">
     <value>Eukrasian Dosis Option</value>
   </data>
-  <data name="SGE_ST_DPS_Kardia_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Kardia_Desc" xml:space="preserve">
     <value>Adds Kardia when not under the effect.</value>
   </data>
-  <data name="SGE_ST_DPS_Kardia_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Kardia_Name" xml:space="preserve">
     <value>Kardia Reminder Option</value>
   </data>
-  <data name="SGE_ST_DPS_Lucid_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Lucid_Desc" xml:space="preserve">
     <value>Weaves Lucid Dreaming when your MP drops below the specified value.</value>
   </data>
-  <data name="SGE_ST_DPS_Lucid_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Lucid_Name" xml:space="preserve">
     <value>Lucid Dreaming Option</value>
   </data>
-  <data name="SGE_ST_DPS_Movement_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Movement_Desc" xml:space="preserve">
     <value>Use selected instant cast actions while moving.</value>
   </data>
-  <data name="SGE_ST_DPS_Movement_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Movement_Name" xml:space="preserve">
     <value>Movement Options</value>
   </data>
-  <data name="SGE_ST_DPS_Name" xml:space="preserve">
+  <data name="SGE_ST_Advanced_DPS_Name" xml:space="preserve">
     <value>Advanced DPS Mode - Single Target</value>
   </data>
-  <data name="SGE_ST_DPS_Opener_Desc" xml:space="preserve">
-    <value>Use the Balance opener from level 92 onwards.</value>
+  <data name="SGE_ST_Adv_DPS_Opener_Desc" xml:space="preserve">
+    <value>Adds the Balance opener at level 92.
+Prepull:
+- Eukrasia at -5 (skipped if already up)
+- Potion at -2
+- Toxikon or Pneuma at -1 (selected opener)
+Without a countdown, prepull steps have no delay.
+(During a countdown only: holds as Savage Blade until each prepull timing)</value>
   </data>
-  <data name="SGE_ST_DPS_Opener_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Opener_Name" xml:space="preserve">
     <value>Balance Opener (Level 92)</value>
   </data>
-  <data name="SGE_ST_DPS_Phlegma_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Phlegma_Desc" xml:space="preserve">
     <value>Use Phlegma if available and within range.</value>
   </data>
-  <data name="SGE_ST_DPS_Phlegma_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Phlegma_Name" xml:space="preserve">
     <value>Phlegma Option</value>
   </data>
-  <data name="SGE_ST_DPS_Psyche_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Psyche_Desc" xml:space="preserve">
     <value>Weaves Psyche when available.</value>
   </data>
-  <data name="SGE_ST_DPS_Psyche_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Psyche_Name" xml:space="preserve">
     <value>Psyche Option</value>
   </data>
-  <data name="SGE_ST_DPS_Rhizo_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Rhizo_Desc" xml:space="preserve">
     <value>Weaves Rhizomata when Addersgall gauge falls below the specified value.</value>
   </data>
-  <data name="SGE_ST_DPS_Rhizo_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Rhizo_Name" xml:space="preserve">
     <value>Rhizomata Option</value>
   </data>
-  <data name="SGE_ST_DPS_Soteria_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Soteria_Desc" xml:space="preserve">
     <value>Weaves Soteria if you have the Kardia buff.</value>
   </data>
-  <data name="SGE_ST_DPS_Soteria_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_DPS_Soteria_Name" xml:space="preserve">
     <value>Soteria Option</value>
   </data>
-  <data name="SGE_ST_Heal_Desc" xml:space="preserve">
+  <data name="SGE_ST_Advanced_Heal_Desc" xml:space="preserve">
     <value>Change Diagnosis into various options.</value>
   </data>
-  <data name="SGE_ST_Heal_Druochole_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Druochole_Desc" xml:space="preserve">
     <value>Applies Druochole.</value>
   </data>
-  <data name="SGE_ST_Heal_Druochole_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Druochole_Name" xml:space="preserve">
     <value>Druochole Option</value>
   </data>
-  <data name="SGE_ST_Heal_EDiagnosis_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_EDiagnosis_Desc" xml:space="preserve">
     <value>Diagnosis becomes Eukrasian Diagnosis if the shield is not applied to the target.</value>
   </data>
-  <data name="SGE_ST_Heal_EDiagnosis_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_EDiagnosis_Name" xml:space="preserve">
     <value>Eukrasian Diagnosis Option</value>
   </data>
-  <data name="SGE_ST_Heal_Esuna_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Esuna_Desc" xml:space="preserve">
     <value>Applies Esuna if there is a cleansable debuff.</value>
   </data>
-  <data name="SGE_ST_Heal_Esuna_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Esuna_Name" xml:space="preserve">
     <value>Esuna Option</value>
   </data>
-  <data name="SGE_ST_Heal_Haima_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Haima_Desc" xml:space="preserve">
     <value>Applies Haima.</value>
   </data>
-  <data name="SGE_ST_Heal_Haima_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Haima_Name" xml:space="preserve">
     <value>Haima Option</value>
   </data>
-  <data name="SGE_ST_Heal_Holos_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Holos_Desc" xml:space="preserve">
     <value>Adds Holos.</value>
   </data>
-  <data name="SGE_ST_Heal_Holos_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Holos_Name" xml:space="preserve">
     <value>Holos Option</value>
   </data>
-  <data name="SGE_ST_Heal_Kardia_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Kardia_Desc" xml:space="preserve">
     <value>Applies Kardia if it's not applied to anyone.</value>
   </data>
-  <data name="SGE_ST_Heal_Kardia_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Kardia_Name" xml:space="preserve">
     <value>Apply Kardia Option</value>
   </data>
-  <data name="SGE_ST_Heal_Kerachole_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Kerachole_Desc" xml:space="preserve">
     <value>Adds Kerachole.</value>
   </data>
-  <data name="SGE_ST_Heal_Kerachole_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Kerachole_Name" xml:space="preserve">
     <value>Kerachole Option</value>
   </data>
-  <data name="SGE_ST_Heal_Krasis_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Krasis_Desc" xml:space="preserve">
     <value>Applies Krasis.</value>
   </data>
-  <data name="SGE_ST_Heal_Krasis_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Krasis_Name" xml:space="preserve">
     <value>Krasis Option</value>
   </data>
-  <data name="SGE_ST_Heal_Lucid_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Lucid_Desc" xml:space="preserve">
     <value>Adds Lucid Dreaming when MP drops below slider value:</value>
   </data>
-  <data name="SGE_ST_Heal_Lucid_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Lucid_Name" xml:space="preserve">
     <value>Lucid Dreaming Weave Option</value>
   </data>
-  <data name="SGE_ST_Heal_Name" xml:space="preserve">
+  <data name="SGE_ST_Advanced_Heal_Name" xml:space="preserve">
     <value>Advanced Healing Mode - Single Target</value>
   </data>
-  <data name="SGE_ST_Heal_Panhaima_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Panhaima_Desc" xml:space="preserve">
     <value>Adds Panhaima.</value>
   </data>
-  <data name="SGE_ST_Heal_Panhaima_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Panhaima_Name" xml:space="preserve">
     <value>Panhaima Option</value>
   </data>
-  <data name="SGE_ST_Heal_Pepsis_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Pepsis_Desc" xml:space="preserve">
     <value>Triggers Pepsis if a shield is present.</value>
   </data>
-  <data name="SGE_ST_Heal_Pepsis_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Pepsis_Name" xml:space="preserve">
     <value>Pepsis Option</value>
   </data>
-  <data name="SGE_ST_Heal_Physis_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Physis_Desc" xml:space="preserve">
     <value>Adds Physis.</value>
   </data>
-  <data name="SGE_ST_Heal_Physis_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Physis_Name" xml:space="preserve">
     <value>Physis Option</value>
   </data>
-  <data name="SGE_ST_Heal_Rhizomata_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Rhizomata_Desc" xml:space="preserve">
     <value>Adds Rhizomata when Addersgall is 0.</value>
   </data>
-  <data name="SGE_ST_Heal_Rhizomata_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Rhizomata_Name" xml:space="preserve">
     <value>Rhizomata Option</value>
   </data>
-  <data name="SGE_ST_Heal_Soteria_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Soteria_Desc" xml:space="preserve">
     <value>Applies Soteria.</value>
   </data>
-  <data name="SGE_ST_Heal_Soteria_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Soteria_Name" xml:space="preserve">
     <value>Soteria Option</value>
   </data>
-  <data name="SGE_ST_Heal_Taurochole_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Taurochole_Desc" xml:space="preserve">
     <value>Adds Taurochole.</value>
   </data>
-  <data name="SGE_ST_Heal_Taurochole_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Taurochole_Name" xml:space="preserve">
     <value>Taurochole Option</value>
   </data>
-  <data name="SGE_ST_Heal_Zoe_Desc" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Zoe_Desc" xml:space="preserve">
     <value>Applies Zoe.</value>
   </data>
-  <data name="SGE_ST_Heal_Zoe_Name" xml:space="preserve">
+  <data name="SGE_ST_Adv_Heal_Zoe_Name" xml:space="preserve">
     <value>Zoe Option</value>
   </data>
   <data name="SGE_ST_Simple_DPS_Desc" xml:space="preserve">
@@ -11819,5 +12144,29 @@ This is the ideal option for newcomers to the job.</value>
   </data>
   <data name="Phantom_RedMage_OccultCureII_Retarget_Desc" xml:space="preserve">
     <value>Retargets Phantom Cure II. Retargets if anyone in your party is below the slider above.</value>
+  </data>
+  <data name="PoTD_SustainingPotion_Name" xml:space="preserve">
+    <value>Palace of the Dead - Sustaining Potion</value>
+  </data>
+  <data name="PoTD_SustainingPotion_Desc" xml:space="preserve">
+    <value>Adds Sustaining Potion to one button rotations</value>
+  </data>
+  <data name="HoH_EmpyreanPotion_Name" xml:space="preserve">
+    <value>Heaven on High - Empyrean Potion</value>
+  </data>
+  <data name="HoH_EmpyreanPotion_Desc" xml:space="preserve">
+    <value>Adds Empyrean Potion to one button rotations</value>
+  </data>
+  <data name="EO_OrthosPotion_Name" xml:space="preserve">
+    <value>Eureka Orthos - Orthos Potion</value>
+  </data>
+  <data name="EO_OrthosPotion_Desc" xml:space="preserve">
+    <value>Adds Orthos Potion to one button rotations</value>
+  </data>
+  <data name="PT_PilgrimsPotion_Name" xml:space="preserve">
+    <value>Pilgrim's Traverse - Pilgrim's Potion</value>
+  </data>
+  <data name="PT_PilgrimsPotion_Desc" xml:space="preserve">
+    <value>Adds Pilgrim's Potion to one button rotations</value>
   </data>
 </root>

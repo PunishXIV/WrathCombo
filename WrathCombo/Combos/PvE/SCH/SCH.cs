@@ -50,7 +50,7 @@ internal partial class SCH : Healer
                     return ChainStratagem;
 
                 if (ActionReady(EnergyDrain) && AetherflowCD <= 10 &&
-                    (ChainStrategemCD > 10 || !LevelChecked(ChainStratagem)))
+                    (ChainStrategemCD > 10 || !ActionLearned(ChainStratagem)))
                     return EnergyDrain;
 
                 if (Role.CanLucidDream(6500))
@@ -236,7 +236,7 @@ internal partial class SCH : Healer
             if (Gauge.SeraphTimer > 0 && !FairyBusy && ActionReady(Consolation))
                 return Consolation;
 
-            if (InCombat() && IsOffCooldown(Indomitability) && LevelChecked(Indomitability))
+            if (InCombat() && IsOffCooldown(Indomitability) && ActionLearned(Indomitability))
                 return !HasAetherflow && ActionReady(Recitation)
                     ? Recitation
                     : Indomitability;
@@ -329,7 +329,7 @@ internal partial class SCH : Healer
                     AetherflowCD <= SCH_ST_DPS_EnergyDrain &&
                     (!SCH_ST_DPS_EnergyDrain_Burst ||
                      ChainStrategemCD > 10 ||
-                     !LevelChecked(ChainStratagem)))
+                     !ActionLearned(ChainStratagem)))
                     return EnergyDrain;
 
                 if (IsEnabled(Preset.SCH_ST_ADV_DPS_Lucid) && Role.CanLucidDream(SCH_ST_DPS_LucidOption))
@@ -400,14 +400,14 @@ internal partial class SCH : Healer
 
             if (IsEnabled(Preset.SCH_AoE_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem &&
                 GetTargetHPPercent() > chainThreshold && CanWeave() &&
-                (LevelChecked(BanefulImpaction) || !SCH_AoE_DPS_ChainStratagemBanefulOption))
+                (ActionLearned(BanefulImpaction) || !SCH_AoE_DPS_ChainStratagemBanefulOption))
                 return ChainStratagem;
 
             if (IsEnabled(Preset.SCH_AoE_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) &&
                 AetherflowCD <= SCH_AoE_DPS_EnergyDrain && CanWeave() &&
                 (!SCH_AoE_DPS_EnergyDrain_Burst ||
                  ChainStrategemCD > 10 ||
-                 !LevelChecked(ChainStratagem)))
+                 !ActionLearned(ChainStratagem)))
                 return EnergyDrain;
 
             var dotAction = OriginalHook(Bio);
@@ -560,7 +560,7 @@ internal partial class SCH : Healer
             if (SCH_AoE_Heal_Succor_Options[0] && ActionReady(EmergencyTactics))
                 return OriginalHook(EmergencyTactics);
 
-            return !LevelChecked(Succor) ?
+            return !ActionLearned(Succor) ?
                 WhisperingDawn :
                 OriginalHook(Succor);
         }
@@ -576,7 +576,7 @@ internal partial class SCH : Healer
         protected internal override Preset Preset => Preset.SCH_Consolation;
 
         protected override uint Invoke(uint actionID)
-            => actionID is FeyBlessing && LevelChecked(SummonSeraph) && Gauge.SeraphTimer > 0 ? Consolation : actionID;
+            => actionID is FeyBlessing && ActionLearned(SummonSeraph) && Gauge.SeraphTimer > 0 ? Consolation : actionID;
     }
     #endregion
 
@@ -653,7 +653,7 @@ internal partial class SCH : Healer
                 return All.Cease;
 
             return IsOffCooldown(Aetherflow) || 
-                   !LevelChecked(Dissipation) || 
+                   !ActionLearned(Dissipation) || 
                    GetCooldownRemainingTime(Aetherflow) < GetCooldownRemainingTime(Dissipation)
                 ? Aetherflow
                 : actionID;
@@ -668,13 +668,13 @@ internal partial class SCH : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            if (!AetherflowList.Contains(actionID) || !LevelChecked(Aetherflow))
+            if (!AetherflowList.Contains(actionID) || !ActionLearned(Aetherflow))
                 return actionID;
 
             bool hasAetherFlows = HasAetherflow; //False if Zero stacks
 
             if (IsEnabled(Preset.SCH_Aetherflow_Recite) &&
-                LevelChecked(Recitation) &&
+                ActionLearned(Recitation) &&
                 (IsOffCooldown(Recitation) || HasStatusEffect(Buffs.Recitation)))
             {
                 //Recitation Indominability and Excogitation, with optional check against AF zero stack count

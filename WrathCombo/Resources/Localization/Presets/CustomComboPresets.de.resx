@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1289,6 +1289,18 @@ Wird zuerst auf jeden Feind ausgerichtet werden, dann auf dein Fokus ziel, dann 
     <value>Klartraum Weave Option</value>
   </data>
   <data name="AST_DPS_Lucid_Desc" xml:space="preserve">
+    <value>Fügt Klartraum hinzu, wenn MP unter den Schwellenwert fällt</value>
+  </data>
+  <data name="AST_ST_Heals_Lucid_Name" xml:space="preserve">
+    <value>Klartraum Weave Option</value>
+  </data>
+  <data name="AST_ST_Heals_Lucid_Desc" xml:space="preserve">
+    <value>Fügt Klartraum hinzu, wenn MP unter den Schwellenwert fällt</value>
+  </data>
+  <data name="AST_AoE_Heals_Lucid_Name" xml:space="preserve">
+    <value>Klartraum Weave Option</value>
+  </data>
+  <data name="AST_AoE_Heals_Lucid_Desc" xml:space="preserve">
     <value>Fügt Klartraum hinzu, wenn MP unter den Schwellenwert fällt</value>
   </data>
   <data name="AST_AOE_DPS_Name" xml:space="preserve">

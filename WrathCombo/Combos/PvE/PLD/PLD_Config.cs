@@ -171,7 +171,7 @@ internal partial class PLD
                 #region AoE
 
                 case Preset.PLD_AoE_AdvancedMode_FoF:
-                    DrawSliderInt(0, 50, PLD_ST_FoF_HPOption, Generics.StopEnemyHpPercent, 200);
+                    DrawSliderInt(0, 50, PLD_AoE_FoF_HPOption, Generics.StopEnemyHpPercent, 200);
                     ImGui.Indent();
                     ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
                     DrawHorizontalRadioButton(PLD_AoE_FoF_BossOption, Generics.NonBosses, Generics.HPCheckNonBosses, 0);

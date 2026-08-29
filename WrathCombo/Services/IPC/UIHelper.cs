@@ -1,6 +1,7 @@
 ﻿#region
 
 using Dalamud.Interface.Colors;
+using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.ImGuiMethods;
 using System;
@@ -67,12 +68,12 @@ public class UIHelper(Leasing leasing)
 
     private DateTime? _jobsUpdated;
 
-    private Dictionary<string, (string controllers, bool state)>
+    private Dictionary<uint, (string controllers, bool state)>
         JobsControlled { get; } = new();
 
     internal (string controllers, bool state)? JobControlled(Job job)
     {
-        var jobName = job.Shorthand();
+        uint jobId = (uint)job;
 
         if (_jobsUpdated != _leasing.JobsUpdated)
             JobsControlled.Clear();
@@ -80,7 +81,7 @@ public class UIHelper(Leasing leasing)
         // Return the cached value if it is valid, fastest
         if (_jobsUpdated is not null &&
             _jobsUpdated == _leasing.JobsUpdated &&
-            JobsControlled.TryGetValue(jobName, out var jobControlled))
+            JobsControlled.TryGetValue(jobId, out var jobControlled))
         {
             if (string.IsNullOrEmpty(jobControlled.controllers))
                 return null;
@@ -88,13 +89,13 @@ public class UIHelper(Leasing leasing)
         }
 
         // Bail if the job is not controlled, fast
-        if ((JobsControlled.TryGetValue(jobName, out var jobNotControlled) &&
+        if ((JobsControlled.TryGetValue(jobId, out var jobNotControlled) &&
              string.IsNullOrEmpty(jobNotControlled.controllers)) ||
             _leasing.CheckJobControlled(job) is null)
         {
             if (string.IsNullOrEmpty(jobNotControlled.controllers))
             {
-                JobsControlled[jobName] = (string.Empty, false);
+                JobsControlled[jobId] = (string.Empty, false);
                 _jobsUpdated = _leasing.JobsUpdated;
             }
 
@@ -103,14 +104,14 @@ public class UIHelper(Leasing leasing)
 
         // Re-populate the cache with the current set of controlled jobs, slowest
         JobsControlled.Clear();
-        foreach (var jobListing in Enum.GetValues(typeof(Job)))
-            JobsControlled[jobListing.ToString()!] = (string.Empty, false);
+        foreach (var jobListing in Enum.GetValues<Job>())
+            JobsControlled[(uint)jobListing] = (string.Empty, false);
         foreach (var controlledJob in _search.AllJobsControlled)
-            JobsControlled[controlledJob.Key.ToString()] =
+            JobsControlled[(uint)controlledJob.Key] =
                 (string.Join(", ", controlledJob.Value.Keys), true);
         _jobsUpdated = _leasing.JobsUpdated;
 
-        return JobsControlled[jobName];
+        return JobsControlled.ContainsKey(jobId) ? JobsControlled[jobId] : (string.Empty, false);
     }
 
     #endregion

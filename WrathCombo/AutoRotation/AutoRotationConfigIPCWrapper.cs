@@ -195,6 +195,8 @@ public class DPSSettingsIPCWrapper(DPSSettings settings)
 
     public bool PreferNonCombat => settings.PreferNonCombat;
 
+    public bool TreasureHuntPriority => settings.TreasureHuntPriority;
+
     public float MaxDistance => settings.MaxDistance;
 
     public bool AoEIgnoreManual => settings.AoEIgnoreManual;

@@ -29,10 +29,4 @@ Works best on 2.50 GCD.</value>
   <data name="BurstMirageDuringLoTD" xml:space="preserve">
     <value>Burst {0} During {1}</value>
   </data>
-  <data name="EarlyBuffOpener" xml:space="preserve">
-    <value>Early Buff Opener</value>
-  </data>
-  <data name="UseEarlyBuffOpener" xml:space="preserve">
-    <value>Uses the Early Buff Opener.</value>
-  </data>
 </root>

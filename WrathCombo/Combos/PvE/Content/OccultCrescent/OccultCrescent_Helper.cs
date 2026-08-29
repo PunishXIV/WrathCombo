@@ -1,4 +1,4 @@
-﻿#region Dependencies
+#region Dependencies
 
 using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
 using System;
@@ -419,3 +419,5 @@ internal static class JobIDExtensions
     {
     }
 }
+
+

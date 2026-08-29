@@ -3,12 +3,12 @@ using System;
 namespace WrathCombo.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
-internal class SimpleCombo : Attribute
+internal class SimpleDPSCombo : Attribute
 {
 }
 
 [AttributeUsage(AttributeTargets.Field)]
-internal class AdvancedCombo : Attribute
+internal class AdvancedDPSCombo : Attribute
 {
 }
 
@@ -18,7 +18,12 @@ internal class BasicCombo : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Field)]
-internal class HealingCombo : Attribute
+internal class SimpleHealingCombo : Attribute
+{
+}
+
+[AttributeUsage(AttributeTargets.Field)]
+internal class AdvancedHealingCombo : Attribute
 {
 }
 
@@ -29,11 +34,12 @@ internal class MitigationCombo : Attribute
 
 internal enum ComboType
 {
-    Simple = 0,
-    Advanced = 1,
+    SimpleDPS = 0,
+    AdvancedDPS = 1,
     Basic = 3,
 
-    Healing = 7,
+    SimpleHealing = 6,
+    AdvancedHealing = 7,
     Mitigation = 8,
 
     Feature = 11,

@@ -183,7 +183,21 @@ namespace WrathCombo.Data.BattleData
                     }.ToFrozenSet();
 
                     break;
-
+                
+                case 1346: //The Forked Tower: Magic
+                    // Two-headed Aevis Blue Head = 14491
+                    // Two-headed Aevis Green Head = 14490
+                    _invincibleCheck = (tar, _, _) =>
+                    {
+                        if (tar?.NameId is 14491 or 14490)
+                        {
+                            if (HasStatusEffect(4192)) return Result(tar.NameId != 14491); // Two-headed Aevis Blue Head
+                            if (HasStatusEffect(4194)) return Result(tar.NameId != 14490); // Two-headed Aevis Green Head
+                        }
+                        return Invincible.False;
+                    };
+                    break;
+                
                 case 1363: // Dancing Mad (Ultimate)
                            // Chaos = 19508
                            // Exdeath = 19509
@@ -240,6 +254,7 @@ namespace WrathCombo.Data.BattleData
                     }.ToFrozenSet();
 
                     break;
+                
                 default:
                     dataLoaded = false;
                     break;

@@ -29,11 +29,33 @@ internal static class PresetStorage
     /// </summary>
     internal static readonly FrozenSet<Preset> ConflictingCombos = BuildConflictingCombos();
 
+    /// <summary>
+    ///     A frozen lookup from a preset's internal name (case-insensitive) to
+    ///     the <see cref="Preset" /> itself, used by <see cref="GetPresetByName" />
+    ///     so that resolving a name doesn't require scanning every preset.
+    /// </summary>
+    private static readonly FrozenDictionary<string, Preset> PresetsByName =
+        AllPresets.Values.ToFrozenDictionary(
+            data => data.InternalName,
+            data => data.Preset,
+            StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    ///     A frozen lookup from a preset's underlying integer ID to the
+    ///     <see cref="Preset" /> itself, used by <see cref="GetPresetByInt" />
+    ///     so that resolving an ID doesn't require scanning every preset.
+    /// </summary>
+    private static readonly FrozenDictionary<int, Preset> PresetsById =
+        AllPresets.Keys.ToFrozenDictionary(preset => (int)preset, preset => preset);
+
     internal class PresetData
     {
         public Preset Preset { get; }
+        //UI Facing Name and Description
         public string Name => PresetLocalization.GetName(Preset);
         public string Description => PresetLocalization.GetDescription(Preset);
+        //The Enum Name
+        public string InternalName { get; }
         public bool IsPvP { get; }
         public bool IsAoE { get; }
         public Preset[] Conflicts;
@@ -48,8 +70,13 @@ internal static class PresetStorage
         public uint[] RetargetedActions =>
             GetRetargetedActions(Preset, RetargetedAttribute, PossiblyRetargeted, Parent);
         public bool IsBozja { get; }
+        public bool IsBlueDPS { get; }
+        public bool IsBlueTank { get; }
+        public bool IsBlueHealer { get; }
+        public bool IsBlueRole => IsBlueDPS || IsBlueTank || IsBlueHealer;
         public bool IsOccultCrescent => OccultCrescentJob != null;
         public OccultCrescentAttribute? OccultCrescentJob;
+        public bool IsDeepDungeon { get; }
         public string? HoverText { get; }
         public ReplaceSkillAttribute? ReplaceSkill;
         public JobInfoAttribute? JobInfo;
@@ -62,21 +89,26 @@ internal static class PresetStorage
         public PresetData(Preset preset)
         {
             Preset = preset;
+            InternalName = preset.ToString();
             IsPvP = preset.GetAttribute<PvPCustomComboAttribute>() != null;
             Conflicts = preset.GetAttribute<ConflictingCombosAttribute>()?.ConflictingPresets ?? [];
             Parent = preset.GetAttribute<ParentComboAttribute>()?.ParentPreset;
             BlueInactive = preset.GetAttribute<BlueInactiveAttribute>();
+            IsDeepDungeon = preset.GetAttribute<DeepDungeonAttribute>() != null;
             IsVariant = preset.GetAttribute<VariantAttribute>() != null;
             PossiblyRetargeted = preset.GetAttribute<PossiblyRetargetedAttribute>();
             RetargetedAttribute = preset.GetAttribute<RetargetedAttribute>();
             IsBozja = preset.GetAttribute<BozjaAttribute>() != null;
+            IsBlueDPS = preset.GetAttribute<BlueDPSAttribute>() != null;
+            IsBlueTank = preset.GetAttribute<BlueTankAttribute>() != null;
+            IsBlueHealer = preset.GetAttribute<BlueHealerAttribute>() != null;
             OccultCrescentJob = preset.GetAttribute<OccultCrescentAttribute>();
             HoverText = preset.GetAttribute<HoverInfoAttribute>()?.HoverText;
             ReplaceSkill = preset.GetAttribute<ReplaceSkillAttribute>();
             JobInfo = preset.GetAttribute<JobInfoAttribute>();
             AutoAction = preset.GetAttribute<AutoActionAttribute>();
             IsAoE = AutoAction?.IsAoE
-                ?? preset.ToString().Contains("_AoE_", StringComparison.OrdinalIgnoreCase);
+                ?? InternalName.Contains("_AoE_", StringComparison.OrdinalIgnoreCase);
             IsHidden = preset.GetAttribute<HiddenAttribute>() != null;
             ComboType = GetComboType(preset);
             if (AutoAction != null)
@@ -84,16 +116,16 @@ internal static class PresetStorage
                 if (AutoAction.IsHeal)
                 {
                     if (AutoAction.IsAoE)
-                        TargetType = ComboTargetTypeKeys.HealMT;
+                        TargetType = ComboTargetTypeKeys.AoEHeals;
                     else
-                        TargetType = ComboTargetTypeKeys.HealST;
+                        TargetType = ComboTargetTypeKeys.SingleTargetHeals;
                 }
                 else
                 {
                     if (AutoAction.IsAoE)
-                        TargetType = ComboTargetTypeKeys.MultiTarget;
+                        TargetType = ComboTargetTypeKeys.AoEDPS;
                     else
-                        TargetType = ComboTargetTypeKeys.SingleTarget;
+                        TargetType = ComboTargetTypeKeys.SingleTargetDPS;
                 }
             }
             else
@@ -275,28 +307,30 @@ internal static class PresetStorage
     /// <returns> The conflicting presets. </returns>
     public static Preset[] GetConflicts(Preset preset) => AllPresets[preset].Conflicts;
 
-    public static Preset? GetPresetByString(string value)
+    public static Preset? GetPresetByName(string value) =>
+        !string.IsNullOrEmpty(value) &&
+        PresetsByName.TryGetValue(value, out var preset)
+            ? preset
+            : null;
+
+    public static Preset? GetPresetByInt(int value) =>
+        PresetsById.TryGetValue(value, out var preset) ? preset : null;
+
+    /// <summary>
+    ///     Gets a preset by either its internal name or numeric ID.
+    /// </summary>
+    /// <param name="value">
+    ///     The preset identifier - either the enum member name (e.g., "DRK_Delirium")
+    ///     or its numeric ID (e.g., "123").
+    /// </param>
+    /// <returns>
+    ///     The Preset if found, or null if neither the name nor ID match any preset.
+    /// </returns>
+    public static Preset? GetPresetByIdentifier(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            return null;
-
-        foreach (var preset in AllPresets.Keys)
-        {
-            if (string.Equals(preset.ToString(), value, StringComparison.OrdinalIgnoreCase))
-                return preset;
-        }
-
-        return null;
-    }
-
-    public static Preset? GetPresetByInt(int value)
-    {
-        foreach (var preset in AllPresets.Keys)
-        {
-            if ((int)preset == value)
-                return preset;
-        }
-        return null;
+        return int.TryParse(value, out var numericId)
+                ? PresetStorage.GetPresetByInt(numericId)
+                : PresetStorage.GetPresetByName(value);
     }
 
     private static object GetControlledText(Preset preset)
@@ -392,7 +426,7 @@ internal static class PresetStorage
 
     public static bool EnablePreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         EnablePreset(pre, source);
 
     public static bool EnablePreset
@@ -419,7 +453,7 @@ internal static class PresetStorage
 
     public static bool DisablePreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         DisablePreset(pre, source);
 
     public static bool DisablePreset
@@ -443,7 +477,7 @@ internal static class PresetStorage
 
     public static bool TogglePreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         TogglePreset(pre, source);
 
     public static bool TogglePreset
@@ -473,7 +507,7 @@ internal static class PresetStorage
 
     public static bool EnableAutoModeForPreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         EnableAutoModeForPreset(pre, source);
 
     public static bool EnableAutoModeForPreset
@@ -501,7 +535,7 @@ internal static class PresetStorage
 
     public static bool DisableAutoModeForPreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         DisableAutoModeForPreset(pre, source);
 
     public static bool DisableAutoModeForPreset
@@ -529,7 +563,7 @@ internal static class PresetStorage
 
     public static bool ToggleAutoModeForPreset
         (string preset, ConfigChangeSource? source = null) =>
-        GetPresetByString(preset) is { } pre &&
+        GetPresetByName(preset) is { } pre &&
         ToggleAutoModeForPreset(pre, source);
 
     public static bool ToggleAutoModeForPreset
@@ -543,22 +577,25 @@ internal static class PresetStorage
 
     internal static ComboType GetComboType(Preset preset)
     {
-        var simple = preset.GetAttribute<SimpleCombo>();
-        var advanced = preset.GetAttribute<AdvancedCombo>();
+        var simpleDps = preset.GetAttribute<SimpleDPSCombo>();
+        var advancedDps = preset.GetAttribute<AdvancedDPSCombo>();
         var basic = preset.GetAttribute<BasicCombo>();
-        var healing = preset.GetAttribute<HealingCombo>();
+        var simplehealing = preset.GetAttribute<SimpleHealingCombo>();
+        var advancedhealing = preset.GetAttribute<AdvancedHealingCombo>();
         var mitigation = preset.GetAttribute<MitigationCombo>();
         var parent = (object?)preset.GetAttribute<ParentComboAttribute>();
 
-        if (simple != null)
-            return ComboType.Simple;
-        if (advanced != null)
-            return ComboType.Advanced;
+        if (simpleDps != null)
+            return ComboType.SimpleDPS;
+        if (advancedDps != null)
+            return ComboType.AdvancedDPS;
         if (basic != null)
             return ComboType.Basic;
 
-        if (healing != null)
-            return ComboType.Healing;
+        if (simplehealing != null)
+            return ComboType.SimpleHealing;
+        if (advancedhealing != null)
+            return ComboType.AdvancedHealing;
         if (mitigation != null)
             return ComboType.Mitigation;
 

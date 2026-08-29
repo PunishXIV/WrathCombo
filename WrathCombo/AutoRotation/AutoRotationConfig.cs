@@ -26,6 +26,7 @@ public class DPSSettings
 {
     public bool FATEPriority = false;
     public bool QuestPriority = false;
+    public bool TreasureHuntPriority = false;
     public int? DPSAoETargets = 3;
     public bool PreferNonCombat = false;
     public bool OnlyAttackInCombat = false;

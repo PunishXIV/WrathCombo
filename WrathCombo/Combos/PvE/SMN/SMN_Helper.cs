@@ -166,7 +166,7 @@ internal partial class SMN
     internal static bool CanSummonEgi => Gauge.IsTitanReady || Gauge.IsGarudaReady || Gauge.IsIfritReady;
     internal static bool GemshineReady => Gauge.AttunementCount > 0;
     internal static bool IsAttunedAny => IsIfritAttuned || IsTitanAttuned || IsGarudaAttuned;
-    internal static bool IsDreadwyrmTranceReady => !LevelChecked(SummonBahamut) && IsBahamutReady;
+    internal static bool IsDreadwyrmTranceReady => !ActionLearned(SummonBahamut) && IsBahamutReady;
     internal static bool IsBahamutReady => !IsPhoenixReady && !IsSolarBahamutReady;
     internal static bool IsPhoenixReady => Gauge.AetherFlags.HasFlag((AetherFlags)4) && !Gauge.AetherFlags.HasFlag((AetherFlags)8);
     internal static bool IsSolarBahamutReady => Gauge.AetherFlags.HasFlag((AetherFlags)8) || Gauge.AetherFlags.HasFlag((AetherFlags)12);
@@ -330,8 +330,8 @@ internal partial class SMN
 
         bool SearingLightBurstEnabled =
             flags.HasFlag(Combo.Simple) ||
-            IsSTEnabled(flags, Preset.SMN_AoE_Advanced_Combo_SearingLight_Burst) ||
-            IsAoEEnabled(flags, Preset.SMN_ST_Advanced_Combo_SearingLight_Burst);
+            IsSTEnabled(flags, Preset.SMN_ST_Advanced_Combo_SearingLight_Burst) ||
+            IsAoEEnabled(flags, Preset.SMN_AoE_Advanced_Combo_SearingLight_Burst);
 
         bool energyDrainEnabled =
             flags.HasFlag(Combo.Simple) ||
@@ -415,14 +415,14 @@ internal partial class SMN
                 //Too low level for searing
                 //Searing cd is over 30 seconds (used for the 1 min)
                 //Searing light is active
-                if (!ogcdPoolingEnabled || !LevelChecked(SearingLight) || SearingCD > 30 || HasStatusEffect(Buffs.SearingLight, anyOwner: true))
+                if (!ogcdPoolingEnabled || !ActionLearned(SearingLight) || SearingCD > 30 || HasStatusEffect(Buffs.SearingLight, anyOwner: true))
                 {
-                    if (flags.HasFlag(Combo.ST) || flags.HasFlag(Combo.AoE) && !LevelChecked(EnergySiphon))
+                    if (flags.HasFlag(Combo.ST) || flags.HasFlag(Combo.AoE) && !ActionLearned(EnergySiphon))
                     {
                         actionID = OriginalHook(EnergyDrain);
                         return true;
                     }
-                    if (flags.HasFlag(Combo.AoE) && LevelChecked(EnergySiphon))
+                    if (flags.HasFlag(Combo.AoE) && ActionLearned(EnergySiphon))
                     {
                         actionID = OriginalHook(EnergySiphon);
                         return true;
@@ -436,7 +436,7 @@ internal partial class SMN
             if (demiSummonsAttacksEnabled && DemiExists && !JustUsed(SearingLight, 1.5f) &&
                 (HasStatusEffect(Buffs.SearingLight, anyOwner: true) || //Searing is active
                  SearingCD > Gauge.SummonTimerRemaining / 1000f + GCDTotal || //There is not enough time left in demi phase for searing to happen
-                 !LevelChecked(SearingLight)))  // Full send if searing light isnt of level
+                 !ActionLearned(SearingLight)))  // Full send if searing light isnt of level
             {
                 if (ActionReady(OriginalHook(EnkindleBahamut)))
                 {
@@ -475,14 +475,14 @@ internal partial class SMN
                 //Fire asap without pooling
                 //Too low level for Searing Light
                 //You have Searing Light
-                if (!ogcdPoolingEnabled || !LevelChecked(SearingLight) || HasStatusEffect(Buffs.SearingLight, anyOwner: true))
+                if (!ogcdPoolingEnabled || !ActionLearned(SearingLight) || HasStatusEffect(Buffs.SearingLight, anyOwner: true))
                 {
-                    if (flags.HasFlag(Combo.ST) || flags.HasFlag(Combo.AoE) && !LevelChecked(Painflare))
+                    if (flags.HasFlag(Combo.ST) || flags.HasFlag(Combo.AoE) && !ActionLearned(Painflare))
                     {
                         actionID = OriginalHook(Fester);
                         return true;
                     }
-                    if (flags.HasFlag(Combo.AoE) && LevelChecked(Painflare))
+                    if (flags.HasFlag(Combo.AoE) && ActionLearned(Painflare))
                     {
                         actionID = OriginalHook(Painflare);
                         return true;
@@ -691,7 +691,7 @@ internal partial class SMN
 
             #region Special Ruin 3 rule lvl 54 - 72 (ST ADV Only)
             // Use Ruin III instead of Emerald Ruin III if enabled and Ruin Mastery III is not active
-            if (emeraldToRuinBeforeMasteryEnabled && !TraitLevelChecked(Traits.RuinMastery3) && LevelChecked(Ruin3) && !IsMoving())
+            if (emeraldToRuinBeforeMasteryEnabled && !TraitLevelChecked(Traits.RuinMastery3) && ActionLearned(Ruin3) && !IsMoving())
             {
                 actionID = OriginalHook(Ruin);
                 return true;
@@ -782,36 +782,36 @@ internal partial class SMN
 
     internal class SMNOpenerMaxLevel1 : WrathOpener
     {
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            Ruin3, // 1
-            SummonSolarBahamut, // 2
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 3
-            UmbralImpulse, // 4
-            SearingLight, // 5
-            UmbralImpulse, // 6
-            UmbralImpulse, // 7
-            EnergyDrain, // 8
-            UmbralImpulse, // 9
-            EnkindleSolarBahamut, // 10
-            Necrotize, // 11
-            UmbralImpulse, // 12
-            Sunflare, // 13
-            Necrotize, // 14
-            UmbralImpulse, // 15
-            SearingFlash, // 16
-            SummonTitan2, // 17
-            TopazRite, // 18
-            MountainBuster, // 19
-            TopazRite, // 20
-            MountainBuster, // 21
-            TopazRite, // 22
-            MountainBuster, // 23
-            TopazRite, // 24
-            MountainBuster, // 25
-            SummonGaruda2, // 26
-            Role.Swiftcast, // 27
-            Slipstream, // 28
+            () => Ruin3, // 1
+            () => SummonSolarBahamut, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 3
+            () => UmbralImpulse, // 4
+            () => SearingLight, // 5
+            () => UmbralImpulse, // 6
+            () => UmbralImpulse, // 7
+            () => EnergyDrain, // 8
+            () => UmbralImpulse, // 9
+            () => EnkindleSolarBahamut, // 10
+            () => Necrotize, // 11
+            () => UmbralImpulse, // 12
+            () => Sunflare, // 13
+            () => Necrotize, // 14
+            () => UmbralImpulse, // 15
+            () => SearingFlash, // 16
+            () => SummonTitan2, // 17
+            () => TopazRite, // 18
+            () => MountainBuster, // 19
+            () => TopazRite, // 20
+            () => MountainBuster, // 21
+            () => TopazRite, // 22
+            () => MountainBuster, // 23
+            () => TopazRite, // 24
+            () => MountainBuster, // 25
+            () => SummonGaruda2, // 26
+            () => Role.Swiftcast, // 27
+            () => Slipstream, // 28
 
         ];
 
@@ -843,4 +843,6 @@ internal partial class SMN
     }
     #endregion
 }
+
+
 

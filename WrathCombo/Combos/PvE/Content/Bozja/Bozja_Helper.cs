@@ -1,4 +1,4 @@
-﻿namespace WrathCombo.Combos.PvE;
+namespace WrathCombo.Combos.PvE;
 
 internal static partial class Bozja
 {
@@ -236,3 +236,5 @@ internal static partial class Bozja
             PhysicalAversion = 2369;
     }
 }
+
+

@@ -200,7 +200,7 @@ internal partial class WAR
                     CanWeave() && HasSurgingTempest && InMeleeRange())
                     return Upheaval;
             
-                if (IsEnabled(Preset.WAR_FC_PrimalWrath) && LevelChecked(PrimalWrath) && 
+                if (IsEnabled(Preset.WAR_FC_PrimalWrath) && ActionLearned(PrimalWrath) && 
                     CanWeave() && HasWrathful && HasSurgingTempest &&
                     GetTargetDistance() <= 4.99f)
                     return PrimalWrath;
@@ -239,7 +239,7 @@ internal partial class WAR
     {
         protected internal override Preset Preset => Preset.WAR_EyePath;
         protected override uint Invoke(uint actionID) => actionID != StormsPath ? actionID
-            : GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_EyePath_Refresh && LevelChecked(StormsEye) 
+            : GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_EyePath_Refresh && ActionLearned(StormsEye) 
                 ? StormsEye 
                 : actionID;
     }
@@ -251,8 +251,8 @@ internal partial class WAR
         protected internal override Preset Preset => Preset.WAR_PrimalCombo_InnerRelease;
 
         protected override uint Invoke(uint action) => action is not (Berserk or InnerRelease) ? OriginalHook(action) :
-            LevelChecked(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) ? PrimalRend :
-            LevelChecked(PrimalRuination) && HasStatusEffect(Buffs.PrimalRuinationReady) ? PrimalRuination : OriginalHook(action);
+            ActionLearned(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) ? PrimalRend :
+            ActionLearned(PrimalRuination) && HasStatusEffect(Buffs.PrimalRuinationReady) ? PrimalRuination : OriginalHook(action);
     }
     #endregion
 
@@ -276,7 +276,7 @@ internal partial class WAR
             if (actionID != NascentFlash)
                 return actionID;
                     
-            if (!LevelChecked(NascentFlash)) 
+            if (!ActionLearned(NascentFlash)) 
                 return OriginalHook(RawIntuition);
             
             IGameObject? target =
@@ -449,8 +449,8 @@ internal partial class WAR
         protected internal override Preset Preset => Preset.WAR_ST_StormsPathCombo;
 
         protected override uint Invoke(uint id) => (id != StormsPath) ? id :
-            (ComboTimer > 0 && ComboAction == HeavySwing && LevelChecked(Maim)) ? Maim :
-            (ComboTimer > 0 && ComboAction == Maim && LevelChecked(StormsPath)) ? StormsPath :
+            (ComboTimer > 0 && ComboAction == HeavySwing && ActionLearned(Maim)) ? Maim :
+            (ComboTimer > 0 && ComboAction == Maim && ActionLearned(StormsPath)) ? StormsPath :
             HeavySwing;
     }
 
@@ -459,8 +459,8 @@ internal partial class WAR
         protected internal override Preset Preset => Preset.WAR_ST_StormsEyeCombo;
 
         protected override uint Invoke(uint id) => (id != StormsEye) ? id :
-            (ComboTimer > 0 && ComboAction == HeavySwing && LevelChecked(Maim)) ? Maim :
-            (ComboTimer > 0 && ComboAction == Maim && LevelChecked(StormsEye)) ? StormsEye :
+            (ComboTimer > 0 && ComboAction == HeavySwing && ActionLearned(Maim)) ? Maim :
+            (ComboTimer > 0 && ComboAction == Maim && ActionLearned(StormsEye)) ? StormsEye :
             HeavySwing;
     }
     
@@ -473,7 +473,7 @@ internal partial class WAR
             if (actionID is not MythrilTempest)
                 return actionID;
             
-            if (ComboAction is Overpower && ComboTimer > 0 && LevelChecked(MythrilTempest))
+            if (ComboAction is Overpower && ComboTimer > 0 && ActionLearned(MythrilTempest))
                 return MythrilTempest;
 
             return Overpower;

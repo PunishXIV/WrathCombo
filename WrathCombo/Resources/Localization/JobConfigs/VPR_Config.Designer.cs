@@ -107,15 +107,6 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Early Buff Opener.
-        /// </summary>
-        internal static string EarlyBuffOpener {
-            get {
-                return ResourceManager.GetString("EarlyBuffOpener", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Forces {0} or {1} if buff needs to be reapplied..
         /// </summary>
         internal static string Forces0Or1ForBuffs {
@@ -139,15 +130,6 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         internal static string Replace0WithFullCombo {
             get {
                 return ResourceManager.GetString("Replace0WithFullCombo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Uses the Early Buff Opener.
-        /// </summary>
-        internal static string UseEarlyBuffOpener {
-            get {
-                return ResourceManager.GetString("UseEarlyBuffOpener", resourceCulture);
             }
         }
         

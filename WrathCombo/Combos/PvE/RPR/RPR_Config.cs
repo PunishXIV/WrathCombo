@@ -20,15 +20,6 @@ internal partial class RPR
                 case Preset.RPR_ST_Opener:
                     DrawBossOnlyChoice(RPR_Balance_Content);
                     DrawOpenerPotionChoice(RPR_Opener_Potion);
-                    ImGuiEx.TextUnderlined("Select Opener");
-                    ImGui.Spacing();
-                    DrawRadioButton(RPR_SelectedOpener,
-                        Generics.StandardOpener,
-                        Generics.UsesStandardOpener, 0, descriptionAsTooltip: true);
-
-                    DrawRadioButton(RPR_SelectedOpener,
-                        RPR_Config.FirstGcdBuffsOpener,
-                        FormatAndCache(RPR_Config.UseFirstGcdBuffsOpener), 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.RPR_ST_ArcaneCircle:
@@ -159,7 +150,6 @@ internal partial class RPR
             //ST
             RPR_Positional = new("RPR_Positional"),
             RPR_Balance_Content = new("RPR_Balance_Content", 1),
-            RPR_SelectedOpener = new("RPR_SelectedOpener"),
             RPR_ST_ArcaneCircleHPOption = new("RPR_ST_ArcaneCircleHPOption", 25),
             RPR_ST_ArcaneCircleHPBossOption = new("RPR_ST_ArcaneCircleHPBossOption"),
             RPR_SoDRefreshRange = new("RPR_SoDRefreshRange", 6),

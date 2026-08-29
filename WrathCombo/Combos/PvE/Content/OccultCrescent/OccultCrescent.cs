@@ -7,6 +7,7 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.Services;
 using static WrathCombo.Combos.PvE.OccultCrescent.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using ContentHelper = ECommons.GameHelpers;
@@ -59,7 +60,7 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Freelancer_OccultResuscitation, OccultResuscitation) &&
-            PlayerHP <= Phantom_Freelancer_Resuscitation_Health && !CanWeaveNow)
+            PlayerHP <= Phantom_Freelancer_Resuscitation_Health && !CanWeave())
         {
             actionID = OccultResuscitation; // self-heal
             return true;
@@ -74,7 +75,7 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Knight_Pray, Pray) &&
-            !HasStatusEffect(Buffs.Pray) && !CanWeaveNow &&
+            !HasStatusEffect(Buffs.Pray) && !CanWeave() &&
             (Phantom_Knight_Pray_KeepUp || PlayerHP <= Phantom_Knight_Pray_Health))
         {
             actionID = Pray; // regen
@@ -82,7 +83,7 @@ internal partial class OccultCrescent
         }
 
         // Skip things we want to weave, if not in a weave window
-        if (!CanWeaveNow) return false;
+        if (!CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Knight_PhantomGuard, PhantomGuard) &&
             PlayerHP <= Phantom_Knight_PhantomGuard_Health)
@@ -111,14 +112,14 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Monk_Counterstance, Counterstance) &&
-            InCombatNow && !HasStatusEffect(Buffs.Counterstance) && !CanWeaveNow)
+            InCombat() && !HasStatusEffect(Buffs.Counterstance) && !CanWeave())
         {
             actionID = Counterstance; // counterstance
             return true;
         }
 
         // Skip things we want to weave, if not in a weave window
-        if (!CanWeaveNow) return false;
+        if (!CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Monk_OccultChakra, OccultChakra) &&
             (PlayerHP <= Phantom_Monk_OccultChakra_Health || PlayerMP <= Phantom_Monk_OccultChakra_MP))
@@ -133,7 +134,7 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Monk_PhantomKick, PhantomKick) &&
-            !IsMovingNow && InActionRange(PhantomKick) &&
+            !IsMoving() && InActionRange(PhantomKick) &&
             GetTargetDistance() <= Phantom_Monk_PhantomKick_Distance)
         {
             actionID = PhantomKick; // damage buff + dash
@@ -156,23 +157,23 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Thief_Vigilance, Vigilance) &&
-            !HasStatusEffect(Buffs.Vigilance) && !InCombatNow)
+            !HasStatusEffect(Buffs.Vigilance) && !InCombat())
         {
             actionID = Vigilance; // damage buff out of combat
             return true;
         }
 
         // Skip things we want to weave, if not in a weave window
-        if (!CanWeaveNow) return false;
+        if (!CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Thief_OccultSprint, OccultSprint) &&
-            IsMovingNow)
+            IsMoving())
         {
             actionID = OccultSprint; // movement speed
             return true;
         }
 
-        if (HasTargetNow && InActionRange(Steal))
+        if (HasBattleTarget() && InActionRange(Steal))
         {
             if (IsEnabledAndUsable(Preset.Phantom_Thief_Steal, Steal) &&
                 TargetHP <= Phantom_Thief_Steal_Health)
@@ -203,14 +204,14 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Samurai_Shirahadori, Shirahadori) &&
-            CanWeaveNow && BeingTargetedHostile)
+            CanWeave() && BeingTargetedHostile)
         {
             actionID = Shirahadori; // inv against physical
             return true;
         }
 
         // GCDs
-        if (!CanWeaveNow && HasTargetNow)
+        if (!CanWeave() && HasBattleTarget())
         {
             if (IsEnabledAndUsable(Preset.Phantom_Samurai_Mineuchi, Mineuchi) &&
                 CanInterruptEnemy() && InActionRange(Mineuchi))
@@ -232,7 +233,7 @@ internal partial class OccultCrescent
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_Samurai_Iainuki, Iainuki) &&
-                !IsMovingNow && InActionRange(Iainuki))
+                !IsMoving() && InActionRange(Iainuki))
             {
                 actionID = Iainuki; // cone
                 return true;
@@ -247,7 +248,7 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_Berserker))
             return false;
 
-        if (!HasTargetNow) return false;
+        if (!HasBattleTarget()) return false;
 
         // Skip if no damage buff, and user wants things under buffs
         if (IsEnabled(Preset.Phantom_RestrictToBuff) &&
@@ -255,14 +256,14 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Berserker_Rage, Rage) &&
-            InActionRange(Rage) && CanWeaveNow)
+            InActionRange(Rage) && CanWeave())
         {
             actionID = Rage; // buff
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Berserker_DeadlyBlow, DeadlyBlow) &&
-            InActionRange(DeadlyBlow) && !CanWeaveNow &&
+            InActionRange(DeadlyBlow) && !CanWeave() &&
             (CurrentJobLevel < 3 ||
              !IsEnabled(Preset.Phantom_Berserker_Rage) ||
              GetStatusEffectRemainingTime(Buffs.PentupRage) <= 3f && HasStatusEffect(Buffs.PentupRage) ||
@@ -281,7 +282,7 @@ internal partial class OccultCrescent
             return false;
 
         // Skip things we want to weave, if not in a weave window
-        if (!CanWeaveNow) return false;
+        if (!CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Ranger_OccultUnicorn, OccultUnicorn) &&
             !HasStatusEffect(Buffs.OccultUnicorn, anyOwner: true) && PlayerHP <= Phantom_Ranger_OccultUnicorn_Health)
@@ -313,13 +314,13 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_TimeMage_OccultMageMasher, OccultMageMasher) &&
-            HasTargetNow && !HasStatusEffect(Debuffs.OccultMageMasher, CurrentTarget) && CanWeaveNow)
+            HasBattleTarget() && !HasStatusEffect(Debuffs.OccultMageMasher, CurrentTarget) && CanWeave())
         {
             actionID = OccultMageMasher; // weaken target's magic attack
             return true;
         }
 
-        if (CanWeaveNow) return false;
+        if (CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_TimeMage_OccultQuick, OccultQuick) &&
             !HasStatusEffect(Buffs.OccultQuick) && ActionWatching.NumberOfGcdsUsed > 3 &&
@@ -330,7 +331,7 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_TimeMage_OccultDispel, OccultDispel) &&
-            HasTargetNow && HasPhantomDispelStatus(CurrentTarget))
+            HasBattleTarget() && HasPhantomDispelStatus(CurrentTarget))
         {
             actionID = OccultDispel; // cleanse
             return true;
@@ -400,7 +401,7 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_Chemist))
             return false;
 
-        if (CanWeaveNow) return false;
+        if (CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, Revive) &&
             TryRetargetPhantomRaise(ref actionID, Revive))
@@ -421,7 +422,7 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Chemist_OccultElixir, OccultElixir) &&
-            GetPartyAvgHPPercent() <= Phantom_Chemist_OccultElixir_HP && InCombatNow &&
+            GetPartyAvgHPPercent() <= Phantom_Chemist_OccultElixir_HP && InCombat() &&
             (!Phantom_Chemist_OccultElixir_RequireParty || IsInParty()))
         {
             actionID = OccultElixir;
@@ -436,7 +437,7 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_Bard))
             return false;
 
-        if (!CanWeaveNow) return false;
+        if (!CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Bard_RomeosBallad, RomeosBallad) &&
             CanInterruptEnemy())
@@ -480,7 +481,7 @@ internal partial class OccultCrescent
 
         if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
         {
-            if (IsEnabledAndUsable(Preset.Phantom_Oracle_Predict, Predict) && InCombatNow && !CanWeaveNow &&
+            if (IsEnabledAndUsable(Preset.Phantom_Oracle_Predict, Predict) && InCombat() && !CanWeave() &&
                 !HasStatusEffect(Buffs.PredictionOfJudgment) && !HasStatusEffect(Buffs.PredictionOfCleansing) &&
                 !HasStatusEffect(Buffs.PredictionOfBlessing) && !HasStatusEffect(Buffs.PredictionOfStarfall))
             {
@@ -491,7 +492,7 @@ internal partial class OccultCrescent
         }
 
         // Skip things we want to weave, if not in a weave window
-        if (!CanWeaveNow) return false;
+        if (!CanWeave()) return false;
 
         UpdateOracleDeck();
         bool lastCard = OracleRemainingCards.Count <= 1;
@@ -642,7 +643,7 @@ internal partial class OccultCrescent
             return false;
 
         // GCDs
-        if (CanWeaveNow || !HasTargetNow) return false;
+        if (CanWeave() || !HasBattleTarget()) return false;
 
         // Skip if no damage buff, and user wants things under buffs
         if (IsEnabled(Preset.Phantom_RestrictToBuff) &&
@@ -716,7 +717,7 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_Geomancer))
             return false;
 
-        if (IsEnabled(Preset.Phantom_Geomancer_Weather) && !CanWeaveNow)
+        if (IsEnabled(Preset.Phantom_Geomancer_Weather) && !CanWeave())
         {
             if (IsEnabledAndUsable(Preset.Phantom_Geomancer_Sunbath, Sunbath) &&
                 PlayerHP <= Phantom_Geomancer_Sunbath_Health)
@@ -763,7 +764,7 @@ internal partial class OccultCrescent
         }
 
         // Skip things we want to weave, if not in a weave window
-        if (!CanWeaveNow) return false;
+        if (!CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Geomancer_BattleBell, BattleBell) &&
             !HasStatusEffect(Buffs.BattleBell))
@@ -781,8 +782,8 @@ internal partial class OccultCrescent
 
         if (IsEnabledAndUsable(Preset.Phantom_Geomancer_Suspend, Suspend) &&
             !HasStatusEffect(Buffs.Suspend) &&
-            (InCombatNow && Phantom_Geomancer_Suspend_InCombat ||
-             !InCombatNow && Phantom_Geomancer_Suspend_OutOfCombat))
+            (InCombat() && Phantom_Geomancer_Suspend_InCombat ||
+             !InCombat() && Phantom_Geomancer_Suspend_OutOfCombat))
         {
             actionID = Suspend; // float
             return true;
@@ -804,7 +805,7 @@ internal partial class OccultCrescent
             return true;
         }
 
-        if (CanWeaveNow) return false;
+        if (CanWeave()) return false;
 
         // Skip if no damage buff, and user wants things under buffs
         if (IsEnabled(Preset.Phantom_RestrictToBuff) &&
@@ -841,7 +842,7 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_Dancer))
             return false;
 
-        if (CanWeaveNow)
+        if (CanWeave())
         {
             if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
             {
@@ -908,7 +909,7 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_Gladiator))
             return false;
 
-        if (CanWeaveNow)
+        if (CanWeave())
         {
             if (IsEnabledAndUsable(Preset.Phantom_Gladiator_Defend, Defend) && InCombat() &&
                 (!Phantom_Gladiator_DefendOnlyAtMaxFervor ||
@@ -952,7 +953,7 @@ internal partial class OccultCrescent
     {
         if (!IsEnabled(Preset.Phantom_Ninja))
             return false;
-        if (!CanWeaveNow)
+        if (!CanWeave())
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Ninja_Smoke, Smoke) && InCombat() &&
@@ -1015,7 +1016,7 @@ internal partial class OccultCrescent
             actionID = OccultBlink;
             return true;
         }
-        if (CanWeaveNow)
+        if (CanWeave())
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultRaise, OccultRaise) &&
@@ -1052,7 +1053,7 @@ internal partial class OccultCrescent
     {
         if (!IsEnabled(Preset.Phantom_BlackMage))
             return false;
-        if (CanWeaveNow)
+        if (CanWeave())
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultToad, OccultToad) && InCombat() &&
@@ -1074,21 +1075,21 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultFireIII, OccultFireIII) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.FireWeakness))
         {
             actionID = OccultFireIII;
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultBlizzardIII, OccultBlizzardIII) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.IceWeakness))
         {
             actionID = OccultBlizzardIII;
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_BlackMage_OccultThunderIII, OccultThunderIII) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.LightningWeakness))
         {
             actionID = OccultThunderIII;
             return true;
@@ -1118,7 +1119,7 @@ internal partial class OccultCrescent
     {
         if (!IsEnabled(Preset.Phantom_Dragoon))
             return false;
-        if (CanWeaveNow)
+        if (CanWeave())
         {
             if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
                 return false;
@@ -1149,11 +1150,11 @@ internal partial class OccultCrescent
     {
         if (!IsEnabled(Preset.Phantom_Summoner))
             return false;
-        if (CanWeaveNow)
+        if (CanWeave())
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Summoner_EarthenWall, EarthenWall) && InCombat() &&
-            !HasStatusEffect(Buffs.EarthenWall))
+            !HasStatusEffect(Buffs.EarthenWall) && GroupDamageIncoming() && !IsMoving())
         {
             actionID = EarthenWall;
             return true;
@@ -1169,21 +1170,21 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Summoner_Thunderstorm, Thunderstorm) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.WindWeakness))
         {
             actionID = Thunderstorm;
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Summoner_JudgmentBolt, JudgmentBolt) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.LightningWeakness))
         {
             actionID = JudgmentBolt;
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Summoner_Hellfire, Hellfire) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.FireWeakness))
         {
             actionID = Hellfire;
             return true;
@@ -1213,7 +1214,7 @@ internal partial class OccultCrescent
     {
         if (!IsEnabled(Preset.Phantom_BlueMage))
             return false;
-        if (CanWeaveNow)
+        if (CanWeave())
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultMightyGuard, OccultMightyGuard) && InCombat() &&
@@ -1293,22 +1294,29 @@ internal partial class OccultCrescent
 
             if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
                 return false;
+
+            var weakness = GetElementalWeaknesses(CurrentTarget);
+            if (weakness.Length == 0 || ((IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && weakness.Any(x => x == Debuffs.FireWeakness)) ||
+                (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultBlizzardII, OccultBlizzardII) && weakness.Any(x => x == Debuffs.IceWeakness)) ||
+                (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultThunderII, OccultThunderII) && weakness.Any(x => x == Debuffs.LightningWeakness))) && !HasLibraWeakness(CurrentTarget))
+                return false;
+
             if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultBlizzardII, OccultBlizzardII) && HasBattleTarget() &&
-                HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
+                HasSpecificWeakness(CurrentTarget, Debuffs.IceWeakness))
             {
                 actionID = OccultBlizzardII;
                 return true;
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultThunderII, OccultThunderII) && HasBattleTarget() &&
-                HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+                HasSpecificWeakness(CurrentTarget, Debuffs.LightningWeakness))
             {
                 actionID = OccultThunderII;
                 return true;
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_RedMage_OccultFireII, OccultFireII) && HasBattleTarget() &&
-                HasStatusEffect(Debuffs.FireWeakness, CurrentTarget, true))
+                HasSpecificWeakness(CurrentTarget, Debuffs.FireWeakness))
             {
                 actionID = OccultFireII;
                 return true;
@@ -1352,10 +1360,11 @@ internal partial class OccultCrescent
     {
         if (!IsEnabled(Preset.Phantom_Necromancer))
             return false;
-        if (CanWeaveNow)
+        if (CanWeave())
         {
             if (!IsEnabledAndUsable(Preset.Phantom_Necromancer_DrainTouch, DrainTouch) || !HasBattleTarget())
                 return false;
+            
             if (ShouldUseDrainTouch())
             {
                 actionID = DrainTouch;
@@ -1371,21 +1380,21 @@ internal partial class OccultCrescent
         if (IsEnabled(Preset.Phantom_RestrictToBuff) && !Bursting.PlayerIsDamageBuffed)
             return false;
         if (IsEnabledAndUsable(Preset.Phantom_Necromancer_ChaosDrive, ChaosDrive) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.LightningWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.LightningWeakness))
         {
             actionID = ChaosDrive;
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Necromancer_HellWind, HellWind) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.WindWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.WindWeakness))
         {
             actionID = HellWind;
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Necromancer_DeepFreeze, DeepFreeze) && HasBattleTarget() &&
-            HasStatusEffect(Debuffs.IceWeakness, CurrentTarget, true))
+            HasSpecificWeakness(CurrentTarget, Debuffs.IceWeakness))
         {
             actionID = DeepFreeze;
             return true;
@@ -1597,12 +1606,125 @@ internal partial class OccultCrescent
         return min;
     }
 
+    #region Elemental Weakness Caching
+
+    public static bool StatusIsElementalWeakness(uint statusId) =>
+        statusId is Debuffs.FireWeakness or Debuffs.IceWeakness or Debuffs.LightningWeakness or Debuffs.WindWeakness;
+
+    /// <summary>
+    /// Gets all cached elemental weaknesses for a target by its BaseId.
+    /// </summary>
+    /// <param name="target">The target to check weakness for</param>
+    /// <returns>Array of weakness debuff IDs, or empty array if no weaknesses are cached</returns>
+    private static uint[] GetCachedWeaknesses(IGameObject? target)
+    {
+        if (target?.BaseId is null or 0) return [];
+
+        if (Service.Configuration.ElementalWeaknessCache.TryGetValue(target.BaseId, out var weaknesses))
+            return weaknesses ?? [];
+
+        return [];
+    }
+
+    /// <summary>
+    /// Adds an elemental weakness to the cache for an enemy, avoiding duplicates.
+    /// </summary>
+    /// <param name="target">The target to cache weakness for</param>
+    /// <param name="weaknessId">The weakness debuff ID to cache</param>
+    public static void CacheWeakness(IGameObject? target, uint weaknessId)
+    {
+        if (target?.BaseId is null or 0 || weaknessId == 0) return;
+
+        if (!Service.Configuration.ElementalWeaknessCache.TryGetValue(target.BaseId, out var weaknesses))
+        {
+            weaknesses = [];
+            Service.Configuration.ElementalWeaknessCache[target.BaseId] = weaknesses;
+        }
+
+        // Add only if not already cached
+        if (!weaknesses.Contains(weaknessId))
+        {
+            var newWeaknesses = new List<uint>(weaknesses) { weaknessId };
+            Service.Configuration.ElementalWeaknessCache[target.BaseId] = newWeaknesses.ToArray();
+            Service.Configuration.Save();
+        }
+    }
+
+    /// <summary>
+    /// Gets all elemental weaknesses for a target, checking cache first then current status effects.
+    /// Automatically caches newly detected weaknesses.
+    /// </summary>
+    /// <param name="target">The target to check weakness for</param>
+    /// <returns>Array of weakness debuff IDs (Fire/Ice/Lightning/Wind), or empty array if no weaknesses detected</returns>
+    private static uint[] GetElementalWeaknesses(IGameObject? target)
+    {
+        if (target == null) return [];
+
+        var result = new HashSet<uint>();
+
+        // Check cache first
+        var cached = GetCachedWeaknesses(target);
+        foreach (var weakness in cached)
+            result.Add(weakness);
+
+        // Check current status effects and add any not yet cached
+        var statuses = target.SafeStatusList;
+        if (statuses != null)
+        {
+            foreach (var status in statuses)
+            {
+                if (status.StatusId is Debuffs.FireWeakness or Debuffs.IceWeakness
+                    or Debuffs.LightningWeakness or Debuffs.WindWeakness)
+                {
+                    if (!result.Contains(status.StatusId))
+                    {
+                        CacheWeakness(target, status.StatusId);
+                        result.Add(status.StatusId);
+                    }
+                }
+            }
+        }
+
+        return result.ToArray();
+    }
+
+    /// <summary>
+    /// Checks if a target has a specific elemental weakness (cached or active).
+    /// </summary>
+    private static bool HasSpecificWeakness(IGameObject? tar, uint weaknessId)
+    {
+        if (tar == null) return false;
+
+        var weaknesses = GetElementalWeaknesses(tar);
+        return weaknesses.Contains(weaknessId);
+    }
+
+    /// <summary>
+    /// Clears the elemental weakness cache for a specific enemy.
+    /// </summary>
+    /// <param name="baseId">The BaseId of the enemy to clear cache for</param>
+    private static void ClearWeaknessCache(uint baseId)
+    {
+        if (baseId != 0)
+        {
+            Service.Configuration.ElementalWeaknessCache.Remove(baseId);
+            Service.Configuration.Save();
+        }
+    }
+
+    /// <summary>
+    /// Clears all cached elemental weaknesses.
+    /// </summary>
+    private static void ClearAllWeaknessCache()
+    {
+        Service.Configuration.ElementalWeaknessCache.Clear();
+        Service.Configuration.Save();
+    }
+
+    #endregion
+
     #region Shorter variables
 
-    private static bool IsMovingNow => IsMoving();
-    private static bool InCombatNow => InCombat();
-    private static bool CanWeaveNow => CanWeave();
-    private static bool HasTargetNow => HasBattleTarget();
     private static float TargetHP => GetTargetHPPercent();
     private static float PlayerHP => PlayerHealthPercentageHp();
     private static uint PlayerMP => LocalPlayer.CurrentMp;

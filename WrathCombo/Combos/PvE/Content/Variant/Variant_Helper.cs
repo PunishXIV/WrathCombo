@@ -1,4 +1,4 @@
-﻿using ECommons.DalamudServices;
+using ECommons.DalamudServices;
 using System.Linq;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -83,3 +83,5 @@ namespace WrathCombo.Combos.PvE
 
     }
 }
+
+

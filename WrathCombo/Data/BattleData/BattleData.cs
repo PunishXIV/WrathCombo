@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Logging;
 using Lumina.Excel.Sheets;
@@ -174,7 +175,7 @@ namespace WrathCombo.Data.BattleData
                 .Any(x =>
                     x.IsCasting &&
                     x.CastActionId == actionID &&
-                    (x.TotalCastTime - x.CurrentCastTime) <= Service.Configuration.PenaltyPause);
+                    x.RemainingCastTime <= Service.Configuration.PenaltyPause);
         }
 
         /// <summary>
@@ -191,7 +192,7 @@ namespace WrathCombo.Data.BattleData
                     x.BaseId == baseId &&
                     x.IsCasting &&
                     x.CastActionId == actionID &&
-                    (x.TotalCastTime - x.CurrentCastTime) <= Service.Configuration.PenaltyPause);
+                    x.RemainingCastTime <= Service.Configuration.PenaltyPause);
         }
     }
 }

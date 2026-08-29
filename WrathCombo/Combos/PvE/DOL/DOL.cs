@@ -79,12 +79,12 @@ internal partial class DOL
             //MIN
             if (actionID is DOL.LayOfTheLand && !HasStatusEffect(Buffs.Prospect))
                 return Prospect;
-            if (actionID is DOL.LayOfTheLand2 && LevelChecked(TruthOfMountains) && !HasStatusEffect(Buffs.TruthOfMountains))
+            if (actionID is DOL.LayOfTheLand2 && ActionLearned(TruthOfMountains) && !HasStatusEffect(Buffs.TruthOfMountains))
                 return TruthOfMountains;
             //BTN
             if (actionID is DOL.ArborCall && !HasStatusEffect(Buffs.Triangulate))
                 return Triangulate;
-            if (actionID is DOL.ArborCall2 && LevelChecked(TruthOfForests) && !HasStatusEffect(Buffs.TruthOfForests))
+            if (actionID is DOL.ArborCall2 && ActionLearned(TruthOfForests) && !HasStatusEffect(Buffs.TruthOfForests))
                 return TruthOfForests;
             return actionID;
         }

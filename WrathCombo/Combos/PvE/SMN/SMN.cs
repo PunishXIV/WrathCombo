@@ -282,7 +282,7 @@ internal partial class SMN : Caster
             if (HasStatusEffect(Buffs.FurtherRuin) && IsOnCooldown(EnergyDrain) && !gauge.HasAetherflowStacks && IsEnabled(Preset.SMN_EDFester_Ruin4))
                 return Ruin4;
 
-            if (LevelChecked(EnergyDrain) && !gauge.HasAetherflowStacks)
+            if (ActionLearned(EnergyDrain) && !gauge.HasAetherflowStacks)
                 return EnergyDrain;
 
             return actionID;
@@ -298,16 +298,16 @@ internal partial class SMN : Caster
 
             SMNGauge gauge = GetJobGauge<SMNGauge>();
 
-            if (!LevelChecked(Painflare) || gauge.HasAetherflowStacks)
+            if (!ActionLearned(Painflare) || gauge.HasAetherflowStacks)
                 return actionID;
 
             if (HasStatusEffect(Buffs.FurtherRuin) && IsOnCooldown(EnergySiphon) && IsEnabled(Preset.SMN_ESPainflare_Ruin4))
                 return Ruin4;
 
-            if (LevelChecked(EnergySiphon))
+            if (ActionLearned(EnergySiphon))
                 return EnergySiphon;
 
-            return LevelChecked(EnergyDrain) ? EnergyDrain : actionID;
+            return ActionLearned(EnergyDrain) ? EnergyDrain : actionID;
         }
     }
     internal class SMN_CarbuncleReminder : CustomCombo

@@ -1,24 +1,30 @@
-﻿using Dalamud.Interface;
+﻿using Dalamud.Game.Config;
+using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility.Raii;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.Throttlers;
+using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Combos.PvE.Content.DeepDungeons;
 using WrathCombo.Combos.PvP;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
 using WrathCombo.Resources.Localization.UI.Features;
 using WrathCombo.Resources.Localization.UI.Misc;
 using WrathCombo.Resources.Localization.UI.Settings;
@@ -31,7 +37,10 @@ namespace WrathCombo.Window.Functions;
 
 internal class Presets : ConfigWindow
 {
-
+    private static uint? SelectedAction;
+    private static bool DragDropMode;
+    private static uint HiddenSlots;
+    private const UiControlOption HotbarSetting = UiControlOption.HotbarEmptyVisible;
     private static bool _animFrame = false;
     public static bool UpdateDue = true;
     internal static Dictionary<Preset, bool> GetJobAutorots
@@ -107,7 +116,7 @@ internal class Presets : ConfigWindow
         if (ipcControl is not null)
             enabled = ipcControl.Value.enabled;
 
-        if (comboType is (ComboType.Advanced or ComboType.Simple))
+        if (comboType is (ComboType.AdvancedDPS or ComboType.SimpleDPS or ComboType.SimpleHealing or ComboType.AdvancedHealing) || (presetData.IsOccultCrescent && presetData.Parent is null))
             if (ipcControl is not null)
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded(preset);
 
@@ -118,9 +127,10 @@ internal class Presets : ConfigWindow
             ($"{presetName}###{preset}", ref enabled, preset, true))
             PresetStorage.TogglePreset(preset);
 
-        DrawReplaceAttribute(presetData);
-
         DrawRetargetedAttribute(presetData);
+
+        var customMode = CustomActionHelper.GetTypeByAttribute(presetData.AutoAction);
+        DrawReplaceAttribute(presetData, customMode);
 
         if (DrawRoleIcon(presetData))
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 8f.Scale());
@@ -217,6 +227,7 @@ internal class Presets : ConfigWindow
                             Bozja.Config.Draw(preset);
                             Variant.Config.Draw(preset);
                             OccultCrescent.Config.Draw(preset);
+                            DeepDungeons.Config.Draw(preset);
                             break;
                         }
                     case Job.AST: AST.Config.Draw(preset); break;
@@ -344,26 +355,138 @@ internal class Presets : ConfigWindow
         }
     }
 
-    private static void DrawReplaceAttribute(PresetData presetData)
+    public static void DrawDragDrop()
+    {
+        try
+        {
+            if (!Player.Available)
+                return;
+
+            if (SelectedAction is { } act)
+            {
+                var mousePos = ImGui.GetMousePos();
+                mousePos.X -= 5;
+                mousePos.Y -= 5;
+
+                ImGui.SetNextWindowPos(mousePos);
+                ImGui.SetNextWindowBgAlpha(0.5f);
+
+                ImGui.Begin(
+                    $"{act}DragDrops",
+                    ImGuiWindowFlags.NoDecoration |
+                    ImGuiWindowFlags.AlwaysAutoResize);
+
+                ushort icon = (ushort)(act >= All.SingleTargetDPS ? 1 : Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Action>().GetRow(act).Icon);
+                IDalamudTextureWrap? texture;
+                if (act >= All.SingleTargetDPS)
+                {
+                    P.CustomActions.Manager.IconTextures[P.CustomActions.Manager.Actions.First(x => x.Id == act).IconId].TryGetWrap(out texture, out _);
+                }
+                else
+                {
+                   texture = Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
+                }
+
+                if (texture is not null)
+                    ImGui.Image(texture.Handle, new(50f.Scale()));
+
+                ImGui.End();
+
+                if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) || (ImGui.IsMouseReleased(ImGuiMouseButton.Left) && DragDropMode))
+                {
+                    if (P.CustomActions.HoveredSlot != null)
+                    {
+                        unsafe
+                        {
+                            var val = P.CustomActions.HoveredSlot.Value;
+                            RaptureHotbarModule.Instance()->Hotbars[val.Hotbar].Slots[val.Slot].Set(RaptureHotbarModule.HotbarSlotType.Action, act);
+                            var actualSlot = RaptureHotbarModule.Instance()->Hotbars[val.Hotbar].Slots[val.Slot];
+                            RaptureHotbarModule.Instance()->WriteSavedSlot(Player.ClassJob.RowId, (uint)val.Hotbar, (uint)val.Slot, &actualSlot, false, false);
+                        }
+                    }
+                    SelectedAction = null;
+                    DragDropMode = false;
+                    Svc.GameConfig.Set(HotbarSetting, HiddenSlots);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.Log();
+        }
+    }
+
+    private static void DrawReplaceAttribute(PresetData presetData, CustomActionType customActMode)
     {
         if (presetData.ReplaceSkill is ReplaceSkillAttribute att)
         {
-            string skills = string.Join(", ", att.ActionNames);
-
-            ImGuiComponents.HelpMarker($"{MiscUI.Replaces}: {skills}");
-            if (ImGui.IsItemHovered())
+            bool customEnabled = CustomActionHelper.CustomActionEnabled(customActMode);
+            List<uint> icons = new();
+            List<uint> actionIDs = new();
+            List<string> actionNames = new();
+            if (customEnabled)
             {
-                ImGui.BeginTooltip();
-                foreach (var icon in att.ActionIcons)
+                if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == CustomActionHelper.GetActionId(customActMode), out var customAct))
                 {
-                    var img = Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
-                    ImGui.Image(img.Handle, (img.Size / 2f) * ImGui.GetIO().FontGlobalScale);
-                    ImGui.SameLine();
+                    icons = new() { customAct.IconId };
+                    actionIDs = new() { customAct.Id };
+                    actionNames = new() { customAct.Name };
                 }
-                ImGui.EndTooltip();
+            }
+            else
+            {
+                icons = att.ActionIcons;
+                actionIDs = att.ActionIDs;
+                actionNames = att.ActionNames;
+            }
+            float iconSize = icons.Select(x => new Vector2(30f) * ImGui.GetIO().FontGlobalScale).First().X;
+            float spacing = 4f.Scale();
+            float totalWidth = icons.Count * iconSize
+                 + Math.Max(0, icons.Count - 1) * spacing;
+            var edge = ImGui.GetWindowContentRegionMax().X - 24f.Scale() - ImGui.CalcTextSize($"{MiscUI.Replaces}:").X;
+            float start = edge - totalWidth;
+
+            if (ImGui.GetIO().MouseDownDuration[0] > 0.5f)
+                DragDropMode = true;
+
+            ImGui.SameLine(start);
+            ImGui.Text($"{MiscUI.Replaces}:");
+            ImGui.SameLine(0, spacing);
+            foreach (var icon in icons)
+            {
+                var img = customEnabled ? P.CustomActions.Manager.IconTextures[icon].GetWrapOrDefault() : Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
+                ImGui.Image(img.Handle, (new Vector2(30f)) * ImGui.GetIO().FontGlobalScale);
+                var indexOfIcon = icons.IndexOf(icon);
+                var skillName = actionNames[indexOfIcon];
+                if (ImGui.IsItemHovered())
+                {
+                    if (Player.Available)
+                    {
+                        ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+                        if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+                        {
+                            Svc.GameConfig.TryGet(HotbarSetting, out HiddenSlots);
+                            Svc.Log.Debug($"User has slots {(HiddenSlots == 0 ? "hidden" : "shown")}");
+                        }
+                        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+                        {
+                            SelectedAction = actionIDs[indexOfIcon];
+                            Svc.GameConfig.Set(HotbarSetting, 1);
+                        }
+                    }
+
+                    ImGui.BeginTooltip();
+                    ImGui.TextUnformatted($"{skillName}");
+                    ImGui.EndTooltip();
+                }
+
+                if (icon != icons[^1])
+                    ImGui.SameLine(0, spacing);
+
             }
         }
     }
+
 
     public static void DrawRetargetedSymbolForSettingsPage() =>
         DrawRetargetedAttribute(

@@ -152,6 +152,9 @@ public static class ActionWatching
         Svc.Log.Verbose($"[ActorControl] {entityId} {category} {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {targetId.Id} {isRecorded}");
         ActorControlPacketHook.Original(entityId, category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, targetId, isRecorded);
 
+        if (category == 20 && OccultCrescent.StatusIsElementalWeakness(arg1))
+            OccultCrescent.CacheWeakness(targetId.Id.GetObject(), arg1);
+
         if (category == 1541) // Dots
             SimpleTargetState.UpdatePeriodicHealthChange(entityId, arg2, true);
 
@@ -671,7 +674,7 @@ public static class ActionWatching
                     actionManager->QueuedActionId = Service.ActionReplacer.ActionReplacingEnabled ? actionId : replacedWith;
 
                 // Determine if the action will queue according to user settings
-                bool willQueue = CanQueueCS(replacedWith) && RemainingGCD > 0;
+                bool willQueue = CanQueueCS(replacedWith) && RemainingGCD > 0 && mode is not ActionManager.UseActionMode.Macro;
 
                 // If the action is going to queue, and we've retargeted, update the queued target to match the retargeted target at time of queue
                 if (willQueue && changed)

@@ -72,10 +72,10 @@ internal partial class DRK
 
             var burstAbility = LivingShadow;
             var burstAbilityCDWindow = 90;
-            if (!LevelChecked(LivingShadow))
+            if (!ActionLearned(LivingShadow))
             {
                 burstAbilityCDWindow = 40;
-                burstAbility = LevelChecked(Delirium) ? Delirium : BloodWeapon;
+                burstAbility = ActionLearned(Delirium) ? Delirium : BloodWeapon;
             }
 
             // Fallback resetting of burst
@@ -162,7 +162,7 @@ internal partial class DRK
 
         return Opener1.LevelChecked ? Opener1 : WrathOpener.Dummy;
     }
-    
+
     #region Mitigation
 
     #region TBN
@@ -226,7 +226,7 @@ internal partial class DRK
         HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
 
     #endregion
-    
+
     #region Openers
 
     private static void handleEdgeCasts
@@ -247,32 +247,28 @@ internal partial class DRK
 
         public override int MaxOpenerLevel => 109;
 
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            Unmend, // 1
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 2
-            HardSlash, // 3
-            EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 4
-            LivingShadow, // 5
-            SyphonStrike, // 6
-            LivingShadow, // 7
-            Souleater, // 8
-            Delirium, // 9
-            HardSlash, // 10
-            Disesteem, // 11
-            SaltedEarth, // 12
-            //EdgeOfShadow, // Handled like a procc
-            ScarletDelirium, // 13
-            Shadowbringer, // 14
-            //EdgeOfShadow, // Handled like a procc
-            Comeuppance, // 15
-            CarveAndSpit, // 16
-            //EdgeOfShadow, // Handled like a procc
-            Torcleaver, // 17
-            Shadowbringer, // 18
-            //EdgeOfShadow, // Handled like a procc
-            Bloodspiller, // 19
-            SaltAndDarkness, // 20
+            () => Unmend, // 1
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 2
+            () => HardSlash, // 3
+            () => EdgeOfShadow, // 4
+            () => LivingShadow, // 5
+            () => SyphonStrike, // 6
+            () => LivingShadow, // 7
+            () => Souleater, // 8
+            () => Delirium, // 9
+            () => HardSlash, // 10
+            () => Disesteem, // 11
+            () => SaltedEarth, // 12
+            () => ScarletDelirium, // 13
+            () => Shadowbringer, // 14
+            () => Comeuppance, // 15
+            () => CarveAndSpit, // 16
+            () => Torcleaver, // 17
+            () => Shadowbringer, // 18
+            () => Bloodspiller, // 19
+            () => SaltAndDarkness, // 20
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps
@@ -336,32 +332,28 @@ internal partial class DRK
 
         public override int MaxOpenerLevel => 109;
 
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            LivingShadow, // 1
-            Unmend, // 2
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
-            EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 4
-            HardSlash, // 5
-            Delirium, // 6
-            SaltedEarth, // 7
-            HardSlash, // 8
-            Disesteem, // 9
-            //EdgeOfShadow, // Handled like a procc
-            CarveAndSpit, // 10
-            ScarletDelirium, // 11
-            Shadowbringer, // 12
-            Comeuppance, // 13
-            Shadowbringer, // 14
-            Torcleaver, // 15
-            SaltAndDarkness, // 16
-            SyphonStrike, // 17
-            //EdgeOfShadow, // Handled like a procc
-            Souleater, // 18
-            //EdgeOfShadow, // Handled like a procc
-            Bloodspiller, // 19
-            //EdgeOfShadow, // Handled like a procc
-            HardSlash, // 20
+            () => LivingShadow, // 1
+            () => Unmend, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
+            () => EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 4
+            () => HardSlash, // 5
+            () => Delirium, // 6
+            () => SaltedEarth, // 7
+            () => HardSlash, // 8
+            () => Disesteem, // 9
+            () => CarveAndSpit, // 10
+            () => ScarletDelirium, // 11
+            () => Shadowbringer, // 12
+            () => Comeuppance, // 13
+            () => Shadowbringer, // 14
+            () => Torcleaver, // 15
+            () => SaltAndDarkness, // 16
+            () => SyphonStrike, // 17
+            () => Souleater, // 18
+            () => Bloodspiller, // 19
+            () => HardSlash, // 20
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
@@ -534,7 +526,7 @@ internal partial class DRK
 
         /// Different from Delirium, to do the Scarlet Delirium chain
         public const ushort EnhancedDelirium = 3836;
-        
+
         // Darkside is checked through the gauge
 
         #endregion
@@ -565,13 +557,13 @@ internal partial class DRK
 
         /// Damage Reduction part of Vigil
         public const ushort ShadowedVigil = 3835;
-        
+
         /// Shadow Wall Active
         public const ushort ShadowWall = 747;
-        
+
         /// Dark Missionary Active
         public const ushort DarkMissionary = 1894;
-        
+
         /// DarkMind Active
         public const ushort DarkMind = 746;
 
@@ -594,3 +586,5 @@ internal partial class DRK
 
     #endregion
 }
+
+

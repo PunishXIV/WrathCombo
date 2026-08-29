@@ -295,27 +295,27 @@ internal partial class DRK : Tank
 
             if (IsEnabled(Preset.DRK_oGCD_Shadow) &&
                 IsOffCooldown(LivingShadow) &&
-                LevelChecked(LivingShadow))
+                ActionLearned(LivingShadow))
                 return LivingShadow;
 
             if (IsEnabled(Preset.DRK_oGCD_Disesteem) &&
                 IsOffCooldown(Disesteem) &&
-                LevelChecked(Disesteem))
+                ActionLearned(Disesteem))
                 return Disesteem;
 
             if (IsEnabled(Preset.DRK_oGCD_SaltedEarth) &&
                 IsOffCooldown(SaltedEarth) &&
-                LevelChecked(SaltedEarth) &&
+                ActionLearned(SaltedEarth) &&
                 !HasStatusEffect(Buffs.SaltedEarth))
                 return SaltedEarth;
 
             if (IsOffCooldown(CarveAndSpit) &&
-                LevelChecked(AbyssalDrain))
+                ActionLearned(AbyssalDrain))
                 return actionID;
 
             if (IsEnabled(Preset.DRK_oGCD_SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
-                LevelChecked(SaltAndDarkness) &&
+                ActionLearned(SaltAndDarkness) &&
                 HasStatusEffect(Buffs.SaltedEarth))
                 return SaltAndDarkness;
 

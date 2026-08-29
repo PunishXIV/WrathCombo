@@ -379,6 +379,16 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to How many {0} to retain for manual use.
+        ///Set to 0 to disable this check..
+        /// </summary>
+        internal static string ChargePool0 {
+            get {
+                return ResourceManager.GetString("ChargePool0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to How long to delay after detecting incoming tankbuster to use {0}.
         ///Set to 0 to disable this check..
         /// </summary>

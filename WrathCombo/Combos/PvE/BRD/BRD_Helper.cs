@@ -124,10 +124,10 @@ internal partial class BRD
     internal static bool JustSangSong => JustUsed(WanderersMinuet) || JustUsed(MagesBallad) || JustUsed(ArmysPaeon);
     internal static bool CanBardWeave => CanWeave();
     internal static bool CanWeaveDelayed => CanDelayedWeave();
-    internal static bool CanIronJaws => LevelChecked(IronJaws);
+    internal static bool CanIronJaws => ActionLearned(IronJaws);
     internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) &&
-                                       (HasStatusEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)) &&
-                                       (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
+                                       (HasStatusEffect(Buffs.BattleVoice) || !ActionLearned(BattleVoice)) &&
+                                       (HasStatusEffect(Buffs.RadiantFinale) || !ActionLearned(RadiantFinale));
 
     //Buff Tracking
     internal static float RagingCD => GetCooldownRemainingTime(RagingStrikes);
@@ -141,8 +141,8 @@ internal partial class BRD
     // Pitch Perfect Logic
     internal static bool PitchPerfected()
     {
-        if (LevelChecked(PitchPerfect) && SongWanderer &&
-             (gauge.Repertoire == 3 || LevelChecked(EmpyrealArrow) && gauge.Repertoire == 2 && EmpyrealCD < 2))
+        if (ActionLearned(PitchPerfect) && SongWanderer &&
+             (gauge.Repertoire == 3 || ActionLearned(EmpyrealArrow) && gauge.Repertoire == 2 && EmpyrealCD < 2))
             return true;
 
         return false;
@@ -333,7 +333,7 @@ internal partial class BRD
         bool UsePooledBloodRain()
         {
             if ((!WasLastAbility(Bloodletter) || !WasLastAbility(RainOfDeath) || !WasLastAbility(HeartbreakShot)) &&
-                (EmpyrealCD > 2 || !LevelChecked(EmpyrealArrow)))
+                (EmpyrealCD > 2 || !ActionLearned(EmpyrealArrow)))
             {
                 if (BloodletterCharges == 3 && TraitLevelChecked(Traits.EnhancedBloodletter) ||
                     BloodletterCharges == 2 && !TraitLevelChecked(Traits.EnhancedBloodletter) ||
@@ -388,19 +388,19 @@ internal partial class BRD
         #region Buffs
         if (buffsEnabled && CanWeave() && GetTargetHPPercent() > buffsThreshold)
         {
-            if (allBuffsEnabled && !SongNone && LevelChecked(MagesBallad))
+            if (allBuffsEnabled && !SongNone && ActionLearned(MagesBallad))
             {
                 if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !HasStatusEffect(Buffs.RadiantEncoreReady))
                 {
                     actionID = RadiantFinale;
                     return true;
                 }
-                if (ActionReady(BattleVoice) && (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale)))
+                if (ActionReady(BattleVoice) && (HasStatusEffect(Buffs.RadiantFinale) || !ActionLearned(RadiantFinale)))
                 {
                     actionID = BattleVoice;
                     return true;
                 }
-                if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !LevelChecked(BattleVoice) || HasStatusEffect(Buffs.BattleVoice)))
+                if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !ActionLearned(BattleVoice) || HasStatusEffect(Buffs.BattleVoice)))
                 {
                     actionID = RagingStrikes;
                     return true;
@@ -412,7 +412,7 @@ internal partial class BRD
                 }
             }
 
-            if (!allBuffsEnabled || !LevelChecked(MagesBallad))
+            if (!allBuffsEnabled || !ActionLearned(MagesBallad))
             {
                 if (ActionReady(RadiantFinale) && radiantEnabled)
                 {
@@ -484,7 +484,7 @@ internal partial class BRD
                 }
             }
 
-            if (!LevelChecked(RainOfDeath) && !WasLastAction(Bloodletter) && BloodletterCharges > 0) //Low Level Just send it
+            if (!ActionLearned(RainOfDeath) && !WasLastAction(Bloodletter) && BloodletterCharges > 0) //Low Level Just send it
             {
                 actionID = OriginalHook(Bloodletter);
                 return true;
@@ -763,19 +763,19 @@ internal partial class BRD
             var purpleTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, ComputeMultidotHpThreshold, computeMultidotRefresh);
             #endregion
 
-            if (ironTarget is not null && LevelChecked(IronJaws))
+            if (ironTarget is not null && ActionLearned(IronJaws))
             {
                 actionID = IronJaws.Retarget(actionID, ironTarget);
                 return true;
             }
 
-            if (blueTarget is not null && LevelChecked(Windbite))
+            if (blueTarget is not null && ActionLearned(Windbite))
             {
                 actionID = blueDotAction.Retarget(actionID, blueTarget);
                 return true;
             }
 
-            if (purpleTarget is not null && LevelChecked(VenomousBite))
+            if (purpleTarget is not null && ActionLearned(VenomousBite))
             {
                 actionID = purpleDotAction.Retarget(actionID, purpleTarget);
                 return true;
@@ -826,28 +826,28 @@ internal partial class BRD
 
     internal class BRDStandard : BRDOpenerBase
     {
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            Stormbite, // 1
-            WanderersMinuet, // 2
-            EmpyrealArrow, // 3
-            CausticBite, // 4
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            BattleVoice, // 6
-            BurstShot, // 7
-            RadiantFinale, // 8
-            RagingStrikes, // 9
-            BurstShot, // 10
-            RadiantEncore, // 11
-            Barrage, // 12
-            RefulgentArrow, // 13
-            Sidewinder, // 14
-            ResonantArrow, // 15
-            EmpyrealArrow, // 16
-            BurstShot, // 17
-            BurstShot, // 18
-            IronJaws, // 19
-            BurstShot // 20
+            () => Stormbite, // 1
+            () => WanderersMinuet, // 2
+            () => EmpyrealArrow, // 3
+            () => CausticBite, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            () => BattleVoice, // 6
+            () => BurstShot, // 7
+            () => RadiantFinale, // 8
+            () => RagingStrikes, // 9
+            () => BurstShot, // 10
+            () => RadiantEncore, // 11
+            () => Barrage, // 12
+            () => RefulgentArrow, // 13
+            () => Sidewinder, // 14
+            () => ResonantArrow, // 15
+            () => EmpyrealArrow, // 16
+            () => BurstShot, // 17
+            () => BurstShot, // 18
+            () => IronJaws, // 19
+            () => BurstShot // 20
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
@@ -860,29 +860,29 @@ internal partial class BRD
     }
     internal class BRDAdjusted : BRDOpenerBase
     {
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            HeartbreakShot, // 1
-            Stormbite, // 2
-            WanderersMinuet, // 3
-            EmpyrealArrow, // 4
-            CausticBite, // 5
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
-            BattleVoice, // 7
-            BurstShot, // 8
-            RadiantFinale, // 9
-            RagingStrikes, // 10
-            BurstShot, // 11
-            Barrage, // 12
-            RefulgentArrow, // 13
-            Sidewinder, // 14
-            RadiantEncore, // 15
-            ResonantArrow, // 16
-            EmpyrealArrow, // 17
-            BurstShot, // 18
-            BurstShot, // 19
-            IronJaws, // 20
-            BurstShot // 21
+            () => HeartbreakShot, // 1
+            () => Stormbite, // 2
+            () => WanderersMinuet, // 3
+            () => EmpyrealArrow, // 4
+            () => CausticBite, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            () => BattleVoice, // 7
+            () => BurstShot, // 8
+            () => RadiantFinale, // 9
+            () => RagingStrikes, // 10
+            () => BurstShot, // 11
+            () => Barrage, // 12
+            () => RefulgentArrow, // 13
+            () => Sidewinder, // 14
+            () => RadiantEncore, // 15
+            () => ResonantArrow, // 16
+            () => EmpyrealArrow, // 17
+            () => BurstShot, // 18
+            () => BurstShot, // 19
+            () => IronJaws, // 20
+            () => BurstShot // 21
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
@@ -895,29 +895,29 @@ internal partial class BRD
     }
     internal class BRDComfy : BRDOpenerBase
     {
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            Stormbite, // 1
-            HeartbreakShot, // 2
-            WanderersMinuet, // 3
-            CausticBite, // 4
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            EmpyrealArrow, // 6
-            RadiantFinale, // 7
-            BurstShot, // 8
-            BattleVoice, // 9
-            RagingStrikes, // 10
-            BurstShot, // 11
-            Barrage, // 12
-            RefulgentArrow, // 13
-            Sidewinder, // 14
-            RadiantEncore, // 15
-            ResonantArrow, // 16
-            BurstShot, // 17
-            EmpyrealArrow, // 18
-            BurstShot, // 19
-            IronJaws, // 20
-            BurstShot // 21
+            () => Stormbite, // 1
+            () => HeartbreakShot, // 2
+            () => WanderersMinuet, // 3
+            () => CausticBite, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            () => EmpyrealArrow, // 6
+            () => RadiantFinale, // 7
+            () => BurstShot, // 8
+            () => BattleVoice, // 9
+            () => RagingStrikes, // 10
+            () => BurstShot, // 11
+            () => Barrage, // 12
+            () => RefulgentArrow, // 13
+            () => Sidewinder, // 14
+            () => RadiantEncore, // 15
+            () => ResonantArrow, // 16
+            () => BurstShot, // 17
+            () => EmpyrealArrow, // 18
+            () => BurstShot, // 19
+            () => IronJaws, // 20
+            () => BurstShot // 21
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
@@ -927,28 +927,28 @@ internal partial class BRD
     }
     internal class BRDEarly : BRDOpenerBase
     {
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            Stormbite, // 1
-                WanderersMinuet, // 2
-                BattleVoice, // 3
-            CausticBite, // 4
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-                RagingStrikes, // 6
-                RadiantFinale, // 7
-            BurstShot, // 8
-                EmpyrealArrow, // 9
-            BurstShot, // 10
-                Barrage, // 11
-            RefulgentArrow, // 12
-                Sidewinder, // 13
-            RadiantEncore, // 14
-            ResonantArrow, // 15
-            BurstShot, // 16
-            IronJaws, // 17
-                EmpyrealArrow, // 18
-            BurstShot, // 19
-            BurstShot, // 20
+            () => Stormbite, // 1
+            () => WanderersMinuet, // 2
+            () => BattleVoice, // 3
+            () => CausticBite, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            () => RagingStrikes, // 6
+            () => RadiantFinale, // 7
+            () => BurstShot, // 8
+            () => EmpyrealArrow, // 9
+            () => BurstShot, // 10
+            () => Barrage, // 11
+            () => RefulgentArrow, // 12
+            () => Sidewinder, // 13
+            () => RadiantEncore, // 14
+            () => ResonantArrow, // 15
+            () => BurstShot, // 16
+            () => IronJaws, // 17
+            () => EmpyrealArrow, // 18
+            () => BurstShot, // 19
+            () => BurstShot, // 20
         ];
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
@@ -957,3 +957,5 @@ internal partial class BRD
     }
     #endregion
 }
+
+

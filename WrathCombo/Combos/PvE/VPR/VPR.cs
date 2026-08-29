@@ -30,7 +30,7 @@ internal partial class VPR : Melee
                     UseViceTwinWeaves(ref actionID, false, true))
                     return actionID;
 
-                if (CanSerpentsIre())
+                if (UseSerpentsIre())
                     return SerpentsIre;
 
                 if (Role.CanFeint() && GroupDamageIncoming())
@@ -46,19 +46,19 @@ internal partial class VPR : Melee
                     return Role.LegSweep;
             }
 
-            if (CanVicewinderCombo(ref actionID, preferRangedWhenOor: true))
+            if (UseVicewinderCombo(ref actionID, preferRangedWhenOor: true))
                 return actionID;
 
-            if (CanReawaken())
+            if (UseReawaken())
                 return Reawaken;
 
             if (OvercapUncoiledFuryProtection(false))
                 return UncoiledFury;
 
-            if (CanUseVicewinder)
-                return UseVicewinder();
+            if (UseVicewinder())
+                return DoVicewinder();
 
-            if (CanUseUncoiledFury())
+            if (UseUncoiledFury())
                 return UncoiledFury;
 
             if (ActionReady(WrithingSnap) &&
@@ -91,7 +91,7 @@ internal partial class VPR : Melee
                     UseViceTwinWeaves(ref actionID, true, true))
                     return actionID;
 
-                if (CanSerpentsIre(25))
+                if (UseSerpentsIre(25))
                     return SerpentsIre;
 
                 if (Role.CanSecondWind(40))
@@ -107,16 +107,16 @@ internal partial class VPR : Melee
             if (UseVicepitCombo(ref actionID))
                 return actionID;
 
-            if (CanReawaken(true) && InActionRange(Reawaken))
+            if (UseReawaken(true) && InActionRange(Reawaken))
                 return Reawaken;
 
             if (OvercapUncoiledFuryProtection(true))
                 return UncoiledFury;
 
-            if (CanVicepit())
+            if (UseVicepit())
                 return Vicepit;
 
-            return CanUseUncoiledFury(true)
+            return UseUncoiledFury(true)
                 ? UncoiledFury
                 : UseCombo(actionID, true, true);
         }
@@ -150,7 +150,7 @@ internal partial class VPR : Melee
                     UseViceTwinWeaves(ref actionID, false, IsEnabled(Preset.VPR_ST_VicewinderWeaves)))
                     return actionID;
 
-                if (IsEnabled(Preset.VPR_ST_SerpentsIre) && CanSerpentsIre(SerpentsIreHPThreshold))
+                if (IsEnabled(Preset.VPR_ST_SerpentsIre) && UseSerpentsIre(SerpentsIreHPThreshold))
                     return SerpentsIre;
 
                 if (IsEnabled(Preset.VPR_ST_Feint) &&
@@ -173,13 +173,13 @@ internal partial class VPR : Melee
             }
 
             if (IsEnabled(Preset.VPR_ST_VicewinderCombo) &&
-                CanVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio,
+                UseVicewinderCombo(ref actionID, VPR_VicewinderBuffPrio,
                     IsEnabled(Preset.VPR_ST_UncoiledFury) ||
                     IsEnabled(Preset.VPR_ST_RangedUptime)))
                 return actionID;
 
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
-                CanReawaken(hpThresholdUsage: ReawakenHPThreshold(), hpThresholdDontSave: VPR_ST_ReAwakenAlwaysUse))
+                UseReawaken(hpThresholdUsage: ReawakenHPThreshold(), hpThresholdDontSave: VPR_ST_ReAwakenAlwaysUse))
                 return Reawaken;
 
             if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&
@@ -187,21 +187,21 @@ internal partial class VPR : Melee
                 return UncoiledFury;
 
             if (IsEnabled(Preset.VPR_ST_Vicewinder) &&
-                CanUseVicewinder)
-                return UseVicewinder(
+                UseVicewinder())
+                return DoVicewinder(
                     false,
                     IsEnabled(Preset.VPR_TrueNorthDynamic),
                     VPR_ManualTN);
 
             if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&
-                CanUseUncoiledFury(stHoldCharges: VPR_ST_UncoiledFuryHoldCharges, stHpThreshold: VPR_ST_UncoiledFuryAlwaysUse))
+                UseUncoiledFury(stHoldCharges: VPR_ST_UncoiledFuryHoldCharges, stHpThreshold: VPR_ST_UncoiledFuryAlwaysUse))
                 return UncoiledFury;
 
             if (!InMeleeRange() && HasBattleTarget() &&
                 IsEnabled(Preset.VPR_ST_RangedUptime) &&
                 ActionReady(WrithingSnap) &&
                 (IsEnabled(Preset.VPR_ST_UncoiledFury) && !HasRattlingCoilStacks ||
-                 IsNotEnabled(Preset.VPR_ST_UncoiledFury)))
+                 !IsEnabled(Preset.VPR_ST_UncoiledFury)))
                 return WrithingSnap;
 
             return UseCombo(actionID, false,
@@ -236,7 +236,7 @@ internal partial class VPR : Melee
                     return actionID;
 
                 if (IsEnabled(Preset.VPR_AoE_SerpentsIre) &&
-                    CanSerpentsIre(VPR_AoE_SerpentsIreHPThreshold))
+                    UseSerpentsIre(VPR_AoE_SerpentsIreHPThreshold))
                     return SerpentsIre;
 
                 if (IsEnabled(Preset.VPR_AoE_ComboHeals))
@@ -258,7 +258,7 @@ internal partial class VPR : Melee
                 return actionID;
 
             if (IsEnabled(Preset.VPR_AoE_Reawaken) &&
-                CanReawaken(true, hpThresholdUsageAoE: VPR_AoE_ReawakenHPThreshold) &&
+                UseReawaken(true, hpThresholdUsageAoE: VPR_AoE_ReawakenHPThreshold) &&
                 (InActionRange(Reawaken) || VPR_AoE_ReawakenRangecheck == 1))
                 return Reawaken;
 
@@ -267,11 +267,11 @@ internal partial class VPR : Melee
                 return UncoiledFury;
 
             if (IsEnabled(Preset.VPR_AoE_Vicepit) &&
-                CanVicepit(VPR_AoE_VicepitRangeCheck == 1))
+                UseVicepit(VPR_AoE_VicepitRangeCheck == 1))
                 return Vicepit;
 
             if (IsEnabled(Preset.VPR_AoE_UncoiledFury) &&
-                CanUseUncoiledFury(true, aoeHoldCharges: VPR_AoE_UncoiledFuryHoldCharges, aoeHpThreshold: VPR_AoE_UncoiledFuryAlwaysUse))
+                UseUncoiledFury(true, aoeHoldCharges: VPR_AoE_UncoiledFuryHoldCharges, aoeHpThreshold: VPR_AoE_UncoiledFuryAlwaysUse))
                 return UncoiledFury;
 
             return UseCombo(actionID, true, IsEnabled(Preset.VPR_AoE_ReawakenCombo));
@@ -288,7 +288,7 @@ internal partial class VPR : Melee
                 return actionID;
 
             if (IsDeathRattleWeave &&
-                LevelChecked(SerpentsTail) && InActionRange(DeathRattle))
+                ActionLearned(SerpentsTail) && InActionRange(DeathRattle))
                 return OriginalHook(SerpentsTail);
 
             return DoBasicCombo();
@@ -383,13 +383,13 @@ internal partial class VPR : Melee
             {
                 case Reawaken when VPR_ReawakenLegacyButton == 0 && HasStatusEffect(Buffs.Reawakened):
                 case ReavingFangs when VPR_ReawakenLegacyButton == 1 && HasStatusEffect(Buffs.Reawakened):
-                {
-                    return IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
-                           TraitLevelChecked(Traits.SerpentsLegacy) &&
-                           HasStatusEffect(Buffs.Reawakened) && IsLegacyWeaveReady
-                        ? OriginalHook(SerpentsTail)
-                        : ReawakenCombo(actionID);
-                }
+                    {
+                        return IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
+                               TraitLevelChecked(Traits.SerpentsLegacy) &&
+                               HasStatusEffect(Buffs.Reawakened) && IsLegacyWeaveReady
+                            ? OriginalHook(SerpentsTail)
+                            : ReawakenCombo(actionID);
+                    }
             }
 
             return actionID;
@@ -405,7 +405,7 @@ internal partial class VPR : Melee
             if (actionID is not SerpentsTail)
                 return actionID;
 
-            if (LevelChecked(SerpentsTail) && OriginalHook(SerpentsTail) is not SerpentsTail)
+            if (ActionLearned(SerpentsTail) && OriginalHook(SerpentsTail) is not SerpentsTail)
                 return OriginalHook(SerpentsTail);
 
             if (HasStatusEffect(Buffs.PoisedForTwinfang) ||
@@ -437,7 +437,7 @@ internal partial class VPR : Melee
                 ReavingFangs when Gauge.SerpentCombo is SerpentCombo.SecondLegacy => OriginalHook(SerpentsTail),
                 HuntersCoil when Gauge.SerpentCombo is SerpentCombo.ThirdLegacy => OriginalHook(SerpentsTail),
                 SwiftskinsCoil when Gauge.SerpentCombo is SerpentCombo.FourthLegacy => OriginalHook(SerpentsTail),
-                var _ => actionID
+                _ => actionID
             };
         }
     }
@@ -455,7 +455,7 @@ internal partial class VPR : Melee
             {
                 SteelFangs or ReavingFangs when IsDeathRattleWeave => OriginalHook(SerpentsTail),
                 SteelMaw or ReavingMaw when IsLastLashWeave => OriginalHook(SerpentsTail),
-                var _ => actionID
+                _ => actionID
             };
         }
     }
@@ -471,7 +471,7 @@ internal partial class VPR : Melee
 
             return (UsedVicewinder || UsedHuntersCoil || UsedSwiftskinsCoil ||
                     UsedVicepit || UsedHuntersDen || UsedSwiftskinsDen) &&
-                   LevelChecked(Vicewinder)
+                   ActionLearned(Vicewinder)
                 ? All.Cease
                 : actionID;
         }

@@ -200,7 +200,7 @@ internal partial class BRD : PhysicalRanged
             // Apex Option
             if (BRD_IronJaws_Apex)
             {
-                if (LevelChecked(BlastArrow) && HasStatusEffect(Buffs.BlastArrowReady))
+                if (ActionLearned(BlastArrow) && HasStatusEffect(Buffs.BlastArrowReady))
                     return BlastArrow;
 
                 if (gauge.SoulVoice == 100)
@@ -208,7 +208,7 @@ internal partial class BRD : PhysicalRanged
             }
 
             if (BRD_IronJaws_Alternate)
-                return LevelChecked(Windbite) && BlueRemaining <= PurpleRemaining ?
+                return ActionLearned(Windbite) && BlueRemaining <= PurpleRemaining ?
                     OriginalHook(Windbite) :
                     OriginalHook(VenomousBite);
 
@@ -388,7 +388,7 @@ internal partial class BRD : PhysicalRanged
                 if (ActionReady(OriginalHook(Bloodletter)) && BRD_WideVolleyUpgrade_OGCDs_Options[2] &&
                     (BloodletterCharges == 3 && TraitLevelChecked(Traits.EnhancedBloodletter) ||
                      BloodletterCharges == 2 && !TraitLevelChecked(Traits.EnhancedBloodletter)))
-                    return LevelChecked(RainOfDeath)
+                    return ActionLearned(RainOfDeath)
                         ? RainOfDeath
                         : OriginalHook(Bloodletter);
             }
@@ -402,7 +402,7 @@ internal partial class BRD : PhysicalRanged
                     return BlastArrow;
             }
 
-            return LevelChecked(WideVolley) && (HasStatusEffect(Buffs.HawksEye) || HasStatusEffect(Buffs.Barrage))
+            return ActionLearned(WideVolley) && (HasStatusEffect(Buffs.HawksEye) || HasStatusEffect(Buffs.Barrage))
                 ? actionID
                 : OriginalHook(QuickNock);
 

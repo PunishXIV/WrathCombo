@@ -65,7 +65,7 @@ internal partial class GNB : Tank
             //2.5 - if No Mercy is imminent, then we want to aim for buffing HV after using Burst Strike instead of sending it right away (BS^NM^HV>GF>etc.)
             //2.4x - just use it after Burst Strike
             if (JustUsed(BurstStrike, 5f) &&
-                LevelChecked(Hypervelocity) &&
+                ActionLearned(Hypervelocity) &&
                 HasStatusEffect(Buffs.ReadyToBlast) &&
                 (!Slow || NMcd > 1.3f))
                 return Hypervelocity;
@@ -83,7 +83,7 @@ internal partial class GNB : Tank
                 return OriginalHook(Continuation);
 
             //Burst - at Lv100 we want to send Reign as soon as we enter No Mercy (unless we're in opener/reopener with max GF charges), else we send Gnashing Fang (since no Reign)
-            var wantGF = GetCooldownRemainingTime(GnashingFang) < 0.5f || !LevelChecked(ReignOfBeasts);
+            var wantGF = GetCooldownRemainingTime(GnashingFang) < 0.5f || !ActionLearned(ReignOfBeasts);
             if (wantGF ? ShouldUseGnashingFangBurst(Preset.GNB_ST_Simple) : ShouldUseReignOfBeasts(Preset.GNB_ST_Simple))
                 return wantGF ? GnashingFang : ReignOfBeasts;
 
@@ -178,7 +178,7 @@ internal partial class GNB : Tank
             //2.4x - just use it after Burst Strike
             if (IsEnabled(Preset.GNB_ST_Continuation) &&
                 JustUsed(BurstStrike, 5f) &&
-                LevelChecked(Hypervelocity) &&
+                ActionLearned(Hypervelocity) &&
                 HasStatusEffect(Buffs.ReadyToBlast) &&
                 (!Slow || (IsEnabled(Preset.GNB_ST_NoMercy) && NMcd > 1.3f)))
                 return Hypervelocity;
@@ -196,7 +196,7 @@ internal partial class GNB : Tank
                 return OriginalHook(Continuation);
 
             //Burst - at Lv100 we want to send Reign as soon as we enter No Mercy (unless we're in opener/reopener with max GF charges), else we send Gnashing Fang (since no Reign)
-            var wantGF = GetCooldownRemainingTime(GnashingFang) < 0.5f || !LevelChecked(ReignOfBeasts);
+            var wantGF = GetCooldownRemainingTime(GnashingFang) < 0.5f || !ActionLearned(ReignOfBeasts);
             if (wantGF ? ShouldUseGnashingFangBurst(Preset.GNB_ST_GnashingFang) : ShouldUseReignOfBeasts(Preset.GNB_ST_Reign))
                 return wantGF ? GnashingFang : ReignOfBeasts;
 
@@ -298,7 +298,7 @@ internal partial class GNB : Tank
                     return OriginalHook(ReignOfBeasts);
 
                 if (ShouldUseFatedCircle(Preset.GNB_AoE_Simple, 0))
-                    return LevelChecked(FatedCircle) ? FatedCircle : BurstStrike;
+                    return ActionLearned(FatedCircle) ? FatedCircle : BurstStrike;
             }
 
             return AOECombo(0, 0);
@@ -378,8 +378,8 @@ internal partial class GNB : Tank
 
                 if (ShouldUseFatedCircle(Preset.GNB_AoE_FatedCircle, GNB_AoE_FatedCircle_Setup))
                     return
-                        LevelChecked(FatedCircle) ? FatedCircle :
-                        LevelChecked(BurstStrike) && GNB_AoE_FatedCircle_BurstStrike == 0 ? BurstStrike :
+                        ActionLearned(FatedCircle) ? FatedCircle :
+                        ActionLearned(BurstStrike) && GNB_AoE_FatedCircle_BurstStrike == 0 ? BurstStrike :
                         aoe;
             }
 
@@ -423,7 +423,7 @@ internal partial class GNB : Tank
             //2.4x - just use it after Burst Strike
             if (IsEnabled(Preset.GNB_GF_Continuation) &&
                 JustUsed(BurstStrike, 5f) &&
-                LevelChecked(Hypervelocity) &&
+                ActionLearned(Hypervelocity) &&
                 HasStatusEffect(Buffs.ReadyToBlast) &&
                 (!Slow || (IsEnabled(Preset.GNB_GF_NoMercy) && NMcd > 1.3f)))
                 return Hypervelocity;
@@ -441,7 +441,7 @@ internal partial class GNB : Tank
                 return OriginalHook(Continuation);
 
             //Burst - at Lv100 we want to send Reign as soon as we enter No Mercy (unless we're in opener/reopener with max GF charges), else we send Gnashing Fang (since no Reign)
-            var wantGF = GetCooldownRemainingTime(GnashingFang) < 0.5f || !LevelChecked(ReignOfBeasts);
+            var wantGF = GetCooldownRemainingTime(GnashingFang) < 0.5f || !ActionLearned(ReignOfBeasts);
             if (wantGF ? ShouldUseGnashingFangBurst(Preset.GNB_GF_Features) : ShouldUseReignOfBeasts(Preset.GNB_GF_Reign))
                 return wantGF ? GnashingFang : ReignOfBeasts;
 
@@ -496,7 +496,7 @@ internal partial class GNB : Tank
             if (ShouldContinue(Preset.GNB_BS_Continuation, canContinue, CanWeave()))
                 return OriginalHook(Continuation);
 
-            var wantGF = GetCooldownRemainingTime(GnashingFang) < 0.5f || !LevelChecked(ReignOfBeasts);
+            var wantGF = GetCooldownRemainingTime(GnashingFang) < 0.5f || !ActionLearned(ReignOfBeasts);
             if (wantGF ? ShouldUseGnashingFangBurst(Preset.GNB_BS_GnashingFang) : ShouldUseReignOfBeasts(Preset.GNB_BS_Reign))
                 return wantGF ? GnashingFang : ReignOfBeasts;
             if (ShouldUseDoubleDown(Preset.GNB_BS_DoubleDown))
@@ -750,9 +750,9 @@ internal partial class GNB : Tank
         protected override uint Invoke(uint actionID) 
             => actionID != SolidBarrel 
                 ? actionID 
-                : ComboTimer > 0 && ComboAction is KeenEdge && LevelChecked(BrutalShell) 
+                : ComboTimer > 0 && ComboAction is KeenEdge && ActionLearned(BrutalShell) 
                     ? BrutalShell 
-                : ComboTimer > 0 && ComboAction is BrutalShell && LevelChecked(SolidBarrel) 
+                : ComboTimer > 0 && ComboAction is BrutalShell && ActionLearned(SolidBarrel) 
                     ? SolidBarrel 
                 : KeenEdge;
     }
@@ -763,7 +763,7 @@ internal partial class GNB : Tank
         protected override uint Invoke(uint actionID) 
             => actionID is not DemonSlaughter
                 ? actionID
-                : ComboAction is DemonSlice && ComboTimer > 0 && LevelChecked(DemonSlaughter) 
+                : ComboAction is DemonSlice && ComboTimer > 0 && ActionLearned(DemonSlaughter) 
                     ? DemonSlaughter 
                 : DemonSlice;
     }

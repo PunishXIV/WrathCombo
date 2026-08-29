@@ -21,7 +21,8 @@ internal partial class All
         AutoOff = 1_000_006,
 
         AutoToggle = 1_000_007,
-        Items = 2_000_000; // Ids on top of this will be for items, created dynamically
+        Items = 2_000_000, // Ids on top of this will be for items, created dynamically
+        Pomanders = 3_000_000; // Ids on top of this will be for pomanders, created dynamically
 
     public static class Buffs
     {

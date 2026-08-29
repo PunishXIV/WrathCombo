@@ -59,7 +59,7 @@ internal partial class NIN : Melee
                 return NinkiWillOvercap ? OriginalHook(Bhavacakra) : OriginalHook(Meisui);
 
             if (CanBhavacakra && NinkiPooling)
-                return LevelChecked(Bhavacakra) ? OriginalHook(Bhavacakra) : OriginalHook(HellfrogMedium);
+                return ActionLearned(Bhavacakra) ? OriginalHook(Bhavacakra) : OriginalHook(HellfrogMedium);
 
             if (CanMugST && CombatEngageDuration().TotalSeconds > 5)
                 return NinkiWillOvercap && TraitLevelChecked(Traits.MugMastery) ? OriginalHook(Bhavacakra) : OriginalHook(Mug);
@@ -76,7 +76,7 @@ internal partial class NIN : Melee
             if ((CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID)) ||
                 (CanUseSuiton && TrickCD <= 18 && MudraState.CastSuiton(ref actionID)) ||
                 (CanUseRaiton && MudraState.CastRaiton(ref actionID)) ||
-                (CanUseFumaShuriken && !LevelChecked(Raiton) && MudraState.CastFumaShuriken(ref actionID)))
+                (CanUseFumaShuriken && !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID)))
                 return actionID;
             #endregion
 
@@ -108,20 +108,20 @@ internal partial class NIN : Melee
             {
                 switch (ComboAction)
                 {
-                    case SpinningEdge when LevelChecked(GustSlash):
+                    case SpinningEdge when ActionLearned(GustSlash):
                         return OriginalHook(GustSlash);
 
                     case GustSlash when GetTargetHPPercent() <= 10 && gauge.Kazematoi > 0: //Kazematoi Dump Below 10%
                         return TNAeolianEdge ? Role.TrueNorth : AeolianEdge;
 
-                    case GustSlash when LevelChecked(ArmorCrush):
+                    case GustSlash when ActionLearned(ArmorCrush):
                         return gauge.Kazematoi switch
                         {
                             0 => TNArmorCrush ? Role.TrueNorth : ArmorCrush,
                             >= 4 => TNAeolianEdge ? Role.TrueNorth : AeolianEdge,
                             _ => OnTargetsFlank() || !TargetNeedsPositionals() ? ArmorCrush : AeolianEdge
                         };
-                    case GustSlash when !LevelChecked(ArmorCrush) && LevelChecked(AeolianEdge):
+                    case GustSlash when !ActionLearned(ArmorCrush) && ActionLearned(AeolianEdge):
                         return TNAeolianEdge ? Role.TrueNorth : AeolianEdge;
                 }
             }
@@ -193,7 +193,7 @@ internal partial class NIN : Melee
                 (CanUseHuton && TrickCD <= 18 && MudraState.CastHuton(ref actionID)) ||
                 (CanUseDoton && GetTargetHPPercent() >= 30 && MudraState.CastDoton(ref actionID)) ||
                 (CanUseKaton && MudraState.CastKaton(ref actionID)) ||
-                (CanUseFumaShuriken && !LevelChecked(Katon) && MudraState.CastFumaShuriken(ref actionID)))
+                (CanUseFumaShuriken && !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID)))
                 return actionID;
             #endregion
 
@@ -225,15 +225,15 @@ internal partial class NIN : Melee
             {
                 switch (ComboAction)
                 {
-                    case SpinningEdge when LevelChecked(GustSlash) && !LevelChecked(DeathBlossom):
+                    case SpinningEdge when ActionLearned(GustSlash) && !ActionLearned(DeathBlossom):
                         return OriginalHook(GustSlash);
-                    case GustSlash when !LevelChecked(ArmorCrush) && LevelChecked(AeolianEdge) && !LevelChecked(DeathBlossom):
+                    case GustSlash when !ActionLearned(ArmorCrush) && ActionLearned(AeolianEdge) && !ActionLearned(DeathBlossom):
                         return TNAeolianEdge ? Role.TrueNorth : AeolianEdge;
-                    case DeathBlossom when LevelChecked(HakkeMujinsatsu):
+                    case DeathBlossom when ActionLearned(HakkeMujinsatsu):
                         return HakkeMujinsatsu;
                 }
             }
-            return LevelChecked(DeathBlossom)
+            return ActionLearned(DeathBlossom)
                 ? DeathBlossom
                 : SpinningEdge;
             #endregion
@@ -302,7 +302,7 @@ internal partial class NIN : Melee
 
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Bhavacakra) && CanBhavacakra &&
                     (NinkiPooling || !NIN_ST_AdvancedMode_Bhavacakra_Pooling))
-                    return LevelChecked(Bhavacakra) ? OriginalHook(Bhavacakra) : OriginalHook(HellfrogMedium);
+                    return ActionLearned(Bhavacakra) ? OriginalHook(Bhavacakra) : OriginalHook(HellfrogMedium);
 
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Mug) && CanMugST && CombatEngageDuration().TotalSeconds > 5 &&
                     GetTargetHPPercent() > STMugThreshold)
@@ -331,7 +331,7 @@ internal partial class NIN : Melee
                     IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Raiton) &&
                     CanUseRaiton && MudraState.CastRaiton(ref actionID) ||
                     IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Raiton) &&
-                    CanUseFumaShuriken && !LevelChecked(Raiton) && MudraState.CastFumaShuriken(ref actionID))
+                    CanUseFumaShuriken && !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
             #endregion
@@ -377,20 +377,20 @@ internal partial class NIN : Melee
             {
                 switch (ComboAction)
                 {
-                    case SpinningEdge when LevelChecked(GustSlash):
+                    case SpinningEdge when ActionLearned(GustSlash):
                         return OriginalHook(GustSlash);
 
                     case GustSlash when GetTargetHPPercent() <= NIN_ST_AdvancedMode_BurnKazematoi && gauge.Kazematoi > 0: //Kazematoi Dump Below 10%
                         return TNAeolianEdge && NIN_ST_AdvancedMode_TrueNorth ? Role.TrueNorth : AeolianEdge;
 
-                    case GustSlash when LevelChecked(ArmorCrush):
+                    case GustSlash when ActionLearned(ArmorCrush):
                         return gauge.Kazematoi switch
                         {
                             0 => TNArmorCrush && NIN_ST_AdvancedMode_TrueNorth ? Role.TrueNorth : ArmorCrush,
                             >= 4 => TNAeolianEdge && NIN_ST_AdvancedMode_TrueNorth ? Role.TrueNorth : AeolianEdge,
                             _ => OnTargetsFlank() || !TargetNeedsPositionals() ? ArmorCrush : AeolianEdge
                         };
-                    case GustSlash when !LevelChecked(ArmorCrush) && LevelChecked(AeolianEdge):
+                    case GustSlash when !ActionLearned(ArmorCrush) && ActionLearned(AeolianEdge):
                         return TNAeolianEdge && NIN_ST_AdvancedMode_TrueNorth ? Role.TrueNorth : AeolianEdge;
                 }
             }
@@ -483,7 +483,7 @@ internal partial class NIN : Melee
                     IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon) &&
                     CanUseKaton && MudraState.CastKaton(ref actionID) ||
                     IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon) &&
-                    CanUseFumaShuriken && !LevelChecked(Katon) && MudraState.CastFumaShuriken(ref actionID))
+                    CanUseFumaShuriken && !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
             #endregion
@@ -517,15 +517,15 @@ internal partial class NIN : Melee
             {
                 switch (ComboAction)
                 {
-                    case SpinningEdge when LevelChecked(GustSlash) && !LevelChecked(DeathBlossom):
+                    case SpinningEdge when ActionLearned(GustSlash) && !ActionLearned(DeathBlossom):
                         return OriginalHook(GustSlash);
-                    case GustSlash when !LevelChecked(ArmorCrush) && LevelChecked(AeolianEdge) && !LevelChecked(DeathBlossom):
+                    case GustSlash when !ActionLearned(ArmorCrush) && ActionLearned(AeolianEdge) && !ActionLearned(DeathBlossom):
                         return AeolianEdge;
-                    case DeathBlossom when LevelChecked(HakkeMujinsatsu):
+                    case DeathBlossom when ActionLearned(HakkeMujinsatsu):
                         return HakkeMujinsatsu;
                 }
             }
-            return LevelChecked(DeathBlossom) ? DeathBlossom : SpinningEdge;
+            return ActionLearned(DeathBlossom) ? DeathBlossom : SpinningEdge;
             #endregion
         }
     }
@@ -573,10 +573,10 @@ internal partial class NIN : Melee
 
             if (ComboTimer > 0)
             {
-                if (ComboAction is SpinningEdge && LevelChecked(GustSlash))
+                if (ComboAction is SpinningEdge && ActionLearned(GustSlash))
                     return GustSlash;
 
-                if (ComboAction is GustSlash && LevelChecked(AeolianEdge))
+                if (ComboAction is GustSlash && ActionLearned(AeolianEdge))
                     return AeolianEdge;
             }
             return SpinningEdge;
@@ -594,10 +594,10 @@ internal partial class NIN : Melee
 
             if (ComboTimer > 0)
             {
-                if (ComboAction == SpinningEdge && LevelChecked(GustSlash))
+                if (ComboAction == SpinningEdge && ActionLearned(GustSlash))
                     return GustSlash;
 
-                if (ComboAction == GustSlash && LevelChecked(ArmorCrush))
+                if (ComboAction == GustSlash && ActionLearned(ArmorCrush))
                     return ArmorCrush;
             }
             return SpinningEdge;
@@ -615,7 +615,7 @@ internal partial class NIN : Melee
 
 
             if (NIN_HideMug_Toggle && HasStatusEffect(Buffs.Hidden) &&
-                (LevelChecked(Suiton) || !NIN_HideMug_ToggleLevelCheck)) //Check level to get ShadowWalker buff.
+                (ActionLearned(Suiton) || !NIN_HideMug_ToggleLevelCheck)) //Check level to get ShadowWalker buff.
                 StatusManager.ExecuteStatusOff(Buffs.Hidden);
 
             if (NIN_HideMug_Trick &&
@@ -824,24 +824,24 @@ internal partial class NIN : Melee
 
             switch (actionID)
             {
-                case Ten when LevelChecked(HyoshoRanryu) && HasKassatsu:
+                case Ten when ActionLearned(HyoshoRanryu) && HasKassatsu:
                     return UseHyoshoRanryu(ref actionID);
-                case Ten when LevelChecked(Suiton) && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
+                case Ten when ActionLearned(Suiton) && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
                     return UseSuiton(ref actionID);
                 case Ten:
-                    return LevelChecked(Raiton)
+                    return ActionLearned(Raiton)
                         ? UseRaiton(ref actionID)
                         : UseFumaShuriken(ref actionID);
-                case Chi when LevelChecked(GokaMekkyaku) && HasKassatsu:
+                case Chi when ActionLearned(GokaMekkyaku) && HasKassatsu:
                     return UseGokaMekkyaku(ref actionID);
-                case Chi when LevelChecked(Huton) && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
+                case Chi when ActionLearned(Huton) && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
                     return UseHuton(ref actionID);
                 case Chi:
-                    return LevelChecked(Katon)
+                    return ActionLearned(Katon)
                         ? UseKaton(ref actionID)
                         : UseFumaShuriken(ref actionID);
                 case Jin:
-                    return LevelChecked(Doton)
+                    return ActionLearned(Doton)
                         ? UseDoton(ref actionID)
                         : UseFumaShuriken(ref actionID);
                 default:

@@ -160,7 +160,7 @@ internal partial class BLM
 
                 case Preset.BLM_ST_Manaward:
 
-                    if ((int)(BLM_ST_ManawardTrigger) is 0 or 1)
+                    if ((int)BLM_ST_ManawardTrigger is 0 or 1)
                         DrawSliderInt(0, 100, BLM_ST_ManawardHPThreshold,
                             FormatAndCache(Generics.HPPercentageThreshold, Manaward.ActionName()));
 

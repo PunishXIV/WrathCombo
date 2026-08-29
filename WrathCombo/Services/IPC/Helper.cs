@@ -6,6 +6,7 @@ using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -72,18 +73,17 @@ public partial class Helper(ref Leasing leasing)
     }
 
     /// <summary>
-    ///     Gets the "opposite" preset, as in Advanced if given Simple, and vice
+    ///     Gets the " " preset, as in Advanced if given Simple, and vice
     ///     versa.
     /// </summary>
     /// <param name="preset">The preset to search for the opposite of.</param>
     /// <returns>The Opposite-mode preset.</returns>
     internal static Preset? GetOppositeModeCombo(Preset preset)
     {
-        const StringComparison lower = StringComparison.CurrentCultureIgnoreCase;
         var presetData = preset.Attributes();
 
         // Bail if it is not one of the main combos
-        if (presetData.ComboType is not (ComboType.Advanced or ComboType.Simple))
+        if (presetData.ComboType is not (ComboType.AdvancedDPS or ComboType.SimpleDPS or ComboType.SimpleHealing or ComboType.AdvancedHealing))
             return null;
 
         // Detect the target type
@@ -95,7 +95,7 @@ public partial class Helper(ref Leasing leasing)
 
         // Detect the simplicity level
         var simplicityLevel =
-            presetData.ComboType is ComboType.Simple
+            presetData.ComboType is ComboType.SimpleDPS or ComboType.SimpleHealing
                 ? ComboSimplicityLevelKeys.Simple
                 : ComboSimplicityLevelKeys.Advanced;
         // Flip the simplicity level
@@ -112,11 +112,13 @@ public partial class Helper(ref Leasing leasing)
                         [presetData.JobInfo.Job]
                     [targetType][simplicityLevelToSearchFor];
 
+            // Bail if there's no opposite-mode preset for this target type
+            // (e.g. no Advanced healer combos for the same target type)
+            if (categorizedPreset.Count == 0)
+                return null;
+
             // Return the opposite mode, as a proper preset
-            var oppositeMode = categorizedPreset.FirstOrDefault().Key;
-            var oppositeModePreset = (Preset)
-                Enum.Parse(typeof(Preset), oppositeMode, true);
-            return oppositeModePreset;
+            return categorizedPreset.Keys.First();
         }
         catch (Exception ex)
         {
@@ -179,29 +181,23 @@ public partial class Helper(ref Leasing leasing)
 
         #region Override the Values with any IPC-control
 
-        Preset? simpleComboPreset = simpleHigher is null
-            ? null
-            : (Preset)
-            Enum.Parse(typeof(Preset), simpleHigher.Value.Key, true);
+        var simpleComboPreset = simpleHigher?.Key;
         if (simpleComboPreset is not null)
         {
             simple[ComboStateKeys.AutoMode] =
-                P.IPCSearch.AutoActions[(Preset)simpleComboPreset];
+                P.IPCSearch.AutoActions[simpleComboPreset.Value];
             simple[ComboStateKeys.Enabled] =
-                P.IPCSearch.EnabledActions.Contains(
-                    (Preset)simpleComboPreset);
+                P.IPCSearch.EnabledActions.Contains(simpleComboPreset.Value);
         }
 
         #endregion
 
         // Get the Advanced Mode settings
-        var (advancedKey, advancedValue) =
+        var (advancedComboPreset, advancedValue) =
             comboStates[mode][ComboSimplicityLevelKeys.Advanced].First();
 
         #region Override the Values with any IPC-control
 
-        var advancedComboPreset = (Preset)
-            Enum.Parse(typeof(Preset), advancedKey, true);
         advancedValue[ComboStateKeys.AutoMode] =
             P.IPCSearch.AutoActions[advancedComboPreset];
         advancedValue[ComboStateKeys.Enabled] =
@@ -247,94 +243,80 @@ public partial class Helper(ref Leasing leasing)
     internal static List<string>? GetCombosToSetJobAutoRotationReady
         (Job job, bool includeOptions = true)
     {
-        #region Getting Combo data
-
         if (CombosForARCache.TryGetValue(job, out var value))
             return value;
 
-        P.IPCSearch.CurrentJobComboStatesCategorized.TryGetValue(job,
-            out var comboStates);
-
-        if (comboStates is null)
+        if (!P.IPCSearch.CurrentJobComboStatesCategorized.TryGetValue(job, out var comboStates))
             return null;
-
-        #endregion
 
         List<string> combos = [];
 
-        #region Single Target
-
-        comboStates[ComboTargetTypeKeys.SingleTarget]
-            .TryGetValue(ComboSimplicityLevelKeys.Simple, out var stSimpleResults);
-        var stSimple =
-            stSimpleResults?.FirstOrDefault();
-
-        if (stSimple is not null)
-            combos.Add(comboStates[ComboTargetTypeKeys.SingleTarget]
-                [ComboSimplicityLevelKeys.Simple].First().Key);
-        else
+        // Add combos for each target type category
+        AddComboForTargetType(combos, comboStates, job, ComboTargetTypeKeys.SingleTargetDPS, includeOptions);
+        AddComboForTargetType(combos, comboStates, job, ComboTargetTypeKeys.AoEDPS, includeOptions);
+        if (job.IsHealer() || job is Job.BLU)
         {
-            var stAdvanced = comboStates[ComboTargetTypeKeys.SingleTarget]
-                [ComboSimplicityLevelKeys.Advanced].First().Key;
-            combos.Add(stAdvanced);
-            if (includeOptions)
-                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][stAdvanced]);
+            AddComboForTargetType(combos, comboStates, job, ComboTargetTypeKeys.SingleTargetHeals, includeOptions);
+            AddComboForTargetType(combos, comboStates, job, ComboTargetTypeKeys.AoEHeals, includeOptions);
         }
-
-        #endregion
-
-        #region Multi Target
-
-        comboStates[ComboTargetTypeKeys.MultiTarget]
-            .TryGetValue(ComboSimplicityLevelKeys.Simple, out var mtSimpleResults);
-        var mtSimple =
-            mtSimpleResults?.FirstOrDefault();
-
-        if (mtSimple is not null)
-            combos.Add(comboStates[ComboTargetTypeKeys.MultiTarget]
-                [ComboSimplicityLevelKeys.Simple].First().Key);
-        else
-        {
-            var mtAdvanced = comboStates[ComboTargetTypeKeys.MultiTarget]
-                [ComboSimplicityLevelKeys.Advanced].First().Key;
-            combos.Add(mtAdvanced);
-            if (includeOptions)
-                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][mtAdvanced]);
-        }
-
-        #endregion
-
-        #region Heals
-
-        if (comboStates.TryGetValue(ComboTargetTypeKeys.HealST, out var healResults))
-            combos.Add(healResults
-                [ComboSimplicityLevelKeys.Other].First().Key);
-        var healST = healResults?.FirstOrDefault().Key;
-        if (healST is not null)
-        {
-            var healSTPreset = comboStates[ComboTargetTypeKeys.HealST]
-                [ComboSimplicityLevelKeys.Other].First().Key;
-            if (includeOptions)
-                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][healSTPreset]);
-        }
-
-        if (comboStates.TryGetValue(ComboTargetTypeKeys.HealMT, out healResults))
-            combos.Add(healResults
-                [ComboSimplicityLevelKeys.Other].First().Key);
-        var healMT = healResults?.FirstOrDefault().Key;
-        if (healMT is not null)
-        {
-            var healMTPreset = comboStates[ComboTargetTypeKeys.HealMT]
-                [ComboSimplicityLevelKeys.Other].First().Key;
-            if (includeOptions)
-                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][healMTPreset]);
-        }
-
-        #endregion
 
         if (includeOptions)
             CombosForARCache[job] = combos;
         return combos;
+    }
+
+    /// <summary>
+    ///     Adds the appropriate combo for a specific target type to the list.
+    ///     Prioritizes simple combos, falls back to advanced if no simple combo exists.
+    /// </summary>
+    private static void AddComboForTargetType(
+        List<string> combos,
+        Dictionary<ComboTargetTypeKeys, Dictionary<ComboSimplicityLevelKeys, Dictionary<Preset, Dictionary<ComboStateKeys, bool>>>> comboStates,
+        Job job,
+        ComboTargetTypeKeys targetType,
+        bool includeOptions)
+    {
+        if (!comboStates.TryGetValue(targetType, out var bySimplicity))
+            return;
+
+        // Get simple combo if available
+        if (bySimplicity.TryGetValue(ComboSimplicityLevelKeys.Simple, out var simpleCombo) && simpleCombo.Count > 0)
+        {
+            if (job is Job.BLU)
+                combos.AddRange(simpleCombo.Keys.Select(k => k.ToString()));
+            else
+                combos.Add(simpleCombo.First().Key.ToString());
+            return;
+        }
+
+        // Fall back to advanced combo
+        if (!bySimplicity.TryGetValue(ComboSimplicityLevelKeys.Advanced, out var advancedCombo) ||
+            advancedCombo.Count == 0)
+            return;
+
+        if (job is Job.BLU)
+        {
+            foreach (var preset in advancedCombo.Keys)
+            {
+                var bluComboName = preset.ToString();
+                combos.Add(bluComboName);
+                if (includeOptions &&
+                    P.IPCSearch.OptionNamesByJob.TryGetValue(job, out var bluOptions) &&
+                    bluOptions.TryGetValue(bluComboName, out var bluComboOptions))
+                    combos.AddRange(bluComboOptions);
+            }
+            return;
+        }
+
+        var comboName = advancedCombo.First().Key.ToString();
+        combos.Add(comboName);
+
+        // Add related options if requested
+        if (includeOptions && P.IPCSearch.OptionNamesByJob.TryGetValue(job, out var jobOptions) &&
+            jobOptions.TryGetValue(comboName, out var options))
+        {
+            combos.AddRange(options);
+        }
     }
 
     #endregion

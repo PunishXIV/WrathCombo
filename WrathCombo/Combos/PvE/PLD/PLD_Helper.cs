@@ -41,7 +41,7 @@ internal partial class PLD
     ///     Each logic check is already combined with checking if the preset
     ///     <see cref="IsEnabled(Preset)">is enabled</see>
     ///     and if the action is <see cref="ActionReady(uint,bool,bool)">ready</see> and
-    ///     <see cref="LevelChecked(uint)">level-checked</see>.<br />
+    ///     <see cref="ActionLearned(uint)">level-checked</see>.<br />
     ///     Do not add any of these checks to <c>Logic</c>.
     /// </remarks>
     private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
@@ -104,7 +104,7 @@ internal partial class PLD
         (int index, out uint action)
     {
         action = PrioritizedMitigation[index].Action;
-        return ActionReady(action) && LevelChecked(action) &&
+        return ActionReady(action) && ActionLearned(action) &&
                PrioritizedMitigation[index].Logic() &&
                IsEnabled(PrioritizedMitigation[index].Preset);
     }
@@ -552,8 +552,8 @@ internal partial class PLD
             
             if (fightOrFlightEnabled && !HasWeaved() && CombatEngageDuration().TotalSeconds >= 8 && //Time to hold buffing for non opener pulls.
                 OriginalHook(FightOrFlight) is FightOrFlight && ActionReady(FightOrFlight) && //To make sure it doesnt try to weave gcd Goring Blade
-                (!LevelChecked(Requiescat) || hasRequiescatMp) && //Must Have Enough Mana to combo
-                (InMeleeRange() || LevelChecked(Imperator) && InActionRange(Imperator) && IsOffCooldown(Imperator)) && // in melee or ready to start ranged combo with imperator
+                (!ActionLearned(Requiescat) || hasRequiescatMp) && //Must Have Enough Mana to combo
+                (InMeleeRange() || ActionLearned(Imperator) && InActionRange(Imperator) && IsOffCooldown(Imperator)) && // in melee or ready to start ranged combo with imperator
                 GetTargetHPPercent() >= fightOrFlightStopThreshold) //Health Threshold Check, boss check built into config
             {
                 actionID = FightOrFlight;
@@ -561,7 +561,7 @@ internal partial class PLD
             }
             
             if ((requiescatEnabled && ActionReady(OriginalHook(Requiescat)) && GetCooldownRemainingTime(FightOrFlight) > 50 && InActionRange(OriginalHook(Requiescat))) || //Requiescat Logic, in action range because Imperator gets 25y range
-                (bladeOfHonorEnabled && LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor)) //Blade of Honor Logic since it shares the button
+                (bladeOfHonorEnabled && ActionLearned(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor && ActionReady(BladeOfHonor)))
             {
                 actionID = OriginalHook(Requiescat);
                 return true;
@@ -597,6 +597,15 @@ internal partial class PLD
     #endregion
     
     #region GCD Attacks
+    private static uint NextConfiteorBlade() =>
+        ComboAction switch
+        {
+            Confiteor when ActionLearned(BladeOfFaith) => BladeOfFaith,
+            BladeOfFaith => BladeOfTruth,
+            BladeOfTruth => BladeOfValor,
+            var _ => OriginalHook(Confiteor),
+        };
+
     private static bool TryGCDAttacks(Combo flags, ref uint actionID)
     {
         #region Enables
@@ -679,9 +688,9 @@ internal partial class PLD
         
         if (confiteorComboEnabled && HasStatusEffect(Buffs.Requiescat) && HasDivineMagicMP && //Does not have a battle target check as un-targeting and fast blade retargeting breaks Cofefe combo. DO NOT ADD.
             (HasStatusEffect(Buffs.ConfiteorReady) || //Confiteor
-             LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)) //Its combo
+             ActionLearned(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)) //Its combo
         {
-            actionID = OriginalHook(Confiteor);
+            actionID = NextConfiteorBlade();
             return true;
         }
         
@@ -707,7 +716,7 @@ internal partial class PLD
             }
         }
 
-        if (rangedUptimeEnabled && LevelChecked(ShieldLob) && HasBattleTarget() && rangedUptimeRangeCheck)
+        if (rangedUptimeEnabled && ActionLearned(ShieldLob) && HasBattleTarget() && rangedUptimeRangeCheck)
         {
             //Holy Spirit Ranged Uptime Options
             if (ActionReady(HolySpirit) && holySpiritUptime == 1 && !IsMoving())
@@ -748,15 +757,15 @@ internal partial class PLD
     #region Basic Combos
     internal static uint STCombo
         => ComboTimer > 0 
-            ? LevelChecked(RiotBlade) && ComboAction == FastBlade
+            ? ActionLearned(RiotBlade) && ComboAction == FastBlade
                 ? RiotBlade
-                : LevelChecked(RageOfHalone) && ComboAction == RiotBlade 
+                : ActionLearned(RageOfHalone) && ComboAction == RiotBlade 
                     ? OriginalHook(RageOfHalone)
                     : FastBlade
             : FastBlade;
     
     internal static uint AoECombo 
-        => ComboTimer > 0 && LevelChecked(Prominence) && ComboAction == TotalEclipse 
+        => ComboTimer > 0 && ActionLearned(Prominence) && ComboAction == TotalEclipse 
             ? Prominence 
             : TotalEclipse;
     #endregion
@@ -781,29 +790,29 @@ internal partial class PLD
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 100;
 
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            HolySpirit, // 1
-            FastBlade, // 2
-            RiotBlade, // 3
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
-            RoyalAuthority, // 5
-            FightOrFlight, // 6
-            Imperator, // 7
-            Confiteor, // 8
-            CircleOfScorn, // 9
-            Expiacion, // 10
-            BladeOfFaith, // 11
-            Intervene, // 12
-            BladeOfTruth, // 13
-            Intervene, // 14
-            BladeOfValor, // 15
-            BladeOfHonor, // 16
-            GoringBlade, // 17
-            Atonement, // 18
-            Supplication, // 19
-            Sepulchre, // 20
-            HolySpirit // 21
+            () => HolySpirit, // 1
+            () => FastBlade, // 2
+            () => RiotBlade, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            () => RoyalAuthority, // 5
+            () => FightOrFlight, // 6
+            () => Imperator, // 7
+            () => Confiteor, // 8
+            () => CircleOfScorn, // 9
+            () => Expiacion, // 10
+            () => BladeOfFaith, // 11
+            () => Intervene, // 12
+            () => BladeOfTruth, // 13
+            () => Intervene, // 14
+            () => BladeOfValor, // 15
+            () => BladeOfHonor, // 16
+            () => GoringBlade, // 17
+            () => Atonement, // 18
+            () => Supplication, // 19
+            () => Sepulchre, // 20
+            () => HolySpirit // 21
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
@@ -811,6 +820,8 @@ internal partial class PLD
             ([1], () => InMeleeRange()),
             ([12, 14], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
         ];
+
+        public override List<int> AllowUpgradeSteps { get; set; } = [8, 11, 13, 15, 16];
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;
@@ -829,29 +840,29 @@ internal partial class PLD
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 100;
 
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            HolySpirit, // 1
-            FastBlade, // 2
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
-            FightOrFlight, // 4
-            Imperator, // 5
-            RiotBlade, // 6
-            CircleOfScorn, // 7
-            Expiacion, // 8
-            RoyalAuthority, // 9
-            Intervene, // 10
-            GoringBlade, // 11
-            Intervene, // 12
-            Confiteor, // 13
-            BladeOfFaith, // 14
-            BladeOfTruth, // 15
-            BladeOfValor, // 16
-            BladeOfHonor, // 17
-            HolySpirit, // 18
-            Atonement, // 19
-            Supplication, // 20
-            Sepulchre // 21
+            () => HolySpirit, // 1
+            () => FastBlade, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
+            () => FightOrFlight, // 4
+            () => Imperator, // 5
+            () => RiotBlade, // 6
+            () => CircleOfScorn, // 7
+            () => Expiacion, // 8
+            () => RoyalAuthority, // 9
+            () => Intervene, // 10
+            () => GoringBlade, // 11
+            () => Intervene, // 12
+            () => Confiteor, // 13
+            () => BladeOfFaith, // 14
+            () => BladeOfTruth, // 15
+            () => BladeOfValor, // 16
+            () => BladeOfHonor, // 17
+            () => HolySpirit, // 18
+            () => Atonement, // 19
+            () => Supplication, // 20
+            () => Sepulchre // 21
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
@@ -865,6 +876,8 @@ internal partial class PLD
             ([10, 12], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0),
             ([19, 20, 21], () => !InMeleeRange())
         ];
+
+        public override List<int> AllowUpgradeSteps { get; set; } = [13, 14, 15, 16, 17];
 
         public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;
@@ -956,3 +969,5 @@ internal partial class PLD
 
     #endregion
 }
+
+

@@ -206,6 +206,12 @@ Features marked with an 'Auto-Mode' checkbox are able to be used with Auto-Rotat
   <data name="Checkbox_QuestPriority" xml:space="preserve">
     <value>Prioritise Quest Targets</value>
   </data>
+  <data name="Checkbox_TreasureHuntPriority" xml:space="preserve">
+    <value>Prioritise Treasure Hunt Kill Order</value>
+  </data>
+  <data name="HelpText_TreasureHuntPriority" xml:space="preserve">
+    <value>When enemies have numbered nameplate markers (1–5), Auto-Rotation will only attack the lowest remaining number until it dies. Used for treasure map vermin; also applies anywhere those markers appear.</value>
+  </data>
   <data name="Checkbox_PreferNonCombat" xml:space="preserve">
     <value>Prioritise Targets Not in Combat</value>
   </data>

@@ -103,23 +103,5 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
                 return ResourceManager.GetString("SolarLunarOpenerDesc", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Early Buff Opener.
-        /// </summary>
-        internal static string BrotherhoodFirstOpener {
-            get {
-                return ResourceManager.GetString("BrotherhoodFirstOpener", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Double Lunar with BH → RoF weaved after the first DK; PB moves to after the second DK..
-        /// </summary>
-        internal static string BrotherhoodFirstOpenerDesc {
-            get {
-                return ResourceManager.GetString("BrotherhoodFirstOpenerDesc", resourceCulture);
-            }
-        }
     }
 }

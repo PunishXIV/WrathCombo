@@ -249,7 +249,7 @@ internal partial class SCH
             
             case 7:
                 action = OriginalHook(Succor);
-                enabled = IsEnabled(Preset.SCH_AoE_Heal) && ShieldCheck && LevelChecked(Succor);
+                enabled = IsEnabled(Preset.SCH_AoE_Heal) && ShieldCheck && ActionLearned(Succor);
                 return 100; //Don't HP Check
         }
 
@@ -272,31 +272,31 @@ internal partial class SCH
 
     internal class SCHOpenerMaxLevel1 : WrathOpener
     {
-        public override List<uint> OpenerActions { get; set; } =
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            Broil4, // 1
-            Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
-            Biolysis, // 3
-            Dissipation, // 4
-            Broil4, // 5
-            ChainStratagem, // 6
-            Broil4, // 7
-            EnergyDrain, // 8
-            Broil4, // 9
-            EnergyDrain, // 10
-            Broil4, // 11
-            EnergyDrain, // 12
-            Broil4, // 13
-            Aetherflow, // 14
-            Broil4, // 15
-            BanefulImpaction, // 16
-            Broil4, // 17
-            EnergyDrain, // 18
-            Broil4, // 19
-            EnergyDrain, // 20
-            Broil4, // 21
-            EnergyDrain, // 22
-            Biolysis // 23
+            () => Broil4, // 1
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
+            () => Biolysis, // 3
+            () => Dissipation, // 4
+            () => Broil4, // 5
+            () => ChainStratagem, // 6
+            () => Broil4, // 7
+            () => EnergyDrain, // 8
+            () => Broil4, // 9
+            () => EnergyDrain, // 10
+            () => Broil4, // 11
+            () => EnergyDrain, // 12
+            () => Broil4, // 13
+            () => Aetherflow, // 14
+            () => Broil4, // 15
+            () => BanefulImpaction, // 16
+            () => Broil4, // 17
+            () => EnergyDrain, // 18
+            () => Broil4, // 19
+            () => EnergyDrain, // 20
+            () => Broil4, // 21
+            () => EnergyDrain, // 22
+            () => Biolysis // 23
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
@@ -415,3 +415,5 @@ internal partial class SCH
 
     #endregion
 }
+
+

@@ -327,14 +327,16 @@ public static class DebugFile
 
         AddLine("START TARGET INFO");
         AddLine($"IDs: (<entity>/<data or base>): {target?.EntityId} / {target?.BaseId}");
-        AddLine($"Is Friendly: {target.IsFriendly()}");
+        AddLine($"Is Friendly: {battleTarget?.IsFriendly()}");
         AddLine($"Is Hostile: {target.IsHostile()}");
         AddLine($"In Combat: {target.IsInCombat()}");
-        AddLine($"Is Boss: {battleTarget.IsBoss()}");
+        AddLine($"Is Boss: {battleTarget?.IsBoss()}");
         AddLine($"(In Boss Encounter: {InBossEncounter()})");
         AddLine($"Is Dead: {target.IsDead}");
         AddLine($"Distance: {GetTargetDistance(target):F1}y");
         AddLine($"Nameplate: {target.GetNameplateKind()}");
+        AddLine($"NamePlate Icon ID: {GetNamePlateIconId(target)}");
+        AddLine($"Treasure Hunt Order: {GetTreasureHuntOrder(target)}");
         AddLine($"Name ID: {target.GetNameId()}");
         if (battleTarget is not null)
         {
@@ -823,7 +825,7 @@ public static class DebugFile
                 $"STACKS: {effect.Param}, " +
                 $"SOURCE: {(effect.SourceId == playerID ? "self" : effect
                     .SourceId)}, " +
-                $"NAME: {GetStatusName(effect.StatusId)}");
+                $"NAME: {effect.Name}");
         AddLine("END STATUS EFFECTS");
 
         AddLine();

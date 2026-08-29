@@ -758,6 +758,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adds Lucid Dreaming when MP drops below slider value.
+        /// </summary>
+        internal static string AST_AoE_Heals_Lucid_Desc {
+            get {
+                return ResourceManager.GetString("AST_AoE_Heals_Lucid_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lucid Dreaming Weave Option.
+        /// </summary>
+        internal static string AST_AoE_Heals_Lucid_Name {
+            get {
+                return ResourceManager.GetString("AST_AoE_Heals_Lucid_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced Healing Mode - AoE.
         /// </summary>
         internal static string AST_AoE_Heals_Name {
@@ -1866,6 +1884,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string AST_ST_Heals_Exaltation_Name {
             get {
                 return ResourceManager.GetString("AST_ST_Heals_Exaltation_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Lucid Dreaming when MP drops below slider value.
+        /// </summary>
+        internal static string AST_ST_Heals_Lucid_Desc {
+            get {
+                return ResourceManager.GetString("AST_ST_Heals_Lucid_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lucid Dreaming Weave Option.
+        /// </summary>
+        internal static string AST_ST_Heals_Lucid_Name {
+            get {
+                return ResourceManager.GetString("AST_ST_Heals_Lucid_Name", resourceCulture);
             }
         }
         
@@ -3174,6 +3210,25 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replaces Electrogenesis with a full one-button AoE rotation.
+        ///Also used with Healer Mimicry when the party does not need healing.
+        /// </summary>
+        internal static string BLU_AoE_DPS_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DPS Mode - AoE.
+        /// </summary>
+        internal static string BLU_AoE_DPS_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Turns Song of Torment into Bristle so Song of Torment is buffed..
         /// </summary>
         internal static string BLU_BuffedSoT_Desc {
@@ -3593,6 +3648,25 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string BLU_SoloMode_Name {
             get {
                 return ResourceManager.GetString("BLU_SoloMode_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Sonic Boom with a full one-button single target rotation.
+        ///Also used with Healer Mimicry when the party does not need healing.
+        /// </summary>
+        internal static string BLU_ST_DPS_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DPS Mode - Single Target.
+        /// </summary>
+        internal static string BLU_ST_DPS_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Name", resourceCulture);
             }
         }
         
@@ -11902,6 +11976,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adds Empyrean Potion to one button rotations.
+        /// </summary>
+        internal static string HoH_EmpyreanPotion_Desc {
+            get {
+                return ResourceManager.GetString("HoH_EmpyreanPotion_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heaven on High - Empyrean Potion.
+        /// </summary>
+        internal static string HoH_EmpyreanPotion_Name {
+            get {
+                return ResourceManager.GetString("HoH_EmpyreanPotion_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds Flamethrower to the rotation.
         ///Will block action whilst channelling..
         /// </summary>
@@ -18550,7 +18642,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Earthen Wall into the rotation..
+        ///   Looks up a localized string similar to Uses Earthen Wall when a raidwide is incoming..
         /// </summary>
         internal static string Phantom_Summoner_EarthenWall_Desc {
             get {
@@ -20678,6 +20770,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string PLDPvP_ShieldSmite_Name {
             get {
                 return ResourceManager.GetString("PLDPvP_ShieldSmite_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Sustaining Potion to one button rotations.
+        /// </summary>
+        internal static string PoTD_SustainingPotion_Desc {
+            get {
+                return ResourceManager.GetString("PoTD_SustainingPotion_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Palace of the Dead - Sustaining Potion.
+        /// </summary>
+        internal static string PoTD_SustainingPotion_Name {
+            get {
+                return ResourceManager.GetString("PoTD_SustainingPotion_Name", resourceCulture);
             }
         }
         
@@ -23718,6 +23828,241 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collection of Cooldown features on main combo..
+        /// </summary>
+        internal static string SAM_AoE_Adv_CDs_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_CDs_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cooldowns on Main Combo.
+        /// </summary>
+        internal static string SAM_AoE_Adv_CDs_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_CDs_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold..
+        /// </summary>
+        internal static string SAM_AoE_Adv_ComboHeals_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_ComboHeals_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combo Heals Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_ComboHeals_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_ComboHeals_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collection of Damage skills on main combo..
+        /// </summary>
+        internal static string SAM_AoE_Adv_Damage_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Damage_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage skills on Main Combo.
+        /// </summary>
+        internal static string SAM_AoE_Adv_Damage_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Damage_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Guren to the rotation..
+        /// </summary>
+        internal static string SAM_AoE_Adv_Guren_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Guren_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guren Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_Guren_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Guren_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Ikishoten when at or below 50 Kenki.
+        ///Will dump Kenki at 10 seconds left to allow Ikishoten to be used..
+        /// </summary>
+        internal static string SAM_AoE_Adv_Ikishoten_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Ikishoten_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ikishoten Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_Ikishoten_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Ikishoten_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Kyuten to the rotation..
+        /// </summary>
+        internal static string SAM_AoE_Adv_Kyuten_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Kyuten_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kyuten Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_Kyuten_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Kyuten_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Meikyo Shisui to the rotation..
+        /// </summary>
+        internal static string SAM_AoE_Adv_Meikyo_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Meikyo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meikyo Shisui Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_Meikyo_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Meikyo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Ogi Namikiri and Kaeshi: Namikiri when ready and when you&apos;re not moving to the rotation..
+        /// </summary>
+        internal static string SAM_AoE_Adv_OgiNamikiri_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_OgiNamikiri_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ogi Namikiri Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_OgiNamikiri_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_OgiNamikiri_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Oka combo to the rotation..
+        /// </summary>
+        internal static string SAM_AoE_Adv_Oka_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Oka_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oka Combo.
+        /// </summary>
+        internal static string SAM_AoE_Adv_Oka_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Oka_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Shoha when you have 3 meditation stacks..
+        /// </summary>
+        internal static string SAM_AoE_Adv_Shoha_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Shoha_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shoha Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_Shoha_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Shoha_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Leg Sweep when target non-boss is casting..
+        /// </summary>
+        internal static string SAM_AoE_Adv_StunInterrupt_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_StunInterrupt_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leg Sweep Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_StunInterrupt_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_StunInterrupt_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Tenka Goken, Midare: Setsugekka, and Kaeshi: Goken when ready and when you&apos;re not moving to the rotation..
+        /// </summary>
+        internal static string SAM_AoE_Adv_TenkaGoken_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_TenkaGoken_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iaijutsu Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_TenkaGoken_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_TenkaGoken_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Zanshin to the rotation..
+        /// </summary>
+        internal static string SAM_AoE_Adv_Zanshin_Desc {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Zanshin_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zanshin Option.
+        /// </summary>
+        internal static string SAM_AoE_Adv_Zanshin_Name {
+            get {
+                return ResourceManager.GetString("SAM_AoE_Adv_Zanshin_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaces Fuga with a full one-button AoE rotation.
         ///These features are ideal if you want to customize the rotation..
         /// </summary>
@@ -23733,133 +24078,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string SAM_AoE_AdvancedMode_Name {
             get {
                 return ResourceManager.GetString("SAM_AoE_AdvancedMode_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Collection of Cooldown features on main combo..
-        /// </summary>
-        internal static string SAM_AoE_CDs_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_CDs_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Ikishoten when at or below 50 Kenki.
-        ///Will dump Kenki at 10 seconds left to allow Ikishoten to be used..
-        /// </summary>
-        internal static string SAM_AoE_CDs_Ikishoten_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_CDs_Ikishoten_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ikishoten Option.
-        /// </summary>
-        internal static string SAM_AoE_CDs_Ikishoten_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_CDs_Ikishoten_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cooldowns on Main Combo.
-        /// </summary>
-        internal static string SAM_AoE_CDs_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_CDs_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold..
-        /// </summary>
-        internal static string SAM_AoE_ComboHeals_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_ComboHeals_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Combo Heals Option.
-        /// </summary>
-        internal static string SAM_AoE_ComboHeals_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_ComboHeals_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Collection of Damage skills on main combo..
-        /// </summary>
-        internal static string SAM_AoE_Damage_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Damage_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Damage skills on Main Combo.
-        /// </summary>
-        internal static string SAM_AoE_Damage_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Damage_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Guren to the rotation..
-        /// </summary>
-        internal static string SAM_AoE_Guren_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Guren_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Guren Option.
-        /// </summary>
-        internal static string SAM_AoE_Guren_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Guren_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Hagakure to the rotation when there are three Sen..
-        /// </summary>
-        internal static string SAM_AoE_Hagakure_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Hagakure_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hagakure Option.
-        /// </summary>
-        internal static string SAM_AoE_Hagakure_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Hagakure_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Kyuten to the rotation..
-        /// </summary>
-        internal static string SAM_AoE_Kyuten_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Kyuten_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kyuten Option.
-        /// </summary>
-        internal static string SAM_AoE_Kyuten_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Kyuten_Name", resourceCulture);
             }
         }
         
@@ -23883,60 +24101,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Meikyo Shisui to the rotation..
-        /// </summary>
-        internal static string SAM_AoE_MeikyoShisui_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_MeikyoShisui_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Meikyo Shisui Option.
-        /// </summary>
-        internal static string SAM_AoE_MeikyoShisui_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_MeikyoShisui_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Ogi Namikiri and Kaeshi: Namikiri when ready and when you&apos;re not moving to the rotation..
-        /// </summary>
-        internal static string SAM_AoE_OgiNamikiri_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_OgiNamikiri_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ogi Namikiri Option.
-        /// </summary>
-        internal static string SAM_AoE_OgiNamikiri_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_OgiNamikiri_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Oka combo to the rotation..
-        /// </summary>
-        internal static string SAM_AoE_Oka_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Oka_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Oka Combo.
-        /// </summary>
-        internal static string SAM_AoE_Oka_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Oka_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Replace Oka with its combo chain..
         /// </summary>
         internal static string SAM_AoE_OkaCombo_Desc {
@@ -23951,24 +24115,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string SAM_AoE_OkaCombo_Name {
             get {
                 return ResourceManager.GetString("SAM_AoE_OkaCombo_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Shoha when you have 3 meditation stacks..
-        /// </summary>
-        internal static string SAM_AoE_Shoha_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Shoha_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shoha Option.
-        /// </summary>
-        internal static string SAM_AoE_Shoha_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Shoha_Name", resourceCulture);
             }
         }
         
@@ -23988,60 +24134,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string SAM_AoE_SimpleMode_Name {
             get {
                 return ResourceManager.GetString("SAM_AoE_SimpleMode_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Leg Sweep when target non-boss is casting..
-        /// </summary>
-        internal static string SAM_AoE_StunInterrupt_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_StunInterrupt_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Leg Sweep Option.
-        /// </summary>
-        internal static string SAM_AoE_StunInterrupt_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_StunInterrupt_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Tenka Goken, Midare: Setsugekka, and Kaeshi: Goken when ready and when you&apos;re not moving to the rotation..
-        /// </summary>
-        internal static string SAM_AoE_TenkaGoken_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_TenkaGoken_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Iaijutsu Option.
-        /// </summary>
-        internal static string SAM_AoE_TenkaGoken_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_TenkaGoken_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Zanshin to the rotation..
-        /// </summary>
-        internal static string SAM_AoE_Zanshin_Desc {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Zanshin_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Zanshin Option.
-        /// </summary>
-        internal static string SAM_AoE_Zanshin_Name {
-            get {
-                return ResourceManager.GetString("SAM_AoE_Zanshin_Name", resourceCulture);
             }
         }
         
@@ -24461,6 +24553,485 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collection of Cooldown features on main combo..
+        /// </summary>
+        internal static string SAM_ST_Adv_CDs_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_CDs_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cooldowns on Main Combo.
+        /// </summary>
+        internal static string SAM_ST_Adv_CDs_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_CDs_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold..
+        /// </summary>
+        internal static string SAM_ST_Adv_ComboHeals_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_ComboHeals_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combo Heals Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_ComboHeals_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_ComboHeals_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collection of Damage skills on main combo..
+        /// </summary>
+        internal static string SAM_ST_Adv_Damage_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Damage_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage skills on Main Combo.
+        /// </summary>
+        internal static string SAM_ST_Adv_Damage_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Damage_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Feint when Raidwide is detected casting..
+        /// </summary>
+        internal static string SAM_ST_Adv_Feint_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Feint_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feint Raidwide Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Feint_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Feint_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Gekko combo to the rotation..
+        /// </summary>
+        internal static string SAM_ST_Adv_Gekko_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Gekko_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gekko Combo.
+        /// </summary>
+        internal static string SAM_ST_Adv_Gekko_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Gekko_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will use Higanbana depending on suboptions..
+        /// </summary>
+        internal static string SAM_ST_Adv_Higanbana_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Higanbana_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Higanbana.
+        /// </summary>
+        internal static string SAM_ST_Adv_Higanbana_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Higanbana_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Midare: Setsugekka, Higanbana, and Kaeshi: Setsugekka to the rotation..
+        /// </summary>
+        internal static string SAM_ST_Adv_Iaijutsu_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Iaijutsu_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Midare: Setsugekka and Higanbana when you&apos;re not moving..
+        /// </summary>
+        internal static string SAM_ST_Adv_Iaijutsu_Movement_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Iaijutsu_Movement_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iajutsu movement Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Iaijutsu_Movement_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Iaijutsu_Movement_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iaijutsu Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Iaijutsu_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Iaijutsu_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Ikishoten when at or below 50 Kenki.
+        ///PRE 94: Will dump Kenki at 10 seconds left to allow Ikishoten to be used.
+        ///POST 94: Will use during burst window..
+        /// </summary>
+        internal static string SAM_ST_Adv_Ikishoten_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Ikishoten_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ikishoten Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Ikishoten_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Ikishoten_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Kasha combo to the rotation..
+        /// </summary>
+        internal static string SAM_ST_Adv_Kasha_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Kasha_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kasha Combo.
+        /// </summary>
+        internal static string SAM_ST_Adv_Kasha_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Kasha_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Meditate when not moving, not having a target and being in combat..
+        /// </summary>
+        internal static string SAM_ST_Adv_Meditate_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Meditate_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meditate Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Meditate_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Meditate_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Meikyo Shisui to the rotation..
+        /// </summary>
+        internal static string SAM_ST_Adv_Meikyo_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Meikyo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meikyo Shisui Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Meikyo_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Meikyo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will use Midare Setsugekka and Tendo Setsugekka..
+        /// </summary>
+        internal static string SAM_ST_Adv_Midare_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Midare_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Midare Setsugekka.
+        /// </summary>
+        internal static string SAM_ST_Adv_Midare_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Midare_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Ogi Namikiri and Kaeshi: Namikiri to the rotation..
+        /// </summary>
+        internal static string SAM_ST_Adv_OgiNamikiri_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_OgiNamikiri_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ogi Namikiri Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_OgiNamikiri_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_OgiNamikiri_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds the Balance opener at level 70/80/90/100.
+        ///Prepull:
+        ///- Meikyo at -13
+        ///- True North at -5 (skipped if target has no positionals)
+        ///- Gekko on pull
+        ///Without a countdown, prepull steps have no delay.
+        ///(During a countdown only: blocks action until each prepull timing).
+        /// </summary>
+        internal static string SAM_ST_Adv_Opener_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Opener_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Balance Opener (Level 70/80/90/100).
+        /// </summary>
+        internal static string SAM_ST_Adv_Opener_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Opener_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Enpi to the rotation when you are out of range.
+        ///Will use Ogi or Iaijutsu when possible and enabled..
+        /// </summary>
+        internal static string SAM_ST_Adv_RangedUptime_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_RangedUptime_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ranged Uptime Feature.
+        /// </summary>
+        internal static string SAM_ST_Adv_RangedUptime_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_RangedUptime_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Senei to the rotation..
+        /// </summary>
+        internal static string SAM_ST_Adv_Senei_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Senei_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Senei Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Senei_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Senei_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Shinten to the rotation.
+        ///Will pool kenki for burst..
+        /// </summary>
+        internal static string SAM_ST_Adv_Shinten_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Shinten_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shinten Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Shinten_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Shinten_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Shoha when you have three meditation stacks..
+        /// </summary>
+        internal static string SAM_ST_Adv_Shoha_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Shoha_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shoha Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Shoha_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Shoha_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Leg Sweep when target non-boss is casting..
+        /// </summary>
+        internal static string SAM_ST_Adv_StunInterrupt_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_StunInterrupt_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leg Sweep Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_StunInterrupt_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_StunInterrupt_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will Use Tenka Goken when lvlsynched below lvl 50..
+        /// </summary>
+        internal static string SAM_ST_Adv_TenkaGoken_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_TenkaGoken_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Tenka Goken.
+        /// </summary>
+        internal static string SAM_ST_Adv_TenkaGoken_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_TenkaGoken_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Third Eye when Raidwide is detected casting. 
+        ///When Solo, uses on cd..
+        /// </summary>
+        internal static string SAM_ST_Adv_ThirdEye_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_ThirdEye_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Third Eye Raidwide Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_ThirdEye_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_ThirdEye_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds True North when you are not in the correct position for the enhanced potency bonus..
+        /// </summary>
+        internal static string SAM_ST_Adv_TrueNorth_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_TrueNorth_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to True North Feature.
+        /// </summary>
+        internal static string SAM_ST_Adv_TrueNorth_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_TrueNorth_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will use Tsubame-gaeshi and Tendo Kaeshi Setsugekka..
+        /// </summary>
+        internal static string SAM_ST_Adv_Tsubame_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Tsubame_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Tsubame-gaeshi.
+        /// </summary>
+        internal static string SAM_ST_Adv_Tsubame_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Tsubame_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Yukikaze combo to the rotation..
+        /// </summary>
+        internal static string SAM_ST_Adv_Yukikaze_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Yukikaze_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yukikaze Combo.
+        /// </summary>
+        internal static string SAM_ST_Adv_Yukikaze_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Yukikaze_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Zanshin when ready to the rotation..
+        /// </summary>
+        internal static string SAM_ST_Adv_Zanshin_Desc {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Zanshin_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zanshin Option.
+        /// </summary>
+        internal static string SAM_ST_Adv_Zanshin_Name {
+            get {
+                return ResourceManager.GetString("SAM_ST_Adv_Zanshin_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaces Hakaze with a full one-button single target rotation.
         ///These features are ideal if you want to customize the rotation..
         /// </summary>
@@ -24476,314 +25047,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string SAM_ST_AdvancedMode_Name {
             get {
                 return ResourceManager.GetString("SAM_ST_AdvancedMode_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Collection of Cooldown features on main combo..
-        /// </summary>
-        internal static string SAM_ST_CDs_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Midare: Setsugekka, Higanbana, and Kaeshi: Setsugekka to the rotation..
-        /// </summary>
-        internal static string SAM_ST_CDs_Iaijutsu_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Iaijutsu_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Midare: Setsugekka and Higanbana when you&apos;re not moving..
-        /// </summary>
-        internal static string SAM_ST_CDs_Iaijutsu_Movement_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Iaijutsu_Movement_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Iajutsu movement Option.
-        /// </summary>
-        internal static string SAM_ST_CDs_Iaijutsu_Movement_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Iaijutsu_Movement_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Iaijutsu Option.
-        /// </summary>
-        internal static string SAM_ST_CDs_Iaijutsu_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Iaijutsu_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Ikishoten when at or below 50 Kenki.
-        ///PRE 94: Will dump Kenki at 10 seconds left to allow Ikishoten to be used.
-        ///POST 94: Will use during burst window..
-        /// </summary>
-        internal static string SAM_ST_CDs_Ikishoten_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Ikishoten_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ikishoten Option.
-        /// </summary>
-        internal static string SAM_ST_CDs_Ikishoten_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Ikishoten_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Meikyo Shisui to the rotation..
-        /// </summary>
-        internal static string SAM_ST_CDs_MeikyoShisui_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_MeikyoShisui_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Meikyo Shisui Option.
-        /// </summary>
-        internal static string SAM_ST_CDs_MeikyoShisui_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_MeikyoShisui_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cooldowns on Main Combo.
-        /// </summary>
-        internal static string SAM_ST_CDs_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Ogi Namikiri and Kaeshi: Namikiri to the rotation..
-        /// </summary>
-        internal static string SAM_ST_CDs_OgiNamikiri_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_OgiNamikiri_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ogi Namikiri Option.
-        /// </summary>
-        internal static string SAM_ST_CDs_OgiNamikiri_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_OgiNamikiri_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Senei to the rotation..
-        /// </summary>
-        internal static string SAM_ST_CDs_Senei_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Senei_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Senei Option.
-        /// </summary>
-        internal static string SAM_ST_CDs_Senei_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Senei_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Shoha when you have three meditation stacks..
-        /// </summary>
-        internal static string SAM_ST_CDs_Shoha_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Shoha_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shoha Option.
-        /// </summary>
-        internal static string SAM_ST_CDs_Shoha_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Shoha_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Will use Higanbana depending on suboptions..
-        /// </summary>
-        internal static string SAM_ST_CDs_UseHiganbana_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_UseHiganbana_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Higanbana.
-        /// </summary>
-        internal static string SAM_ST_CDs_UseHiganbana_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_UseHiganbana_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Will use Midare Setsugekka and Tendo Setsugekka..
-        /// </summary>
-        internal static string SAM_ST_CDs_UseMidare_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_UseMidare_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Midare Setsugekka.
-        /// </summary>
-        internal static string SAM_ST_CDs_UseMidare_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_UseMidare_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Will Use Tenka Goken when lvlsynched below lvl 50..
-        /// </summary>
-        internal static string SAM_ST_CDs_UseTenkaGoken_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_UseTenkaGoken_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Tenka Goken.
-        /// </summary>
-        internal static string SAM_ST_CDs_UseTenkaGoken_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_UseTenkaGoken_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Will use Tsubame-gaeshi and Tendo Kaeshi Setsugekka..
-        /// </summary>
-        internal static string SAM_ST_CDs_UseTsubame_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_UseTsubame_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Tsubame-gaeshi.
-        /// </summary>
-        internal static string SAM_ST_CDs_UseTsubame_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_UseTsubame_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Zanshin when ready to the rotation..
-        /// </summary>
-        internal static string SAM_ST_CDs_Zanshin_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Zanshin_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Zanshin Option.
-        /// </summary>
-        internal static string SAM_ST_CDs_Zanshin_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_CDs_Zanshin_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold..
-        /// </summary>
-        internal static string SAM_ST_ComboHeals_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_ComboHeals_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Combo Heals Option.
-        /// </summary>
-        internal static string SAM_ST_ComboHeals_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_ComboHeals_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Collection of Damage skills on main combo..
-        /// </summary>
-        internal static string SAM_ST_Damage_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_Damage_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Damage skills on Main Combo.
-        /// </summary>
-        internal static string SAM_ST_Damage_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_Damage_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Feint when Raidwide is detected casting..
-        /// </summary>
-        internal static string SAM_ST_Feint_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_Feint_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feint Raidwide Option.
-        /// </summary>
-        internal static string SAM_ST_Feint_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_Feint_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Gekko combo to the rotation..
-        /// </summary>
-        internal static string SAM_ST_Gekko_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_Gekko_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gekko Combo.
-        /// </summary>
-        internal static string SAM_ST_Gekko_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_Gekko_Name", resourceCulture);
             }
         }
         
@@ -24806,24 +25069,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Kasha combo to the rotation..
-        /// </summary>
-        internal static string SAM_ST_Kasha_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_Kasha_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kasha Combo.
-        /// </summary>
-        internal static string SAM_ST_Kasha_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_Kasha_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Replace Kasha with its combo chain..
         /// </summary>
         internal static string SAM_ST_KashaCombo_Desc {
@@ -24838,86 +25083,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string SAM_ST_KashaCombo_Name {
             get {
                 return ResourceManager.GetString("SAM_ST_KashaCombo_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Meditate when not moving, not having a target and being in combat..
-        /// </summary>
-        internal static string SAM_ST_Meditate_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_Meditate_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Meditate Option.
-        /// </summary>
-        internal static string SAM_ST_Meditate_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_Meditate_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds the Balance opener at level 70/80/90/100.
-        ///Prepull:
-        ///- Meikyo at -13
-        ///- True North at -5 (skipped if target has no positionals)
-        ///- Gekko on pull
-        ///Without a countdown, prepull steps have no delay.
-        ///(During a countdown only: blocks action until each prepull timing).
-        /// </summary>
-        internal static string SAM_ST_Opener_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_Opener_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Balance Opener (Level 70/80/90/100).
-        /// </summary>
-        internal static string SAM_ST_Opener_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_Opener_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Enpi to the rotation when you are out of range.
-        ///Will use Ogi or Iaijutsu when possible and enabled..
-        /// </summary>
-        internal static string SAM_ST_RangedUptime_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_RangedUptime_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ranged Uptime Feature.
-        /// </summary>
-        internal static string SAM_ST_RangedUptime_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_RangedUptime_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Shinten to the rotation.
-        ///Will pool kenki for burst..
-        /// </summary>
-        internal static string SAM_ST_Shinten_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_Shinten_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shinten Option.
-        /// </summary>
-        internal static string SAM_ST_Shinten_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_Shinten_Name", resourceCulture);
             }
         }
         
@@ -24937,79 +25102,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string SAM_ST_SimpleMode_Name {
             get {
                 return ResourceManager.GetString("SAM_ST_SimpleMode_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Leg Sweep when target non-boss is casting..
-        /// </summary>
-        internal static string SAM_ST_StunInterrupt_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_StunInterrupt_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Leg Sweep Option.
-        /// </summary>
-        internal static string SAM_ST_StunInterrupt_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_StunInterrupt_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Third Eye when Raidwide is detected casting. 
-        ///When Solo, uses on cd..
-        /// </summary>
-        internal static string SAM_ST_ThirdEye_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_ThirdEye_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Third Eye Raidwide Option.
-        /// </summary>
-        internal static string SAM_ST_ThirdEye_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_ThirdEye_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds True North when you are not in the correct position for the enhanced potency bonus..
-        /// </summary>
-        internal static string SAM_ST_TrueNorth_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_TrueNorth_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to True North Feature.
-        /// </summary>
-        internal static string SAM_ST_TrueNorth_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_TrueNorth_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Yukikaze combo to the rotation..
-        /// </summary>
-        internal static string SAM_ST_Yukikaze_Desc {
-            get {
-                return ResourceManager.GetString("SAM_ST_Yukikaze_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Yukikaze Combo.
-        /// </summary>
-        internal static string SAM_ST_Yukikaze_Name {
-            get {
-                return ResourceManager.GetString("SAM_ST_Yukikaze_Name", resourceCulture);
             }
         }
         
@@ -26750,396 +26842,396 @@ namespace WrathCombo.Resources.Localization.Presets {
         /// <summary>
         ///   Looks up a localized string similar to Weaves Druochole when Addersgall gauge is greater than or equal to the specified value..
         /// </summary>
-        internal static string SGE_AoE_DPS_AddersgallProtect_Desc {
+        internal static string SGE_AoE_Adv_DPS_AddersgallProtect_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_AddersgallProtect_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_AddersgallProtect_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Addersgall Overflow Protection.
         /// </summary>
-        internal static string SGE_AoE_DPS_AddersgallProtect_Name {
+        internal static string SGE_AoE_Adv_DPS_AddersgallProtect_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_AddersgallProtect_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds various options to Dyskrasia I &amp; II. Requires a target..
-        /// </summary>
-        internal static string SGE_AoE_DPS_Desc {
-            get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_AddersgallProtect_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Uses Eukrasia for Eukrasia Dyskrasia..
         /// </summary>
-        internal static string SGE_AoE_DPS_EDyskrasia_Desc {
+        internal static string SGE_AoE_Adv_DPS_EDyskrasia_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_EDyskrasia_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_EDyskrasia_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Eukrasia Option.
         /// </summary>
-        internal static string SGE_AoE_DPS_EDyskrasia_Name {
+        internal static string SGE_AoE_Adv_DPS_EDyskrasia_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_EDyskrasia_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_EDyskrasia_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Weaves Lucid Dreaming when your MP falls below the specified value..
         /// </summary>
-        internal static string SGE_AoE_DPS_Lucid_Desc {
+        internal static string SGE_AoE_Adv_DPS_Lucid_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Lucid_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Lucid_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Lucid Dreaming Option.
         /// </summary>
-        internal static string SGE_AoE_DPS_Lucid_Name {
+        internal static string SGE_AoE_Adv_DPS_Lucid_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Lucid_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Lucid_Name", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advanced DPS Mode - AoE.
+        ///   Looks up a localized string similar to Uses Phlegma if available. When Psyche is also enabled, pairs Phlegma → Psyche → Phlegma..
         /// </summary>
-        internal static string SGE_AoE_DPS_Name {
+        internal static string SGE_AoE_Adv_DPS_Phlegma_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Uses Phlegma if available..
-        /// </summary>
-        internal static string SGE_AoE_DPS_Phlegma_Desc {
-            get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Phlegma_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Phlegma_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Phlegma Option.
         /// </summary>
-        internal static string SGE_AoE_DPS_Phlegma_Name {
+        internal static string SGE_AoE_Adv_DPS_Phlegma_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Phlegma_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Phlegma_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Pneuma if available..
         /// </summary>
-        internal static string SGE_AoE_DPS_Pneuma_Desc {
+        internal static string SGE_AoE_Adv_DPS_Pneuma_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Pneuma_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Pneuma_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pneuma Option.
         /// </summary>
-        internal static string SGE_AoE_DPS_Pneuma_Name {
+        internal static string SGE_AoE_Adv_DPS_Pneuma_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Pneuma_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Pneuma_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Weaves Psyche if available..
         /// </summary>
-        internal static string SGE_AoE_DPS_Psyche_Desc {
+        internal static string SGE_AoE_Adv_DPS_Psyche_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Psyche_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Psyche_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Psyche Option.
         /// </summary>
-        internal static string SGE_AoE_DPS_Psyche_Name {
+        internal static string SGE_AoE_Adv_DPS_Psyche_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Psyche_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Psyche_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Weaves Rhizomata when Addersgall gauge falls below the specified value..
         /// </summary>
-        internal static string SGE_AoE_DPS_Rhizo_Desc {
+        internal static string SGE_AoE_Adv_DPS_Rhizo_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Rhizo_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Rhizo_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rhizomata Option.
         /// </summary>
-        internal static string SGE_AoE_DPS_Rhizo_Name {
+        internal static string SGE_AoE_Adv_DPS_Rhizo_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Rhizo_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Rhizo_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Weaves Soteria if you have the Kardia buff..
         /// </summary>
-        internal static string SGE_AoE_DPS_Soteria_Desc {
+        internal static string SGE_AoE_Adv_DPS_Soteria_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Soteria_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Soteria_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Soteria Option.
         /// </summary>
-        internal static string SGE_AoE_DPS_Soteria_Name {
+        internal static string SGE_AoE_Adv_DPS_Soteria_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Soteria_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Soteria_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Use Toxikon if available..
         /// </summary>
-        internal static string SGE_AoE_DPS_Toxikon_Desc {
+        internal static string SGE_AoE_Adv_DPS_Toxikon_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Toxikon_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Toxikon_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Toxikon Option.
         /// </summary>
-        internal static string SGE_AoE_DPS_Toxikon_Name {
+        internal static string SGE_AoE_Adv_DPS_Toxikon_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_DPS_Toxikon_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Change Prognosis into various options..
-        /// </summary>
-        internal static string SGE_AoE_Heal_Desc {
-            get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_DPS_Toxikon_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Eukrasian Prognosis..
         /// </summary>
-        internal static string SGE_AoE_Heal_EPrognosis_Desc {
+        internal static string SGE_AoE_Adv_Heal_EPrognosis_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_EPrognosis_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_EPrognosis_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Eukrasian Prognosis Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_EPrognosis_Name {
+        internal static string SGE_AoE_Adv_Heal_EPrognosis_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_EPrognosis_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_EPrognosis_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Holos..
         /// </summary>
-        internal static string SGE_AoE_Heal_Holos_Desc {
+        internal static string SGE_AoE_Adv_Heal_Holos_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Holos_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Holos_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Holos Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Holos_Name {
+        internal static string SGE_AoE_Adv_Heal_Holos_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Holos_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Holos_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Ixochole..
         /// </summary>
-        internal static string SGE_AoE_Heal_Ixochole_Desc {
+        internal static string SGE_AoE_Adv_Heal_Ixochole_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Ixochole_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Ixochole_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Ixochole Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Ixochole_Name {
+        internal static string SGE_AoE_Adv_Heal_Ixochole_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Ixochole_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Ixochole_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Kerachole..
         /// </summary>
-        internal static string SGE_AoE_Heal_Kerachole_Desc {
+        internal static string SGE_AoE_Adv_Heal_Kerachole_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Kerachole_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Kerachole_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Kerachole Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Kerachole_Name {
+        internal static string SGE_AoE_Adv_Heal_Kerachole_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Kerachole_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Kerachole_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Lucid Dreaming when MP drops below slider value:.
         /// </summary>
-        internal static string SGE_AoE_Heal_Lucid_Desc {
+        internal static string SGE_AoE_Adv_Heal_Lucid_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Lucid_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Lucid_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Lucid Dreaming Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Lucid_Name {
+        internal static string SGE_AoE_Adv_Heal_Lucid_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Lucid_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Advanced Healing Mode - AoE.
-        /// </summary>
-        internal static string SGE_AoE_Heal_Name {
-            get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Lucid_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Panhaima..
         /// </summary>
-        internal static string SGE_AoE_Heal_Panhaima_Desc {
+        internal static string SGE_AoE_Adv_Heal_Panhaima_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Panhaima_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Panhaima_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Panhaima Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Panhaima_Name {
+        internal static string SGE_AoE_Adv_Heal_Panhaima_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Panhaima_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Panhaima_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Triggers Pepsis if a shield is present..
         /// </summary>
-        internal static string SGE_AoE_Heal_Pepsis_Desc {
+        internal static string SGE_AoE_Adv_Heal_Pepsis_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Pepsis_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Pepsis_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pepsis Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Pepsis_Name {
+        internal static string SGE_AoE_Adv_Heal_Pepsis_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Pepsis_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Pepsis_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Philosophia..
         /// </summary>
-        internal static string SGE_AoE_Heal_Philosophia_Desc {
+        internal static string SGE_AoE_Adv_Heal_Philosophia_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Philosophia_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Philosophia_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Philosophia Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Philosophia_Name {
+        internal static string SGE_AoE_Adv_Heal_Philosophia_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Philosophia_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Philosophia_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Physis..
         /// </summary>
-        internal static string SGE_AoE_Heal_Physis_Desc {
+        internal static string SGE_AoE_Adv_Heal_Physis_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Physis_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Physis_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Physis Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Physis_Name {
+        internal static string SGE_AoE_Adv_Heal_Physis_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Physis_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Physis_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Rhizomata when Addersgall is 0..
         /// </summary>
-        internal static string SGE_AoE_Heal_Rhizomata_Desc {
+        internal static string SGE_AoE_Adv_Heal_Rhizomata_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Rhizomata_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Rhizomata_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rhizomata Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Rhizomata_Name {
+        internal static string SGE_AoE_Adv_Heal_Rhizomata_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Rhizomata_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Rhizomata_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Zoe..
         /// </summary>
-        internal static string SGE_AoE_Heal_Zoe_Desc {
+        internal static string SGE_AoE_Adv_Heal_Zoe_Desc {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Zoe_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Zoe_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Zoe Option.
         /// </summary>
-        internal static string SGE_AoE_Heal_Zoe_Name {
+        internal static string SGE_AoE_Adv_Heal_Zoe_Name {
             get {
-                return ResourceManager.GetString("SGE_AoE_Heal_Zoe_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_AoE_Adv_Heal_Zoe_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds various options to Dyskrasia I &amp; II. Requires a target..
+        /// </summary>
+        internal static string SGE_AoE_Advanced_DPS_Desc {
+            get {
+                return ResourceManager.GetString("SGE_AoE_Advanced_DPS_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advanced DPS Mode - AoE.
+        /// </summary>
+        internal static string SGE_AoE_Advanced_DPS_Name {
+            get {
+                return ResourceManager.GetString("SGE_AoE_Advanced_DPS_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Prognosis into various options..
+        /// </summary>
+        internal static string SGE_AoE_Advanced_Heal_Desc {
+            get {
+                return ResourceManager.GetString("SGE_AoE_Advanced_Heal_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advanced Healing Mode - AoE.
+        /// </summary>
+        internal static string SGE_AoE_Advanced_Heal_Name {
+            get {
+                return ResourceManager.GetString("SGE_AoE_Advanced_Heal_Name", resourceCulture);
             }
         }
         
@@ -27159,6 +27251,25 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string SGE_AoE_Simple_DPS_Name {
             get {
                 return ResourceManager.GetString("SGE_AoE_Simple_DPS_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Prognosis with a full one-button single target healing utility.
+        ///This is the ideal option for newcomers to the job. Particularly with autorotation..
+        /// </summary>
+        internal static string SGE_AoE_Simple_Heal_Desc {
+            get {
+                return ResourceManager.GetString("SGE_AoE_Simple_Heal_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple Healing Mode - AoE.
+        /// </summary>
+        internal static string SGE_AoE_Simple_Heal_Name {
+            get {
+                return ResourceManager.GetString("SGE_AoE_Simple_Heal_Name", resourceCulture);
             }
         }
         
@@ -27618,544 +27729,512 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replaces Prognosis with a full one-button single target healing utility.
-        ///This is the ideal option for newcomers to the job. Particularly with autorotation..
-        /// </summary>
-        internal static string SGE_Simple_AoE_Heal_Desc {
-            get {
-                return ResourceManager.GetString("SGE_Simple_AoE_Heal_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Simple Healing Mode - AoE.
-        /// </summary>
-        internal static string SGE_Simple_AoE_Heal_Name {
-            get {
-                return ResourceManager.GetString("SGE_Simple_AoE_Heal_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Replaces Diagnosis with a full one-button single target healing utility.
-        ///This is the ideal option for newcomers to the job. Particularly with autorotation..
-        /// </summary>
-        internal static string SGE_Simple_ST_Heal_Desc {
-            get {
-                return ResourceManager.GetString("SGE_Simple_ST_Heal_Desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Simple Healing Mode - Single Target.
-        /// </summary>
-        internal static string SGE_Simple_ST_Heal_Name {
-            get {
-                return ResourceManager.GetString("SGE_Simple_ST_Heal_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Weaves Druochole when Addersgall gauge is greater than or equal to the specified value..
         /// </summary>
-        internal static string SGE_ST_DPS_AddersgallProtect_Desc {
+        internal static string SGE_ST_Adv_DPS_AddersgallProtect_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_AddersgallProtect_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_AddersgallProtect_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Addersgall Overflow Protection.
         /// </summary>
-        internal static string SGE_ST_DPS_AddersgallProtect_Name {
+        internal static string SGE_ST_Adv_DPS_AddersgallProtect_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_AddersgallProtect_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Adds various options to Dosis I/II/III..
-        /// </summary>
-        internal static string SGE_ST_DPS_Desc {
-            get {
-                return ResourceManager.GetString("SGE_ST_DPS_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_AddersgallProtect_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Automatic DoT Uptime..
         /// </summary>
-        internal static string SGE_ST_DPS_EDosis_Desc {
+        internal static string SGE_ST_Adv_DPS_EDosis_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_EDosis_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_EDosis_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Eukrasian Dosis Option.
         /// </summary>
-        internal static string SGE_ST_DPS_EDosis_Name {
+        internal static string SGE_ST_Adv_DPS_EDosis_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_EDosis_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_EDosis_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Kardia when not under the effect..
         /// </summary>
-        internal static string SGE_ST_DPS_Kardia_Desc {
+        internal static string SGE_ST_Adv_DPS_Kardia_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Kardia_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Kardia_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Kardia Reminder Option.
         /// </summary>
-        internal static string SGE_ST_DPS_Kardia_Name {
+        internal static string SGE_ST_Adv_DPS_Kardia_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Kardia_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Kardia_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Weaves Lucid Dreaming when your MP drops below the specified value..
         /// </summary>
-        internal static string SGE_ST_DPS_Lucid_Desc {
+        internal static string SGE_ST_Adv_DPS_Lucid_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Lucid_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Lucid_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Lucid Dreaming Option.
         /// </summary>
-        internal static string SGE_ST_DPS_Lucid_Name {
+        internal static string SGE_ST_Adv_DPS_Lucid_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Lucid_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Lucid_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Use selected instant cast actions while moving..
         /// </summary>
-        internal static string SGE_ST_DPS_Movement_Desc {
+        internal static string SGE_ST_Adv_DPS_Movement_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Movement_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Movement_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Movement Options.
         /// </summary>
-        internal static string SGE_ST_DPS_Movement_Name {
+        internal static string SGE_ST_Adv_DPS_Movement_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Movement_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Movement_Name", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advanced DPS Mode - Single Target.
+        ///   Looks up a localized string similar to Adds the Balance opener at level 92.
+        ///Prepull:
+        ///- Eukrasia at -5 (skipped if already up)
+        ///- Potion at -2
+        ///- Toxikon or Pneuma at -1 (selected opener)
+        ///Without a countdown, prepull steps have no delay.
+        ///(During a countdown only: holds as Savage Blade until each prepull timing).
         /// </summary>
-        internal static string SGE_ST_DPS_Name {
+        internal static string SGE_ST_Adv_DPS_Opener_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use the Balance opener from level 92 onwards..
-        /// </summary>
-        internal static string SGE_ST_DPS_Opener_Desc {
-            get {
-                return ResourceManager.GetString("SGE_ST_DPS_Opener_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Opener_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Balance Opener (Level 92).
         /// </summary>
-        internal static string SGE_ST_DPS_Opener_Name {
+        internal static string SGE_ST_Adv_DPS_Opener_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Opener_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Opener_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Use Phlegma if available and within range..
         /// </summary>
-        internal static string SGE_ST_DPS_Phlegma_Desc {
+        internal static string SGE_ST_Adv_DPS_Phlegma_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Phlegma_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Phlegma_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Phlegma Option.
         /// </summary>
-        internal static string SGE_ST_DPS_Phlegma_Name {
+        internal static string SGE_ST_Adv_DPS_Phlegma_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Phlegma_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Phlegma_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Weaves Psyche when available..
         /// </summary>
-        internal static string SGE_ST_DPS_Psyche_Desc {
+        internal static string SGE_ST_Adv_DPS_Psyche_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Psyche_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Psyche_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Psyche Option.
         /// </summary>
-        internal static string SGE_ST_DPS_Psyche_Name {
+        internal static string SGE_ST_Adv_DPS_Psyche_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Psyche_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Psyche_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Weaves Rhizomata when Addersgall gauge falls below the specified value..
         /// </summary>
-        internal static string SGE_ST_DPS_Rhizo_Desc {
+        internal static string SGE_ST_Adv_DPS_Rhizo_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Rhizo_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Rhizo_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rhizomata Option.
         /// </summary>
-        internal static string SGE_ST_DPS_Rhizo_Name {
+        internal static string SGE_ST_Adv_DPS_Rhizo_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Rhizo_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Rhizo_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Weaves Soteria if you have the Kardia buff..
         /// </summary>
-        internal static string SGE_ST_DPS_Soteria_Desc {
+        internal static string SGE_ST_Adv_DPS_Soteria_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Soteria_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Soteria_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Soteria Option.
         /// </summary>
-        internal static string SGE_ST_DPS_Soteria_Name {
+        internal static string SGE_ST_Adv_DPS_Soteria_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_DPS_Soteria_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Change Diagnosis into various options..
-        /// </summary>
-        internal static string SGE_ST_Heal_Desc {
-            get {
-                return ResourceManager.GetString("SGE_ST_Heal_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_DPS_Soteria_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Applies Druochole..
         /// </summary>
-        internal static string SGE_ST_Heal_Druochole_Desc {
+        internal static string SGE_ST_Adv_Heal_Druochole_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Druochole_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Druochole_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Druochole Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Druochole_Name {
+        internal static string SGE_ST_Adv_Heal_Druochole_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Druochole_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Druochole_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Diagnosis becomes Eukrasian Diagnosis if the shield is not applied to the target..
         /// </summary>
-        internal static string SGE_ST_Heal_EDiagnosis_Desc {
+        internal static string SGE_ST_Adv_Heal_EDiagnosis_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_EDiagnosis_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_EDiagnosis_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Eukrasian Diagnosis Option.
         /// </summary>
-        internal static string SGE_ST_Heal_EDiagnosis_Name {
+        internal static string SGE_ST_Adv_Heal_EDiagnosis_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_EDiagnosis_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_EDiagnosis_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Applies Esuna if there is a cleansable debuff..
         /// </summary>
-        internal static string SGE_ST_Heal_Esuna_Desc {
+        internal static string SGE_ST_Adv_Heal_Esuna_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Esuna_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Esuna_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Esuna Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Esuna_Name {
+        internal static string SGE_ST_Adv_Heal_Esuna_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Esuna_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Esuna_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Applies Haima..
         /// </summary>
-        internal static string SGE_ST_Heal_Haima_Desc {
+        internal static string SGE_ST_Adv_Heal_Haima_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Haima_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Haima_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Haima Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Haima_Name {
+        internal static string SGE_ST_Adv_Heal_Haima_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Haima_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Haima_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Holos..
         /// </summary>
-        internal static string SGE_ST_Heal_Holos_Desc {
+        internal static string SGE_ST_Adv_Heal_Holos_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Holos_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Holos_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Holos Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Holos_Name {
+        internal static string SGE_ST_Adv_Heal_Holos_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Holos_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Holos_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Applies Kardia if it&apos;s not applied to anyone..
         /// </summary>
-        internal static string SGE_ST_Heal_Kardia_Desc {
+        internal static string SGE_ST_Adv_Heal_Kardia_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Kardia_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Kardia_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Apply Kardia Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Kardia_Name {
+        internal static string SGE_ST_Adv_Heal_Kardia_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Kardia_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Kardia_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Kerachole..
         /// </summary>
-        internal static string SGE_ST_Heal_Kerachole_Desc {
+        internal static string SGE_ST_Adv_Heal_Kerachole_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Kerachole_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Kerachole_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Kerachole Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Kerachole_Name {
+        internal static string SGE_ST_Adv_Heal_Kerachole_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Kerachole_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Kerachole_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Applies Krasis..
         /// </summary>
-        internal static string SGE_ST_Heal_Krasis_Desc {
+        internal static string SGE_ST_Adv_Heal_Krasis_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Krasis_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Krasis_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Krasis Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Krasis_Name {
+        internal static string SGE_ST_Adv_Heal_Krasis_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Krasis_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Krasis_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Lucid Dreaming when MP drops below slider value:.
         /// </summary>
-        internal static string SGE_ST_Heal_Lucid_Desc {
+        internal static string SGE_ST_Adv_Heal_Lucid_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Lucid_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Lucid_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Lucid Dreaming Weave Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Lucid_Name {
+        internal static string SGE_ST_Adv_Heal_Lucid_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Lucid_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Advanced Healing Mode - Single Target.
-        /// </summary>
-        internal static string SGE_ST_Heal_Name {
-            get {
-                return ResourceManager.GetString("SGE_ST_Heal_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Lucid_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Panhaima..
         /// </summary>
-        internal static string SGE_ST_Heal_Panhaima_Desc {
+        internal static string SGE_ST_Adv_Heal_Panhaima_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Panhaima_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Panhaima_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Panhaima Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Panhaima_Name {
+        internal static string SGE_ST_Adv_Heal_Panhaima_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Panhaima_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Panhaima_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Triggers Pepsis if a shield is present..
         /// </summary>
-        internal static string SGE_ST_Heal_Pepsis_Desc {
+        internal static string SGE_ST_Adv_Heal_Pepsis_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Pepsis_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Pepsis_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pepsis Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Pepsis_Name {
+        internal static string SGE_ST_Adv_Heal_Pepsis_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Pepsis_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Pepsis_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Physis..
         /// </summary>
-        internal static string SGE_ST_Heal_Physis_Desc {
+        internal static string SGE_ST_Adv_Heal_Physis_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Physis_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Physis_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Physis Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Physis_Name {
+        internal static string SGE_ST_Adv_Heal_Physis_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Physis_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Physis_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Rhizomata when Addersgall is 0..
         /// </summary>
-        internal static string SGE_ST_Heal_Rhizomata_Desc {
+        internal static string SGE_ST_Adv_Heal_Rhizomata_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Rhizomata_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Rhizomata_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rhizomata Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Rhizomata_Name {
+        internal static string SGE_ST_Adv_Heal_Rhizomata_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Rhizomata_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Rhizomata_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Applies Soteria..
         /// </summary>
-        internal static string SGE_ST_Heal_Soteria_Desc {
+        internal static string SGE_ST_Adv_Heal_Soteria_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Soteria_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Soteria_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Soteria Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Soteria_Name {
+        internal static string SGE_ST_Adv_Heal_Soteria_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Soteria_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Soteria_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Adds Taurochole..
         /// </summary>
-        internal static string SGE_ST_Heal_Taurochole_Desc {
+        internal static string SGE_ST_Adv_Heal_Taurochole_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Taurochole_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Taurochole_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Taurochole Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Taurochole_Name {
+        internal static string SGE_ST_Adv_Heal_Taurochole_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Taurochole_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Taurochole_Name", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Applies Zoe..
         /// </summary>
-        internal static string SGE_ST_Heal_Zoe_Desc {
+        internal static string SGE_ST_Adv_Heal_Zoe_Desc {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Zoe_Desc", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Zoe_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Zoe Option.
         /// </summary>
-        internal static string SGE_ST_Heal_Zoe_Name {
+        internal static string SGE_ST_Adv_Heal_Zoe_Name {
             get {
-                return ResourceManager.GetString("SGE_ST_Heal_Zoe_Name", resourceCulture);
+                return ResourceManager.GetString("SGE_ST_Adv_Heal_Zoe_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds various options to Dosis I/II/III..
+        /// </summary>
+        internal static string SGE_ST_Advanced_DPS_Desc {
+            get {
+                return ResourceManager.GetString("SGE_ST_Advanced_DPS_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advanced DPS Mode - Single Target.
+        /// </summary>
+        internal static string SGE_ST_Advanced_DPS_Name {
+            get {
+                return ResourceManager.GetString("SGE_ST_Advanced_DPS_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Diagnosis into various options..
+        /// </summary>
+        internal static string SGE_ST_Advanced_Heal_Desc {
+            get {
+                return ResourceManager.GetString("SGE_ST_Advanced_Heal_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advanced Healing Mode - Single Target.
+        /// </summary>
+        internal static string SGE_ST_Advanced_Heal_Name {
+            get {
+                return ResourceManager.GetString("SGE_ST_Advanced_Heal_Name", resourceCulture);
             }
         }
         
@@ -28175,6 +28254,25 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string SGE_ST_Simple_DPS_Name {
             get {
                 return ResourceManager.GetString("SGE_ST_Simple_DPS_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Diagnosis with a full one-button single target healing utility.
+        ///This is the ideal option for newcomers to the job. Particularly with autorotation..
+        /// </summary>
+        internal static string SGE_ST_Simple_Heal_Desc {
+            get {
+                return ResourceManager.GetString("SGE_ST_Simple_Heal_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple Healing Mode - Single Target.
+        /// </summary>
+        internal static string SGE_ST_Simple_Heal_Name {
+            get {
+                return ResourceManager.GetString("SGE_ST_Simple_Heal_Name", resourceCulture);
             }
         }
         

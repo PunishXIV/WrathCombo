@@ -203,7 +203,7 @@ public static class GameObjectExtensions
         ///     <see langword="null" /> if the target is not invulnerable/invincible.
         /// </summary>
         public IGameObject? IfNotInvincible() =>
-            obj != null && !TargetIsInvincible(obj) ? obj : null;
+            obj is IBattleChara chara && !chara.IsInvincible ? obj : null;
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -314,7 +314,7 @@ public static class GameObjectExtensions
         /// </summary>
         public bool IsWithinRange(float range = 25) =>
             obj != null && IsInRange(obj, range);
-        
+
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
         ///     boolean check for if the target is outside of range.
@@ -334,7 +334,7 @@ public static class GameObjectExtensions
         ///     boolean check for if the object is not invulnerable/invincible.
         /// </summary>
         public bool IsNotInvincible() =>
-            obj != null && !TargetIsInvincible(obj);
+            obj is IBattleChara chara  && !TargetIsInvincible(chara);
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
@@ -378,7 +378,7 @@ public static class GameObjectExtensions
         #endregion
 
         #region Safe Access to Members
-        
+
         /// <summary>
         ///     Safely gets the GameObjectId of the object, handling cases where the object may have been deleted.
         /// </summary>
@@ -487,7 +487,7 @@ public static class GameObjectExtensions
     /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
     public static IGameObject? GetObject(this ulong? id) =>
         id == null ? null : GetObjectFrom((ulong)id);
-    
+
     /// <summary>
     ///     Converts a GameObject pointer to an IGameObject from the object table.<br />
     ///     Primarily for safely accessing object members, since the address is

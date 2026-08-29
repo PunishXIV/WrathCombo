@@ -26,10 +26,6 @@ internal partial class DRG
                     DrawRadioButton(DRG_SelectedOpener,
                         FormatAndCache(Generics.Action_Opener, PiercingTalon.ActionName()),
                         FormatAndCache(Generics.Use_0_Opener, PiercingTalon.ActionName()), 1, descriptionAsTooltip: true);
-
-                    DrawRadioButton(DRG_SelectedOpener,
-                        DRG_Config.EarlyBuffOpener,
-                        FormatAndCache(DRG_Config.UseEarlyBuffOpener), 2, descriptionAsTooltip: true);
                     break;
 
                 case Preset.DRG_ST_BattleLitany:

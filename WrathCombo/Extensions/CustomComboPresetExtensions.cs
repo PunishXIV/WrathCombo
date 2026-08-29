@@ -1,5 +1,6 @@
 ﻿#region
 
+using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using System.Collections.Generic;
 using System.Text;
@@ -68,6 +69,9 @@ internal static partial class PresetExtensions
 
                     else if (attr.OccultCrescentJob is not null)
                         header += $" {MiscUI.Occult_Crescent}";
+
+                    else if (attr.IsDeepDungeon)
+                        header += $" {MiscUI.Deep_Dungeon}";
 
                     else header += $" {MiscUI.Job_Roles}";
 

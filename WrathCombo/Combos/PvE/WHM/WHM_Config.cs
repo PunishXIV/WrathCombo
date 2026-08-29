@@ -615,7 +615,7 @@ internal partial class WHM
         ///     Priority order for single target healing abilities.
         /// </summary>
         public static UserIntArray WHM_ST_Heals_Priority =
-            new("WHM_ST_Heals_Priority", [1, 7, 6, 5, 9, 8, 2, 3, 4]);
+            new("WHM_ST_Heals_Priority", [1, 4, 3, 2, 5, 9, 7, 6, 8]);
 
         /// <summary>
         ///     Time threshold in seconds before refreshing Regen.
@@ -651,7 +651,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Regen" />
         public static UserInt WHM_STHeals_RegenHPUpper =
-            new("WHM_STHeals_RegenHPUpper", 100);
+            new("WHM_STHeals_RegenHPUpper", 80);
 
         /// <summary>
         ///     Only use Benediction when weaving.
@@ -686,7 +686,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_STHeals_Solace" />
 
         public static UserInt WHM_STHeals_SolaceHP =
-            new("WHM_STHeals_SolaceHP", 70);
+            new("WHM_STHeals_SolaceHP", 55);
 
         /// <summary>
         ///     Number of Thin Air charges to reserve.
@@ -730,7 +730,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Tetragrammaton" />
         public static UserInt WHM_STHeals_TetraHP =
-            new("WHM_STHeals_TetraHP", 70);
+            new("WHM_STHeals_TetraHP", 55);
 
         /// <summary>
         ///     Only use Divine Benison when weaving.
@@ -830,7 +830,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Temperance" />
         public static UserInt WHM_STHeals_TemperanceHP =
-            new("WHM_STHeals_TemperanceHP", 70);
+            new("WHM_STHeals_TemperanceHP", 45);
 
         /// <summary>
         ///     Weaving and boss selection options for Asylum.
@@ -852,7 +852,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Asylum" />
         public static UserInt WHM_STHeals_AsylumHP =
-            new("WHM_STHeals_AsylumHP", 70);
+            new("WHM_STHeals_AsylumHP", 60);
 
         /// <summary>
         ///     Weaving and boss selection options for LiturgyOfTheBell.
@@ -874,7 +874,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_LiturgyOfTheBell" />
         public static UserInt WHM_STHeals_LiturgyOfTheBellHP =
-            new("WHM_STHeals_LiturgyOfTheBellHP", 70);
+            new("WHM_STHeals_LiturgyOfTheBellHP", 45);
 
         /// <summary>
         ///     HP threshold to stop using Esuna.
@@ -896,7 +896,7 @@ internal partial class WHM
         ///     Priority order for AoE healing abilities.
         /// </summary>
         public static UserIntArray WHM_AoE_Heals_Priority =
-            new("WHM_AoE_Heals_Priority", [9, 8, 6, 5, 3, 4, 7, 2, 1]);
+            new("WHM_AoE_Heals_Priority", [9, 8, 4, 2, 1, 5, 7, 3, 6]);
 
         /// <summary>
         ///     Number of Thin Air charges to reserve in AoE healing.
@@ -921,7 +921,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_AoEHeals_Cure3" />
 
         public static UserInt WHM_AoEHeals_Cure3HP =
-            new("WHM_AoEHeals_Cure3HP", 50);
+            new("WHM_AoEHeals_Cure3HP", 55);
 
         /// <summary>
         ///     Minimum Party Members In range of target to use Cure 3.
@@ -958,7 +958,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_AoEHeals_Assize" />
         public static UserInt WHM_AoEHeals_AssizeHP =
-            new("WHM_AoEHeals_AssizeHP", 100);
+            new("WHM_AoEHeals_AssizeHP", 80);
 
         /// <summary>
         ///     Only use Assize when weaving.
@@ -981,7 +981,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_AoEHeals_Plenary" />
 
         public static UserInt WHM_AoEHeals_PlenaryHP =
-            new("WHM_AoEHeals_PlenaryHP", 100);
+            new("WHM_AoEHeals_PlenaryHP", 80);
 
         /// <summary>
         ///     Only use Plenary Indulgence when weaving.
@@ -1038,7 +1038,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_AoEHeals_Medica2" />
 
         public static UserInt WHM_AoEHeals_Medica2HP =
-            new("WHM_AoEHeals_Medica2HP", 100);
+            new("WHM_AoEHeals_Medica2HP", 80);
 
         /// <summary>
         ///     Average party HP% threshold to use Rapture.
@@ -1051,7 +1051,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_AoEHeals_Rapture" />
 
         public static UserInt WHM_AoEHeals_RaptureHP =
-            new("WHM_AoEHeals_RaptureHP", 100);
+            new("WHM_AoEHeals_RaptureHP", 70);
 
         /// <summary>
         ///     Average party HP% threshold to use Divine Caress.
@@ -1064,7 +1064,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_AoEHeals_DivineCaress" />
 
         public static UserInt WHM_AoEHeals_DivineCaressHP =
-            new("WHM_AoEHeals_DivineCaressHP", 100);
+            new("WHM_AoEHeals_DivineCaressHP", 80);
 
         /// <summary>
         ///     Only use Divine Caress when weaving.
@@ -1086,7 +1086,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_AoEHeals_LiturgyOfTheBell" />
         public static UserInt WHM_AoEHeals_LiturgyHP =
-            new("WHM_AoEHeals_LiturgyHP", 30);
+            new("WHM_AoEHeals_LiturgyHP", 50);
 
         /// <summary>
         ///     Only use Liturgy when weaving.
@@ -1129,7 +1129,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_AoEHeals_Temperance" />
         public static UserInt WHM_AoEHeals_TemperanceHP =
-            new("WHM_AoEHeals_TemperanceHP", 30);
+            new("WHM_AoEHeals_TemperanceHP", 55);
 
         /// <summary>
         ///     Content difficulty selector for Temperance.
@@ -1163,7 +1163,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_AoEHeals_Asylum" />
         public static UserInt WHM_AoEHeals_AsylumHP =
-            new("WHM_AoEHeals_AsylumHP", 70);
+            new("WHM_AoEHeals_AsylumHP", 80);
 
         /// <summary>
         ///     Only use Asylum when weaving.

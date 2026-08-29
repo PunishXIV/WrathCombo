@@ -66,7 +66,7 @@ public partial class WrathCombo
             Preset.AST_ST_DPS_EarthlyStar, Preset.AST_AOE_DPS_EarthlyStar,
             Preset.AST_DPS_LightSpeed, Preset.AST_AOE_LightSpeed,
         ] },
-        { Job.SGE, [Preset.SGE_AoE_DPS_Psyche, Preset.SGE_AoE_DPS_Phlegma, Preset.SGE_ST_DPS_Psyche, Preset.SGE_ST_DPS_Phlegma] },
+        { Job.SGE, [Preset.SGE_AoE_Adv_DPS_Psyche, Preset.SGE_AoE_Adv_DPS_Phlegma, Preset.SGE_ST_Adv_DPS_Psyche, Preset.SGE_ST_Adv_DPS_Phlegma] },
         { Job.DRG, [
             Preset.DRG_ST_BattleLitany, Preset.DRG_ST_LanceCharge,
             Preset.DRG_AoE_BattleLitany, Preset.DRG_AoE_LanceCharge,
@@ -86,9 +86,9 @@ public partial class WrathCombo
             Preset.NIN_ST_AdvancedMode_Meisui, Preset.NIN_AoE_AdvancedMode_Meisui,
         ] },
         { Job.SAM, [
-            Preset.SAM_ST_CDs_Ikishoten, Preset.SAM_AoE_CDs_Ikishoten,
-            Preset.SAM_ST_CDs_MeikyoShisui, Preset.SAM_AoE_MeikyoShisui,
-            Preset.SAM_ST_CDs_Shoha, Preset.SAM_AoE_Shoha,
+            Preset.SAM_ST_Adv_Ikishoten, Preset.SAM_AoE_Adv_Ikishoten,
+            Preset.SAM_ST_Adv_Meikyo, Preset.SAM_AoE_Adv_Meikyo,
+            Preset.SAM_ST_Adv_Shoha, Preset.SAM_AoE_Adv_Shoha,
         ] },
         { Job.RPR, [
             Preset.RPR_ST_Gluttony, Preset.RPR_AoE_Gluttony,
@@ -869,7 +869,7 @@ public partial class WrathCombo
     /// </param>
     private void HandleBurstControl(string[] argument)
     {
-        if (!PresetStorage.AllPresets.Any(p => p.Value.JobInfo?.Job == Player.Job && p.Value.ComboType == ComboType.Advanced && PresetStorage.IsEnabled(p.Key)))
+        if (!PresetStorage.AllPresets.Any(p => p.Value.JobInfo?.Job == Player.Job && p.Value.ComboType == ComboType.AdvancedDPS && PresetStorage.IsEnabled(p.Key)))
         {
             DuoLog.Error("This feature is for Advanced Mode Combos.");
             return;

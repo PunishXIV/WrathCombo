@@ -29,6 +29,10 @@ internal class FeaturesWindow : ConfigWindow
         Variant,
         Bozja,
         OccultCrescent,
+        BlueDPS,
+        BlueTank,
+        BlueHealer,
+        DeepDungeon,
     }
 
     private const StringComparison Lower = StringComparison.OrdinalIgnoreCase;
@@ -308,7 +312,7 @@ internal class FeaturesWindow : ConfigWindow
             case "!maincombo":
             case "!maincombos":
                 matchesKeyWords = attributes.ComboType is
-                    ComboType.Advanced or ComboType.Simple or ComboType.Healing;
+                    ComboType.AdvancedDPS or ComboType.SimpleDPS or ComboType.SimpleHealing or ComboType.AdvancedHealing;
                 return true;
 
             case "!combo":

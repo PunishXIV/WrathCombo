@@ -24,6 +24,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <param name="target">Optional target</param>
     /// <returns>Status object or null.</returns>
+    [Obsolete("Use the IBattleChara extension .Status(id, anyowner) to retrieve a status")]
     public static IStatus? GetStatusEffect(uint statusId, IGameObject? target = null, bool anyOwner = false)
     {
         // Default to LocalPlayer if no target/bad target
@@ -42,6 +43,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target">Optional Target</param>
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <returns>Boolean if the status effect exists or not</returns>
+    [Obsolete("Use the IBattleChara.HasStatus extension.")]
     public static bool HasStatusEffect(uint statusId, IGameObject? target = null, bool anyOwner = false)
     {
         // Default to LocalPlayer if no target provided
@@ -57,6 +59,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <param name="status">Retrieved Status object</param>
     /// <returns>Boolean if the status effect exists or not</returns>
+    [Obsolete("Use the IBattleChara & IStatus? extensions .Status(id, anyowner).NotNull to retrieve a status and verify it exists")]
     public static bool HasStatusEffect(ushort statusId, out IStatus? status, IGameObject? target = null, bool anyOwner = false)
     {
         target ??= LocalPlayer;
@@ -72,6 +75,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="anyOwner">Check if the Player owns/created the statuses, true means anyone owns</param>
     /// <param name="matchAll">If true, target must have all of the statuses</param>
     /// <seealso cref="HasStatusEffect(ushort statusId, IGameObject? target = null, bool anyOwner = false)"/>
+    [Obsolete("Use the IBattleChara extension .HasStatusEffects(id, anyowner, matchall)")]
     public static bool HasStatusEffects(ushort[] statusIds, IGameObject? target = null, bool anyOwner = false, bool matchAll = false)
     {
         target ??= LocalPlayer;
@@ -104,6 +108,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="effect">Dalamud Status object</param>
     /// <returns>Float representing remaining status effect time</returns>
+    [Obsolete("Use the IBattleChara & IStatus? extensions .Status(id, anyowner).RemainingTime(). Will return NaN instead of 0 if the status doesn't exist")]
     public unsafe static float GetStatusEffectRemainingTime(IStatus? effect)
     {
         if (effect is null) return 0;
@@ -118,6 +123,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target">Optional Target</param>
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <returns>Float representing remaining status effect time</returns>
+    [Obsolete("Use the IBattleChara & IStatus? extensions .Status(id, anyowner).RemainingTimeOrNaN() (fails comparison if status does not exist) or .RemainingTimeOrZero()")]
     public unsafe static float GetStatusEffectRemainingTime(uint effectId, IGameObject? target = null, bool anyOwner = false) =>
         GetStatusEffectRemainingTime(GetStatusEffect(effectId, target, anyOwner));
 
@@ -128,6 +134,7 @@ internal abstract partial class CustomComboFunctions
     ///     As in: It will not return <c>0</c>, and pass less than checks.
     /// </summary>
     /// <seealso cref="GetStatusEffectRemainingTime(ushort, IGameObject?, bool)"/>
+    [Obsolete("Use the IBattleChara & IStatus? extensions .Status(id, anyowner).RemainingTimeOrNaN(). Will return NaN instead of 0 if the status doesn't exist")]
     public static float GetPossessedStatusRemainingTime
     (ushort effectId, IGameObject? target = null, bool anyOwner = false) =>
     HasStatusEffect(effectId, out var status, target, anyOwner)
@@ -139,6 +146,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="effect">Dalamud Status object</param>
     /// <returns>Integer representing status effect stack count</returns>
+    [Obsolete("Use the IBattleChara & IStatus? extensions .Status(id, anyowner).Stacks")]
     public static ushort GetStatusEffectStacks(IStatus? effect) => effect?.Param ?? 0;
 
     /// <summary>
@@ -148,19 +156,18 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target">Optional Target</param>
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <returns>Integer representing status effect stack count</returns>
+    [Obsolete("Use the IBattleChara & IStatus? extensions .Status(id, anyowner).Stacks")]
     public static ushort GetStatusEffectStacks(uint effectId, IGameObject? target = null, bool anyOwner = false) =>
         GetStatusEffectStacks(GetStatusEffect(effectId, target, anyOwner));
 
 
-    /// <summary> Returns the name of a status effect from its ID. </summary>
-    /// <param name="id"> ID of the status. </param>
-    /// <returns></returns>
-    public static string GetStatusName(uint id) => StatusCache.GetStatusName(id);
-
+    [Obsolete("Use the IBattleChara extension .HasDamageDown")]
     public static bool TargetHasDamageDown(IGameObject? target) => StatusCache.HasDamageDown(target);
 
+    [Obsolete("Use the IBattleChara extension .HasDamageUp")]
     public static bool TargetHasDamageUp(IGameObject? target) => StatusCache.HasDamageUp(target);
 
+    [Obsolete("Use the IBattleChara extension .HasRezWeakness")]
     public static bool TargetHasRezWeakness(IGameObject? target, bool checkForWeakness = true)
     {
         if (checkForWeakness && HasStatusEffect(43, target, true)) //Weakness = 43
@@ -169,7 +176,9 @@ internal abstract partial class CustomComboFunctions
         return HasStatusEffect(44, target, true); //Brink of Death = 44
     }
 
+    [Obsolete("Use the IBattleChara extension .HasRaiseInvincibility")]
     public static bool TargetHasRaiseInvincibility(IBattleChara? target) => StatusCache.HasRaiseInvincibility(target);
+    [Obsolete("Use the IBattleChara extension .HasRaiseStatus")]
     public static bool TargetHasRaiseStatus(IBattleChara? target) => StatusCache.HasRaiseStatus(target);
 
     /// <summary>
@@ -177,6 +186,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="target">The game object to check. Defaults to the current target if null.</param>
     /// <returns>True if the target has a cleansable debuff; otherwise, false.</returns>
+    [Obsolete("Use the IBattleChara extension .HasCleansableDebuff")]
     public static bool HasCleansableDebuff(IGameObject? target) => StatusCache.HasCleansableDebuff(target);
 
     /// <summary>
@@ -184,9 +194,11 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    public static bool HasBeneficialStatus(IGameObject? target) => StatusCache.HasBeneficialStatus(target);
+    //[Obsolete("Use the IBattleChara extension .HasBeneficialStatus")]
+    //public static bool HasBeneficialStatus(IGameObject? target) => StatusCache.HasBeneficialStatus(target);
 
-    public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || StatusCache.HasEvasionUp(target) || HasStatusEffect(4355, target) || TargetIsInvincible(target);
+    [Obsolete("Use the IBattleChara extension .HasPhantomDispelStatus")]
+    public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || StatusCache.HasEvasionUp(target) || HasStatusEffect(4355, target) || ((target as IBattleChara)?.IsInvincible ?? false);
 
     /// <summary>
     /// Checks to see if the player has a status that should stop all actions and unselect targets
@@ -205,15 +217,15 @@ internal abstract partial class CustomComboFunctions
                 Player.Status.Any(s =>
                     // Acceleration Bomb within Timeframe
                     (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
-                        GetStatusEffectRemainingTime(s) <= userSetting) ||
+                        Player.Object!.Status(s.StatusId).RemainingTimeOrZero(false) <= userSetting) ||
 
                     // Pyretic
                     StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
 
                     // Others
-                    (StatusCache.PausingStatuses.Misc.Contains(s.StatusId) && GetStatusEffectRemainingTime(s) <= userSetting)
+                    (StatusCache.PausingStatuses.Misc.Contains(s.StatusId) && Player.Object!.Status(s.StatusId).RemainingTimeOrZero(false) <= userSetting)
 
-                ) == true;
+                );
         }
 
         if (hasActionPenalty)
@@ -231,6 +243,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="target">The game object to check.</param>
     /// <returns>True if the target is invincible; otherwise, false.</returns>
+    [Obsolete("Use the IBattleChara extension .IsInvincible")]
     public static bool TargetIsInvincible(IGameObject? target)
     {
         if (target is not IBattleChara tar)
@@ -264,6 +277,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
+    [Obsolete("Use the IBattleChara extension .IsStatusCapped")]
     public static unsafe bool TargetIsStatusCapped(IGameObject? target)
     {
         try
@@ -291,18 +305,19 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target"></param>
     /// <param name="statusId"></param>
     /// <returns></returns>
+    [Obsolete("Use the IBattleChara extension .CanApplyStatus")]
     public static bool CanApplyStatus(IGameObject? target, uint statusId)
     {
         target ??= LocalPlayer;
-        if (target is null)
+        if (target is not IBattleChara targetchara)
             return false;
 
         //Check to see if it's a buff or debuff and therefore if the target is suitable for the status
         var status = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>().GetRow(statusId);
-        if ((target.IsHostile() && status.StatusCategory != 2) || (target.IsFriendly() && status.StatusCategory != 1))
+        if ((targetchara.IsHostile() && status.StatusCategory != 2) || (targetchara.IsFriendly() && status.StatusCategory != 1))
             return false;
 
-        if (!TargetIsStatusCapped(target) || HasStatusEffect(statusId, target))
+        if (!TargetIsStatusCapped(targetchara) || HasStatusEffect(statusId, targetchara))
             return true;
 
         return false;
@@ -312,9 +327,11 @@ internal abstract partial class CustomComboFunctions
     ///     Overload to accept a list of status IDs.
     /// </summary>
     /// <seealso cref="CanApplyStatus(IGameObject?,ushort)"/>
+    [Obsolete("Use the IBattleChara extension .CanApplyStatus")]
     public static bool CanApplyStatus(IGameObject? target, ushort[] status) =>
         status.Any(statusId => CanApplyStatus(target, statusId));
 
+    [Obsolete("Use the IBattleChara extension .HasCleansableDoom")]
     public static bool HasCleansableDoom(IGameObject? target = null)
     {
         target ??= CurrentTarget;
@@ -326,6 +343,7 @@ internal abstract partial class CustomComboFunctions
         return StatusCache.HasCleansableDoom(target);
     }
 
+    [Obsolete("Use the IBattleChara extension .IsImmuneToStatus")]
     public static bool ImmuneToStatus(IGameObject? target, uint status) => Service.Configuration.StatusBlacklist.Any(x => x.Status == status && x.BaseId == target?.BaseId);
 
 }

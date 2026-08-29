@@ -61,11 +61,11 @@ internal partial class DNC : PhysicalRanged
                 !HasStatusEffect(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
-                LevelChecked(TechnicalStep);
+                ActionLearned(TechnicalStep);
 
             var needToStandardOrFinish =
                 GetTargetHPPercent() > targetHpThresholdStandard && // HP% check
-                LevelChecked(StandardStep);
+                ActionLearned(StandardStep);
 
             // More Threshold, but only for SS
             if (DNC_ST_ADV_AntiDrift == (int)AntiDrift.Hold ||
@@ -184,11 +184,11 @@ internal partial class DNC : PhysicalRanged
             // ST Devilment
             if (IsEnabled(Preset.DNC_ST_Adv_Devilment) &&
                 CanWeave() &&
-                LevelChecked(Devilment) &&
+                ActionLearned(Devilment) &&
                 GetCooldownRemainingTime(Devilment) < GCD / 2 &&
                 (HasStatusEffect(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
-                 !LevelChecked(TechnicalStep)))
+                 !ActionLearned(TechnicalStep)))
                 return Devilment;
 
             // ST Flourish
@@ -227,7 +227,7 @@ internal partial class DNC : PhysicalRanged
 
             // Dance Partner
             if (IsEnabled(Preset.DNC_ST_Adv_AutoPartner) &&
-                LevelChecked(ClosedPosition) &&
+                ActionLearned(ClosedPosition) &&
                 IsOffCooldown(ClosedPosition) &&
                 CanWeave() &&
                 CurrentPartnerNonOptimal)
@@ -256,14 +256,14 @@ internal partial class DNC : PhysicalRanged
 
                 // ST Feathers
                 if (IsEnabled(Preset.DNC_ST_Adv_Feathers) &&
-                    LevelChecked(FanDance1))
+                    ActionLearned(FanDance1))
                 {
                     // FD1 HP% Dump
                     if (GetTargetHPPercent() <= targetHpThresholdFeather &&
                         Gauge.Feathers > 0)
                         return FanDance1;
 
-                    if (LevelChecked(TechnicalStep))
+                    if (ActionLearned(TechnicalStep))
                     {
                         // Burst FD1
                         if (HasStatusEffect(Buffs.TechnicalFinish) &&
@@ -280,7 +280,7 @@ internal partial class DNC : PhysicalRanged
                     }
 
                     // FD1 Non-pooling & under burst level
-                    if (!LevelChecked(TechnicalStep) && Gauge.Feathers > 0)
+                    if (!ActionLearned(TechnicalStep) && Gauge.Feathers > 0)
                         return FanDance1;
                 }
                 
@@ -352,7 +352,7 @@ internal partial class DNC : PhysicalRanged
             // ST Tillana (Emergency Use)
             if (GetPossessedStatusRemainingTime(Buffs.FlourishingFinish) < GCD * 2.5 &&
                 tillanaDropProtectionActive &&
-                LevelChecked(Tillana) &&
+                ActionLearned(Tillana) &&
                 EnemyIn15Yalms)
                 return Tillana;
 
@@ -381,7 +381,7 @@ internal partial class DNC : PhysicalRanged
                 (Gauge.Esprit >= DNC_ST_Adv_SaberThreshold || // above esprit threshold use
                  (HasStatusEffect(Buffs.TechnicalFinish) && // will overcap with Tillana if not used
                   !tillanaDriftProtectionActive && Gauge.Esprit >= 50)))
-                return LevelChecked(DanceOfTheDawn) &&
+                return ActionLearned(DanceOfTheDawn) &&
                        HasStatusEffect(Buffs.DanceOfTheDawnReady)
                     ? OriginalHook(DanceOfTheDawn)
                     : SaberDance;
@@ -392,7 +392,7 @@ internal partial class DNC : PhysicalRanged
             // ST Tillana
             if (HasStatusEffect(Buffs.FlourishingFinish) &&
                 IsEnabled(Preset.DNC_ST_Adv_Tillana) &&
-                LevelChecked(Tillana) &&
+                ActionLearned(Tillana) &&
                 EnemyIn15Yalms)
                 return Tillana;
 
@@ -406,16 +406,16 @@ internal partial class DNC : PhysicalRanged
                 return SaberDance;
 
             // ST combos and burst attacks
-            if (LevelChecked(Fountain) &&
+            if (ActionLearned(Fountain) &&
                 ComboAction is Cascade &&
                 ComboTimer is < 2 and > 0)
                 return Fountain;
 
-            if (LevelChecked(Fountainfall) && flow)
+            if (ActionLearned(Fountainfall) && flow)
                 return Fountainfall;
-            if (LevelChecked(ReverseCascade) && symmetry)
+            if (ActionLearned(ReverseCascade) && symmetry)
                 return ReverseCascade;
-            if (LevelChecked(Fountain) && ComboAction is Cascade &&
+            if (ActionLearned(Fountain) && ComboAction is Cascade &&
                 ComboTimer > 0)
                 return Fountain;
 
@@ -454,11 +454,11 @@ internal partial class DNC : PhysicalRanged
                 !HasStatusEffect(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
-                LevelChecked(TechnicalStep);
+                ActionLearned(TechnicalStep);
 
             var needToStandardOrFinish =
                 GetTargetHPPercent() > targetHpThresholdStandard && // HP% check
-                LevelChecked(StandardStep);
+                ActionLearned(StandardStep);
 
             var needToFinish =
                 HasStatusEffect(Buffs.FinishingMoveReady) &&
@@ -530,11 +530,11 @@ internal partial class DNC : PhysicalRanged
 
             // ST Devilment
             if (CanWeave() &&
-                LevelChecked(Devilment) &&
+                ActionLearned(Devilment) &&
                 GetCooldownRemainingTime(Devilment) < 0.05 &&
                 (HasStatusEffect(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
-                 !LevelChecked(TechnicalStep)))
+                 !ActionLearned(TechnicalStep)))
                 return Devilment;
 
             // ST Flourish
@@ -569,7 +569,7 @@ internal partial class DNC : PhysicalRanged
             }
 
             // Dance Partner
-            if (CanWeave() && LevelChecked(ClosedPosition) &&
+            if (CanWeave() && ActionLearned(ClosedPosition) &&
                 IsOffCooldown(ClosedPosition) &&
                 CurrentPartnerNonOptimal)
                 return HasStatusEffect(Buffs.ClosedPosition)
@@ -590,14 +590,14 @@ internal partial class DNC : PhysicalRanged
                     return FanDance4;
 
                 // ST Feathers & Fans
-                if (LevelChecked(FanDance1))
+                if (ActionLearned(FanDance1))
                 {
                     // FD1 HP% Dump
                     if (GetTargetHPPercent() <= targetHpThresholdFeather &&
                         Gauge.Feathers > 0)
                         return FanDance1;
 
-                    if (LevelChecked(TechnicalStep))
+                    if (ActionLearned(TechnicalStep))
                     {
                         // Burst FD1
                         if (HasStatusEffect(Buffs.TechnicalFinish) &&
@@ -612,7 +612,7 @@ internal partial class DNC : PhysicalRanged
                     }
 
                     // FD1 Non-pooling & under burst level
-                    if (!LevelChecked(TechnicalStep) && Gauge.Feathers > 0)
+                    if (!ActionLearned(TechnicalStep) && Gauge.Feathers > 0)
                         return FanDance1;
                 }
                 if (ActionReady(ShieldSamba) && GroupDamageIncoming() && 
@@ -668,7 +668,7 @@ internal partial class DNC : PhysicalRanged
             // ST Tillana (Emergency Use)
             if (GetPossessedStatusRemainingTime(Buffs.FlourishingFinish) < GCD * 1.5 &&
                 Gauge.Esprit < 100 &&
-                LevelChecked(Tillana) &&
+                ActionLearned(Tillana) &&
                 EnemyIn15Yalms)
                 return Tillana;
 
@@ -692,7 +692,7 @@ internal partial class DNC : PhysicalRanged
             // ST Saber Dance
             if (ActionReady(SaberDance) &&
                 Gauge.Esprit >= 50)
-                return LevelChecked(DanceOfTheDawn) &&
+                return ActionLearned(DanceOfTheDawn) &&
                        HasStatusEffect(Buffs.DanceOfTheDawnReady)
                     ? OriginalHook(DanceOfTheDawn)
                     : SaberDance;
@@ -702,21 +702,21 @@ internal partial class DNC : PhysicalRanged
 
             // ST Tillana
             if (HasStatusEffect(Buffs.FlourishingFinish) &&
-                LevelChecked(Tillana) &&
+                ActionLearned(Tillana) &&
                 EnemyIn15Yalms)
                 return Tillana;
 
             // ST combos and burst attacks
-            if (LevelChecked(Fountain) &&
+            if (ActionLearned(Fountain) &&
                 ComboAction is Cascade &&
                 ComboTimer is < 2 and > 0)
                 return Fountain;
 
-            if (LevelChecked(Fountainfall) && flow)
+            if (ActionLearned(Fountainfall) && flow)
                 return Fountainfall;
-            if (LevelChecked(ReverseCascade) && symmetry)
+            if (ActionLearned(ReverseCascade) && symmetry)
                 return ReverseCascade;
-            if (LevelChecked(Fountain) && ComboAction is Cascade &&
+            if (ActionLearned(Fountain) && ComboAction is Cascade &&
                 ComboTimer > 0)
                 return Fountain;
 
@@ -751,12 +751,12 @@ internal partial class DNC : PhysicalRanged
                 !HasStatusEffect(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
-                LevelChecked(TechnicalStep);
+                ActionLearned(TechnicalStep);
 
             var needToStandardOrFinish =
                 ActionReady(StandardStep) && // Up
                 GetTargetHPPercent() > targetHpThresholdStandard && // HP% check
-                LevelChecked(StandardStep);
+                ActionLearned(StandardStep);
 
             var needToFinish =
                 IsEnabled(Preset.DNC_AoE_Adv_FM) && // Enabled
@@ -812,11 +812,11 @@ internal partial class DNC : PhysicalRanged
             // AoE Devilment
             if (IsEnabled(Preset.DNC_AoE_Adv_Devilment) &&
                 CanWeave() &&
-                LevelChecked(Devilment) &&
+                ActionLearned(Devilment) &&
                 GetCooldownRemainingTime(Devilment) < 0.05 &&
                 (HasStatusEffect(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
-                 !LevelChecked(TechnicalStep)))
+                 !ActionLearned(TechnicalStep)))
                 return Devilment;
 
             // AoE Flourish
@@ -850,11 +850,11 @@ internal partial class DNC : PhysicalRanged
 
                 // AoE Feathers
                 if (IsEnabled(Preset.DNC_AoE_Adv_Feathers) &&
-                    LevelChecked(FanDance1))
+                    ActionLearned(FanDance1))
                 {
-                    if (LevelChecked(FanDance2))
+                    if (ActionLearned(FanDance2))
                     {
-                        if (LevelChecked(TechnicalStep))
+                        if (ActionLearned(TechnicalStep))
                         {
                             // Burst FD2
                             if (HasStatusEffect(Buffs.TechnicalFinish) &&
@@ -869,13 +869,13 @@ internal partial class DNC : PhysicalRanged
                         }
 
                         // FD2 Non-pooling & under burst level
-                        if (!LevelChecked(TechnicalStep) &&
+                        if (!ActionLearned(TechnicalStep) &&
                             Gauge.Feathers > 0)
                             return FanDance2;
                     }
 
                     // FD1 Replacement for Lv.30-49
-                    if (!LevelChecked(FanDance2) &&
+                    if (!ActionLearned(FanDance2) &&
                         Gauge.Feathers > 0)
                         return FanDance1;
                 }
@@ -970,7 +970,7 @@ internal partial class DNC : PhysicalRanged
             // AoE Tillana
             if (HasStatusEffect(Buffs.FlourishingFinish) &&
                 IsEnabled(Preset.DNC_AoE_Adv_Tillana) &&
-                LevelChecked(Tillana))
+                ActionLearned(Tillana))
                 return Tillana;
 
             // AoE Saber Dance
@@ -985,16 +985,16 @@ internal partial class DNC : PhysicalRanged
                 return SaberDance;
 
             // AoE combos and burst attacks
-            if (LevelChecked(Bladeshower) &&
+            if (ActionLearned(Bladeshower) &&
                 ComboAction is Windmill &&
                 ComboTimer is < 2 and > 0)
                 return Bladeshower;
 
-            if (LevelChecked(Bloodshower) && flow)
+            if (ActionLearned(Bloodshower) && flow)
                 return Bloodshower;
-            if (LevelChecked(RisingWindmill) && symmetry)
+            if (ActionLearned(RisingWindmill) && symmetry)
                 return RisingWindmill;
-            if (LevelChecked(Bladeshower) && ComboAction is Windmill &&
+            if (ActionLearned(Bladeshower) && ComboAction is Windmill &&
                 ComboTimer > 0)
                 return Bladeshower;
 
@@ -1027,7 +1027,7 @@ internal partial class DNC : PhysicalRanged
                 !HasStatusEffect(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
-                LevelChecked(TechnicalStep);
+                ActionLearned(TechnicalStep);
 
             var needToStandardOrFinish =
                 ActionReady(StandardStep) && // Up
@@ -1035,7 +1035,7 @@ internal partial class DNC : PhysicalRanged
                 (IsOffCooldown(
                      TechnicalStep) || // Checking burst is ready for standard
                  GetCooldownRemainingTime(TechnicalStep) > 5) && // Don't mangle
-                LevelChecked(StandardStep);
+                ActionLearned(StandardStep);
 
             var needToFinish =
                 HasStatusEffect(Buffs.FinishingMoveReady) &&
@@ -1086,11 +1086,11 @@ internal partial class DNC : PhysicalRanged
 
             // AoE Devilment
             if (CanWeave() &&
-                LevelChecked(Devilment) &&
+                ActionLearned(Devilment) &&
                 GetCooldownRemainingTime(Devilment) < 0.05 &&
                 (HasStatusEffect(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
-                 !LevelChecked(TechnicalStep)))
+                 !ActionLearned(TechnicalStep)))
                 return Devilment;
 
             // AoE Flourish
@@ -1116,15 +1116,15 @@ internal partial class DNC : PhysicalRanged
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
             {
                 // AoE Feathers & Fans
-                if (LevelChecked(FanDance1))
+                if (ActionLearned(FanDance1))
                 {
                     // FD3
                     if (HasStatusEffect(Buffs.ThreeFoldFanDance))
                         return FanDance3;
 
-                    if (LevelChecked(FanDance2))
+                    if (ActionLearned(FanDance2))
                     {
-                        if (LevelChecked(TechnicalStep))
+                        if (ActionLearned(TechnicalStep))
                         {
                             // Burst FD2
                             if (HasStatusEffect(Buffs.TechnicalFinish) &&
@@ -1139,13 +1139,13 @@ internal partial class DNC : PhysicalRanged
                         }
 
                         // FD2 Non-pooling & under burst level
-                        if (!LevelChecked(TechnicalStep) &&
+                        if (!ActionLearned(TechnicalStep) &&
                             Gauge.Feathers > 0)
                             return FanDance2;
                     }
 
                     // FD1 Replacement for Lv.30-49
-                    if (!LevelChecked(FanDance2) &&
+                    if (!ActionLearned(FanDance2) &&
                         Gauge.Feathers > 0)
                         return FanDance1;
                 }
@@ -1208,20 +1208,20 @@ internal partial class DNC : PhysicalRanged
 
             // AoE Tillana
             if (HasStatusEffect(Buffs.FlourishingFinish) &&
-                LevelChecked(Tillana))
+                ActionLearned(Tillana))
                 return Tillana;
 
             // AoE combos and burst attacks
-            if (LevelChecked(Bladeshower) &&
+            if (ActionLearned(Bladeshower) &&
                 ComboAction is Windmill &&
                 ComboTimer is < 2 and > 0)
                 return Bladeshower;
 
-            if (LevelChecked(Bloodshower) && flow)
+            if (ActionLearned(Bloodshower) && flow)
                 return Bloodshower;
-            if (LevelChecked(RisingWindmill) && symmetry)
+            if (ActionLearned(RisingWindmill) && symmetry)
                 return RisingWindmill;
-            if (LevelChecked(Bladeshower) && ComboAction is Windmill &&
+            if (ActionLearned(Bladeshower) && ComboAction is Windmill &&
                 ComboTimer > 0)
                 return Bladeshower;
 
@@ -1242,7 +1242,7 @@ internal partial class DNC : PhysicalRanged
             if (actionID is not Fountain)
                 return actionID;
 
-            if (LevelChecked(Fountain) && ComboAction is Cascade &&
+            if (ActionLearned(Fountain) && ComboAction is Cascade &&
                 ComboTimer > 0)
                 return Fountain;
 
@@ -1284,7 +1284,7 @@ internal partial class DNC : PhysicalRanged
             {
                 // ST Fan Dance overcap protection
                 if (IsEnabled(Preset.DNC_ST_FanDanceOvercap) &&
-                    LevelChecked(FanDance1) && Gauge.Feathers is 4 &&
+                    ActionLearned(FanDance1) && Gauge.Feathers is 4 &&
                     (HasStatusEffect(Buffs.SilkenSymmetry) ||
                      HasStatusEffect(Buffs.SilkenFlow)))
                     return FanDance1;
@@ -1300,11 +1300,11 @@ internal partial class DNC : PhysicalRanged
             }
 
             // ST base combos
-            if (LevelChecked(Fountainfall) && flow)
+            if (ActionLearned(Fountainfall) && flow)
                 return Fountainfall;
-            if (LevelChecked(ReverseCascade) && symmetry)
+            if (ActionLearned(ReverseCascade) && symmetry)
                 return ReverseCascade;
-            if (LevelChecked(Fountain) && ComboAction is Cascade)
+            if (ActionLearned(Fountain) && ComboAction is Cascade)
                 return Fountain;
 
             return actionID;
@@ -1344,7 +1344,7 @@ internal partial class DNC : PhysicalRanged
             {
                 // AoE Fan Dance overcap protection
                 if (IsEnabled(Preset.DNC_AoE_FanDanceOvercap) &&
-                    LevelChecked(FanDance2) && Gauge.Feathers is 4 &&
+                    ActionLearned(FanDance2) && Gauge.Feathers is 4 &&
                     (HasStatusEffect(Buffs.SilkenSymmetry) ||
                      HasStatusEffect(Buffs.SilkenFlow)))
                     return FanDance2;
@@ -1360,11 +1360,11 @@ internal partial class DNC : PhysicalRanged
             }
 
             // AoE base combos
-            if (LevelChecked(Bloodshower) && flow)
+            if (ActionLearned(Bloodshower) && flow)
                 return Bloodshower;
-            if (LevelChecked(RisingWindmill) && symmetry)
+            if (ActionLearned(RisingWindmill) && symmetry)
                 return RisingWindmill;
-            if (LevelChecked(Bladeshower) && ComboAction is Windmill)
+            if (ActionLearned(Bladeshower) && ComboAction is Windmill)
                 return Bladeshower;
 
             return actionID;

@@ -26,5 +26,5 @@ public class ReplaceSkillAttribute : Attribute
     internal List<uint> ActionIDs { get; set; } = [];
     internal List<string> ActionNames { get; set; } = [];
 
-    internal List<ushort> ActionIcons { get; set; } = [];
+    internal List<uint> ActionIcons { get; set; } = [];
 }

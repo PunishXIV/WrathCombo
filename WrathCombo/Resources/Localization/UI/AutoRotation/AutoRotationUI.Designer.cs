@@ -321,6 +321,15 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prioritise Treasure Hunt Kill Order.
+        /// </summary>
+        internal static string Checkbox_TreasureHuntPriority {
+            get {
+                return ResourceManager.GetString("Checkbox_TreasureHuntPriority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pause for Action Penalty Mechanics.
         /// </summary>
         internal static string Checkbox_UnTargetAndDisableForPenalty {
@@ -618,6 +627,15 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         internal static string HelpText_ThrottleDelay {
             get {
                 return ResourceManager.GetString("HelpText_ThrottleDelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When enemies have numbered nameplate markers (1–5), Auto-Rotation will only attack the lowest remaining number until it dies. Used for treasure map vermin; also applies anywhere those markers appear.
+        /// </summary>
+        internal static string HelpText_TreasureHuntPriority {
+            get {
+                return ResourceManager.GetString("HelpText_TreasureHuntPriority", resourceCulture);
             }
         }
         

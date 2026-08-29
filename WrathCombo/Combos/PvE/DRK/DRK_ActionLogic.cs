@@ -108,7 +108,7 @@ internal partial class DRK
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Shadow) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Shadow)) &&
                 IsOffCooldown(LivingShadow) &&
-                LevelChecked(LivingShadow) &&
+                ActionLearned(LivingShadow) &&
                 shadowHPMatchesThreshold)
                 return (action = LivingShadow) != 0;
 
@@ -172,7 +172,7 @@ internal partial class DRK
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Delirium)) &&
                 deliriumHPMatchesThreshold &&
                 deliriumTieToShadowSatisfied &&
-                LevelChecked(BloodWeapon) &&
+                ActionLearned(BloodWeapon) &&
                 GetCooldownRemainingTime(BloodWeapon) < GCD * 1.5)
                 ShouldDeliriumNext = true;
 
@@ -208,7 +208,7 @@ internal partial class DRK
             if ((flags.HasFlag(Combo.Simple) ||
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Salt) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Salt)) &&
-                LevelChecked(SaltedEarth) &&
+                ActionLearned(SaltedEarth) &&
                 IsOffCooldown(SaltedEarth) &&
                 !HasStatusEffect(Buffs.SaltedEarth) &&
                 saltStill &&
@@ -241,7 +241,7 @@ internal partial class DRK
             if ((flags.HasFlag(Combo.Simple) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Darkness) ||
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Darkness)) &&
-                LevelChecked(SaltAndDarkness) &&
+                ActionLearned(SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
                 HasStatusEffect(Buffs.SaltedEarth) &&
                 darknessTimeSatisfied)
@@ -287,9 +287,9 @@ internal partial class DRK
                  IsEnabled(Preset.DRK_ST_CD_Spit)) &&
                 ActionReady(CarveAndSpit) &&
                 (int)LocalPlayer.CurrentMp <= 9400 &&
-                (!LevelChecked(LivingShadow) ||
+                (!ActionLearned(LivingShadow) ||
                  GetCooldownRemainingTime(LivingShadow) > 20) &&
-                (!LevelChecked(BloodWeapon) ||
+                (!ActionLearned(BloodWeapon) ||
                  GetCooldownRemainingTime(BloodWeapon) > 10))
                 return (action = CarveAndSpit) != 0;
 
@@ -427,7 +427,7 @@ internal partial class DRK
             if (JustUsedMitigation) return false;
 
             var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
-            var pre70Mitigation = !LevelChecked(BlackestNight) && numberOfEnemies >= 3;
+            var pre70Mitigation = !ActionLearned(BlackestNight) && numberOfEnemies >= 3;
 
             #region TBN
 
@@ -763,7 +763,7 @@ internal partial class DRK
             #region Variables and readiness bails
 
             var bloodGCDReady =
-                LevelChecked(Bloodspiller) &&
+                ActionLearned(Bloodspiller) &&
                 GetCooldownRemainingTime(Bloodspiller) < GCD / 2;
 
             if (!bloodGCDReady) return false;
@@ -802,7 +802,7 @@ internal partial class DRK
             if (flags.HasFlag(Combo.ST) &&
                 (flags.HasFlag(Combo.Simple) ||
                  IsEnabled(Preset.DRK_ST_CD_Delirium)) &&
-                LevelChecked(Delirium) &&
+                ActionLearned(Delirium) &&
                 Gauge.Blood >= 70 &&
                 Cooldown.ShouldDeliriumNext)
                 return (action = Bloodspiller) != 0;
@@ -820,7 +820,7 @@ internal partial class DRK
                 (GetCooldownRemainingTime(Delirium) > 37 || IsBursting))
                 if (flags.HasFlag(Combo.ST))
                     return (action = Bloodspiller) != 0;
-                else if (flags.HasFlag(Combo.AoE) && LevelChecked(Quietus))
+                else if (flags.HasFlag(Combo.AoE) && ActionLearned(Quietus))
                     return (action = Quietus) != 0;
 
             #endregion
@@ -847,7 +847,7 @@ internal partial class DRK
                 beforeSouleater)
                 if (flags.HasFlag(Combo.ST))
                     return (action = Bloodspiller) != 0;
-                else if (flags.HasFlag(Combo.AoE) && LevelChecked(Quietus))
+                else if (flags.HasFlag(Combo.AoE) && ActionLearned(Quietus))
                     return (action = Quietus) != 0;
 
             #endregion
@@ -865,7 +865,7 @@ internal partial class DRK
             // Bail if it is too early into the fight
             if (CombatEngageDuration().TotalSeconds <= 5) return false;
             // Bail if mana spending is not available yet
-            if (!LevelChecked(FloodOfDarkness)) return false;
+            if (!ActionLearned(FloodOfDarkness)) return false;
 
             var mana = (int)LocalPlayer.CurrentMp;
             var manaPooling =
@@ -909,7 +909,7 @@ internal partial class DRK
                  IsSTEnabled(flags, Preset.DRK_ST_Sp_EdgeDarkside) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_Sp_Flood)) &&
                 darksideDropping)
-                if (flags.HasFlag(Combo.ST) && LevelChecked(EdgeOfDarkness))
+                if (flags.HasFlag(Combo.ST) && ActionLearned(EdgeOfDarkness))
                     return (action = OriginalHook(EdgeOfDarkness)) != 0;
                 else
                     return (action = OriginalHook(FloodOfDarkness)) != 0;
@@ -919,7 +919,7 @@ internal partial class DRK
             // Bail if it is right before burst
             if (GetCooldownRemainingTime(LivingShadow) <
                 Math.Min(6, secondsBeforeBurst) &&
-                LevelChecked(LivingShadow) &&
+                ActionLearned(LivingShadow) &&
                 CombatEngageDuration().TotalSeconds > 20)
                 return false;
 
@@ -930,7 +930,7 @@ internal partial class DRK
                  IsAoEEnabled(flags, Preset.DRK_AoE_Sp_ManaOvercap)) &&
                 mana >= 9400 &&
                 !evenBurstSoon)
-                if (flags.HasFlag(Combo.ST) && LevelChecked(EdgeOfDarkness))
+                if (flags.HasFlag(Combo.ST) && ActionLearned(EdgeOfDarkness))
                     return (action = OriginalHook(EdgeOfDarkness)) != 0;
                 else
                     return (action = OriginalHook(FloodOfDarkness)) != 0;
@@ -945,7 +945,7 @@ internal partial class DRK
                  IsSTEnabled(flags, Preset.DRK_ST_Sp_Edge) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_Sp_Flood)) &&
                 IsBursting)
-                if (flags.HasFlag(Combo.ST) && LevelChecked(EdgeOfDarkness))
+                if (flags.HasFlag(Combo.ST) && ActionLearned(EdgeOfDarkness))
                     return (action = OriginalHook(EdgeOfDarkness)) != 0;
                 else
                     return (action = OriginalHook(FloodOfDarkness)) != 0;
@@ -961,7 +961,7 @@ internal partial class DRK
                  IsSTEnabled(flags, Preset.DRK_ST_Sp_DarkArts) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_Sp_Flood)) &&
                 Gauge.HasDarkArts && HasOwnTBN)
-                if (flags.HasFlag(Combo.ST) && LevelChecked(EdgeOfDarkness))
+                if (flags.HasFlag(Combo.ST) && ActionLearned(EdgeOfDarkness))
                     return (action = OriginalHook(EdgeOfDarkness)) != 0;
                 else
                     return (action = OriginalHook(FloodOfDarkness)) != 0;
@@ -1006,10 +1006,10 @@ internal partial class DRK
                 if (!comboRunning)
                     return (action = HardSlash) != 0;
                 else if (lastComboAction == HardSlash &&
-                         LevelChecked(SyphonStrike))
+                         ActionLearned(SyphonStrike))
                     return (action = SyphonStrike) != 0;
                 else if (lastComboAction == SyphonStrike &&
-                         LevelChecked(Souleater))
+                         ActionLearned(Souleater))
                     return (action = Souleater) != 0;
 
             #endregion
@@ -1020,7 +1020,7 @@ internal partial class DRK
                 if (!comboRunning)
                     return (action = Unleash) != 0;
                 else if (lastComboAction == Unleash &&
-                         LevelChecked(StalwartSoul))
+                         ActionLearned(StalwartSoul))
                     return (action = StalwartSoul) != 0;
 
             #endregion
@@ -1045,7 +1045,7 @@ internal partial class DRK
     ///     Each logic check is already combined with checking if the preset
     ///     <see cref="IsEnabled">is enabled</see>
     ///     and if the action is <see cref="ActionReady(uint,bool,bool)">ready</see> and
-    ///     <see cref="LevelChecked(uint)">level-checked</see>.<br />
+    ///     <see cref="ActionLearned(uint)">level-checked</see>.<br />
     ///     Do not add any of these checks to <c>Logic</c>.
     /// </remarks>
     private static (uint Action, Preset Preset, System.Func<bool> Logic)[]

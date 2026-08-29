@@ -37,3 +37,12 @@ public class BlueInactiveAttribute : Attribute
     internal List<uint> MasterActions { get; set; } = [];
     internal bool NoneSet { get; set; } = false;
 }
+
+[AttributeUsage(AttributeTargets.Field)]
+internal class BlueDPSAttribute : Attribute;
+
+[AttributeUsage(AttributeTargets.Field)]
+internal class BlueTankAttribute : Attribute;
+
+[AttributeUsage(AttributeTargets.Field)]
+internal class BlueHealerAttribute : Attribute;
