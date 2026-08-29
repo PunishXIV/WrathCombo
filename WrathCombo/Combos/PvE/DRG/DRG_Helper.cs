@@ -10,6 +10,7 @@ using WrathCombo.API.Enum;
 using static ECommons.DalamudServices.Svc;
 using static WrathCombo.Combos.PvE.DRG.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class DRG
@@ -17,7 +18,7 @@ internal partial class DRG
     #region Misc
 
     private static IStatus? ChaosDebuff =>
-        GetStatusEffect(ChaoticList[OriginalHook(ChaosThrust)], CurrentTarget);
+        CurrentTarget.Status(ChaoticList[OriginalHook(ChaosThrust)]);
 
     #endregion
 
@@ -51,7 +52,7 @@ internal partial class DRG
                 }
             }
 
-            if (includeDisembowel && !HasStatusEffect(Buffs.PowerSurge) && !ActionLearned(SonicThrust))
+            if (includeDisembowel && !LocalPlayer.HasStatus(Buffs.PowerSurge) && !ActionLearned(SonicThrust))
                 return OriginalHook(TrueThrust);
 
             return OriginalHook(DoomSpike);
@@ -62,8 +63,8 @@ internal partial class DRG
             if (ComboAction is TrueThrust or RaidenThrust && ActionLearned(VorpalThrust))
                 return ActionLearned(Disembowel) &&
                        (ActionLearned(ChaosThrust) && ChaosDebuff is null &&
-                        CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
-                        GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
+                        CurrentTarget.CanApplyStatus(ChaoticList[OriginalHook(ChaosThrust)]) ||
+                        LocalPlayer.Status(Buffs.PowerSurge).RemainingTimeOrZero() < 15)
                     ? OriginalHook(Disembowel)
                     : OriginalHook(VorpalThrust);
 
@@ -127,8 +128,8 @@ internal partial class DRG
         {
             var disembowelPath = ActionLearned(Disembowel) &&
                                  (ActionLearned(ChaosThrust) && ChaosDebuff is null &&
-                                  CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
-                                  GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15);
+                                  CurrentTarget.CanApplyStatus(ChaoticList[OriginalHook(ChaosThrust)]) ||
+                                  LocalPlayer.Status(Buffs.PowerSurge).RemainingTimeOrZero() < 15);
 
             if (disembowelPath && ActionLearned(ChaosThrust))
                 ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(ChaosThrust), 2);
@@ -168,7 +169,7 @@ internal partial class DRG
 
     private static bool UseLifeSurge(bool onAoE = false)
     {
-        if (!ActionReady(LifeSurge) || HasStatusEffect(Buffs.LifeSurge))
+        if (!ActionReady(LifeSurge) || LocalPlayer.HasStatus(Buffs.LifeSurge))
             return false;
 
         if (onAoE)
@@ -181,8 +182,8 @@ internal partial class DRG
                 if (!JustUsed(SonicThrust))
                     return false;
 
-                return HasStatusEffect(Buffs.LanceCharge) ||
-                       HasStatusEffect(Buffs.BattleLitany) ||
+                return LocalPlayer.HasStatus(Buffs.LanceCharge) ||
+                       LocalPlayer.HasStatus(Buffs.BattleLitany) ||
                        IsLoTDActive;
             }
 
@@ -197,7 +198,7 @@ internal partial class DRG
             return false;
 
         if (ActionLearned(Drakesbane) && IsLoTDActive &&
-            (HasStatusEffect(Buffs.LanceCharge) || HasStatusEffect(Buffs.BattleLitany)) &&
+            (LocalPlayer.HasStatus(Buffs.LanceCharge) || LocalPlayer.HasStatus(Buffs.BattleLitany)) &&
             (JustUsed(WheelingThrust) ||
              JustUsed(FangAndClaw) ||
              ActionLearned(LanceBarrage) && JustUsed(LanceBarrage) ||
@@ -222,7 +223,7 @@ internal partial class DRG
         !HasWeavedAction(Stardiver) && (!forceFirst || !HasWeaved()) && CanWeave(weaveTime);
 
     private static bool CanWeaveOgcds() =>
-        HasStatusEffect(Buffs.PowerSurge) || !ActionLearned(Disembowel);
+        LocalPlayer.HasStatus(Buffs.PowerSurge) || !ActionLearned(Disembowel);
 
     private const int HoldOnlyWhenStationary = 0;
     private const int HoldOnlyInMeleeRange = 1;
@@ -258,20 +259,20 @@ internal partial class DRG
         FirstmindsFocus is 2 &&
         InActionRange(WyrmwindThrust) &&
         (IsLoTDActive ||
-         HasStatusEffect(Buffs.DraconianFire) ||
-         HasStatusEffect(Buffs.RaidenThrustReady) ||
+         LocalPlayer.HasStatus(Buffs.DraconianFire) ||
+         LocalPlayer.HasStatus(Buffs.RaidenThrustReady) ||
          NumberOfEnemiesInRange(WyrmwindThrust, CurrentTarget) >= 2);
 
     private static bool UseMirageDive(bool onAoE = false, bool ignoreDoubleMirageHold = false)
     {
-        if (!ActionReady(MirageDive) || !HasStatusEffect(Buffs.DiveReady) ||
+        if (!ActionReady(MirageDive) || !LocalPlayer.HasStatus(Buffs.DiveReady) ||
             OriginalHook(Jump) is not MirageDive || !InActionRange(MirageDive))
             return false;
 
         if (onAoE || ignoreDoubleMirageHold || IsLoTDActive)
             return true;
 
-        bool diveExpiring = GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+        bool diveExpiring = LocalPlayer.Status(Buffs.DiveReady).RemainingTimeOrZero() <= 1.2f &&
                             GetCooldownRemainingTime(Geirskogul) > 3;
 
         return diveExpiring || !DRG_ST_DoubleMirage;
@@ -291,13 +292,13 @@ internal partial class DRG
             : DRG_ST_GeirskogulTrashHPOption;
 
     private static bool UseStarcross() =>
-        ActionReady(Starcross) && HasStatusEffect(Buffs.StarcrossReady) && InActionRange(Starcross);
+        ActionReady(Starcross) && LocalPlayer.HasStatus(Buffs.StarcrossReady) && InActionRange(Starcross);
 
     private static bool UseRiseOfTheDragon() =>
-        ActionReady(RiseOfTheDragon) && HasStatusEffect(Buffs.DragonsFlight) && InActionRange(RiseOfTheDragon);
+        ActionReady(RiseOfTheDragon) && LocalPlayer.HasStatus(Buffs.DragonsFlight) && InActionRange(RiseOfTheDragon);
 
     private static bool UseNastrond() =>
-        ActionReady(Nastrond) && HasStatusEffect(Buffs.NastrondReady) && IsLoTDActive && InActionRange(Nastrond);
+        ActionReady(Nastrond) && LocalPlayer.HasStatus(Buffs.NastrondReady) && IsLoTDActive && InActionRange(Nastrond);
 
     private static bool UseHighJump(
         bool onAoE = false,
@@ -314,13 +315,13 @@ internal partial class DRG
     private static bool UseDragonfireDive(
         UserBoolArray? holdOptions = null,
         int hpThreshold = 0) =>
-        ActionReady(DragonfireDive) && !HasStatusEffect(Buffs.DragonsFlight) &&
+        ActionReady(DragonfireDive) && !LocalPlayer.HasStatus(Buffs.DragonsFlight) &&
         GetTargetHPPercent() > hpThreshold &&
         CanUseWithHoldOptions(holdOptions) &&
         (IsLoTDTimerActive || !ActionLearned(Geirskogul));
 
     private static bool UseStardiver(UserBoolArray? holdOptions = null) =>
-        ActionReady(Stardiver) && IsLoTDActive && !HasStatusEffect(Buffs.StarcrossReady) &&
+        ActionReady(Stardiver) && IsLoTDActive && !LocalPlayer.HasStatus(Buffs.StarcrossReady) &&
         CanUseWithHoldOptions(holdOptions);
 
     private readonly struct OutsideOfMeleeOptions

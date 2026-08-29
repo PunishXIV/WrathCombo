@@ -9,6 +9,7 @@ using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.PLD.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class PLD
@@ -18,7 +19,7 @@ internal partial class PLD
     private static PLDGauge Gauge => GetJobGauge<PLDGauge>();
 
     private static bool HasDivineMight =>
-        HasStatusEffect(Buffs.DivineMight);
+        LocalPlayer.HasStatus(Buffs.DivineMight);
 
     private static bool HasDivineMagicMP =>
         LocalPlayer.CurrentMp >= GetResourceCost(HolySpirit);
@@ -127,13 +128,13 @@ internal partial class PLD
         #region Variables
 
         bool mitigationRunning =
-            HasStatusEffect(Role.Buffs.ArmsLength) ||
-            HasStatusEffect(Role.Buffs.Rampart) ||
-            HasStatusEffect(Buffs.HallowedGround) ||
-            HasStatusEffect(Buffs.Bulwark) ||
-            HasStatusEffect(Buffs.Sentinel) ||
-            HasStatusEffect(Buffs.Guardian) ||
-            HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
+            LocalPlayer.HasStatus(Role.Buffs.ArmsLength) ||
+            LocalPlayer.HasStatus(Role.Buffs.Rampart) ||
+            LocalPlayer.HasStatus(Buffs.HallowedGround) ||
+            LocalPlayer.HasStatus(Buffs.Bulwark) ||
+            LocalPlayer.HasStatus(Buffs.Sentinel) ||
+            LocalPlayer.HasStatus(Buffs.Guardian) ||
+            CurrentTarget.HasStatus(Role.Debuffs.Reprisal);
 
         bool justMitted =
             JustUsed(OriginalHook(Bulwark)) ||
@@ -176,7 +177,7 @@ internal partial class PLD
         if (IsEnabled(Preset.PLD_Mitigation_NonBoss_Sheltron) && ActionReady(OriginalHook(Sheltron)) &&
             CanWeave() && !justMitted &&
             !IsMoving() && CanWeave() &&
-            !HasStatusEffect(Buffs.Sheltron) && !HasStatusEffect(Buffs.HallowedGround) &&
+            !LocalPlayer.HasStatus(Buffs.Sheltron) && !LocalPlayer.HasStatus(Buffs.HallowedGround) &&
             Gauge.OathGauge >= 50)
         {
             actionID = OriginalHook(Sheltron);
@@ -332,7 +333,7 @@ internal partial class PLD
                                   HasIncomingTankBusterEffect(out var incomingBusterAge) && incomingBusterAge >= sheltronDelay;
 
         if (ActionReady(OriginalHook(Sheltron)) &&
-            !HasStatusEffect(Buffs.Sheltron) &&
+            !LocalPlayer.HasStatus(Buffs.Sheltron) &&
             (sheltronOvercap || sheltronTankbuster))
         {
             actionID = OriginalHook(Sheltron);
@@ -668,26 +669,26 @@ internal partial class PLD
         bool rangedUptimeRangeCheck = !InMeleeRange() && flags.HasFlag(Combo.ST) || 
                                       !InActionRange(TotalEclipse) && flags.HasFlag(Combo.AoE);
         
-        bool inAtonementPhase = HasStatusEffect(Buffs.AtonementReady) || 
-                                HasStatusEffect(Buffs.SupplicationReady) ||
-                                HasStatusEffect(Buffs.SepulchreReady);
+        bool inAtonementPhase = LocalPlayer.HasStatus(Buffs.AtonementReady) || 
+                                LocalPlayer.HasStatus(Buffs.SupplicationReady) ||
+                                LocalPlayer.HasStatus(Buffs.SepulchreReady);
         
-        bool isAtonementExpiring = HasStatusEffect(Buffs.AtonementReady) && GetStatusEffectRemainingTime(Buffs.AtonementReady) < 6 ||
-                                   HasStatusEffect(Buffs.SupplicationReady) && GetStatusEffectRemainingTime(Buffs.SupplicationReady) < 6 ||
-                                   HasStatusEffect(Buffs.SepulchreReady) && GetStatusEffectRemainingTime(Buffs.SepulchreReady) < 6;
+        bool isAtonementExpiring = LocalPlayer.HasStatus(Buffs.AtonementReady) && LocalPlayer.Status(Buffs.AtonementReady).RemainingTimeOrZero() < 6 ||
+                                   LocalPlayer.HasStatus(Buffs.SupplicationReady) && LocalPlayer.Status(Buffs.SupplicationReady).RemainingTimeOrZero() < 6 ||
+                                   LocalPlayer.HasStatus(Buffs.SepulchreReady) && LocalPlayer.Status(Buffs.SepulchreReady).RemainingTimeOrZero() < 6;
         #endregion
         
-        if (goringBladeEnabled &&  HasStatusEffect(Buffs.GoringBladeReady) && 
+        if (goringBladeEnabled &&  LocalPlayer.HasStatus(Buffs.GoringBladeReady) && 
             InMeleeRange() && HasBattleTarget() &&
-            (goringBladePriority == 1 || !HasStatusEffect(Buffs.Requiescat)) && //Option to allow it to go first if in melee range in case you need to move out after
+            (goringBladePriority == 1 || !LocalPlayer.HasStatus(Buffs.Requiescat)) && //Option to allow it to go first if in melee range in case you need to move out after
             (flags.HasFlag(Combo.ST) || NumberOfEnemiesInRange(TotalEclipse) <= 3)) //Aoe limit on number of targets as dps loss at 4+
         {
             actionID = GoringBlade;
             return true;
         }
         
-        if (confiteorComboEnabled && HasStatusEffect(Buffs.Requiescat) && HasDivineMagicMP && //Does not have a battle target check as un-targeting and fast blade retargeting breaks Cofefe combo. DO NOT ADD.
-            (HasStatusEffect(Buffs.ConfiteorReady) || //Confiteor
+        if (confiteorComboEnabled && LocalPlayer.HasStatus(Buffs.Requiescat) && HasDivineMagicMP && //Does not have a battle target check as un-targeting and fast blade retargeting breaks Cofefe combo. DO NOT ADD.
+            (LocalPlayer.HasStatus(Buffs.ConfiteorReady) || //Confiteor
              ActionLearned(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)) //Its combo
         {
             actionID = NextConfiteorBlade();
@@ -697,12 +698,12 @@ internal partial class PLD
         
             
         if (holySpellEnabled && HasDivineMagicMP && isAboveMPReserve && HasBattleTarget() &&
-            (HasStatusEffect(Buffs.Requiescat) || //Use if you have req stacks. Should only happen if You are under level for Cofefe Combo
+            (LocalPlayer.HasStatus(Buffs.Requiescat) || //Use if you have req stacks. Should only happen if You are under level for Cofefe Combo
              HasDivineMight && !InMeleeRange() || //Out of melee Use this before shield lob
-             HasDivineMight && HasStatusEffect(Buffs.FightOrFlight) || // Burn in buff window
+             HasDivineMight && LocalPlayer.HasStatus(Buffs.FightOrFlight) || // Burn in buff window
              HasDivineMight && ComboAction is RiotBlade && flags.HasFlag(Combo.ST)|| //Use if about to refresh Divine Might ST (Not combined with below for a reason)
              HasDivineMight && ComboAction is TotalEclipse && flags.HasFlag(Combo.AoE)|| //Use if about to refresh Divine Might AOE
-             HasDivineMight && GetStatusEffectRemainingTime(Buffs.DivineMight) < 6)) //Use if expiring
+             HasDivineMight && LocalPlayer.Status(Buffs.DivineMight).RemainingTimeOrZero() < 6)) //Use if expiring
         {
             if (flags.HasFlag(Combo.ST) && ActionReady(HolySpirit))
             {
@@ -733,9 +734,9 @@ internal partial class PLD
         }
         
         if (atonementEnabled && inAtonementPhase && flags.HasFlag(Combo.ST) && HasBattleTarget() &&
-            (HasStatusEffect(Buffs.FightOrFlight) || //Will burn them in Buff window
+            (LocalPlayer.HasStatus(Buffs.FightOrFlight) || //Will burn them in Buff window
              ComboAction is RiotBlade || //Will hold them until you are about to get more
-             HasStatusEffect(Buffs.AtonementReady) || //Will use atonement Asap to Get the supplication ready
+             LocalPlayer.HasStatus(Buffs.AtonementReady) || //Will use atonement Asap to Get the supplication ready
              isAtonementExpiring)) //Burn it if it is expiring soon
         {
             actionID = OriginalHook(Atonement);

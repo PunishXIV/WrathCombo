@@ -31,7 +31,7 @@ internal partial class SGE : Healer
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
-            if (CanWeave() && !HasStatusEffect(Buffs.Eukrasia))
+            if (CanWeave() && !LocalPlayer.HasStatus(Buffs.Eukrasia))
             {
                 if (UseAddersgallProtect(3))
                     return Druochole.RetargetIfEnabled([actionID]);
@@ -52,7 +52,7 @@ internal partial class SGE : Healer
             if (UseEDosis(ref actionID, true, [actionID]))
                 return actionID;
 
-            if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia) && InCombat())
+            if (HasBattleTarget() && !LocalPlayer.HasStatus(Buffs.Eukrasia) && InCombat())
             {
                 if (UsePhlegma(true, 1, true))
                     return OriginalHook(Phlegma);
@@ -96,7 +96,7 @@ internal partial class SGE : Healer
             }
 
             if (UseEDyskrasia())
-                return HasStatusEffect(Buffs.Eukrasia) ? OriginalHook(Dyskrasia) : Eukrasia;
+                return LocalPlayer.HasStatus(Buffs.Eukrasia) ? OriginalHook(Dyskrasia) : Eukrasia;
 
             if (UseAoEPhlegma(psycheEnabled: true))
                 return OriginalHook(Phlegma);
@@ -144,7 +144,7 @@ internal partial class SGE : Healer
             if (UseRaidwide(ref actionID))
                 return actionID;
 
-            if (CanWeave() && !HasStatusEffect(Buffs.Eukrasia))
+            if (CanWeave() && !LocalPlayer.HasStatus(Buffs.Eukrasia))
             {
                 if (IsEnabled(Preset.SGE_ST_Adv_DPS_AddersgallProtect) &&
                     UseAddersgallProtect(SGE_ST_Adv_DPS_AddersgallProtect))
@@ -172,7 +172,7 @@ internal partial class SGE : Healer
                 UseEDosis(ref actionID, false, dosisActions))
                 return actionID;
 
-            if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia) && InCombat())
+            if (HasBattleTarget() && !LocalPlayer.HasStatus(Buffs.Eukrasia) && InCombat())
             {
                 if (IsEnabled(Preset.SGE_ST_Adv_DPS_Phlegma) &&
                     UsePhlegma(
@@ -230,7 +230,7 @@ internal partial class SGE : Healer
             }
 
             if (IsEnabled(Preset.SGE_AoE_Adv_DPS_EDyskrasia) && UseEDyskrasia())
-                return HasStatusEffect(Buffs.Eukrasia) ? OriginalHook(Dyskrasia) : Eukrasia;
+                return LocalPlayer.HasStatus(Buffs.Eukrasia) ? OriginalHook(Dyskrasia) : Eukrasia;
 
             if (IsEnabled(Preset.SGE_AoE_Adv_DPS_Phlegma) &&
                 UseAoEPhlegma(IsEnabled(Preset.SGE_AoE_Adv_DPS_Psyche)))
@@ -264,10 +264,10 @@ internal partial class SGE : Healer
 
             bool cleansableTarget =
                 HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
-                HasCleansableDebuff(healTarget);
+                healTarget.HasCleansableDebuff;
 
             if (ActionLearned(Kardia) &&
-                !HasStatusEffect(Buffs.Kardia))
+                !LocalPlayer.HasStatus(Buffs.Kardia))
                 return Kardia.Retarget(actionID, SimpleTarget.AnyLivingTank);
 
             if (UseEukrasianDiagnosis(healTarget, true, ref actionID))
@@ -308,7 +308,7 @@ internal partial class SGE : Healer
                 if (ActionReady(Taurochole) && HasAddersgall)
                     return Taurochole.RetargetIfEnabled(actionID);
 
-                if (ActionReady(Haima) && !HasStatusEffect(Buffs.Panhaima, healTarget))
+                if (ActionReady(Haima) && !healTarget.HasStatus(Buffs.Panhaima))
                     return Haima.RetargetIfEnabled(actionID);
             }
 
@@ -320,12 +320,12 @@ internal partial class SGE : Healer
                 if (ActionReady(Holos))
                     return Holos;
 
-                if (ActionReady(Panhaima) && !HasStatusEffect(Buffs.Haima, healTarget))
+                if (ActionReady(Panhaima) && !healTarget.HasStatus(Buffs.Haima))
                     return Panhaima;
             }
 
             if (ActionReady(Pepsis) &&
-                HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget))
+                healTarget.HasStatus(Buffs.EukrasianDiagnosis))
                 return Pepsis;
 
             return Diagnosis.RetargetIfEnabled(actionID);
@@ -350,13 +350,13 @@ internal partial class SGE : Healer
                     return Rhizomata;
             }
 
-            if (HasStatusEffect(Buffs.Eukrasia))
+            if (LocalPlayer.HasStatus(Buffs.Eukrasia))
                 return OriginalHook(Prognosis);
 
             if (ActionReady(Eukrasia) &&
                 GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= 50 &&
                 GetPartyBuffPercent(SCH.Buffs.Galvanize) <= 50 &&
-                !HasStatusEffect(Buffs.Eukrasia))
+                !LocalPlayer.HasStatus(Buffs.Eukrasia))
                 return Eukrasia;
 
             if (CanWeave())
@@ -407,12 +407,12 @@ internal partial class SGE : Healer
 
             bool cleansableTarget =
                 HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
-                HasCleansableDebuff(healTarget);
+                healTarget.HasCleansableDebuff;
 
             if (IsEnabled(Preset.SGE_ST_Adv_Heal_Kardia) &&
                 ActionLearned(Kardia) &&
-                !HasStatusEffect(Buffs.Kardia) &&
-                !HasStatusEffect(Buffs.Kardion, healTarget))
+                !LocalPlayer.HasStatus(Buffs.Kardia) &&
+                !healTarget.HasStatus(Buffs.Kardion))
                 return Kardia.Retarget(actionID, Target);
 
             if (UseRaidwide(ref actionID))
@@ -469,7 +469,7 @@ internal partial class SGE : Healer
                 return actionID;
 
             if (IsEnabled(Preset.SGE_AoE_Adv_Heal_EPrognosis) &&
-                HasStatusEffect(Buffs.Eukrasia))
+                LocalPlayer.HasStatus(Buffs.Eukrasia))
                 return OriginalHook(Prognosis);
 
             if (CanWeave())
@@ -515,13 +515,13 @@ internal partial class SGE : Healer
             {
                 case Kerachole when IsEnabled(Preset.SGE_OverProtect_Kerachole) &&
                                     ActionReady(Kerachole) &&
-                                    (HasStatusEffect(Buffs.Kerachole, anyOwner: true) ||
-                                     IsEnabled(Preset.SGE_OverProtect_SacredSoil) && HasStatusEffect(SCH.Buffs.SacredSoil, anyOwner: true)):
+                                    (LocalPlayer.HasStatus(Buffs.Kerachole, true) ||
+                                     IsEnabled(Preset.SGE_OverProtect_SacredSoil) && LocalPlayer.HasStatus(SCH.Buffs.SacredSoil, true)):
                 case Panhaima when IsEnabled(Preset.SGE_OverProtect_Panhaima) &&
-                                   ActionReady(Panhaima) && HasStatusEffect(Buffs.Panhaima, anyOwner: true):
+                                   ActionReady(Panhaima) && LocalPlayer.HasStatus(Buffs.Panhaima, true):
                     return SCH.SacredSoil;
                 case Philosophia when IsEnabled(Preset.SGE_OverProtect_Philosophia) &&
-                                      ActionReady(Philosophia) && HasStatusEffect(Buffs.Eudaimonia, anyOwner: true):
+                                      ActionReady(Philosophia) && LocalPlayer.HasStatus(Buffs.Eudaimonia, true):
                     return SCH.Consolation;
                 default:
                     return actionID;
@@ -584,7 +584,7 @@ internal partial class SGE : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Eukrasia || !HasStatusEffect(Buffs.Eukrasia))
+            if (actionID is not Eukrasia || !LocalPlayer.HasStatus(Buffs.Eukrasia))
                 return actionID;
 
             if (SGE_Eukrasia_Mode == 0)
@@ -634,7 +634,7 @@ internal partial class SGE : Healer
             if (actionID is not Soteria)
                 return actionID;
 
-            if (!HasStatusEffect(Buffs.Kardia) || IsOnCooldown(Soteria))
+            if (!LocalPlayer.HasStatus(Buffs.Kardia) || IsOnCooldown(Soteria))
                 return IsEnabled(Preset.SGE_Retarget_Kardia)
                     ? Kardia.Retarget(actionID, HealStack)
                     : Kardia;
@@ -657,9 +657,9 @@ internal partial class SGE : Healer
                     ? Krasis.Retarget(HealStack)
                     : actionID;
 
-            if (!HasStatusEffect(Buffs.EukrasianDiagnosis, HealStack))
+            if (!HealStack.HasStatus(Buffs.EukrasianDiagnosis))
             {
-                if (!HasStatusEffect(Buffs.Eukrasia))
+                if (!LocalPlayer.HasStatus(Buffs.Eukrasia))
                     return Eukrasia;
 
                 return IsEnabled(Preset.SGE_Retarget_EukrasianDiagnosis)
@@ -695,8 +695,8 @@ internal partial class SGE : Healer
 
             if (SGE_Mit_AoE_Options[1] &&
                 ActionReady(Kerachole) &&
-                !HasStatusEffect(Buffs.Kerachole, anyOwner: true) &&
-                !HasStatusEffect(SCH.Buffs.SacredSoil, anyOwner: true))
+                !LocalPlayer.HasStatus(Buffs.Kerachole, true) &&
+                !LocalPlayer.HasStatus(SCH.Buffs.SacredSoil, true))
                 return Kerachole;
 
             if (SGE_Mit_AoE_Options[0] &&
@@ -704,17 +704,17 @@ internal partial class SGE : Healer
                 return Philosophia;
 
             if (GetPartyBuffPercent(Buffs.EukrasianPrognosis) < SGE_Mit_AoE_PrognosisOption)
-                return HasStatusEffect(Buffs.Eukrasia)
+                return LocalPlayer.HasStatus(Buffs.Eukrasia)
                     ? OriginalHook(Prognosis)
                     : Eukrasia;
 
             if (ActionReady(Holos) &&
-                !HasStatusEffect(Buffs.Holosakos, anyOwner: true))
+                !LocalPlayer.HasStatus(Buffs.Holosakos, true))
                 return Holos;
 
             if (SGE_Mit_AoE_Options[2] &&
                 ActionReady(Panhaima) &&
-                !HasStatusEffect(Buffs.Panhaima, anyOwner: true))
+                !LocalPlayer.HasStatus(Buffs.Panhaima, true))
                 return Panhaima;
 
             return actionID;

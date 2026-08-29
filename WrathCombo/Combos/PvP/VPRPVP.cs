@@ -2,6 +2,7 @@
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.VPRPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -130,12 +131,12 @@ internal static class VPRPvP
             bool[] optionsRattlingCoil = VPRPvP_RattlingCoil_SubOptions;
             bool hasTarget = HasTarget();
             bool inMeleeRange = targetDistance <= 5;
-            bool hasSlither = HasStatusEffect(Buffs.Slither);
-            bool hasBind = HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true);
+            bool hasSlither = LocalPlayer.HasStatus(Buffs.Slither);
+            bool hasBind = LocalPlayer.HasStatus(PvPCommon.Debuffs.Bind, true);
             bool targetHasImmunity = PvPCommon.TargetImmuneToDamage();
             bool hasBacklash = OriginalHook(SnakeScales) is Backlash;
             bool hasOuroboros = OriginalHook(Bloodcoil) is Ouroboros;
-            bool hasSnakesBane = hasBacklash && HasStatusEffect(Buffs.SnakesBane);
+            bool hasSnakesBane = hasBacklash && LocalPlayer.HasStatus(Buffs.SnakesBane);
             bool hasSanguineFeast = OriginalHook(Bloodcoil) is SanguineFeast;
             bool isMeleeDependant = !hasTarget || (hasTarget && inMeleeRange);
             bool isSnakeScalesDown = IsOnCooldown(SnakeScales) && !hasBacklash;

@@ -9,6 +9,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.RDM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 #endregion
 
 namespace WrathCombo.Combos.PvE;
@@ -131,22 +132,22 @@ internal partial class RDM
 
     //Floats
     internal static float EmboldenCD => GetCooldownRemainingTime(Embolden);
-    internal static float VerFireRemaining => GetStatusEffectRemainingTime(Buffs.VerfireReady);
-    internal static float VerStoneRemaining => GetStatusEffectRemainingTime(Buffs.VerstoneReady);
+    internal static float VerFireRemaining => LocalPlayer.Status(Buffs.VerfireReady).RemainingTimeOrZero();
+    internal static float VerStoneRemaining => LocalPlayer.Status(Buffs.VerstoneReady).RemainingTimeOrZero();
 
     //Bools
-    internal static bool CanVerStone => HasStatusEffect(Buffs.VerstoneReady);
-    internal static bool CanVerFire => HasStatusEffect(Buffs.VerfireReady);
-    internal static bool CanVerFireAndStone => HasStatusEffect(Buffs.VerstoneReady) && HasStatusEffect(Buffs.VerfireReady);
-    internal static bool CanGrandImpact => HasStatusEffect(Buffs.GrandImpactReady);
-    internal static bool CanMagickedSwordplay => HasStatusEffect(Buffs.MagickedSwordPlay);
-    internal static bool CanPrefulgence => HasStatusEffect(Buffs.PrefulgenceReady);
-    internal static bool CanViceOfThorns => HasStatusEffect(Buffs.ThornedFlourish) && !JustUsed(Embolden, 6f);
-    internal static bool HasDualcast => HasStatusEffect(Buffs.Dualcast);
-    internal static bool HasAccelerate => HasStatusEffect(Buffs.Acceleration);
-    internal static bool HasSwiftcast => HasStatusEffect(Buffs.Swiftcast);
-    internal static bool HasEmbolden => HasStatusEffect(Buffs.Embolden);
-    internal static bool HasManafication => HasStatusEffect(Buffs.Manafication);
+    internal static bool CanVerStone => LocalPlayer.HasStatus(Buffs.VerstoneReady);
+    internal static bool CanVerFire => LocalPlayer.HasStatus(Buffs.VerfireReady);
+    internal static bool CanVerFireAndStone => LocalPlayer.HasStatus(Buffs.VerstoneReady) && LocalPlayer.HasStatus(Buffs.VerfireReady);
+    internal static bool CanGrandImpact => LocalPlayer.HasStatus(Buffs.GrandImpactReady);
+    internal static bool CanMagickedSwordplay => LocalPlayer.HasStatus(Buffs.MagickedSwordPlay);
+    internal static bool CanPrefulgence => LocalPlayer.HasStatus(Buffs.PrefulgenceReady);
+    internal static bool CanViceOfThorns => LocalPlayer.HasStatus(Buffs.ThornedFlourish) && !JustUsed(Embolden, 6f);
+    internal static bool HasDualcast => LocalPlayer.HasStatus(Buffs.Dualcast);
+    internal static bool HasAccelerate => LocalPlayer.HasStatus(Buffs.Acceleration);
+    internal static bool HasSwiftcast => LocalPlayer.HasStatus(Buffs.Swiftcast);
+    internal static bool HasEmbolden => LocalPlayer.HasStatus(Buffs.Embolden);
+    internal static bool HasManafication => LocalPlayer.HasStatus(Buffs.Manafication);
     internal static bool CanAcceleration => ActionLearned(Acceleration) && !CanVerFireAndStone && HasCharges(Acceleration) && CanInstantCD &&
                                             (EmboldenCD > 15 || ActionLearned(Embolden));
     internal static bool CanAccelerationMovement => ActionLearned(Acceleration) && IsMoving() && HasCharges(Acceleration) && CanInstantCD;
@@ -158,7 +159,7 @@ internal partial class RDM
     internal static bool SaveEngagement => GetRemainingCharges(Engagement) >= 2;
     internal static bool CanCorps => ActionLearned(Corpsacorps) && GetRemainingCharges(Corpsacorps) >= 1 && GetCooldownChargeRemainingTime(Corpsacorps) < 1;
     internal static bool CanInstantCast => HasDualcast || HasAccelerate || HasSwiftcast;
-    internal static bool CanNotMagickBarrier => !ActionReady(MagickBarrier) || HasStatusEffect(Buffs.MagickBarrier, anyOwner: true);
+    internal static bool CanNotMagickBarrier => !ActionReady(MagickBarrier) || LocalPlayer.HasStatus(Buffs.MagickBarrier, true);
     #endregion
 
     #region Functions
@@ -323,7 +324,7 @@ internal partial class RDM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([14, 16, 20, 21], () => !InMeleeRange()),
-            ([6],() => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
+            ([6],() => !LocalPlayer.HasStatus(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
@@ -393,7 +394,7 @@ internal partial class RDM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = 
         [
             ([16, 21], () => !InMeleeRange()),
-            ([35], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
+            ([35], () => !LocalPlayer.HasStatus(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;

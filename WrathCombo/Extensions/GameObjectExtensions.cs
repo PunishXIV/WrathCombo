@@ -14,6 +14,7 @@ using ECommons.Logging;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 
 #endregion
 
@@ -67,8 +68,8 @@ public static class GameObjectExtensions
         {
             return obj.IsDead &&
                    obj.IsAPlayer() &&
-                   !HasStatusEffect(2648, obj, true) && // just rezzed
-                   !HasStatusEffect(148, obj, true) && // pending rezz
+                   !obj.HasStatus(2648, true) && // just rezzed
+                   !obj.HasStatus(148, true) && // pending rezz
                    obj.IsTargetable &&
                    TimeSpentDead(obj.GameObjectId).TotalSeconds > 2;
         }
@@ -211,7 +212,7 @@ public static class GameObjectExtensions
         ///     debuff.
         /// </summary>
         public IGameObject? IfHasCleansable() =>
-            obj != null && HasCleansableDebuff(obj) ? obj : null;
+            obj != null && obj.HasCleansableDebuff ? obj : null;
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -334,14 +335,14 @@ public static class GameObjectExtensions
         ///     boolean check for if the object is not invulnerable/invincible.
         /// </summary>
         public bool IsNotInvincible() =>
-            obj is IBattleChara chara  && !TargetIsInvincible(chara);
+            obj is IBattleChara chara  && !chara.IsInvincible;
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
         ///     boolean check for if the object has a cleansable debuff.
         /// </summary>
         public bool IsCleansable() =>
-            obj != null && HasCleansableDebuff(obj);
+            obj != null && obj.HasCleansableDebuff;
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick

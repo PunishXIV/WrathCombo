@@ -4,6 +4,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.WHMPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -110,11 +111,11 @@ internal static class WHMPvP
                 if (IsEnabled(Preset.WHMPvP_Afflatus_Misery) && IsOffCooldown(AfflatusMisery))
                     return AfflatusMisery;
             }
-            if (IsEnabled(Preset.WHMPvP_Burst_Heals) && !HasStatusEffect(Buffs.SacredSight))
+            if (IsEnabled(Preset.WHMPvP_Burst_Heals) && !LocalPlayer.HasStatus(Buffs.SacredSight))
             {
                 IGameObject? healTarget = WHMPvP_Burst_HealsRetarget ? SimpleTarget.Stack.AllyToHealPVP : SimpleTarget.Stack.Allies;
                 
-                if (WHMPvP_Burst_Heals_Options[1] && HasStatusEffect(Buffs.Cure3Ready) && GetTargetHPPercent(healTarget) <= WHMPvP_Burst_HealsThreshold)
+                if (WHMPvP_Burst_Heals_Options[1] && LocalPlayer.HasStatus(Buffs.Cure3Ready) && GetTargetHPPercent(healTarget) <= WHMPvP_Burst_HealsThreshold)
                     return WHMPvP_Burst_HealsRetarget
                         ? Cure3.Retarget(Glare, healTarget)
                         : Cure3;
@@ -142,7 +143,7 @@ internal static class WHMPvP
             if (actionID is not Cure2) 
                 return actionID;
             
-            if (IsEnabled(Preset.WHMPvP_Cure3) && HasStatusEffect(Buffs.Cure3Ready))
+            if (IsEnabled(Preset.WHMPvP_Cure3) && LocalPlayer.HasStatus(Buffs.Cure3Ready))
                 return WHMPvP_Heals_Options[1]
                     ? Cure3.Retarget(Cure2, SimpleTarget.Stack.AllyToHealPVP)
                     : Cure3;
@@ -165,7 +166,7 @@ internal static class WHMPvP
             {
                 if (actionID is SeraphStrike)
                 {
-                    if (IsEnabled(Preset.WHMPvP_Seraphstrike) && HasStatusEffect(Buffs.SacredSight))
+                    if (IsEnabled(Preset.WHMPvP_Seraphstrike) && LocalPlayer.HasStatus(Buffs.SacredSight))
                         return Glare4;
                 }
 

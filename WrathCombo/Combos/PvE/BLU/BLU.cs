@@ -128,13 +128,13 @@ internal partial class BLU : Caster
         {
             if (actionID is FinalSting)
             {
-                if (IsEnabled(Preset.BLU_SoloMode) && HasCondition(ConditionFlag.BoundByDuty) && !HasStatusEffect(Buffs.BasicInstinct) && GetPartyMembers().Count == 0 && ActionReady(BasicInstinct))
+                if (IsEnabled(Preset.BLU_SoloMode) && HasCondition(ConditionFlag.BoundByDuty) && !LocalPlayer.HasStatus(Buffs.BasicInstinct) && GetPartyMembers().Count == 0 && ActionReady(BasicInstinct))
                     return BasicInstinct;
-                if (!HasStatusEffect(Buffs.Whistle) && ActionReady(Whistle) && !WasLastAction(Whistle))
+                if (!LocalPlayer.HasStatus(Buffs.Whistle) && ActionReady(Whistle) && !WasLastAction(Whistle))
                     return Whistle;
-                if (!HasStatusEffect(Buffs.Tingle) && ActionReady(Tingle) && !WasLastSpell(Tingle))
+                if (!LocalPlayer.HasStatus(Buffs.Tingle) && ActionReady(Tingle) && !WasLastSpell(Tingle))
                     return Tingle;
-                if (!HasStatusEffect(Buffs.MoonFlute) && !WasLastSpell(MoonFlute) && ActionReady(MoonFlute))
+                if (!LocalPlayer.HasStatus(Buffs.MoonFlute) && !WasLastSpell(MoonFlute) && ActionReady(MoonFlute))
                     return MoonFlute;
                 if (IsEnabled(Preset.BLU_Primals))
                 {
@@ -174,10 +174,10 @@ internal partial class BLU : Caster
             {
                 if (IsEnabled(Preset.BLU_HydroPull) && !InMeleeRange() && ActionReady(HydroPull))
                     return HydroPull;
-                if (!HasStatusEffect(Debuffs.DeepFreeze, CurrentTarget, true) && IsOffCooldown(Ultravibration) && ActionReady(RamsVoice))
+                if (!CurrentTarget.HasStatus(Debuffs.DeepFreeze, true) && IsOffCooldown(Ultravibration) && ActionReady(RamsVoice))
                     return RamsVoice;
 
-                if (HasStatusEffect(Debuffs.DeepFreeze, CurrentTarget, true))
+                if (CurrentTarget.HasStatus(Debuffs.DeepFreeze, true))
                 {
                     if (ActionReady(Role.Swiftcast))
                         return Role.Swiftcast;
@@ -198,11 +198,11 @@ internal partial class BLU : Caster
         {
             if (actionID is Devour or Offguard or BadBreath)
             {
-                if (!HasStatusEffect(Debuffs.Offguard, CurrentTarget, true) && ActionReady(Offguard))
+                if (!CurrentTarget.HasStatus(Debuffs.Offguard, true) && ActionReady(Offguard))
                     return Offguard;
-                if (!HasStatusEffect(Debuffs.Malodorous, CurrentTarget, true) && HasStatusEffect(Buffs.TankMimicry) && ActionReady(BadBreath))
+                if (!CurrentTarget.HasStatus(Debuffs.Malodorous, true) && LocalPlayer.HasStatus(Buffs.TankMimicry) && ActionReady(BadBreath))
                     return BadBreath;
-                if (ActionReady(Devour) && HasStatusEffect(Buffs.TankMimicry))
+                if (ActionReady(Devour) && LocalPlayer.HasStatus(Buffs.TankMimicry))
                     return Devour;
                 if (Role.CanLucidDream(9000))
                     return Role.LucidDreaming;
@@ -216,7 +216,7 @@ internal partial class BLU : Caster
     {
         protected internal override Preset Preset => Preset.BLU_Addle;
 
-        protected override uint Invoke(uint actionID) => actionID is MagicHammer && IsOnCooldown(MagicHammer) && ActionReady(Role.Addle) && !HasStatusEffect(Role.Debuffs.Addle, CurrentTarget) && !HasStatusEffect(Debuffs.Conked, CurrentTarget) ? Role.Addle : actionID;
+        protected override uint Invoke(uint actionID) => actionID is MagicHammer && IsOnCooldown(MagicHammer) && ActionReady(Role.Addle) && !CurrentTarget.HasStatus(Role.Debuffs.Addle) && !CurrentTarget.HasStatus(Debuffs.Conked) ? Role.Addle : actionID;
     }
 
     internal class BLU_KnightCombo : CustomCombo
@@ -227,9 +227,9 @@ internal partial class BLU : Caster
         {
             if (actionID is WhiteKnightsTour or BlackKnightsTour)
             {
-                if (HasStatusEffect(Debuffs.Slow, CurrentTarget) && ActionReady(BlackKnightsTour))
+                if (CurrentTarget.HasStatus(Debuffs.Slow) && ActionReady(BlackKnightsTour))
                     return BlackKnightsTour;
-                if (HasStatusEffect(Debuffs.Bind, CurrentTarget) && ActionReady(WhiteKnightsTour))
+                if (CurrentTarget.HasStatus(Debuffs.Bind) && ActionReady(WhiteKnightsTour))
                     return WhiteKnightsTour;
             }
 
@@ -245,9 +245,9 @@ internal partial class BLU : Caster
         {
             if (actionID is PeripheralSynthesis)
             {
-                if (!HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) && ActionReady(PeripheralSynthesis))
+                if (!CurrentTarget.HasStatus(Debuffs.Lightheaded) && ActionReady(PeripheralSynthesis))
                     return PeripheralSynthesis;
-                if (HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) && ActionReady(MustardBomb))
+                if (CurrentTarget.HasStatus(Debuffs.Lightheaded) && ActionReady(MustardBomb))
                     return MustardBomb;
             }
 
@@ -259,7 +259,7 @@ internal partial class BLU : Caster
     {
         protected internal override Preset Preset => Preset.BLU_PerpetualRayStunCombo;
 
-        protected override uint Invoke(uint actionID) => actionID is PerpetualRay && (HasStatusEffect(Debuffs.Stun, CurrentTarget, true) || WasLastAction(PerpetualRay)) && ActionReady(SharpenedKnife) && InMeleeRange() ? SharpenedKnife : actionID;
+        protected override uint Invoke(uint actionID) => actionID is PerpetualRay && (CurrentTarget.HasStatus(Debuffs.Stun, true) || WasLastAction(PerpetualRay)) && ActionReady(SharpenedKnife) && InMeleeRange() ? SharpenedKnife : actionID;
     }
 
     internal class BLU_PeatClean : CustomCombo
@@ -270,7 +270,7 @@ internal partial class BLU : Caster
         {
             if (actionID is DeepClean)
             {
-                if (ActionReady(PeatPelt) && !HasStatusEffect(Debuffs.Begrimed, CurrentTarget))
+                if (ActionReady(PeatPelt) && !CurrentTarget.HasStatus(Debuffs.Begrimed))
                     return PeatPelt;
             }
 

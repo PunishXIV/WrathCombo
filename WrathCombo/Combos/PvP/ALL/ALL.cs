@@ -7,6 +7,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Window.Functions.UserConfig;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvP;
 
 internal static class PvPCommon
@@ -101,8 +102,8 @@ internal static class PvPCommon
         var t = optionalTarget ?? CurrentTarget;
         if (t is null || !InPvP()) return false;
 
-        bool targetHasReductions = HasStatusEffect(Buffs.Guard, t, true) || HasStatusEffect(Buffs.WeakenedGuard, t, true) || HasStatusEffect(VPRPvP.Buffs.HardenedScales, t, true);
-        bool targetHasImmunities = HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, t, true) || HasStatusEffect(PLDPvP.Buffs.HallowedGround, t, true);
+        bool targetHasReductions = t.HasStatus(Buffs.Guard, true) || t.HasStatus(Buffs.WeakenedGuard, true) || t.HasStatus(VPRPvP.Buffs.HardenedScales, true);
+        bool targetHasImmunities = t.HasStatus(DRKPvP.Buffs.UndeadRedemption, true) || t.HasStatus(PLDPvP.Buffs.HallowedGround, true);
 
         return includeReductions
             ? targetHasReductions || targetHasImmunities
@@ -139,7 +140,7 @@ internal static class PvPCommon
 
         protected override uint Invoke(uint actionID)
         {
-            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
+            if ((LocalPlayer.HasStatus(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
             {
                 if (actionID is Guard)
                     return Guard;
@@ -160,10 +161,10 @@ internal static class PvPCommon
             if (LocalPlayer is not { } player || player.IsDead || player.CurrentMp < RecuperateCost) return false;
 
             // Special States
-            if (HasStatusEffect(DRGPvP.Buffs.SkyHigh) ||
-                HasStatusEffect(VPRPvP.Buffs.HardenedScales) ||
-                HasStatusEffect(DRKPvP.Buffs.UndeadRedemption) ||
-                HasStatusEffect(Buffs.RidingMecha, anyOwner: true))
+            if (LocalPlayer.HasStatus(DRGPvP.Buffs.SkyHigh) ||
+                LocalPlayer.HasStatus(VPRPvP.Buffs.HardenedScales) ||
+                LocalPlayer.HasStatus(DRKPvP.Buffs.UndeadRedemption) ||
+                LocalPlayer.HasStatus(Buffs.RidingMecha, true))
                 return false;
 
             var adjustedCurrentHP = player.CurrentHp * 100;
@@ -179,7 +180,7 @@ internal static class PvPCommon
 
         protected override uint Invoke(uint actionID)
         {
-            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
+            if ((LocalPlayer.HasStatus(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
             {
                 if (actionID is Guard)
                 {
@@ -208,13 +209,13 @@ internal static class PvPCommon
             if (LocalPlayer is not { } player || player.IsDead || IsOnCooldown(Guard)) return false;
 
             // Special States
-            if (HasStatusEffect(DRGPvP.Buffs.SkyHigh) ||
-                HasStatusEffect(WARPvP.Buffs.InnerRelease) ||
-                HasStatusEffect(VPRPvP.Buffs.HardenedScales) ||
-                HasStatusEffect(PLDPvP.Buffs.HallowedGround) ||
-                HasStatusEffect(DRKPvP.Buffs.UndeadRedemption) ||
-                HasStatusEffect(Debuffs.Unguarded, anyOwner: true) ||
-                HasStatusEffect(Buffs.RidingMecha, anyOwner: true))
+            if (LocalPlayer.HasStatus(DRGPvP.Buffs.SkyHigh) ||
+                LocalPlayer.HasStatus(WARPvP.Buffs.InnerRelease) ||
+                LocalPlayer.HasStatus(VPRPvP.Buffs.HardenedScales) ||
+                LocalPlayer.HasStatus(PLDPvP.Buffs.HallowedGround) ||
+                LocalPlayer.HasStatus(DRKPvP.Buffs.UndeadRedemption) ||
+                LocalPlayer.HasStatus(Debuffs.Unguarded, true) ||
+                LocalPlayer.HasStatus(Buffs.RidingMecha, true))
                 return false;
 
             var adjustedCurrentHP = player.CurrentHp * 100;
@@ -242,7 +243,7 @@ internal static class PvPCommon
 
         protected override uint Invoke(uint actionID)
         {
-            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
+            if ((LocalPlayer.HasStatus(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
             {
                 if (actionID is Guard)
                     return Guard;
@@ -271,13 +272,13 @@ internal static class PvPCommon
             Array.Resize(ref selectedStatuses, Statuses.Length);
 
             // Don't purify if under some buffs
-            if (HasStatusEffect(DRGPvP.Buffs.SkyHigh) ||
-                HasStatusEffect(VPRPvP.Buffs.HardenedScales) ||
-                HasStatusEffect(Buffs.RidingMecha, anyOwner: true))
+            if (LocalPlayer.HasStatus(DRGPvP.Buffs.SkyHigh) ||
+                LocalPlayer.HasStatus(VPRPvP.Buffs.HardenedScales) ||
+                LocalPlayer.HasStatus(Buffs.RidingMecha, true))
                 return false;
 
             // Check if the status is present and one the user wants purified
-            return selectedStatuses.Where((t, i) => t && HasStatusEffect(Statuses[i].debuff, anyOwner: true)).Any();
+            return selectedStatuses.Where((t, i) => t && LocalPlayer.HasStatus(Statuses[i].debuff, true)).Any();
         }
     }
 }

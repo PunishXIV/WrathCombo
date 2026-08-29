@@ -306,7 +306,7 @@ internal partial class DRK : Tank
             if (IsEnabled(Preset.DRK_oGCD_SaltedEarth) &&
                 IsOffCooldown(SaltedEarth) &&
                 ActionLearned(SaltedEarth) &&
-                !HasStatusEffect(Buffs.SaltedEarth))
+                !LocalPlayer.HasStatus(Buffs.SaltedEarth))
                 return SaltedEarth;
 
             if (IsOffCooldown(CarveAndSpit) &&
@@ -316,7 +316,7 @@ internal partial class DRK : Tank
             if (IsEnabled(Preset.DRK_oGCD_SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
                 ActionLearned(SaltAndDarkness) &&
-                HasStatusEffect(Buffs.SaltedEarth))
+                LocalPlayer.HasStatus(Buffs.SaltedEarth))
                 return SaltAndDarkness;
 
             if (IsEnabled(Preset.DRK_oGCD_Shadowbringer) &&
@@ -391,7 +391,7 @@ internal partial class DRK : Tank
                     : null);
 
             if (target is not null &&
-                CanApplyStatus(target, Buffs.BlackestNightShield))
+                target.CanApplyStatus(Buffs.BlackestNightShield))
                 return actionID.Retarget(target);
 
             return actionID;
@@ -414,13 +414,13 @@ internal partial class DRK : Tank
 
             var checkTarget = target ?? SimpleTarget.Self;
             if (IsEnabled(Preset.DRK_Retarget_Oblation_DoubleProtection) &&
-                (GetStatusEffectRemainingTime(Buffs.Oblation, checkTarget, anyOwner: true) > DRK_RetargetOblationDuration ||
+                (checkTarget.Status(Buffs.Oblation, true).RemainingTimeOrZero() > DRK_RetargetOblationDuration ||
                  JustUsedOn(Oblation, checkTarget)) &&
-                CanApplyStatus(checkTarget, Buffs.Oblation))
+                checkTarget.CanApplyStatus(Buffs.Oblation))
                 return All.Cease;
 
             if (target is not null &&
-                CanApplyStatus(target, Buffs.Oblation))
+                target.CanApplyStatus(Buffs.Oblation))
                 return actionID.Retarget(target);
 
             return actionID;
