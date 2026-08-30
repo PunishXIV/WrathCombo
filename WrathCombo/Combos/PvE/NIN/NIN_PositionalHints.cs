@@ -11,7 +11,6 @@ internal partial class NIN
         if (!CanReportPositionalHints())
             return;
 
-        // Mudra replaces the GCDs that would be Edge/Crush — retract like MNK PB.
         if (MudraPhase)
         {
             ClearUpcomingPositional();
@@ -29,7 +28,6 @@ internal partial class NIN
                 break;
 
             default:
-                // Spinning Edge → Gust Slash → Edge/Crush (combo start / after finisher)
                 if (ActionLearned(GustSlash))
                     ReportNINFinisherHint(3);
                 break;

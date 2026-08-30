@@ -12,7 +12,6 @@ internal partial class VPR
         if (!CanReportPositionalHints())
             return;
 
-        // Reawaken replaces the sting/coil loop — retract like MNK PB/Formless.
         if (LocalPlayer.HasStatus(Buffs.Reawakened))
         {
             ClearUpcomingPositional();
@@ -39,7 +38,6 @@ internal partial class VPR
         else if (ComboAction is ReavingFangs or SteelFangs)
             TryReportVPRFinisherPath(2);
         else
-            // Fangs → Sting → Finisher (combo start / after finisher)
             TryReportVPRFinisherPath(3);
     }
 
@@ -67,18 +65,17 @@ internal partial class VPR
         if (!ActionLearned(Vicewinder) || LocalPlayer.HasStatus(Buffs.Reawakened))
             return false;
 
-        // Advanced: only when Vicewinder features are on (Simple always uses them).
-        var vicewinderInRotation = !IsEnabled(Preset.VPR_ST_AdvancedMode) ||
-                                   IsEnabled(Preset.VPR_ST_Vicewinder) ||
-                                   IsEnabled(Preset.VPR_ST_VicewinderCombo);
+        // Simple always uses Vicewinder; Advanced only when those presets are on.
+        bool vicewinderInRotation = !IsEnabled(Preset.VPR_ST_AdvancedMode) ||
+                                    IsEnabled(Preset.VPR_ST_Vicewinder) ||
+                                    IsEnabled(Preset.VPR_ST_VicewinderCombo);
 
-        if (TryGetNextVicewinderCoil(vicewinderBuffPrio, out var coil))
+        if (TryGetNextVicewinderCoil(vicewinderBuffPrio, out uint coil))
         {
             ReportVicewinderCoil(coil, 1);
             return true;
         }
 
-        // About to press Vicewinder: same first-coil choice the rotation will make after VW.
         if (vicewinderInRotation && UseVicewinder() &&
             TryGetFirstVicewinderCoil(vicewinderBuffPrio, out coil))
         {

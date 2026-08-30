@@ -11,6 +11,7 @@ internal partial class NIN
     internal static class Config
     {
         #region Options
+
         internal static UserInt
             NIN_ST_AdvancedMode_BurnKazematoi = new("NIN_ST_AdvancedMode_BurnKazematoi", 10),
             NIN_ST_AdvancedMode_SecondWindThreshold = new("NIN_ST_AdvancedMode_SecondWindThreshold", 40),
@@ -60,6 +61,7 @@ internal partial class NIN
         internal static UserFloat
             NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill = new("NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill", 3f),
             NIN_AoE_AdvancedMode_TCJ_Doton_Timer = new("NIN_AoE_AdvancedMode_TCJ_Doton_Timer", 3f);
+
         #endregion
 
         internal static void Draw(Preset preset)
@@ -67,6 +69,7 @@ internal partial class NIN
             switch (preset)
             {
                 #region ST
+
                 case Preset.NIN_ST_AdvancedMode:
                     DrawAdditionalBoolChoice(NIN_ST_AdvancedMode_TrueNorth, "Dynamic True North",
                         "Dynamic choice of combo finisher based on position and available charges.\nGo to Flank to build charges, Rear to spend them. \nPrevents overcap or waste and will use true north as needed.");
@@ -148,9 +151,11 @@ internal partial class NIN
                     DrawSliderInt(0, 100, NIN_ST_AdvancedMode_BloodbathThreshold,
                         "Set a HP% threshold for when Bloodbath will be used.");
                     break;
+
                 #endregion
 
                 #region AoE
+
                 case Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon:
                     DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_Ninjitsus_Katon_Pooling, "Katon Pooling",
                         "Will Pool the charges, saving them for Trick Window");
@@ -167,7 +172,7 @@ internal partial class NIN
                     DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_Ninjitsus_Doton_Threshold,
                         "Sets the max remaining HP percentage of the current target to cast Doton.");
                     ImGui.Indent();
-                    DrawSliderFloat(0, 3, NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill,"How Long Standing still before using Doton (in seconds):", decimals: 1);
+                    DrawSliderFloat(0, 3, NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill, "How Long Standing still before using Doton (in seconds):", decimals: 1);
                     ImGui.Unindent();
                     break;
 
@@ -198,8 +203,8 @@ internal partial class NIN
 
                 case Preset.NIN_AoE_AdvancedMode_TenChiJin:
                     DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_TenChiJin_Auto, "Auto TCJ Option", $"Will output TCJ actions in the following order\n" +
-                        $"{Doton.ActionName()} buff less than {NIN_AoE_AdvancedMode_TCJ_Doton_Timer.Value}s = [{FumaShuriken.ActionName()} -> {Katon.ActionName()} -> {Doton.ActionName()}]\n" +
-                        $"{Doton.ActionName()} buff more than {NIN_AoE_AdvancedMode_TCJ_Doton_Timer.Value}s = [{FumaShuriken.ActionName()} -> {Raiton.ActionName()} -> {Suiton.ActionName()}]");
+                                                                                                     $"{Doton.ActionName()} buff less than {NIN_AoE_AdvancedMode_TCJ_Doton_Timer.Value}s = [{FumaShuriken.ActionName()} -> {Katon.ActionName()} -> {Doton.ActionName()}]\n" +
+                                                                                                     $"{Doton.ActionName()} buff more than {NIN_AoE_AdvancedMode_TCJ_Doton_Timer.Value}s = [{FumaShuriken.ActionName()} -> {Raiton.ActionName()} -> {Suiton.ActionName()}]");
 
                     if (NIN_AoE_AdvancedMode_TenChiJin_Auto)
                     {
@@ -223,9 +228,11 @@ internal partial class NIN
                 case Preset.NIN_AoE_AdvancedMode_HellfrogMedium:
                     DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_HellfrogMedium_Pooling, "Hellfrog Pooling", "Will pool Ninki for the buff windows, while preventing overcap");
                     break;
+
                 #endregion
 
                 #region Standalone
+
                 case Preset.NIN_Simple_Mudras:
                     DrawRadioButton(NIN_SimpleMudra_Choice, "Mudra Path Set 1",
                         $"1. {Ten.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Raiton.ActionName()}/{HyoshoRanryu.ActionName()}, {Suiton.ActionName()} " +

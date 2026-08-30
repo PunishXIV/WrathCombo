@@ -516,7 +516,7 @@ internal partial class VPR
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
             ActionLearned(Vicewinder) &&
             !LocalPlayer.HasStatus(Buffs.Reawakened) &&
-            TryGetNextVicewinderCoil(vicewinderBuffPrio, out var coil))
+            TryGetNextVicewinderCoil(vicewinderBuffPrio, out uint coil))
         {
             actionId = coil;
             return true;
@@ -525,9 +525,7 @@ internal partial class VPR
         return false;
     }
 
-    /// <summary>
-    ///     Next Hunter's / Swiftskin's Coil in the dread combo — shared by rotation and positional hints.
-    /// </summary>
+    /// <summary> Next coil in the dread combo (shared by rotation and positional hints). </summary>
     private static bool TryGetNextVicewinderCoil(bool vicewinderBuffPrio, out uint coil)
     {
         coil = 0;
@@ -550,9 +548,7 @@ internal partial class VPR
         return TryGetFirstVicewinderCoil(vicewinderBuffPrio, out coil);
     }
 
-    /// <summary>
-    ///     Which coil Wrath presses first after Vicewinder (buffs / facing / buff-prio).
-    /// </summary>
+    /// <summary> First coil after Vicewinder (buffs / facing / buff-prio). </summary>
     private static bool TryGetFirstVicewinderCoil(bool vicewinderBuffPrio, out uint coil)
     {
         coil = 0;

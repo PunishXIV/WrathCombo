@@ -26,7 +26,6 @@ internal partial class DRG
         else if (ComboAction is TrueThrust or RaidenThrust && ActionLearned(VorpalThrust))
             TryReportDRGPathAfterTrueThrust();
         else
-            // True Thrust → … (combo start / after Fang/Wheeling)
             TryReportDRGFreshComboPath();
     }
 
@@ -36,9 +35,6 @@ internal partial class DRG
          CurrentTarget.CanApplyStatus(ChaoticList[OriginalHook(ChaosThrust)]) ||
          LocalPlayer.Status(Buffs.PowerSurge).RemainingTimeOrZero() < 15);
 
-    /// <summary>
-    ///     After True/Raiden: Disembowel→Chaos (2) or Vorpal→Full→Fang (3).
-    /// </summary>
     private static void TryReportDRGPathAfterTrueThrust()
     {
         if (IsDisembowelPath() && ActionLearned(ChaosThrust))
@@ -47,10 +43,7 @@ internal partial class DRG
             ReportUpcomingPositional(PositionalDirection.Flank, FangAndClaw, 3);
     }
 
-    /// <summary>
-    ///     Before True Thrust: Chaos is 3 GCDs (TT→Disembowel→Chaos).
-    ///     Fang is 4 (TT→Vorpal→FT→Fang) — outside the API max, so skip until after TT.
-    /// </summary>
+    // Fang is 4 GCDs from a fresh True Thrust (beyond the API max of 3).
     private static void TryReportDRGFreshComboPath()
     {
         if (IsDisembowelPath() && ActionLearned(ChaosThrust))

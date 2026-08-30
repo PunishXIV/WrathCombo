@@ -10,9 +10,7 @@ using WrathCombo.Extensions;
 
 namespace WrathCombo.Services.IPC;
 
-/// <summary>
-///     Stores and publishes upcoming one-button positional hints for external plugins.
-/// </summary>
+/// <summary> Upcoming one-button positional hints for external overlay plugins. </summary>
 internal static class UpcomingPositionalHintService
 {
     private static PositionalHintSnapshot _current;
@@ -44,7 +42,6 @@ internal static class UpcomingPositionalHintService
             return;
         }
 
-        // Pull-only consumers refresh on GetWireSnapshot; still drop dead targets without notify.
         RefreshLiveFields(notifyOnChange: OnUpcomingPositionalHintProvider.SubscriptionCount > 0);
     }
 
@@ -96,7 +93,6 @@ internal static class UpcomingPositionalHintService
             !IsExpired(_current) &&
             !IsBetterHint(snapshot, _current))
         {
-            // Same urgency: refresh TTL / facing / target so overlays stay live across retargets
             if (IsSameHint(snapshot, _current) ||
                 snapshot.TargetObjectId != _current.TargetObjectId)
             {
@@ -117,10 +113,7 @@ internal static class UpcomingPositionalHintService
         ApplySnapshot(snapshot, notify);
     }
 
-    /// <summary>
-    ///     Prefer sooner hints. Same action/direction always refreshes (next form-loop).
-    ///     Same urgency may replace when action/direction changes.
-    /// </summary>
+    /// <summary> Sooner wins; same action/direction always refreshes. </summary>
     private static bool IsBetterHint(PositionalHintSnapshot candidate, PositionalHintSnapshot existing)
     {
         if (candidate.ActionId == existing.ActionId && candidate.Direction == existing.Direction)
@@ -147,8 +140,8 @@ internal static class UpcomingPositionalHintService
     }
 
     /// <summary>
-    ///     Prefer CurrentTarget when it still needs positionals; otherwise keep the last
-    ///     reported target so brief AutoDuty untar / override gaps do not drop the hint.
+    ///     Prefer CurrentTarget; fall back to the last reported target so brief untar gaps
+    ///     do not drop the hint.
     /// </summary>
     private static IBattleChara? ResolveLiveTarget()
     {
@@ -178,8 +171,7 @@ internal static class UpcomingPositionalHintService
             return;
         }
 
-        // ST combo may not re-Report every GCD (weaves, lease blips). Keep TTL alive while the
-        // hint target is still a valid positional enemy; drop only on target loss / Reset / Clear.
+        // Heartbeat: ST combo may not re-Report every GCD.
         _lastReportTick = Environment.TickCount64;
 
         var targetId = (uint)target.GameObjectId;
@@ -229,7 +221,6 @@ internal static class UpcomingPositionalHintService
     private static int ComputeExpiresInMs(int gcdsUntil)
     {
         var gcdSeconds = Math.Max(CustomComboFunctions.GCDTotal, 2.0f);
-        // Generous pad: heartbeat normally keeps hints alive; this is only a safety net.
         return (int)(gcdsUntil * gcdSeconds * 1000f) + 5000;
     }
 

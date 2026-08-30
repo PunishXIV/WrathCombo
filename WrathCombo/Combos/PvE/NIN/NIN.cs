@@ -10,6 +10,7 @@ namespace WrathCombo.Combos.PvE;
 internal partial class NIN : Melee
 {
     #region Simple
+
     internal class NIN_ST_SimpleMode : CustomCombo
     {
         protected internal MudraCasting MudraState = new();
@@ -34,8 +35,10 @@ internal partial class NIN : Melee
                 return actionID;
 
             #region Special Content
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction) && !MudraPhase)
                 return contentAction;
+
             #endregion
 
             #region OGCDS
@@ -73,14 +76,17 @@ internal partial class NIN : Melee
             #endregion
 
             #region Ninjutsu
-            if ((CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID)) ||
-                (CanUseSuiton && TrickCD <= 18 && MudraState.CastSuiton(ref actionID)) ||
-                (CanUseRaiton && MudraState.CastRaiton(ref actionID)) ||
-                (CanUseFumaShuriken && !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID)))
+
+            if (CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID) ||
+                CanUseSuiton && TrickCD <= 18 && MudraState.CastSuiton(ref actionID) ||
+                CanUseRaiton && MudraState.CastRaiton(ref actionID) ||
+                CanUseFumaShuriken && !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID))
                 return actionID;
+
             #endregion
 
             #region Selfcare
+
             if ((!MudraPhase || HasKassatsu && TrickCD > 5) && CanWeave())
             {
                 if (Role.CanSecondWind(40))
@@ -92,9 +98,11 @@ internal partial class NIN : Melee
                 if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
             }
+
             #endregion
 
             #region GCDS
+
             if (CanThrowingDaggers)
                 return OriginalHook(ThrowingDaggers);
 
@@ -126,6 +134,7 @@ internal partial class NIN : Melee
                 }
             }
             return OriginalHook(SpinningEdge);
+
             #endregion
         }
     }
@@ -152,11 +161,14 @@ internal partial class NIN : Melee
                 return actionID;
 
             #region Special Content
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction) && !MudraPhase)
                 return contentAction;
+
             #endregion
 
             #region OGCDS
+
             if (InCombat() && HasBattleTarget())
             {
                 if (CanKassatsuAoE)
@@ -186,18 +198,22 @@ internal partial class NIN : Melee
                 if (CanTrickAoE && CombatEngageDuration().TotalSeconds > 5)
                     return OriginalHook(TrickAttack);
             }
+
             #endregion
 
             #region Ninjutsu
-            if ((CanUseGokaMekkyaku && MudraState.CastGokaMekkyaku(ref actionID)) ||
-                (CanUseHuton && TrickCD <= 18 && MudraState.CastHuton(ref actionID)) ||
-                (CanUseDoton && GetTargetHPPercent() >= 30 && MudraState.CastDoton(ref actionID)) ||
-                (CanUseKaton && MudraState.CastKaton(ref actionID)) ||
-                (CanUseFumaShuriken && !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID)))
+
+            if (CanUseGokaMekkyaku && MudraState.CastGokaMekkyaku(ref actionID) ||
+                CanUseHuton && TrickCD <= 18 && MudraState.CastHuton(ref actionID) ||
+                CanUseDoton && GetTargetHPPercent() >= 30 && MudraState.CastDoton(ref actionID) ||
+                CanUseKaton && MudraState.CastKaton(ref actionID) ||
+                CanUseFumaShuriken && !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID))
                 return actionID;
+
             #endregion
 
             #region Selfcare
+
             if ((!MudraPhase || HasKassatsu && TrickCD > 5) && CanWeave())
             {
                 if (Role.CanSecondWind(40))
@@ -209,9 +225,11 @@ internal partial class NIN : Melee
                 if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
             }
+
             #endregion
 
             #region GCDS
+
             if (CanThrowingDaggersAoE)
                 return OriginalHook(ThrowingDaggers);
 
@@ -236,6 +254,7 @@ internal partial class NIN : Melee
             return ActionLearned(DeathBlossom)
                 ? DeathBlossom
                 : SpinningEdge;
+
             #endregion
         }
     }
@@ -243,6 +262,7 @@ internal partial class NIN : Melee
     #endregion
 
     #region Advanced
+
     internal class NIN_ST_AdvancedMode : CustomCombo
     {
         protected internal MudraCasting MudraState = new();
@@ -273,11 +293,14 @@ internal partial class NIN : Melee
                 return actionID;
 
             #region Special Content
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction) && !MudraPhase)
                 return contentAction;
+
             #endregion
 
             #region OGCDS
+
             if (InCombat() && HasBattleTarget())
             {
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Kassatsu) && CanKassatsu)
@@ -319,9 +342,11 @@ internal partial class NIN : Melee
                     RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
+
             #endregion
 
             #region Ninjutsu
+
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus))
             {
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Hyosho) &&
@@ -334,9 +359,11 @@ internal partial class NIN : Melee
                     CanUseFumaShuriken && !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
+
             #endregion
 
             #region Selfcare
+
             if ((!MudraPhase || HasKassatsu && TrickCD > 5) && CanWeave())
             {
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Feint) &&
@@ -357,6 +384,7 @@ internal partial class NIN : Melee
                     Role.CanBloodBath(NIN_ST_AdvancedMode_BloodbathThreshold))
                     return Role.Bloodbath;
             }
+
             #endregion
 
             #region GCDS
@@ -395,6 +423,7 @@ internal partial class NIN : Melee
                 }
             }
             return OriginalHook(SpinningEdge);
+
             #endregion
         }
     }
@@ -422,11 +451,14 @@ internal partial class NIN : Melee
                 return actionID;
 
             #region Special Content
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction) && !MudraPhase)
                 return contentAction;
+
             #endregion
 
             #region OGCDS
+
             if (InCombat() && HasBattleTarget())
             {
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Kassatsu) && CanKassatsuAoE)
@@ -469,9 +501,11 @@ internal partial class NIN : Melee
                     RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
+
             #endregion
 
             #region Ninjutsu
+
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus))
             {
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Goka) &&
@@ -486,9 +520,11 @@ internal partial class NIN : Melee
                     CanUseFumaShuriken && !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
+
             #endregion
 
             #region Selfcare
+
             if ((!MudraPhase || HasKassatsu && TrickCD > 5) && CanWeave())
             {
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_SecondWind) &&
@@ -504,9 +540,11 @@ internal partial class NIN : Melee
                     Role.CanBloodBath(NIN_AoE_AdvancedMode_BloodbathThreshold))
                     return Role.Bloodbath;
             }
+
             #endregion
 
             #region GCDS
+
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_ThrowingDaggers) && CanThrowingDaggersAoE && !MudraPhase)
                 return OriginalHook(ThrowingDaggers);
 
@@ -526,9 +564,11 @@ internal partial class NIN : Melee
                 }
             }
             return ActionLearned(DeathBlossom) ? DeathBlossom : SpinningEdge;
+
             #endregion
         }
     }
+
     #endregion
 
     #region Standalone

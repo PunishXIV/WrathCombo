@@ -30,13 +30,10 @@ internal partial class SAM
         else if (ComboAction is Hakaze or Gyofu)
             TryReportSAMFinisherPath(useGekko, useKasha, 2);
         else
-            // Hakaze → Jinpu/Shifu → Gekko/Kasha (combo start / after finisher)
             TryReportSAMFinisherPath(useGekko, useKasha, 3);
     }
 
-    /// <summary>
-    ///     Same path choice as the Hakaze/Gyofu branch of the ST combo.
-    /// </summary>
+    /// <summary> Same Gekko/Kasha choice as the Hakaze branch of the ST combo. </summary>
     private static bool TryReportSAMFinisherPath(bool useGekko, bool useKasha, int gcdsUntil)
     {
         if (useGekko &&
