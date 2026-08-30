@@ -12,6 +12,7 @@ internal partial class VPR
         if (!CanReportPositionalHints())
             return;
 
+        // Reawaken replaces the sting/coil loop — retract like MNK PB/Formless.
         if (LocalPlayer.HasStatus(Buffs.Reawakened))
         {
             ClearUpcomingPositional();
@@ -25,10 +26,7 @@ internal partial class VPR
             return;
 
         if (ComboTimer <= 0)
-        {
-            ClearUpcomingPositional();
             return;
-        }
 
         if (ComboAction is HuntersSting or SwiftskinsSting)
         {
@@ -40,8 +38,7 @@ internal partial class VPR
                 ReportUpcomingPositional(PositionalDirection.Rear, HindstingStrike, 1);
             else if (LocalPlayer.HasStatus(Buffs.FlankstungVenom) && ActionLearned(FlankstingStrike))
                 ReportUpcomingPositional(PositionalDirection.Flank, FlankstingStrike, 1);
-            else
-                ClearUpcomingPositional();
+            // else keep last hint
         }
         else if (ComboAction is ReavingFangs or SteelFangs)
         {
@@ -51,11 +48,8 @@ internal partial class VPR
             else if (ActionLearned(HuntersSting) &&
                      (HasFlankVenom || IsMissingHuntersInstinct))
                 ReportUpcomingPositional(PositionalDirection.Flank, UpcomingFlankFinisher(), 2);
-            else
-                ClearUpcomingPositional();
         }
-        else
-            ClearUpcomingPositional();
+        // Unknown combo step: leave last hint for heartbeat
     }
 
     private static bool TryReportVicewinderCoilPositionalHints()
@@ -80,8 +74,7 @@ internal partial class VPR
             ReportUpcomingPositional(PositionalDirection.Rear, SwiftskinsCoil, 1);
         else if (!OnTargetsRear() || !TargetNeedsPositionals())
             ReportUpcomingPositional(PositionalDirection.Flank, HuntersCoil, 1);
-        else
-            ClearUpcomingPositional();
+        // Both angles already covered / ambiguous: keep last hint
 
         return true;
     }

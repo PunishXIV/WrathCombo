@@ -11,11 +11,15 @@ internal partial class NIN
         if (!CanReportPositionalHints())
             return;
 
-        if (MudraPhase || ComboTimer <= 1f)
+        // Mudra replaces the GCDs that would be Edge/Crush — retract like MNK PB.
+        if (MudraPhase)
         {
             ClearUpcomingPositional();
             return;
         }
+
+        if (ComboTimer <= 1f)
+            return;
 
         switch (ComboAction)
         {
@@ -27,9 +31,7 @@ internal partial class NIN
                 ReportNINFinisherHint(2);
                 break;
 
-            default:
-                ClearUpcomingPositional();
-                break;
+            // After finisher / unknown: leave last hint for heartbeat
         }
     }
 
@@ -48,7 +50,5 @@ internal partial class NIN
         }
         else if (ActionLearned(AeolianEdge))
             ReportUpcomingPositional(PositionalDirection.Rear, AeolianEdge, gcdsUntil);
-        else
-            ClearUpcomingPositional();
     }
 }

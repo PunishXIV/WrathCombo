@@ -15,11 +15,9 @@ internal partial class DRG
         if (TryReportOpenerPositionalHint(Opener(), TryReportDRGActionPositional))
             return;
 
+        // Combo break / unknown step: leave last hint for heartbeat (same as MNK form gaps).
         if (ComboTimer <= 0)
-        {
-            ClearUpcomingPositional();
             return;
-        }
 
         if (ComboAction == OriginalHook(Disembowel) && ActionLearned(ChaosThrust))
             ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(ChaosThrust), 1);
@@ -38,11 +36,10 @@ internal partial class DRG
 
             if (disembowelPath && ActionLearned(ChaosThrust))
                 ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(ChaosThrust), 2);
-            else
-                ClearUpcomingPositional();
+            else if (ActionLearned(FangAndClaw))
+                // True Thrust → Vorpal → Full Thrust → Fang
+                ReportUpcomingPositional(PositionalDirection.Flank, FangAndClaw, 3);
         }
-        else
-            ClearUpcomingPositional();
     }
 
     private static bool TryReportDRGActionPositional(uint action, int gcdsUntil)

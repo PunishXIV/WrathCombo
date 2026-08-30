@@ -12,6 +12,7 @@ internal partial class RPR
         if (!CanReportPositionalHints())
             return;
 
+        // Enshroud replaces Gibbet/Gallows — retract like MNK PB.
         if (LocalPlayer.HasStatus(Buffs.Enshrouded))
         {
             ClearUpcomingPositional();
@@ -25,7 +26,6 @@ internal partial class RPR
         else if ((LocalPlayer.HasStatus(Buffs.SoulReaver) || LocalPlayer.HasStatus(Buffs.Executioner)) &&
                  ActionLearned(Gibbet))
             ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(Gallows), 1);
-        else
-            ClearUpcomingPositional();
+        // Filler without reaver: leave last hint so heartbeat does not get Reset every tick
     }
 }

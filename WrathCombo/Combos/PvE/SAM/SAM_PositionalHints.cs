@@ -24,10 +24,7 @@ internal partial class SAM
         }
 
         if (ComboTimer <= 0)
-        {
-            ClearUpcomingPositional();
             return;
-        }
 
         if (ComboAction is Jinpu && ActionLearned(Gekko))
             ReportUpcomingPositional(PositionalDirection.Rear, Gekko, 1);
@@ -49,10 +46,8 @@ internal partial class SAM
                       OnTargetsRear() && HasGetsu && ActionLearned(Kasha) ||
                       !LocalPlayer.HasStatus(Buffs.Fuka)))
                 ReportUpcomingPositional(PositionalDirection.Flank, Kasha, 2);
-            else
-                ClearUpcomingPositional();
+            // else keep last hint
         }
-        else
-            ClearUpcomingPositional();
+        // After Gekko/Kasha / unknown: leave last hint for heartbeat
     }
 }
