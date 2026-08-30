@@ -12,6 +12,7 @@ internal partial class MNK
         if (!CanReportPositionalHints())
             return;
 
+        // PB / Formless replace the form loop — retract so heartbeat cannot keep a stale gcds=2/3 alive.
         if (!ActionLearned(TrueStrike) ||
             LocalPlayer.HasStatus(Buffs.PerfectBalance) ||
             LocalPlayer.HasStatus(Buffs.FormlessFist))
@@ -23,14 +24,16 @@ internal partial class MNK
         if (TryReportOpenerPositionalHint(Opener(), TryReportMNKActionPositional))
             return;
 
-        if (LocalPlayer.HasStatus(Buffs.CoeurlForm))
+        // After a Coeurl GCD, form/stack status can lag one tick and look like Demolish gcds=1.
+        var justUsedCoeurlPositional =
+            JustUsed(Demolish, GCD) || JustUsed(OriginalHook(SnapPunch), GCD);
+
+        if (LocalPlayer.HasStatus(Buffs.CoeurlForm) && !justUsedCoeurlPositional)
         {
             if (CoeurlStacks is 0 && ActionLearned(Demolish))
                 ReportUpcomingPositional(PositionalDirection.Rear, Demolish, 1);
             else if (ActionLearned(SnapPunch))
                 ReportUpcomingPositional(PositionalDirection.Flank, OriginalHook(SnapPunch), 1);
-            else
-                ClearUpcomingPositional();
         }
         else if (LocalPlayer.HasStatus(Buffs.RaptorForm) && ActionLearned(TrueStrike))
         {
@@ -38,11 +41,16 @@ internal partial class MNK
                 ReportUpcomingPositional(PositionalDirection.Rear, Demolish, 2);
             else if (ActionLearned(SnapPunch))
                 ReportUpcomingPositional(PositionalDirection.Flank, OriginalHook(SnapPunch), 2);
-            else
-                ClearUpcomingPositional();
         }
-        else
-            ClearUpcomingPositional();
+        else if (LocalPlayer.HasStatus(Buffs.OpoOpoForm) || justUsedCoeurlPositional)
+        {
+            // Opo → Raptor → Coeurl positional
+            if (CoeurlStacks is 0 && ActionLearned(Demolish))
+                ReportUpcomingPositional(PositionalDirection.Rear, Demolish, 3);
+            else if (ActionLearned(SnapPunch))
+                ReportUpcomingPositional(PositionalDirection.Flank, OriginalHook(SnapPunch), 3);
+        }
+        // Form buff gaps / unknown: leave the last published hint for its TTL
     }
 
     private static bool TryReportMNKActionPositional(uint action, int gcdsUntil)

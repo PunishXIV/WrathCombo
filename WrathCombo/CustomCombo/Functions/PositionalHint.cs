@@ -25,16 +25,10 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary>
     ///     Returns <see langword="true"/> when there is a positional battle target.
-    ///     Otherwise clears any published hint and returns <see langword="false"/>.
+    ///     Does not clear an existing hint — brief AutoDuty untar gaps should not drop overlays.
     /// </summary>
-    internal static bool CanReportPositionalHints()
-    {
-        if (HasBattleTarget() && TargetNeedsPositionals())
-            return true;
-
-        ClearUpcomingPositional();
-        return false;
-    }
+    internal static bool CanReportPositionalHints() =>
+        HasBattleTarget() && TargetNeedsPositionals();
 
     /// <summary>
     ///     Reports the opener's current step when it is a known positional action.

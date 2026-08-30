@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Ipc;
 using ECommons.DalamudServices;
 using ECommons.Throttlers;
@@ -5,6 +6,7 @@ using System;
 using WrathCombo.API;
 using WrathCombo.API.Enum;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Services.IPC;
 
@@ -36,19 +38,14 @@ internal static class UpcomingPositionalHintService
         if (!EzThrottler.Throttle("PositionalHintStaleCheck", 100))
             return;
 
-        if (!CustomComboFunctions.HasBattleTarget() ||
-            !CustomComboFunctions.TargetNeedsPositionals() ||
-            IsExpired(_current))
+        if (IsExpired(_current))
         {
             Reset();
             return;
         }
 
-        // Pull-only consumers refresh on GetWireSnapshot; skip live facing work with no subscribers.
-        if (OnUpcomingPositionalHintProvider.SubscriptionCount == 0)
-            return;
-
-        RefreshLiveFields(notifyOnChange: true);
+        // Pull-only consumers refresh on GetWireSnapshot; still drop dead targets without notify.
+        RefreshLiveFields(notifyOnChange: OnUpcomingPositionalHintProvider.SubscriptionCount > 0);
     }
 
     internal static uint[]? GetWireSnapshot()
@@ -57,6 +54,9 @@ internal static class UpcomingPositionalHintService
             return null;
 
         RefreshLiveFields(notifyOnChange: false);
+        if (_current.Direction is PositionalDirection.None)
+            return null;
+
         return RefreshExpiry(_current).ToWire();
     }
 
@@ -96,31 +96,40 @@ internal static class UpcomingPositionalHintService
             !IsExpired(_current) &&
             !IsBetterHint(snapshot, _current))
         {
-            // Same (or worse) urgency: still refresh TTL / facing so overlays stay live
-            if (IsSameHint(snapshot, _current))
+            // Same urgency: refresh TTL / facing / target so overlays stay live across retargets
+            if (IsSameHint(snapshot, _current) ||
+                snapshot.TargetObjectId != _current.TargetObjectId)
+            {
                 ApplySnapshot(snapshot, notify: snapshot.CurrentAngle != _current.CurrentAngle ||
-                                               snapshot.IsSatisfied != _current.IsSatisfied);
+                                               snapshot.IsSatisfied != _current.IsSatisfied ||
+                                               snapshot.TargetObjectId != _current.TargetObjectId);
+            }
+
             return;
         }
 
         var notify = !IsSameHint(snapshot, _current) ||
                      snapshot.CurrentAngle != _current.CurrentAngle ||
                      snapshot.IsSatisfied != _current.IsSatisfied ||
+                     snapshot.TargetObjectId != _current.TargetObjectId ||
                      IsExpired(_current);
 
         ApplySnapshot(snapshot, notify);
     }
 
     /// <summary>
-    ///     Prefer sooner hints. Same urgency may replace when action/direction changes.
+    ///     Prefer sooner hints. Same action/direction always refreshes (next form-loop).
+    ///     Same urgency may replace when action/direction changes.
     /// </summary>
     private static bool IsBetterHint(PositionalHintSnapshot candidate, PositionalHintSnapshot existing)
     {
+        if (candidate.ActionId == existing.ActionId && candidate.Direction == existing.Direction)
+            return true;
+
         if (candidate.GcdsUntil != existing.GcdsUntil)
             return candidate.GcdsUntil < existing.GcdsUntil;
 
-        return candidate.ActionId != existing.ActionId ||
-               candidate.Direction != existing.Direction;
+        return true;
     }
 
     private static bool IsSameHint(PositionalHintSnapshot a, PositionalHintSnapshot b) =>
@@ -137,22 +146,54 @@ internal static class UpcomingPositionalHintService
             NotifySubscribers();
     }
 
+    /// <summary>
+    ///     Prefer CurrentTarget when it still needs positionals; otherwise keep the last
+    ///     reported target so brief AutoDuty untar / override gaps do not drop the hint.
+    /// </summary>
+    private static IBattleChara? ResolveLiveTarget()
+    {
+        var current = CustomComboFunctions.CurrentTarget;
+        if (current is not null &&
+            CustomComboFunctions.HasBattleTarget() &&
+            CustomComboFunctions.TargetNeedsPositionals())
+            return current;
+
+        if (_current.TargetObjectId is 0)
+            return null;
+
+        var stored = ((ulong)_current.TargetObjectId).GetObject() as IBattleChara;
+        if (stored is null || stored.IsDead ||
+            !CustomComboFunctions.TargetNeedsPositionals(stored))
+            return null;
+
+        return stored;
+    }
+
     private static void RefreshLiveFields(bool notifyOnChange)
     {
-        var target = CustomComboFunctions.CurrentTarget;
-        if (target is null || (uint)target.GameObjectId != _current.TargetObjectId)
+        var target = ResolveLiveTarget();
+        if (target is null)
         {
             Reset();
             return;
         }
 
+        // ST combo may not re-Report every GCD (weaves, lease blips). Keep TTL alive while the
+        // hint target is still a valid positional enemy; drop only on target loss / Reset / Clear.
+        _lastReportTick = Environment.TickCount64;
+
+        var targetId = (uint)target.GameObjectId;
         var currentAngle = (byte)CustomComboFunctions.AngleToTarget(target);
         var isSatisfied = currentAngle == RequiredAngle(_current.Direction);
-        if (currentAngle == _current.CurrentAngle && isSatisfied == _current.IsSatisfied)
+
+        if (targetId == _current.TargetObjectId &&
+            currentAngle == _current.CurrentAngle &&
+            isSatisfied == _current.IsSatisfied)
             return;
 
         _current = _current with
         {
+            TargetObjectId = targetId,
             CurrentAngle = currentAngle,
             IsSatisfied = isSatisfied,
         };
@@ -188,7 +229,8 @@ internal static class UpcomingPositionalHintService
     private static int ComputeExpiresInMs(int gcdsUntil)
     {
         var gcdSeconds = Math.Max(CustomComboFunctions.GCDTotal, 2.0f);
-        return (int)(gcdsUntil * gcdSeconds * 1000f) + 750;
+        // Generous pad: heartbeat normally keeps hints alive; this is only a safety net.
+        return (int)(gcdsUntil * gcdSeconds * 1000f) + 5000;
     }
 
     private static void NotifySubscribers()
