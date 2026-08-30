@@ -72,9 +72,15 @@ internal partial class WAR : Tank
         ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
+        
+        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
+        [
+            ([1], HeavySwing, () => InMeleeRange()),
+        ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
+            ([3], () => ComboAction is HeavySwing),
             ([10, 12, 14], () => !HasCharges(Onslaught) || WAR_ST_BalanceOpener_GapcloserChoice == 0)
         ];
         public override Preset Preset => Preset.WAR_ST_BalanceOpener;
