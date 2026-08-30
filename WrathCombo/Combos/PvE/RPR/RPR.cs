@@ -14,7 +14,7 @@ internal partial class RPR : Melee
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Slice)) return actionID;
 
-            ReportRPRPositionalHints(simpleMode: true);
+            ReportRPRPositionalHints();
 
             if (ActionLearned(Soulsow) &&
                 !LocalPlayer.HasStatus(Buffs.Soulsow) &&

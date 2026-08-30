@@ -30,10 +30,10 @@ internal static class UpcomingPositionalHintService
 
     internal static void Tick()
     {
-        if (!EzThrottler.Throttle("PositionalHintStaleCheck", 100))
+        if (_current.Direction is PositionalDirection.None)
             return;
 
-        if (_current.Direction is PositionalDirection.None)
+        if (!EzThrottler.Throttle("PositionalHintStaleCheck", 100))
             return;
 
         if (!CustomComboFunctions.HasBattleTarget() ||
@@ -43,6 +43,10 @@ internal static class UpcomingPositionalHintService
             Reset();
             return;
         }
+
+        // Pull-only consumers refresh on GetWireSnapshot; skip live facing work with no subscribers.
+        if (OnUpcomingPositionalHintProvider.SubscriptionCount == 0)
+            return;
 
         RefreshLiveFields(notifyOnChange: true);
     }
@@ -59,8 +63,7 @@ internal static class UpcomingPositionalHintService
     internal static void Report(
         PositionalDirection direction,
         uint actionId,
-        int gcdsUntil,
-        bool preferOverCurrent = false)
+        int gcdsUntil)
     {
         if (direction is PositionalDirection.None or PositionalDirection.Unknown ||
             actionId is 0 ||
@@ -89,8 +92,7 @@ internal static class UpcomingPositionalHintService
             IsSatisfied = currentAngle == requiredAngle,
         };
 
-        if (!preferOverCurrent &&
-            _current.IsActive &&
+        if (_current.IsActive &&
             !IsExpired(_current) &&
             !IsBetterHint(snapshot, _current))
         {

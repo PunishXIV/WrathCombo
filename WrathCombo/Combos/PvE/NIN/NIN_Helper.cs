@@ -10,7 +10,6 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
-using WrathCombo.API.Enum;
 using static WrathCombo.Combos.PvE.NIN.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
@@ -243,49 +242,6 @@ internal partial class NIN
     internal static bool CanThrowingDaggersAoE => !MudraPhase && ActionReady(ThrowingDaggers) && HasTarget() && GetTargetDistance() >= 4.5 && InActionRange(ThrowingDaggers) &&
                                                   !LocalPlayer.HasStatus(Buffs.RaijuReady);
     internal static bool CanRaiju => !MudraPhase && LocalPlayer.HasStatus(Buffs.RaijuReady);
-
-    internal static void ReportNINPositionalHints()
-    {
-        if (MudraPhase || !TargetNeedsPositionals() || !HasBattleTarget() || ComboTimer <= 1f)
-        {
-            ClearUpcomingPositional();
-            return;
-        }
-
-        switch (ComboAction)
-        {
-            case GustSlash:
-                ReportNINFinisherHint(1);
-                break;
-
-            case SpinningEdge when ActionLearned(GustSlash):
-                ReportNINFinisherHint(2);
-                break;
-
-            default:
-                ClearUpcomingPositional();
-                break;
-        }
-    }
-
-    private static void ReportNINFinisherHint(int gcdsUntil)
-    {
-        if (gauge.Kazematoi is 0 && ActionLearned(ArmorCrush))
-            ReportUpcomingPositional(PositionalDirection.Flank, ArmorCrush, gcdsUntil);
-        else if (gauge.Kazematoi >= 4 && ActionLearned(AeolianEdge))
-            ReportUpcomingPositional(PositionalDirection.Rear, AeolianEdge, gcdsUntil);
-        else if (ActionLearned(ArmorCrush) && ActionLearned(AeolianEdge))
-        {
-            if (OnTargetsFlank() || !TargetNeedsPositionals())
-                ReportUpcomingPositional(PositionalDirection.Flank, ArmorCrush, gcdsUntil);
-            else
-                ReportUpcomingPositional(PositionalDirection.Rear, AeolianEdge, gcdsUntil);
-        }
-        else if (ActionLearned(AeolianEdge))
-            ReportUpcomingPositional(PositionalDirection.Rear, AeolianEdge, gcdsUntil);
-        else
-            ClearUpcomingPositional();
-    }
 
     #endregion
 

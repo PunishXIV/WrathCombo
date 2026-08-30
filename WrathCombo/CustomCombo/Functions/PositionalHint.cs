@@ -14,15 +14,27 @@ internal abstract partial class CustomComboFunctions
     internal static void ReportUpcomingPositional(
         PositionalDirection direction,
         uint actionId,
-        int gcdsUntil,
-        bool preferOverCurrent = false) =>
-        UpcomingPositionalHintService.Report(direction, actionId, gcdsUntil, preferOverCurrent);
+        int gcdsUntil) =>
+        UpcomingPositionalHintService.Report(direction, actionId, gcdsUntil);
 
     /// <summary>
     ///     Retracts any currently published upcoming positional hint.
     /// </summary>
     internal static void ClearUpcomingPositional() =>
         UpcomingPositionalHintService.Reset();
+
+    /// <summary>
+    ///     Returns <see langword="true"/> when there is a positional battle target.
+    ///     Otherwise clears any published hint and returns <see langword="false"/>.
+    /// </summary>
+    internal static bool CanReportPositionalHints()
+    {
+        if (HasBattleTarget() && TargetNeedsPositionals())
+            return true;
+
+        ClearUpcomingPositional();
+        return false;
+    }
 
     /// <summary>
     ///     Reports the opener's current step when it is a known positional action.

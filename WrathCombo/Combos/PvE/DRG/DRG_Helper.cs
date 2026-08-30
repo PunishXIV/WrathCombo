@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.API.Enum;
 using static ECommons.DalamudServices.Svc;
 using static WrathCombo.Combos.PvE.DRG.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -97,70 +96,6 @@ internal partial class DRG
         }
 
         return OriginalHook(TrueThrust);
-    }
-
-    private static void ReportDRGPositionalHints()
-    {
-        if (!TargetNeedsPositionals() || !HasBattleTarget())
-        {
-            ClearUpcomingPositional();
-            return;
-        }
-
-        if (TryReportOpenerPositionalHint(Opener(), TryReportDRGActionPositional))
-            return;
-
-        if (ComboTimer <= 0)
-        {
-            ClearUpcomingPositional();
-            return;
-        }
-
-        if (ComboAction == OriginalHook(Disembowel) && ActionLearned(ChaosThrust))
-            ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(ChaosThrust), 1);
-        else if (ComboAction == OriginalHook(ChaosThrust) && ActionLearned(WheelingThrust))
-            ReportUpcomingPositional(PositionalDirection.Rear, WheelingThrust, 1);
-        else if (ComboAction == OriginalHook(FullThrust) && ActionLearned(FangAndClaw))
-            ReportUpcomingPositional(PositionalDirection.Flank, FangAndClaw, 1);
-        else if (ComboAction == OriginalHook(VorpalThrust) && ActionLearned(FullThrust) && ActionLearned(FangAndClaw))
-            ReportUpcomingPositional(PositionalDirection.Flank, FangAndClaw, 2);
-        else if (ComboAction is TrueThrust or RaidenThrust && ActionLearned(VorpalThrust))
-        {
-            var disembowelPath = ActionLearned(Disembowel) &&
-                                 (ActionLearned(ChaosThrust) && ChaosDebuff is null &&
-                                  CurrentTarget.CanApplyStatus(ChaoticList[OriginalHook(ChaosThrust)]) ||
-                                  LocalPlayer.Status(Buffs.PowerSurge).RemainingTimeOrZero() < 15);
-
-            if (disembowelPath && ActionLearned(ChaosThrust))
-                ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(ChaosThrust), 2);
-            else
-                ClearUpcomingPositional();
-        }
-        else
-            ClearUpcomingPositional();
-    }
-
-    private static bool TryReportDRGActionPositional(uint action, int gcdsUntil)
-    {
-        if (action == OriginalHook(ChaosThrust))
-        {
-            ReportUpcomingPositional(PositionalDirection.Rear, action, gcdsUntil);
-            return true;
-        }
-
-        if (action == WheelingThrust)
-        {
-            ReportUpcomingPositional(PositionalDirection.Rear, WheelingThrust, gcdsUntil);
-            return true;
-        }
-
-        if (action == FangAndClaw)
-        {
-            ReportUpcomingPositional(PositionalDirection.Flank, FangAndClaw, gcdsUntil);
-            return true;
-        }
-
-        return false;
     }
 
     #endregion

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.API.Enum;
 using static ECommons.DalamudServices.Svc;
 using static WrathCombo.Combos.PvE.RPR.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -633,31 +632,6 @@ internal partial class RPR
             BloodStalk => options.Length > SoulsowOnBloodStalk && options[SoulsowOnBloodStalk],
             _ => false
         };
-    }
-
-    internal static void ReportRPRPositionalHints(bool simpleMode = false)
-    {
-        if (!TargetNeedsPositionals() || !HasBattleTarget())
-        {
-            ClearUpcomingPositional();
-            return;
-        }
-
-        if (LocalPlayer.HasStatus(Buffs.Enshrouded))
-        {
-            ClearUpcomingPositional();
-            return;
-        }
-
-        if (LocalPlayer.HasStatus(Buffs.EnhancedGibbet))
-            ReportUpcomingPositional(PositionalDirection.Flank, OriginalHook(Gibbet), 1);
-        else if (LocalPlayer.HasStatus(Buffs.EnhancedGallows))
-            ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(Gallows), 1);
-        else if ((LocalPlayer.HasStatus(Buffs.SoulReaver) || LocalPlayer.HasStatus(Buffs.Executioner)) &&
-                 ActionLearned(Gibbet))
-            ReportUpcomingPositional(PositionalDirection.Rear, OriginalHook(Gallows), 1);
-        else
-            ClearUpcomingPositional();
     }
 
     #endregion

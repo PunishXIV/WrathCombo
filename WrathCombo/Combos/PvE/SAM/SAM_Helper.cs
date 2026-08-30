@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.API.Enum;
 using WrathCombo.Data;
 using static ECommons.DalamudServices.Svc;
 using static FFXIVClientStructs.FFXIV.Client.Game.ActionManager;
@@ -17,62 +16,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM
 {
-    #region Positional Hints
-
-    private static void ReportSAMPositionalHints(bool useGekko, bool useKasha)
-    {
-        if (!TargetNeedsPositionals() || !HasBattleTarget())
-        {
-            ClearUpcomingPositional();
-            return;
-        }
-
-        if (LocalPlayer.HasStatus(Buffs.MeikyoShisui))
-        {
-            if (useGekko && ActionLearned(Gekko) && !HasGetsu || !LocalPlayer.HasStatus(Buffs.Fugetsu))
-                ReportUpcomingPositional(PositionalDirection.Rear, Gekko, 1);
-            else if (useKasha && ActionLearned(Kasha) && !HasKa || !LocalPlayer.HasStatus(Buffs.Fuka))
-                ReportUpcomingPositional(PositionalDirection.Flank, Kasha, 1);
-            else
-                ClearUpcomingPositional();
-            return;
-        }
-
-        if (ComboTimer <= 0)
-        {
-            ClearUpcomingPositional();
-            return;
-        }
-
-        if (ComboAction is Jinpu && ActionLearned(Gekko))
-            ReportUpcomingPositional(PositionalDirection.Rear, Gekko, 1);
-        else if (ComboAction is Shifu && ActionLearned(Kasha))
-            ReportUpcomingPositional(PositionalDirection.Flank, Kasha, 1);
-        else if (ComboAction is Hakaze or Gyofu)
-        {
-            if (useGekko &&
-                ActionLearned(Jinpu) &&
-                (!ActionLearned(Kasha) && ActionLearned(Gekko) ||
-                 (OnTargetsRear() || OnTargetsFront()) && !HasGetsu && ActionLearned(Gekko) ||
-                 OnTargetsFlank() && HasKa && ActionLearned(Gekko) ||
-                 !LocalPlayer.HasStatus(Buffs.Fugetsu)))
-                ReportUpcomingPositional(PositionalDirection.Rear, Gekko, 2);
-
-            else if (useKasha &&
-                     ActionLearned(Shifu) &&
-                     ((OnTargetsFlank() || OnTargetsFront()) && !HasKa && ActionLearned(Kasha) ||
-                      OnTargetsRear() && HasGetsu && ActionLearned(Kasha) ||
-                      !LocalPlayer.HasStatus(Buffs.Fuka)))
-                ReportUpcomingPositional(PositionalDirection.Flank, Kasha, 2);
-            else
-                ClearUpcomingPositional();
-        }
-        else
-            ClearUpcomingPositional();
-    }
-
-    #endregion
-
     #region Combo
 
     private static uint WithTrueNorth(
