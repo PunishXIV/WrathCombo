@@ -203,6 +203,23 @@ public abstract class WrathOpener
                 return false;
             }
 
+            foreach (var (Steps, HoldDelay) in PrepullDelays.Where(x => x.Steps.Any(y => y == OpenerStep)))
+            {
+                if (DelayedStep != OpenerStep)
+                {
+                    DelayedAt = DateTime.Now;
+                    DelayedStep = OpenerStep;
+                    DelayedSecs = HoldDelay();
+                }
+
+                if ((DateTime.Now - DelayedAt).TotalSeconds < DelayedSecs && !PartyInCombat())
+                {
+                    ActionWatching.TimeLastActionUsed = DateTime.Now; //Hacky workaround for TN jobs
+                    actionID = All.Cease;
+                    return true;
+                }
+            }
+
             if (OpenerStep > 1)
             {
                 bool prevStepSkipping = SkipSteps.FindFirst(x => x.Steps.FindFirst(y => y == OpenerStep - 1, out var t), out var p);
@@ -212,6 +229,7 @@ public abstract class WrathOpener
                 if (!prevStepSkipping)
                 {
                     bool delay = PrepullDelays.FindFirst(x => x.Steps.Any(y => y == DelayedStep && y == OpenerStep), out var hold);
+                    Svc.Log.Debug($"Delay: {delay} - {OpenerStep}");
                     if ((!delay && ActionWatching.TimeSinceLastAction.TotalSeconds >= Service.Configuration.OpenerTimeout) || (delay && (DateTime.Now - DelayedAt).TotalSeconds > DelayedSecs + Service.Configuration.OpenerTimeout))
                     {
                         CurrentState = OpenerState.FailedOpener;
@@ -270,23 +288,6 @@ public abstract class WrathOpener
                     }
                     else
                         CurrentOpenerAction = OpenerActions[OpenerStep - 1].Invoke();
-                }
-
-                foreach (var (Steps, HoldDelay) in PrepullDelays.Where(x => x.Steps.Any(y => y == OpenerStep)))
-                {
-                    if (DelayedStep != OpenerStep)
-                    {
-                        DelayedAt = DateTime.Now;
-                        DelayedStep = OpenerStep;
-                        DelayedSecs = HoldDelay();
-                    }
-
-                    if ((DateTime.Now - DelayedAt).TotalSeconds < DelayedSecs && !PartyInCombat())
-                    {
-                        ActionWatching.TimeLastActionUsed = DateTime.Now; //Hacky workaround for TN jobs
-                        actionID = All.Cease;
-                        return true;
-                    }
                 }
 
                 if (CurrentOpenerAction == RoleActions.Melee.TrueNorth && !TargetNeedsPositionals())
