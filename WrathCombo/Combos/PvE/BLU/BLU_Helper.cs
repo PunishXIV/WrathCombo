@@ -296,6 +296,9 @@ internal partial class BLU
         var sardine = onAoE ? Preset.BLU_AoE_DPS_FlyingSardine : Preset.BLU_ST_DPS_FlyingSardine;
         var primals = onAoE ? Preset.BLU_AoE_DPS_Primals : Preset.BLU_ST_DPS_Primals;
 
+        if (LocalPlayer!.Status(Buffs.PhantomFlurry).RemainingTimeOrZero() > 0)
+            return All.Cease;
+
         if (LocalPlayer.HasStatus(Buffs.WaningNocturne))
             return actionID;
 
@@ -527,27 +530,27 @@ internal partial class BLU
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Whistle,
-            () => Tingle,
-            () => RoseOfDestruction,
-            () => MoonFlute,
-            () => JKick,
-            () => TripleTrident,
-            () => Nightbloom,
-            () => WingedReprobation,
-            () => FeatherRain,
-            () => SeaShanty,
-            () => WingedReprobation,
-            () => ShockStrike,
-            () => BeingMortal,
-            () => Bristle,
-            () => Role.Swiftcast,
-            () => Surpanakha,
-            () => Surpanakha,
-            () => Surpanakha,
-            () => Surpanakha,
-            () => MatraMagic,
-            () => PhantomFlurry
+            () => Whistle, //1
+            () => Tingle, //2
+            () => RoseOfDestruction, //3
+            () => MoonFlute, //4 
+            () => JKick, //5
+            () => TripleTrident, //6
+            () => Nightbloom, //7
+            () => WingedReprobation, //8
+            () => FeatherRain.Retarget(SonicBoom, CurrentTarget), //9
+            () => SeaShanty, //10
+            () => WingedReprobation, //11
+            () => ShockStrike, //12
+            () => BeingMortal, //13
+            () => Bristle, //14
+            () => Role.Swiftcast, //15
+            () => Surpanakha, //16
+            () => Surpanakha, //17
+            () => Surpanakha, //18
+            () => Surpanakha, //19
+            () => MatraMagic, //20
+            () => PhantomFlurry //21
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
@@ -578,27 +581,27 @@ internal partial class BLU
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Whistle,
-            () => Tingle,
-            () => RoseOfDestruction,
-            () => MoonFlute,
-            () => JKick,
-            () => TripleTrident,
-            () => Nightbloom,
-            () => Bristle,
-            () => FeatherRain,
-            () => SeaShanty,
-            () => BreathOfMagic,
-            () => ShockStrike,
-            () => Bristle,
-            () => Role.Swiftcast,
-            () => Surpanakha,
-            () => Surpanakha,
-            () => Surpanakha,
-            () => Surpanakha,
-            () => MatraMagic,
-            () => BeingMortal,
-            () => PhantomFlurry
+            () => Whistle, // 1
+            () => Tingle, // 2
+            () => RoseOfDestruction, // 3
+            () => MoonFlute, // 4
+            () => JKick, // 5
+            () => TripleTrident, // 6
+            () => Nightbloom, // 7
+            () => Bristle, // 8
+            () => FeatherRain.Retarget(SonicBoom, CurrentTarget), // 9
+            () => SeaShanty, // 10
+            () => BreathOfMagic, // 11
+            () => ShockStrike, // 12
+            () => Bristle, // 13
+            () => Role.Swiftcast, // 14
+            () => Surpanakha, // 15
+            () => Surpanakha, // 16
+            () => Surpanakha, // 17
+            () => Surpanakha, // 18
+            () => MatraMagic, // 19
+            () => BeingMortal, // 20
+            () => PhantomFlurry // 21
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
@@ -787,7 +790,7 @@ internal partial class BLU
             Slow = 9,
             Bind = 13,
             Stun = 142,
-            SongOfTorment = 273,
+            SongOfTorment = 1714,
             DeepFreeze = 1731,
             Offguard = 1717,
             Malodorous = 1715,

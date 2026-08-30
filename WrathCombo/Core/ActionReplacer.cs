@@ -223,6 +223,8 @@ internal sealed class ActionReplacer : IDisposable
     {
         var playerJob = Player.Job;
         var upgradedJob = playerJob.GetUpgradedJob();
+        if (upgradedJob is Job.BTN or Job.FSH)
+            upgradedJob = Job.MIN; // Allow all DoL jobs to be used for DoL combos
 
         FilteredCombos = CustomCombos.Where(x =>
         {

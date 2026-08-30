@@ -196,8 +196,35 @@ internal class Presets : ConfigWindow
             if (blueAttr.Actions.Count > 0)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, blueAttr.NoneSet ? ImGuiColors.DPSRed : ImGuiColors.DalamudOrange);
-                ImGui.Text($"{(blueAttr.NoneSet ? FeaturesUI.Warning_BLUNoSpells : FeaturesUI.Warning_BLUMissingSpells)} {string.Join(", ", blueAttr.Actions.Select(x => ActionWatching.GetBLUIndex(x) + GetActionName(x)))}");
+                ImGui.Text($"{(blueAttr.NoneSet ? FeaturesUI.Warning_BLUNoSpells : FeaturesUI.Warning_BLUMissingSpells)}");
                 ImGui.PopStyleColor();
+                foreach (var act in blueAttr.Actions)
+                {
+                    var name = act.ActionName();
+                    var idx = BlueMageService.GetBLUIndex(act);
+                    string text = $"#{idx} {name}";
+                    using (ImRaii.PushColor(ImGuiCol.Text, !BlueMageService.SpellUnlocked(act) ? ImGuiColors.DPSRed : ImGuiColors.DalamudYellow))
+                    {
+                        ImGui.Text($"- {text}");
+                    }
+                    if (ImGui.IsItemHovered())
+                    {
+                        ImGui.BeginTooltip();
+                        ImGui.TextUnformatted($"{(!BlueMageService.SpellUnlocked(act) ? "Spell Not Learned" : BlueMageService.HasFreeSpellSlot() ? "Click to Assign" : "No Free Spell Slots")}");
+                        ImGui.EndTooltip();
+
+                        if (!BlueMageService.SpellUnlocked(act) || !BlueMageService.HasFreeSpellSlot())
+                            continue;
+
+                        ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+                        if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+                        {
+                            BlueMageService.AssignSpell(act);
+                            BlueMageService.PopulateBLUSpells();
+                        }
+                    }
+
+                }
             }
 
             else

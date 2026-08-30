@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using WrathCombo.Services;
 
 namespace WrathCombo.Attributes;
@@ -22,7 +23,7 @@ public class BlueInactiveAttribute : Attribute
     {
         NoneSet = true;
         Actions.Clear();
-        foreach (var action in MasterActions)
+        foreach (var action in MasterActions.OrderBy(a => a))
         {
             if (Service.Configuration.ActiveBLUSpells.Contains(action))
             {

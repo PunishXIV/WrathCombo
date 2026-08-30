@@ -1907,7 +1907,7 @@ public enum Preset
     BLU_ST_DPS = 70026,
 
     [ParentCombo(BLU_ST_DPS)]
-    [BlueInactive(BLU.MoonFlute)]
+    [BlueInactive(BLU.Whistle, BLU.Tingle, BLU.RoseOfDestruction, BLU.MoonFlute, BLU.JKick, BLU.TripleTrident, BLU.Nightbloom, BLU.Bristle, BLU.BeingMortal, BLU.FeatherRain, BLU.SeaShanty, BLU.ShockStrike, BLU.Surpanakha, BLU.PhantomFlurry)]
     [BlueDPS]
     [BlueHealer]
     [JobInfo(Job.BLU)]
