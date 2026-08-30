@@ -18,9 +18,6 @@ internal partial class NIN
             return;
         }
 
-        if (ComboTimer <= 1f)
-            return;
-
         switch (ComboAction)
         {
             case GustSlash:
@@ -31,7 +28,11 @@ internal partial class NIN
                 ReportNINFinisherHint(2);
                 break;
 
-            // After finisher / unknown: leave last hint for heartbeat
+            default:
+                // Spinning Edge → Gust Slash → Edge/Crush (combo start / after finisher)
+                if (ActionLearned(GustSlash))
+                    ReportNINFinisherHint(3);
+                break;
         }
     }
 

@@ -515,28 +515,64 @@ internal partial class VPR
 
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
             ActionLearned(Vicewinder) &&
-            !LocalPlayer.HasStatus(Buffs.Reawakened))
+            !LocalPlayer.HasStatus(Buffs.Reawakened) &&
+            TryGetNextVicewinderCoil(vicewinderBuffPrio, out var coil))
         {
-            if (UsedVicewinder &&
-                (!LocalPlayer.HasStatus(Buffs.Swiftscaled) ||
-                 HasBothBuffs && (!OnTargetsFlank() || !TargetNeedsPositionals()) ||
-                 vicewinderBuffPrio && LocalPlayer.Status(Buffs.Swiftscaled).RemainingTimeOrZero() < GCD * 6) ||
-                UsedHuntersCoil)
-            {
-                actionId = SwiftskinsCoil;
-                return true;
-            }
-
-            if (UsedVicewinder &&
-                (!LocalPlayer.HasStatus(Buffs.HuntersInstinct) ||
-                 HasBothBuffs && (!OnTargetsRear() || !TargetNeedsPositionals()) ||
-                 vicewinderBuffPrio && LocalPlayer.Status(Buffs.HuntersInstinct).RemainingTimeOrZero() < GCD * 6) ||
-                UsedSwiftskinsCoil)
-            {
-                actionId = HuntersCoil;
-                return true;
-            }
+            actionId = coil;
+            return true;
         }
+
+        return false;
+    }
+
+    /// <summary>
+    ///     Next Hunter's / Swiftskin's Coil in the dread combo — shared by rotation and positional hints.
+    /// </summary>
+    private static bool TryGetNextVicewinderCoil(bool vicewinderBuffPrio, out uint coil)
+    {
+        coil = 0;
+
+        if (UsedHuntersCoil)
+        {
+            coil = SwiftskinsCoil;
+            return true;
+        }
+
+        if (UsedSwiftskinsCoil)
+        {
+            coil = HuntersCoil;
+            return true;
+        }
+
+        if (!UsedVicewinder)
+            return false;
+
+        return TryGetFirstVicewinderCoil(vicewinderBuffPrio, out coil);
+    }
+
+    /// <summary>
+    ///     Which coil Wrath presses first after Vicewinder (buffs / facing / buff-prio).
+    /// </summary>
+    private static bool TryGetFirstVicewinderCoil(bool vicewinderBuffPrio, out uint coil)
+    {
+        coil = 0;
+
+        if (!LocalPlayer.HasStatus(Buffs.Swiftscaled) ||
+            HasBothBuffs && (!OnTargetsFlank() || !TargetNeedsPositionals()) ||
+            vicewinderBuffPrio && LocalPlayer.Status(Buffs.Swiftscaled).RemainingTimeOrZero() < GCD * 6)
+        {
+            coil = SwiftskinsCoil;
+            return true;
+        }
+
+        if (!LocalPlayer.HasStatus(Buffs.HuntersInstinct) ||
+            HasBothBuffs && (!OnTargetsRear() || !TargetNeedsPositionals()) ||
+            vicewinderBuffPrio && LocalPlayer.Status(Buffs.HuntersInstinct).RemainingTimeOrZero() < GCD * 6)
+        {
+            coil = HuntersCoil;
+            return true;
+        }
+
         return false;
     }
 

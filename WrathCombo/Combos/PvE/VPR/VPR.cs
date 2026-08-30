@@ -17,7 +17,7 @@ internal partial class VPR : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs))
                 return actionID;
 
-            ReportVPRPositionalHints();
+            ReportVPRPositionalHints(vicewinderBuffPrio: false);
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
@@ -132,7 +132,7 @@ internal partial class VPR : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs))
                 return actionID;
 
-            ReportVPRPositionalHints();
+            ReportVPRPositionalHints(VPR_VicewinderBuffPrio);
 
             if (IsEnabled(Preset.VPR_ST_Opener) && Opener().FullOpener(ref actionID))
                 return actionID;

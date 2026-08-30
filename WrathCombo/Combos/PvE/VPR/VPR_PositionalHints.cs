@@ -7,7 +7,7 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class VPR
 {
-    private static void ReportVPRPositionalHints()
+    private static void ReportVPRPositionalHints(bool vicewinderBuffPrio)
     {
         if (!CanReportPositionalHints())
             return;
@@ -22,10 +22,7 @@ internal partial class VPR
         if (TryReportOpenerPositionalHint(Opener(), TryReportVPRActionPositional))
             return;
 
-        if (TryReportVicewinderCoilPositionalHints())
-            return;
-
-        if (ComboTimer <= 0)
+        if (TryReportVicewinderCoilPositionalHints(vicewinderBuffPrio))
             return;
 
         if (ComboAction is HuntersSting or SwiftskinsSting)
@@ -38,45 +35,66 @@ internal partial class VPR
                 ReportUpcomingPositional(PositionalDirection.Rear, HindstingStrike, 1);
             else if (LocalPlayer.HasStatus(Buffs.FlankstungVenom) && ActionLearned(FlankstingStrike))
                 ReportUpcomingPositional(PositionalDirection.Flank, FlankstingStrike, 1);
-            // else keep last hint
         }
         else if (ComboAction is ReavingFangs or SteelFangs)
-        {
-            if (ActionLearned(SwiftskinsSting) &&
-                (HasHindVenom || IsMissingSwiftscaled || IsMissingBasicComboVenom))
-                ReportUpcomingPositional(PositionalDirection.Rear, UpcomingHindFinisher(), 2);
-            else if (ActionLearned(HuntersSting) &&
-                     (HasFlankVenom || IsMissingHuntersInstinct))
-                ReportUpcomingPositional(PositionalDirection.Flank, UpcomingFlankFinisher(), 2);
-        }
-        // Unknown combo step: leave last hint for heartbeat
+            TryReportVPRFinisherPath(2);
+        else
+            // Fangs → Sting → Finisher (combo start / after finisher)
+            TryReportVPRFinisherPath(3);
     }
 
-    private static bool TryReportVicewinderCoilPositionalHints()
+    private static bool TryReportVPRFinisherPath(int gcdsUntil)
     {
-        if (!ActionLearned(Vicewinder) ||
-            !(UsedVicewinder || UsedHuntersCoil || UsedSwiftskinsCoil))
+        if (ActionLearned(SwiftskinsSting) &&
+            (HasHindVenom || IsMissingSwiftscaled || IsMissingBasicComboVenom))
+        {
+            ReportUpcomingPositional(PositionalDirection.Rear, UpcomingHindFinisher(), gcdsUntil);
+            return true;
+        }
+
+        if (ActionLearned(HuntersSting) &&
+            (HasFlankVenom || IsMissingHuntersInstinct))
+        {
+            ReportUpcomingPositional(PositionalDirection.Flank, UpcomingFlankFinisher(), gcdsUntil);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryReportVicewinderCoilPositionalHints(bool vicewinderBuffPrio)
+    {
+        if (!ActionLearned(Vicewinder) || LocalPlayer.HasStatus(Buffs.Reawakened))
             return false;
 
-        if (UsedHuntersCoil)
+        // Advanced: only when Vicewinder features are on (Simple always uses them).
+        var vicewinderInRotation = !IsEnabled(Preset.VPR_ST_AdvancedMode) ||
+                                   IsEnabled(Preset.VPR_ST_Vicewinder) ||
+                                   IsEnabled(Preset.VPR_ST_VicewinderCombo);
+
+        if (TryGetNextVicewinderCoil(vicewinderBuffPrio, out var coil))
         {
-            ReportUpcomingPositional(PositionalDirection.Rear, SwiftskinsCoil, 1);
+            ReportVicewinderCoil(coil, 1);
             return true;
         }
 
-        if (UsedSwiftskinsCoil)
+        // About to press Vicewinder: same first-coil choice the rotation will make after VW.
+        if (vicewinderInRotation && UseVicewinder() &&
+            TryGetFirstVicewinderCoil(vicewinderBuffPrio, out coil))
         {
-            ReportUpcomingPositional(PositionalDirection.Flank, HuntersCoil, 1);
+            ReportVicewinderCoil(coil, 2);
             return true;
         }
 
-        if (!OnTargetsFlank() || !TargetNeedsPositionals())
-            ReportUpcomingPositional(PositionalDirection.Rear, SwiftskinsCoil, 1);
-        else if (!OnTargetsRear() || !TargetNeedsPositionals())
-            ReportUpcomingPositional(PositionalDirection.Flank, HuntersCoil, 1);
-        // Both angles already covered / ambiguous: keep last hint
+        return false;
+    }
 
-        return true;
+    private static void ReportVicewinderCoil(uint coil, int gcdsUntil)
+    {
+        if (coil == SwiftskinsCoil)
+            ReportUpcomingPositional(PositionalDirection.Rear, SwiftskinsCoil, gcdsUntil);
+        else if (coil == HuntersCoil)
+            ReportUpcomingPositional(PositionalDirection.Flank, HuntersCoil, gcdsUntil);
     }
 
     private static bool TryReportVPRActionPositional(uint action, int gcdsUntil)
