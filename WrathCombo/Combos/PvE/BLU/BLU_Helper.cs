@@ -513,9 +513,9 @@ internal partial class BLU
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], () => CountdownRemaining - 5),
-            ([2], () => CountdownRemaining - 3),
-            ([3], () => CountdownRemaining)
+            ([2], () => CountdownRemaining - 5),
+            ([3], () => CountdownRemaining - 3),
+            ([4], () => CountdownRemaining)
         ];
 
         public override bool HasCooldowns() =>
@@ -530,104 +530,108 @@ internal partial class BLU
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Whistle, //1
-            () => Tingle, //2
-            () => RoseOfDestruction, //3
-            () => MoonFlute, //4 
-            () => JKick, //5
-            () => TripleTrident, //6
-            () => Nightbloom, //7
-            () => WingedReprobation, //8
-            () => FeatherRain.Retarget(SonicBoom, CurrentTarget), //9
-            () => SeaShanty, //10
-            () => WingedReprobation, //11
-            () => ShockStrike, //12
-            () => BeingMortal, //13
-            () => Bristle, //14
-            () => Role.Swiftcast, //15
-            () => Surpanakha, //16
-            () => Surpanakha, //17
-            () => Surpanakha, //18
-            () => Surpanakha, //19
-            () => MatraMagic, //20
-            () => PhantomFlurry //21
+            () => All.Cease, // 1
+            () => Whistle, // 2
+            () => Tingle, // 3
+            () => RoseOfDestruction, // 4
+            () => MoonFlute, // 5
+            () => JKick, // 6
+            () => TripleTrident, // 7
+            () => Nightbloom, // 8
+            () => WingedReprobation, // 9
+            () => FeatherRain.Retarget(SonicBoom, CurrentTarget), // 10
+            () => SeaShanty, // 11
+            () => WingedReprobation, // 12
+            () => ShockStrike, // 13
+            () => BeingMortal, // 14
+            () => Bristle, // 15
+            () => Role.Swiftcast, // 16
+            () => Surpanakha, // 17
+            () => Surpanakha, // 18
+            () => Surpanakha, // 19
+            () => Surpanakha, // 20
+            () => MatraMagic, // 21
+            () => PhantomFlurry // 22
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => !IsSpellActive(Whistle) || HasStatusEffect(Buffs.Whistle)),
-            ([2], () => !IsSpellActive(Tingle) || HasStatusEffect(Buffs.Tingle, Target, true)),
-            ([3], () => !IsSpellActive(RoseOfDestruction)),
-            ([5], () => !IsSpellActive(JKick)),
-            ([6], () => !IsSpellActive(TripleTrident) || !ActionReady(TripleTrident)),
-            ([7], () => !IsSpellActive(Nightbloom)),
-            ([8], () => !IsSpellActive(WingedReprobation)),
-            ([9], () => !IsSpellActive(FeatherRain)),
-            ([10], () => !IsSpellActive(SeaShanty)),
-            ([11], () => !IsSpellActive(WingedReprobation)),
-            ([12], () => !IsSpellActive(ShockStrike)),
-            ([13], () => !IsSpellActive(BeingMortal)),
-            ([14], () => !IsSpellActive(Bristle) || HasStatusEffect(Buffs.Bristle)),
-            ([15], () => !ActionReady(Role.Swiftcast)),
-            ([16, 17, 18, 19], () => !IsSpellActive(Surpanakha)),
-            ([20], () => !IsSpellActive(MatraMagic) || !HasStatusEffect(Buffs.DPSMimicry)),
-            ([21], () => !IsSpellActive(PhantomFlurry))
+            ([1], () => CountdownActive || InCombat()),
+            ([2], () => !IsSpellActive(Whistle) || HasStatusEffect(Buffs.Whistle)),
+            ([3], () => !IsSpellActive(Tingle) || HasStatusEffect(Buffs.Tingle, Target, true)),
+            ([4], () => !IsSpellActive(RoseOfDestruction)),
+            ([6], () => !IsSpellActive(JKick)),
+            ([7], () => !IsSpellActive(TripleTrident) || !ActionReady(TripleTrident)),
+            ([8], () => !IsSpellActive(Nightbloom)),
+            ([9], () => !IsSpellActive(WingedReprobation)),
+            ([10], () => !IsSpellActive(FeatherRain)),
+            ([11], () => !IsSpellActive(SeaShanty)),
+            ([12], () => !IsSpellActive(WingedReprobation)),
+            ([13], () => !IsSpellActive(ShockStrike)),
+            ([14], () => !IsSpellActive(BeingMortal)),
+            ([15], () => !IsSpellActive(Bristle) || HasStatusEffect(Buffs.Bristle)),
+            ([16], () => !ActionReady(Role.Swiftcast)),
+            ([17, 18, 19, 20], () => !IsSpellActive(Surpanakha)),
+            ([21], () => !IsSpellActive(MatraMagic) || !HasStatusEffect(Buffs.DPSMimicry)),
+            ([22], () => !IsSpellActive(PhantomFlurry))
         ];
 
-        public override List<int> AllowUpgradeSteps { get; set; } = [8, 11];
+        public override List<int> AllowUpgradeSteps { get; set; } = [9, 12];
     }
 
     internal class BLUMoonFluteDoTOpener : BLUOpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Whistle, // 1
-            () => Tingle, // 2
-            () => RoseOfDestruction, // 3
-            () => MoonFlute, // 4
-            () => JKick, // 5
-            () => TripleTrident, // 6
-            () => Nightbloom, // 7
-            () => Bristle, // 8
-            () => FeatherRain.Retarget(SonicBoom, CurrentTarget), // 9
-            () => SeaShanty, // 10
-            () => BreathOfMagic, // 11
-            () => ShockStrike, // 12
-            () => Bristle, // 13
-            () => Role.Swiftcast, // 14
-            () => Surpanakha, // 15
+            () => All.Cease, // 1
+            () => Whistle, // 2
+            () => Tingle, // 3
+            () => RoseOfDestruction, // 4
+            () => MoonFlute, // 5
+            () => JKick, // 6
+            () => TripleTrident, // 7
+            () => Nightbloom, // 8
+            () => Bristle, // 9
+            () => FeatherRain.Retarget(SonicBoom, CurrentTarget), // 10
+            () => SeaShanty, // 11
+            () => BreathOfMagic, // 12
+            () => ShockStrike, // 13
+            () => Bristle, // 14
+            () => Role.Swiftcast, // 15
             () => Surpanakha, // 16
             () => Surpanakha, // 17
             () => Surpanakha, // 18
-            () => MatraMagic, // 19
-            () => BeingMortal, // 20
-            () => PhantomFlurry // 21
+            () => Surpanakha, // 19
+            () => MatraMagic, // 20
+            () => BeingMortal, // 21
+            () => PhantomFlurry // 22
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
-            ([11], MortalFlame, () => !IsSpellActive(BreathOfMagic) || HasStatusEffect(Debuffs.BreathOfMagic, Target, true))
+            ([12], MortalFlame, () => !IsSpellActive(BreathOfMagic) || HasStatusEffect(Debuffs.BreathOfMagic, Target, true))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => !IsSpellActive(Whistle) || HasStatusEffect(Buffs.Whistle)),
-            ([2], () => !IsSpellActive(Tingle) || HasStatusEffect(Buffs.Tingle, Target, true)),
-            ([3], () => !IsSpellActive(RoseOfDestruction)),
-            ([5], () => !IsSpellActive(JKick)),
-            ([6], () => !IsSpellActive(TripleTrident) || !ActionReady(TripleTrident)),
-            ([7], () => !IsSpellActive(Nightbloom)),
-            ([8], () => !IsSpellActive(Bristle) || HasStatusEffect(Buffs.Bristle)),
-            ([9], () => !IsSpellActive(FeatherRain)),
-            ([10], () => !IsSpellActive(SeaShanty)),
-            ([11], () => !IsSpellActive(BreathOfMagic) && !IsSpellActive(MortalFlame)),
-            ([12], () => !IsSpellActive(ShockStrike)),
-            ([13], () => !IsSpellActive(Bristle) || HasStatusEffect(Buffs.Bristle)),
-            ([14], () => !ActionReady(Role.Swiftcast)),
-            ([15, 16, 17, 18], () => !IsSpellActive(Surpanakha)),
-            ([19], () => !IsSpellActive(MatraMagic) || !HasStatusEffect(Buffs.DPSMimicry)),
-            ([20], () => !IsSpellActive(BeingMortal)),
-            ([21], () => !IsSpellActive(PhantomFlurry))
+            ([1], () => CountdownActive || InCombat()),
+            ([2], () => !IsSpellActive(Whistle) || HasStatusEffect(Buffs.Whistle)),
+            ([3], () => !IsSpellActive(Tingle) || HasStatusEffect(Buffs.Tingle, Target, true)),
+            ([4], () => !IsSpellActive(RoseOfDestruction)),
+            ([6], () => !IsSpellActive(JKick)),
+            ([7], () => !IsSpellActive(TripleTrident) || !ActionReady(TripleTrident)),
+            ([8], () => !IsSpellActive(Nightbloom)),
+            ([9], () => !IsSpellActive(Bristle) || HasStatusEffect(Buffs.Bristle)),
+            ([10], () => !IsSpellActive(FeatherRain)),
+            ([11], () => !IsSpellActive(SeaShanty)),
+            ([12], () => !IsSpellActive(BreathOfMagic) && !IsSpellActive(MortalFlame)),
+            ([13], () => !IsSpellActive(ShockStrike)),
+            ([14], () => !IsSpellActive(Bristle) || HasStatusEffect(Buffs.Bristle)),
+            ([15], () => !ActionReady(Role.Swiftcast)),
+            ([16, 17, 18, 19], () => !IsSpellActive(Surpanakha)),
+            ([20], () => !IsSpellActive(MatraMagic) || !HasStatusEffect(Buffs.DPSMimicry)),
+            ([21], () => !IsSpellActive(BeingMortal)),
+            ([22], () => !IsSpellActive(PhantomFlurry))
         ];
     }
 

@@ -547,36 +547,42 @@ internal partial class DRG
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => LanceCharge, // 1
-            () => BattleLitany, // 2
-            () => TrueThrust, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
-            () => Geirskogul, // 5
-            () => SpiralBlow, // 6
-            () => HighJump, // 7
-            () => Nastrond, // 8
-            () => ChaoticSpring, // 9
-            () => DragonfireDive, // 10
-            () => MirageDive, // 11
-            () => WheelingThrust, // 12
-            () => LifeSurge, // 13
-            () => RiseOfTheDragon, // 14
-            () => Drakesbane, // 15
-            () => Stardiver, // 16
-            () => RaidenThrust, // 17
-            () => Starcross, // 18
-            () => LanceBarrage, // 19
-            () => LifeSurge, // 20
-            () => HeavensThrust, // 21
-            () => FangAndClaw, // 22
-            () => Drakesbane, // 23
-            () => RaidenThrust, // 24
-            () => WyrmwindThrust // 25
+            () => All.Cease, // 1
+            () => LanceCharge, // 2
+            () => BattleLitany, // 3
+            () => TrueThrust, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            () => Geirskogul, // 6
+            () => SpiralBlow, // 7
+            () => HighJump, // 8
+            () => Nastrond, // 9
+            () => ChaoticSpring, // 10
+            () => DragonfireDive, // 11
+            () => MirageDive, // 12
+            () => WheelingThrust, // 13
+            () => LifeSurge, // 14
+            () => RiseOfTheDragon, // 15
+            () => Drakesbane, // 16
+            () => Stardiver, // 17
+            () => RaidenThrust, // 18
+            () => Starcross, // 19
+            () => LanceBarrage, // 20
+            () => LifeSurge, // 21
+            () => HeavensThrust, // 22
+            () => FangAndClaw, // 23
+            () => Drakesbane, // 24
+            () => RaidenThrust, // 25
+            () => WyrmwindThrust // 26
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1, 2], () => CountdownRemaining - 2)
+            ([2, 3], () => CountdownRemaining - 2)
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat())
         ];
     }
 

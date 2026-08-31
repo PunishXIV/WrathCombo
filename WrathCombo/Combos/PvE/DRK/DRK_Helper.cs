@@ -334,26 +334,27 @@ internal partial class DRK
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => LivingShadow, // 1
-            () => Unmend, // 2
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
-            () => EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 4
-            () => HardSlash, // 5
-            () => Delirium, // 6
-            () => SaltedEarth, // 7
-            () => HardSlash, // 8
-            () => Disesteem, // 9
-            () => CarveAndSpit, // 10
-            () => ScarletDelirium, // 11
-            () => Shadowbringer, // 12
-            () => Comeuppance, // 13
-            () => Shadowbringer, // 14
-            () => Torcleaver, // 15
-            () => SaltAndDarkness, // 16
-            () => SyphonStrike, // 17
-            () => Souleater, // 18
-            () => Bloodspiller, // 19
-            () => HardSlash, // 20
+            () => All.Cease, // 1
+            () => LivingShadow, // 2
+            () => Unmend, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            () => EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 5
+            () => HardSlash, // 6
+            () => Delirium, // 7
+            () => SaltedEarth, // 8
+            () => HardSlash, // 9
+            () => Disesteem, // 10
+            () => CarveAndSpit, // 11
+            () => ScarletDelirium, // 12
+            () => Shadowbringer, // 13
+            () => Comeuppance, // 14
+            () => Shadowbringer, // 15
+            () => Torcleaver, // 16
+            () => SaltAndDarkness, // 17
+            () => SyphonStrike, // 18
+            () => Souleater, // 19
+            () => Bloodspiller, // 20
+            () => HardSlash, // 21
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
@@ -362,8 +363,8 @@ internal partial class DRK
             set;
         } =
         [
-            ([1], () => CountdownRemaining - 3),
-            ([2], () => CountdownRemaining - 1),
+            ([2], () => CountdownRemaining - 3),
+            ([3], () => CountdownRemaining - 1),
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps
@@ -372,9 +373,9 @@ internal partial class DRK
             set;
         } =
         [
-            ([2], Shadowstride, () =>
+            ([3], Shadowstride, () =>
                 DRK_ST_OpenerAction == (int)PullAction.Shadowstride),
-            ([2], HardSlash, () =>
+            ([3], HardSlash, () =>
                 DRK_ST_OpenerAction == (int)PullAction.HardSlash),
         ];
 
@@ -384,20 +385,21 @@ internal partial class DRK
             set;
         } =
         [
+            ([1], () => CountdownActive || InCombat()),
             // Skip the duplicate HardSlash, if pulling with HardSlash
-            ([5], () =>
+            ([6], () =>
                 DRK_ST_OpenerAction == (int)PullAction.HardSlash),
             // Skip Salted Earth if on cooldown
-            ([7], () =>
+            ([8], () =>
                 IsOnCooldown(SaltedEarth)),
             // Skip the aligning HardSlash, if pulling with Unmend
-            ([8], () =>
+            ([9], () =>
                 DRK_ST_OpenerAction == (int)PullAction.Unmend),
             // Skip Salt and Darkness when not ready
-            ([16], () =>
+            ([17], () =>
                 !ActionReady(SaltAndDarkness)),
             // Skip Blood spenders when no Blood
-            ([19], () =>
+            ([20], () =>
                 Gauge.Blood < 50),
         ];
 
