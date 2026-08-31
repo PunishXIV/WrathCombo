@@ -712,51 +712,53 @@ internal partial class RPR
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Harpe, // 1
-            () => ShadowOfDeath, // 2
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
-            () => SoulSlice, // 4
-            () => ArcaneCircle, // 5
-            () => Gluttony, // 6
-            () => ExecutionersGibbet, // 7
-            () => ExecutionersGallows, // 8
-            () => SoulSlice, // 9
-            () => PlentifulHarvest, // 10
-            () => Enshroud, // 11
-            () => VoidReaping, // 12
-            () => Sacrificium, // 13
-            () => CrossReaping, // 14
-            () => LemuresSlice, // 15
-            () => VoidReaping, // 16
-            () => CrossReaping, // 17
-            () => LemuresSlice, // 18
-            () => Communio, // 19
-            () => Perfectio, // 20
-            () => UnveiledGibbet, // 21
-            () => Gibbet, // 22
-            () => ShadowOfDeath, // 23
-            () => Slice // 24
+            () => All.Cease, // 1
+            () => Harpe, // 2
+            () => ShadowOfDeath, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            () => SoulSlice, // 5
+            () => ArcaneCircle, // 6
+            () => Gluttony, // 7
+            () => ExecutionersGibbet, // 8
+            () => ExecutionersGallows, // 9
+            () => SoulSlice, // 10
+            () => PlentifulHarvest, // 11
+            () => Enshroud, // 12
+            () => VoidReaping, // 13
+            () => Sacrificium, // 14
+            () => CrossReaping, // 15
+            () => LemuresSlice, // 16
+            () => VoidReaping, // 17
+            () => CrossReaping, // 18
+            () => LemuresSlice, // 19
+            () => Communio, // 20
+            () => Perfectio, // 21
+            () => UnveiledGibbet, // 22
+            () => Gibbet, // 23
+            () => ShadowOfDeath, // 24
+            () => Slice // 25
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([7], ExecutionersGallows, OnTargetsRear),
-            ([8], ExecutionersGibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
-            ([21], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
-            ([22], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
+            ([8], ExecutionersGallows, OnTargetsRear),
+            ([9], ExecutionersGibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
+            ([22], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
+            ([23], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => InMeleeRange())
+            ([1], () => CountdownActive || InCombat()),
+            ([2], () => InMeleeRange())
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], () => CountdownRemaining - 1)
+            ([2], () => CountdownRemaining - 1)
         ];
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [3];
+        public override List<int> DelayedWeaveSteps { get; set; } = [4];
     }
 
     internal class RPRDMUOpenerLvl100 : RPROpenerBase
@@ -809,47 +811,49 @@ internal partial class RPR
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Harpe, // 1
-            () => ShadowOfDeath, // 2
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
-            () => ArcaneCircle, // 4
-            () => SoulSlice, // 5
+            () => All.Cease, // 1
+            () => Harpe, // 2
+            () => ShadowOfDeath, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            () => ArcaneCircle, // 5
             () => SoulSlice, // 6
-            () => PlentifulHarvest, // 7
-            () => Enshroud, // 8
-            () => VoidReaping, // 9
-            () => CrossReaping, // 10
-            () => LemuresSlice, // 11
-            () => VoidReaping, // 12
-            () => CrossReaping, // 13
-            () => LemuresSlice, // 14
-            () => Communio, // 15
-            () => HarvestMoon, // 16
-            () => Gluttony, // 17
-            () => Gibbet, // 18
-            () => Gallows, // 19
-            () => UnveiledGibbet, // 20
-            () => Gibbet // 21
+            () => SoulSlice, // 7
+            () => PlentifulHarvest, // 8
+            () => Enshroud, // 9
+            () => VoidReaping, // 10
+            () => CrossReaping, // 11
+            () => LemuresSlice, // 12
+            () => VoidReaping, // 13
+            () => CrossReaping, // 14
+            () => LemuresSlice, // 15
+            () => Communio, // 16
+            () => HarvestMoon, // 17
+            () => Gluttony, // 18
+            () => Gibbet, // 19
+            () => Gallows, // 20
+            () => UnveiledGibbet, // 21
+            () => Gibbet // 22
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([17], Gallows, OnTargetsRear),
-            ([18], Gibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
-            ([19], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
-            ([20], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
+            ([18], Gallows, OnTargetsRear),
+            ([19], Gibbet, () => HasStatusEffect(Buffs.EnhancedGibbet)),
+            ([20], UnveiledGallows, () => HasStatusEffect(Buffs.EnhancedGallows)),
+            ([21], Gallows, () => HasStatusEffect(Buffs.EnhancedGallows))
         ];
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [3];
+        public override List<int> DelayedWeaveSteps { get; set; } = [4];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => InMeleeRange())
+            ([1], () => CountdownActive || InCombat()),
+            ([2], () => InMeleeRange())
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], () => CountdownRemaining - 1)
+            ([2], () => CountdownRemaining - 1)
         ];
     }
 

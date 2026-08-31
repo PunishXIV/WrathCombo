@@ -659,9 +659,14 @@ internal partial class MCH
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], () => CountdownRemaining - 5),
-            ([2], () => CountdownRemaining - 2),
-            ([3], () => CountdownRemaining)
+            ([2], () => CountdownRemaining - 5),
+            ([3], () => CountdownRemaining - 2),
+            ([4], () => CountdownRemaining)
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat())
         ];
 
         protected static bool SharedOpenerCooldowns() =>
@@ -689,64 +694,23 @@ internal partial class MCH
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Reassemble, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
-            () => AirAnchor, // 3
-            () => CheckMate, // 4
-            () => DoubleCheck, // 5
-            () => Drill, // 6
-            () => BarrelStabilizer, // 7
-            () => Chainsaw, // 8
-            () => Excavator, // 9
-            () => AutomatonQueen, // 10
-            () => Reassemble, // 11
-            () => Drill, // 12
-            () => CheckMate, // 13
-            () => Wildfire, // 14
-            () => FullMetalField, // 15
-            () => Hypercharge, // 16
-            () => DoubleCheck, // 17
-            () => BlazingShot, // 18
-            () => CheckMate, // 19
-            () => BlazingShot, // 20
-            () => DoubleCheck, // 21
-            () => BlazingShot, // 22
-            () => CheckMate, // 23
-            () => BlazingShot, // 24
-            () => DoubleCheck, // 25
-            () => BlazingShot, // 26
-            () => CheckMate, // 27
-            () => Drill, // 28
-            () => DoubleCheck, // 29
-            () => CheckMate, // 30
-            () => HeatedSplitShot, // 31
-            () => DoubleCheck, // 32
-            () => HeatedSlugShot, // 33
-            () => HeatedCleanShot // 34
-        ];
-    }
-
-    internal class MCHLvl100EarlyWFOpener : MCHLvl100OpenerBase
-    {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Reassemble, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
-            () => AirAnchor, // 3
-            () => CheckMate, // 4
-            () => DoubleCheck, // 5
-            () => Drill, // 6
-            () => BarrelStabilizer, // 7
-            () => Reassemble, // 8
+            () => All.Cease, // 1
+            () => Reassemble, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 3
+            () => AirAnchor, // 4
+            () => CheckMate, // 5
+            () => DoubleCheck, // 6
+            () => Drill, // 7
+            () => BarrelStabilizer, // 8
             () => Chainsaw, // 9
-            () => DoubleCheck, // 10
-            () => Wildfire, // 11
-            () => Excavator, // 12
-            () => Hypercharge, // 13
-            () => AutomatonQueen, // 14
-            () => BlazingShot, // 15
-            () => CheckMate, // 16
-            () => BlazingShot, // 17
+            () => Excavator, // 10
+            () => AutomatonQueen, // 11
+            () => Reassemble, // 12
+            () => Drill, // 13
+            () => CheckMate, // 14
+            () => Wildfire, // 15
+            () => FullMetalField, // 16
+            () => Hypercharge, // 17
             () => DoubleCheck, // 18
             () => BlazingShot, // 19
             () => CheckMate, // 20
@@ -754,16 +718,59 @@ internal partial class MCH
             () => DoubleCheck, // 22
             () => BlazingShot, // 23
             () => CheckMate, // 24
-            () => Drill, // 25
+            () => BlazingShot, // 25
             () => DoubleCheck, // 26
-            () => CheckMate, // 27
-            () => FullMetalField, // 28
-            () => DoubleCheck, // 29
-            () => CheckMate, // 30
-            () => Drill, // 31
+            () => BlazingShot, // 27
+            () => CheckMate, // 28
+            () => Drill, // 29
+            () => DoubleCheck, // 30
+            () => CheckMate, // 31
             () => HeatedSplitShot, // 32
-            () => HeatedSlugShot, // 33
-            () => HeatedCleanShot // 34
+            () => DoubleCheck, // 33
+            () => HeatedSlugShot, // 34
+            () => HeatedCleanShot // 35
+        ];
+    }
+
+    internal class MCHLvl100EarlyWFOpener : MCHLvl100OpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Reassemble, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 3
+            () => AirAnchor, // 4
+            () => CheckMate, // 5
+            () => DoubleCheck, // 6
+            () => Drill, // 7
+            () => BarrelStabilizer, // 8
+            () => Reassemble, // 9
+            () => Chainsaw, // 10
+            () => DoubleCheck, // 11
+            () => Wildfire, // 12
+            () => Excavator, // 13
+            () => Hypercharge, // 14
+            () => AutomatonQueen, // 15
+            () => BlazingShot, // 16
+            () => CheckMate, // 17
+            () => BlazingShot, // 18
+            () => DoubleCheck, // 19
+            () => BlazingShot, // 20
+            () => CheckMate, // 21
+            () => BlazingShot, // 22
+            () => DoubleCheck, // 23
+            () => BlazingShot, // 24
+            () => CheckMate, // 25
+            () => Drill, // 26
+            () => DoubleCheck, // 27
+            () => CheckMate, // 28
+            () => FullMetalField, // 29
+            () => DoubleCheck, // 30
+            () => CheckMate, // 31
+            () => Drill, // 32
+            () => HeatedSplitShot, // 33
+            () => HeatedSlugShot, // 34
+            () => HeatedCleanShot // 35
         ];
     }
 
@@ -774,43 +781,44 @@ internal partial class MCH
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Reassemble, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
-            () => AirAnchor, // 3
-            () => GaussRound, // 4
-            () => Ricochet, // 5
-            () => Drill, // 6
-            () => BarrelStabilizer, // 7
-            () => Chainsaw, // 8
-            () => GaussRound, // 9
-            () => Ricochet, // 10
-            () => HeatedSplitShot, // 11
-            () => GaussRound, // 12
-            () => Ricochet, // 13
-            () => HeatedSlugShot, // 14
-            () => Wildfire, // 15
-            () => HeatedCleanShot, // 16
-            () => AutomatonQueen, // 17
-            () => Hypercharge, // 18
-            () => BlazingShot, // 19
-            () => Ricochet, // 20
-            () => BlazingShot, // 21
-            () => GaussRound, // 22
-            () => BlazingShot, // 23
-            () => Ricochet, // 24
-            () => BlazingShot, // 25
-            () => GaussRound, // 26
-            () => BlazingShot, // 27
-            () => Reassemble, // 28
-            () => Drill // 29
+            () => All.Cease, // 1
+            () => Reassemble, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 3
+            () => AirAnchor, // 4
+            () => GaussRound, // 5
+            () => Ricochet, // 6
+            () => Drill, // 7
+            () => BarrelStabilizer, // 8
+            () => Chainsaw, // 9
+            () => GaussRound, // 10
+            () => Ricochet, // 11
+            () => HeatedSplitShot, // 12
+            () => GaussRound, // 13
+            () => Ricochet, // 14
+            () => HeatedSlugShot, // 15
+            () => Wildfire, // 16
+            () => HeatedCleanShot, // 17
+            () => AutomatonQueen, // 18
+            () => Hypercharge, // 19
+            () => BlazingShot, // 20
+            () => Ricochet, // 21
+            () => BlazingShot, // 22
+            () => GaussRound, // 23
+            () => BlazingShot, // 24
+            () => Ricochet, // 25
+            () => BlazingShot, // 26
+            () => GaussRound, // 27
+            () => BlazingShot, // 28
+            () => Reassemble, // 29
+            () => Drill // 30
         ];
 
         public override List<int> AllowUpgradeSteps { get; set; } =
-            [4, 5, 9, 10, 12, 13, 20, 22, 24, 26];
+            [5, 6, 10, 11, 13, 14, 21, 23, 25, 27];
 
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
-            15
+            16
         ];
 
         public override bool HasCooldowns() => SharedOpenerCooldowns();

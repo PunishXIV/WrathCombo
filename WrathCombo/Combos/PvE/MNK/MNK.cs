@@ -148,7 +148,7 @@ internal partial class MNK : Melee
 
             if (IsEnabled(Preset.MNK_STUseOpener) &&
                 Opener().FullOpener(ref actionID))
-                return Opener().OpenerStep > 11 &&
+                return Opener().OpenerStep > 12 &&
                        CanWeave() && Chakra >= 5
                     ? TheForbiddenChakra
                     : actionID;

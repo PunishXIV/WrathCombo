@@ -569,7 +569,8 @@ internal partial class SAM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([2], () => !TargetNeedsPositionals())
+            ([1], () => CountdownActive || InCombat()),
+            ([3], () => !TargetNeedsPositionals())
         ];
 
         protected static bool SharedOpenerCooldowns() =>
@@ -724,8 +725,6 @@ internal partial class SAM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat()),
-            ([3], () => !TargetNeedsPositionals()),
             ([20, 25], () => !ActionReady(Shinten)),
             ([22], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 2),
             ([27], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 3),
