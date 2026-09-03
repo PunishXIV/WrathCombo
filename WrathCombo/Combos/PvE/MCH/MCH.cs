@@ -168,13 +168,6 @@ internal partial class MCH : PhysicalRanged
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            if (!InCombat() &&
-                IsEnabled(Preset.MCH_ST_Adv_Opener) &&
-                IsEnabled(Preset.MCH_ST_Opener_BlockEarly) &&
-                ContentCheck.IsInConfiguredContent(
-                    MCH_Balance_Content, ContentCheck.ListSet.BossOnly))
-                return All.Cease;
-
             if (!IsOverheated &&
                 ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;

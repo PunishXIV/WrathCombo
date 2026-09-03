@@ -659,18 +659,17 @@ internal partial class MCH
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => CountdownRemaining - 5),
-            ([3], () => CountdownRemaining - 2),
-            ([4], () => CountdownRemaining)
+            ([2], () => Math.Max(0, CountdownRemaining - 5)),
+            ([3], () => Math.Max(0, CountdownRemaining - 2)),
+            ([4], () => Math.Max(0, CountdownRemaining))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat())
+            ([1], () => CountdownActive || InCombat() || IsNotEnabled(Preset.MCH_ST_Opener_BlockEarly))
         ];
 
         protected static bool SharedOpenerCooldowns() =>
-            (!IsEnabled(Preset.MCH_ST_Opener_BlockEarly) || CountdownActive) &&
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
             GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
