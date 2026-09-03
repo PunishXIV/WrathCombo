@@ -669,7 +669,7 @@ internal partial class MCH
             ([1], () => CountdownActive || InCombat() || IsNotEnabled(Preset.MCH_ST_Opener_BlockEarly))
         ];
 
-        protected static bool SharedOpenerCooldowns() =>
+        public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
             GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
@@ -684,7 +684,7 @@ internal partial class MCH
         public override int MaxOpenerLevel => 100;
 
         public override bool HasCooldowns() =>
-            SharedOpenerCooldowns() &&
+            base.HasCooldowns() &&
             IsOffCooldown(Excavator) &&
             IsOffCooldown(FullMetalField);
     }
@@ -819,8 +819,6 @@ internal partial class MCH
         [
             16
         ];
-
-        public override bool HasCooldowns() => SharedOpenerCooldowns();
     }
 
     #endregion
