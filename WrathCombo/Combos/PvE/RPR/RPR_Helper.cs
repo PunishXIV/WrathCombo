@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static ECommons.DalamudServices.Svc;
 using static WrathCombo.Combos.PvE.RPR.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -675,7 +676,7 @@ internal partial class RPR
     internal static WrathOpener Opener()
     {
         if (DMUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1363)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU)
             return DMUOpener;
 
         if (StandardOpenerLvl100.LevelChecked)

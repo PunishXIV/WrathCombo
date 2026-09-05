@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static ECommons.DalamudServices.Svc;
 using static WrathCombo.Combos.PvE.MNK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -184,7 +185,7 @@ internal partial class MNK
 
     private static bool IsDoubleLunarOpener(bool useOpenerBalance) =>
         useOpenerBalance &&
-        (MNK_SelectedOpener != 1 || ClientState.TerritoryType == 1363);
+        (MNK_SelectedOpener != 1 || ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU);
 
     private static bool ShouldUsePreRoFPerfectBalance(bool useOpenerBalance)
     {
@@ -547,7 +548,7 @@ internal partial class MNK
     internal static WrathOpener Opener()
     {
         if (DMUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1363)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU)
             return DMUOpener;
 
         if (MNK_SelectedOpener == 0)

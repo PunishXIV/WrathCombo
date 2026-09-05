@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static ECommons.DalamudServices.Svc;
 using static FFXIVClientStructs.FFXIV.Client.Game.ActionManager;
 using static WrathCombo.Combos.PvE.VPR.Config;
@@ -546,7 +547,7 @@ internal partial class VPR
     internal static WrathOpener Opener()
     {
         if (DMUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1363)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU)
             return DMUOpener;
 
         if (StandardOpener.LevelChecked)

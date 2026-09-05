@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static ECommons.DalamudServices.Svc;
 using static WrathCombo.Combos.PvE.DRG.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -397,11 +398,11 @@ internal partial class DRG
     internal static WrathOpener Opener()
     {
         if (FRUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1283)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.FRU)
             return FRUOpener;
 
         if (DMUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1363)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU)
             return DMUOpener;
 
         if (StandardOpener.LevelChecked &&

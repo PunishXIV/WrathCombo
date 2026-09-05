@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
-using GameMain = FFXIVClientStructs.FFXIV.Client.Game.GameMain;
 using EZ = ECommons.Throttlers.EzThrottler;
+using GameMain = FFXIVClientStructs.FFXIV.Client.Game.GameMain;
 using TS = System.TimeSpan;
 
 #endregion
@@ -16,6 +16,20 @@ namespace WrathCombo.Data;
 
 public class ContentCheck
 {
+    public class UltimateTerritoryIDs
+    {
+        public const uint
+        UCOB = 733,
+        UWU = 777,
+        TEA = 887,
+        DSR = 968,
+        TOP = 1122,
+        FRU = 1238,
+        DMU = 1363;
+    }
+
+
+
     /// <summary>
     ///     Valid selections for list sets to use.
     /// </summary>

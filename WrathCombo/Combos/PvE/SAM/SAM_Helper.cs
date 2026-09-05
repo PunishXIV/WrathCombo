@@ -529,7 +529,7 @@ internal partial class SAM
     internal static WrathOpener Opener()
     {
         if (FRUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1283)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.FRU)
             return FRUOpener;
 
         if (Lvl70.LevelChecked)
