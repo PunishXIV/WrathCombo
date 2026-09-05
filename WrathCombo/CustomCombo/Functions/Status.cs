@@ -217,13 +217,13 @@ internal abstract partial class CustomComboFunctions
                 Player.Status.Any(s =>
                     // Acceleration Bomb within Timeframe
                     (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
-                        Player.Object!.Status(s.StatusId).RemainingTimeOrZero(false) <= userSetting) ||
+                        s.RemainingTimeOrZero(false) <= userSetting) ||
 
                     // Pyretic
                     StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
 
                     // Others
-                    (StatusCache.PausingStatuses.Misc.Contains(s.StatusId) && Player.Object!.Status(s.StatusId).RemainingTimeOrZero(false) <= userSetting)
+                    (StatusCache.PausingStatuses.Misc.Contains(s.StatusId) && s.RemainingTimeOrZero(false) <= userSetting)
 
                 );
         }
