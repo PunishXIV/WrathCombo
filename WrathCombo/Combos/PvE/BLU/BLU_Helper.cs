@@ -513,9 +513,9 @@ internal partial class BLU
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => CountdownRemaining - 5),
-            ([3], () => CountdownRemaining - 3),
-            ([4], () => CountdownRemaining)
+            ([2], () => Math.Max(0, CountdownRemaining - 5)),
+            ([3], () => Math.Max(0, CountdownRemaining - 3)),
+            ([4], () => Math.Max(0, CountdownRemaining))
         ];
 
         public override bool HasCooldowns() =>

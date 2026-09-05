@@ -363,8 +363,8 @@ internal partial class DRK
             set;
         } =
         [
-            ([2], () => CountdownRemaining - 3),
-            ([3], () => CountdownRemaining - 1),
+            ([2], () => Math.Max(0, CountdownRemaining - 3)),
+            ([3], () => Math.Max(0, CountdownRemaining - 1)),
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps

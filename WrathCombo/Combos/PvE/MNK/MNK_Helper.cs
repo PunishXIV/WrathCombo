@@ -593,8 +593,8 @@ internal partial class MNK
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => CountdownRemaining - 8),
-            ([3], () => CountdownRemaining - 5)
+            ([2], () => Math.Max(0, CountdownRemaining - 8)),
+            ([3], () => Math.Max(0, CountdownRemaining - 5))
         ];
 
         public override bool HasCooldowns() =>
@@ -776,8 +776,8 @@ internal partial class MNK
 
         public MNKLvl100DMUOpener()
         {
-            SkipSteps.Add(([11], () => Chakra < 5));
-            PrepullDelays.Add(([4], () => CountdownRemaining - 2));
+            base.SkipSteps.Add(([11], () => Chakra < 5));
+            base.PrepullDelays.Add(([4], () => Math.Max(0, CountdownRemaining - 2)));
         }
     }
 

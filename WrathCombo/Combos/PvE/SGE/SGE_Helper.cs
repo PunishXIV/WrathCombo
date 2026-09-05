@@ -656,9 +656,9 @@ internal partial class SGE
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => CountdownRemaining - 5),
-            ([3], () => CountdownRemaining - 2),
-            ([4], () => CountdownRemaining - 1)
+            ([2], () => Math.Max(0, CountdownRemaining - 5)),
+            ([3], () => Math.Max(0, CountdownRemaining - 2)),
+            ([4], () => Math.Max(0, CountdownRemaining - 1))
         ];
 
         protected static bool SharedOpenerCooldowns() =>

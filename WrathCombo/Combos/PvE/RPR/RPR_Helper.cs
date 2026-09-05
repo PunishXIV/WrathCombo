@@ -755,7 +755,7 @@ internal partial class RPR
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => CountdownRemaining - 1)
+            ([2], () => Math.Max(0, CountdownRemaining - 1))
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } = [4];
@@ -853,7 +853,7 @@ internal partial class RPR
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => CountdownRemaining - 1)
+            ([2], () => Math.Max(0, CountdownRemaining - 1))
         ];
     }
 
