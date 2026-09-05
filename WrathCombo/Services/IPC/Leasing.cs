@@ -859,9 +859,9 @@ public partial class Leasing
 
         // ReSharper disable once NotAccessedVariable
         // ReSharper disable once RedundantAssignment
-        var durationForBan = TimeSpan.FromMinutes(2);
+        var durationForBan = TS.FromMinutes(2);
 #if DEBUG
-        durationForBan = TimeSpan.FromSeconds(15);
+        durationForBan = TS.FromSeconds(15);
 #endif
 
         Dictionary<Guid, (string, byte[], DateTime)> blacklistCopy =

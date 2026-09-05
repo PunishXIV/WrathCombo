@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using WrathCombo.Services;
 
 namespace WrathCombo.Core
@@ -99,15 +100,19 @@ namespace WrathCombo.Core
 
     public static class OpCodeConfigHelper
     {
-        public unsafe static void UpdateOpCodes()
+        public static async System.Threading.Tasks.Task UpdateOpCodesAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                var gameVer = Framework.Instance()->GameVersionString;
+                string gameVer;
+                unsafe
+                {
+                    gameVer = Framework.Instance()->GameVersionString;
+                }
                 if (Service.Configuration.OpCodes.GameVersion == gameVer)
                     return;
 
-                var file = P.HTTPClient.GetStringAsync("https://cdn.jsdelivr.net/gh/karashiiro/FFXIVOpcodes@latest/opcodes.json").Result;
+                var file = await P.HTTPClient.GetStringAsync("https://cdn.jsdelivr.net/gh/karashiiro/FFXIVOpcodes@latest/opcodes.json", cancellationToken).ConfigureAwait(false);
                 var config = JsonConvert.DeserializeObject<List<FFXIVOPCodes>>(file);
 
                 if (config == null)
@@ -115,7 +120,7 @@ namespace WrathCombo.Core
 
                 Service.Configuration.OpCodesBackup = config;
 
-                var versionEndpoint = P.HTTPClient.GetStringAsync("https://raw.githubusercontent.com/xivdev/opcodediff/refs/heads/main/automation/ffxiv_versions_global.json").Result;
+                var versionEndpoint = await P.HTTPClient.GetStringAsync("https://raw.githubusercontent.com/xivdev/opcodediff/refs/heads/main/automation/ffxiv_versions_global.json", cancellationToken).ConfigureAwait(false);
                 var versions = JsonConvert.DeserializeObject<List<VersionToRetail>>(versionEndpoint);
 
                 if (versions?.TryGetFirst(x => x.VersionString == gameVer, out var ver) == true)
@@ -126,6 +131,10 @@ namespace WrathCombo.Core
 
                     Service.Configuration.Save();
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch(Exception ex)
             {

@@ -44,13 +44,13 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Gets the minimum level required to use an action. </summary>
     /// <param name="actionId"> The action ID. </param>
-    public static int GetActionLevel(uint actionId) => ActionSheet.TryGetValue(actionId, out var actionSheet) && actionSheet.ClassJobCategory.IsValid
+    public static int GetActionLevel(uint actionId) => ActionSheet.TryGetRow(actionId, out var actionSheet) && actionSheet.ClassJobCategory.IsValid
         ? actionSheet.ClassJobLevel
         : 255;
 
     /// <summary> Gets the minimum level required to benefit from a trait. </summary>
     /// <param name="traitId"> The trait ID. </param>
-    public static int GetTraitLevel(uint traitId) => TraitSheet.TryGetValue(traitId, out var traitSheet) && traitSheet.ClassJobCategory.IsValid
+    public static int GetTraitLevel(uint traitId) => TraitSheet.TryGetRow(traitId, out var traitSheet) && traitSheet.ClassJobCategory.IsValid
         ? traitSheet.Level
         : 255;
 
@@ -60,13 +60,13 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Gets the effect radius of an action. </summary>
     /// <param name="actionId"> The action ID. </param>
-    public static float GetActionEffectRange(uint actionId) => ActionSheet.TryGetValue(actionId, out var actionSheet)
+    public static float GetActionEffectRange(uint actionId) => ActionSheet.TryGetRow(actionId, out var actionSheet)
         ? actionSheet.EffectRange
         : -1f;
 
     /// <summary> Gets the cast time of an action. </summary>
     /// <param name="actionId"> The action ID. </param>
-    public static float GetActionCastTime(uint actionId) => ActionSheet.TryGetValue(actionId, out var actionSheet)
+    public static float GetActionCastTime(uint actionId) => ActionSheet.TryGetRow(actionId, out var actionSheet)
         ? (actionSheet.Cast100ms + actionSheet.ExtraCastTime100ms) * 0.1f
         : 0f;
 
@@ -97,7 +97,7 @@ internal abstract partial class CustomComboFunctions
     public static bool InActionRange(uint actionId, IGameObject? optionalTarget = null)
     {
         optionalTarget ??= CurrentTarget;
-        var s =  ActionSheet.TryGetValue(actionId, out var actSheet);
+        var s =  ActionSheet.TryGetRow(actionId, out var actSheet);
         if (!s)
             return false;
 
@@ -408,7 +408,7 @@ internal abstract partial class CustomComboFunctions
 
             if (BattleData.IgnoreRaidwide(caster.CastActionId)) continue;
 
-            if (ActionSheet.TryGetValue(caster.CastActionId, out var spellSheet))
+            if (ActionSheet.TryGetRow(caster.CastActionId, out var spellSheet))
             {
                 if ((spellSheet.CastType is 2 or 5 && spellSheet.EffectRange >= 30) || BattleData.IsRaidwide(caster.CastActionId))
                 {
@@ -508,5 +508,5 @@ internal abstract partial class CustomComboFunctions
         return 0;
     }
 
-    public static bool ActionIsFriendly(uint actionId) => ActionSheet.TryGetValue(actionId, out var s) && s.Unknown4 == 2;
+    public static bool ActionIsFriendly(uint actionId) => ActionSheet.TryGetRow(actionId, out var s) && s.Unknown4 == 2;
 }

@@ -8,6 +8,7 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.WHM.Config;
+using AW = WrathCombo.Data.ActionWatching;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 
@@ -44,7 +45,7 @@ internal partial class WHM : Healer
             if (CanWeave())
             {
                 if (ActionReady(PresenceOfMind) &&
-                    ActionWatching.NumberOfGcdsUsed >= 3 &&
+                    AW.NumberOfGcdsUsed >= 3 &&
                     !HasStatusEffect(Buffs.SacredSight))
                     return PresenceOfMind;
 
@@ -108,7 +109,7 @@ internal partial class WHM : Healer
                     return Assize;
 
                 if (ActionReady(PresenceOfMind) &&
-                    ActionWatching.NumberOfGcdsUsed >= 4 &&
+                    AW.NumberOfGcdsUsed >= 4 &&
                     !HasStatusEffect(Buffs.SacredSight))
                     return PresenceOfMind;
 
@@ -202,7 +203,7 @@ internal partial class WHM : Healer
             {
                 if (IsEnabled(Preset.WHM_ST_MainCombo_PresenceOfMind) &&
                     ActionReady(PresenceOfMind) &&
-                    ActionWatching.NumberOfGcdsUsed >= 3 &&
+                    AW.NumberOfGcdsUsed >= 3 &&
                     !HasStatusEffect(Buffs.SacredSight))
                     return PresenceOfMind;
 
@@ -279,7 +280,7 @@ internal partial class WHM : Healer
         protected internal override Preset Preset => Preset.WHM_AoE_DPS;
 
         private static int AssizeCount =>
-            ActionWatching.CombatActions.Count(x => x.ActionID == Assize);
+            AW.CombatActions.Count(x => x.ActionID == Assize);
 
         protected override uint Invoke(uint actionID)
         {
@@ -328,7 +329,7 @@ internal partial class WHM : Healer
 
                 if (IsEnabled(Preset.WHM_AoE_DPS_PresenceOfMind) &&
                     ActionReady(PresenceOfMind) &&
-                    ActionWatching.NumberOfGcdsUsed >= 4 &&
+                    AW.NumberOfGcdsUsed >= 4 &&
                     !HasStatusEffect(Buffs.SacredSight))
                     return PresenceOfMind;
             }

@@ -14,7 +14,7 @@ public class ReplaceSkillAttribute : Attribute
     {
         foreach (uint id in actionIDs)
         {
-            if (ActionWatching.ActionSheet.TryGetValue(id, out var action))
+            if (ActionWatching.ActionSheet.TryGetRow(id, out var action))
             {
                 ActionIDs.Add(id);
                 ActionNames.Add($"{action.Name}");

@@ -126,7 +126,7 @@ public partial class Provider : IDisposable
         if (!Svc.ClientState.IsLoggedIn || !Player.Available)
         {
             Svc.Framework.RunOnTick(BuildCachesAction(output),
-                TimeSpan.FromSeconds(3));
+                TS.FromSeconds(3));
             Logging.Verbose("IPC caches delayed, waiting for player-ready");
             return;
         }
@@ -592,7 +592,7 @@ public partial class Provider : IDisposable
     ///     Gets the internal names of all combos for the given job.
     /// </summary>
     /// <param name="jobID">
-    ///     The <see cref="ECommons.ExcelServices.Job" /> to get combos for.
+    ///     The <see cref="Job" /> to get combos for.
     /// </param>
     /// <returns>
     ///     A list of internal names for all combos and options for the given job.
@@ -606,7 +606,7 @@ public partial class Provider : IDisposable
     ///     Gets the names of all combo options for the given job.
     /// </summary>
     /// <param name="jobID">
-    ///     The <see cref="ECommons.ExcelServices.Job" /> to get options for.
+    ///     The <see cref="Job" /> to get options for.
     /// </param>
     /// <returns>
     ///     A dictionary of combo internal names and under each, a list of options'

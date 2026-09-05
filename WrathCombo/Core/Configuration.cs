@@ -163,7 +163,7 @@ public partial class Configuration : IPluginConfiguration
     public SearchMode SearchBehavior = SearchMode.Filter;
 
     /// The search mode. Default: Filter.
-    /// <seealso cref="Configuration.SearchBehavior"/>
+    /// <seealso cref="SearchBehavior"/>
     public enum SearchMode
     {
         /// Only shows matching Presets.
@@ -173,7 +173,7 @@ public partial class Configuration : IPluginConfiguration
     }
 
     /// Whether to preserve hierarchy in Filter mode. Default: false.
-    /// <seealso cref="Configuration.SearchBehavior"/>
+    /// <seealso cref="SearchBehavior"/>
     public bool SearchPreserveHierarchy = false;
 
     #endregion
@@ -252,7 +252,7 @@ public partial class Configuration : IPluginConfiguration
     public float PenaltyPause = 1.5f;
 
     /// Delay before recognizing movement. Default: 0.
-    /// <seealso cref="CustomComboFunctions.IsMoving"/>
+    /// <seealso cref="IsMoving"/>
     [SettingCategory(Rotation_Behavior_Options)]
     [Setting(type: Setting.Type.Number_Float,
         minFloat: 0,

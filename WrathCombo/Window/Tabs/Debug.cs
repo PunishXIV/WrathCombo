@@ -43,6 +43,7 @@ using WrathCombo.Window.Functions;
 using static WrathCombo.Combos.PvE.Content.DeepDungeons.DeepDungeons;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
+using AW = WrathCombo.Data.ActionWatching;
 using BattleNpcSubKindCS = FFXIVClientStructs.FFXIV.Client.Game.Object.BattleNpcSubKind;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using Status = Dalamud.Game.ClientState.Statuses.IStatus;
@@ -523,19 +524,19 @@ internal class Debug : ConfigWindow, IDisposable
 
         if (ImGui.CollapsingHeader("Action Data"))
         {
-            CustomStyleText("Time Since Last Action:", $"{ActionWatching.TimeSinceLastAction}");
+            CustomStyleText("Time Since Last Action:", $"{AW.TimeSinceLastAction}");
             CustomStyleText("Last Action:",
-                ActionWatching.LastAction == 0
+                AW.LastAction == 0
                     ? string.Empty
-                    : $"{(string.IsNullOrEmpty(GetActionName(ActionWatching.LastAction))
+                    : $"{(string.IsNullOrEmpty(GetActionName(AW.LastAction))
                         ? "Unknown"
-                        : GetActionName(ActionWatching.LastAction))} (ID: {ActionWatching.LastAction})");
-            CustomStyleText("Last Action Cost:", GetResourceCost(ActionWatching.LastAction));
-            CustomStyleText("Last Action Type:", ActionWatching.GetAttackType(ActionWatching.LastAction));
-            CustomStyleText("Last Weaponskill:", GetActionName(ActionWatching.LastWeaponskill));
-            CustomStyleText("Last Spell:", GetActionName(ActionWatching.LastSpell));
-            CustomStyleText("Last Ability:", GetActionName(ActionWatching.LastAbility));
-            CustomStyleText("Weave Actions:", string.Join(", ", ActionWatching.WeaveActions.Select(x => x.ActionName())));
+                        : GetActionName(AW.LastAction))} (ID: {AW.LastAction})");
+            CustomStyleText("Last Action Cost:", GetResourceCost(AW.LastAction));
+            CustomStyleText("Last Action Type:", AW.GetAttackType(AW.LastAction));
+            CustomStyleText("Last Weaponskill:", GetActionName(AW.LastWeaponskill));
+            CustomStyleText("Last Spell:", GetActionName(AW.LastSpell));
+            CustomStyleText("Last Ability:", GetActionName(AW.LastAbility));
+            CustomStyleText("Weave Actions:", string.Join(", ", AW.WeaveActions.Select(x => x.ActionName())));
             CustomStyleText("Combo Timer:", $"{ComboTimer:F1}");
             CustomStyleText("Combo Action:",
                 ComboAction == 0
@@ -783,14 +784,14 @@ internal class Debug : ConfigWindow, IDisposable
                 CustomStyleText("Can Target Friendly:", $"{_debugSpell.Value.CanTargetAlly}");
                 CustomStyleText("Can Target Party:", $"{_debugSpell.Value.CanTargetParty}");
                 CustomStyleText("Can Target Area:", $"{_debugSpell.Value.TargetArea}");
-                CustomStyleText("Can Queue:", $"{ActionWatching.CanQueueCS(_debugSpell.Value.RowId)}");
+                CustomStyleText("Can Queue:", $"{AW.CanQueueCS(_debugSpell.Value.RowId)}");
                 CustomStyleText("Cast Type:", $"{_debugSpell.Value.CastType}");
                 CustomStyleText("Friendly?:", $"{(_debugSpell.Value.Unknown4 == 1 ? "No" : $"Yes {_debugSpell.Value.Unknown4}")}");
 
-                if (ActionWatching.ActionTimestamps.TryGetValue(_debugSpell.Value.RowId, out long lastUseTimestamp))
+                if (AW.ActionTimestamps.TryGetValue(_debugSpell.Value.RowId, out long lastUseTimestamp))
                     CustomStyleText("Time Since Last Use:", $"{(Environment.TickCount64 - lastUseTimestamp) / 1000f:F2}");
 
-                if (ActionWatching.LastSuccessfulUseTime.TryGetValue(_debugSpell.Value.RowId, out long lastSuccessfulUseTimestamp))
+                if (AW.LastSuccessfulUseTime.TryGetValue(_debugSpell.Value.RowId, out long lastSuccessfulUseTimestamp))
                     CustomStyleText("Time Since Last Successful Cast:", $"{(Environment.TickCount64 - lastSuccessfulUseTimestamp) / 1000f:F2}");
 
                 var canUseOnSelf = ActionManager.CanUseActionOnTarget(_debugSpell.Value.RowId, Player.GameObject);
@@ -1315,7 +1316,7 @@ internal class Debug : ConfigWindow, IDisposable
         {
             if (ImGui.TreeNode("Active Spells"))
             {
-                ImGui.TextUnformatted($"{string.Join("\n", Service.Configuration.ActiveBLUSpells.Select(GetActionName).OrderBy(x => x))}");
+                ImGui.TextUnformatted($"{string.Join("\n", Service.Configuration.ActiveBLUSpells.Select(x => GetActionName((uint)x)).OrderBy(x => x))}");
                 ImGui.TreePop();
             }
 
@@ -1432,7 +1433,7 @@ internal class Debug : ConfigWindow, IDisposable
                                     if (ef.Type == 0)
                                         continue;
 
-                                    CustomStyleText($"{(Data.ActionEffectType)ef.Type}", $"{ef.Value + ((ef.Param4 & 0x40) != 0 ? ef.Param3 * 0x10000 : 0)}");
+                                    CustomStyleText($"{(ActionEffectType)ef.Type}", $"{ef.Value + ((ef.Param4 & 0x40) != 0 ? ef.Param3 * 0x10000 : 0)}");
                                 }
                             }
                         }
@@ -1440,7 +1441,7 @@ internal class Debug : ConfigWindow, IDisposable
                 }
             }
 
-            foreach (var pending in ActionWatching.PendingHPChanges)
+            foreach (var pending in AW.PendingHPChanges)
             {
                 ImGui.Text($"{pending.gameObjectId.GetObject()?.Name} {pending.gameObjectId} {pending.globalSequence}");
             }
@@ -1716,7 +1717,7 @@ internal class Debug : ConfigWindow, IDisposable
         {
             bool? foundSheet = null;
             BNpcBase? battleNPCRow = null;
-            if (ActionWatching.BNPCSheet.TryGetValue(target.BaseId,
+            if (AW.BNPCSheet.TryGetRow(target.BaseId,
                     out var sheetRow))
             {
                 battleNPCRow = sheetRow;

@@ -16,6 +16,7 @@ using WrathCombo.Resources.Localization.UI.Misc;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 using WrathCombo.Window.MessagesNS;
+using static WrathCombo.Core.PresetStorage;
 
 namespace WrathCombo.Window.Tabs;
 
@@ -474,7 +475,7 @@ internal class PvEFeatures : FeaturesWindow
             (onJobChange || !Service.Configuration.OpenToCurrentJob ||
              !Player.Available)) return;
 
-        if (onJobChange && !P.ConfigWindow.IsOpen)
+        if (onJobChange && P.ConfigWindow is not { IsOpen: true })
             return;
 
         if (Player.Job.IsDoh())

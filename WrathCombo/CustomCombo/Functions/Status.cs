@@ -161,6 +161,11 @@ internal abstract partial class CustomComboFunctions
         GetStatusEffectStacks(GetStatusEffect(effectId, target, anyOwner));
 
 
+    /// <summary> Returns the name of a status effect from its ID. </summary>
+    /// <param name="id"> ID of the status. </param>
+    /// <returns></returns>
+    public static string GetStatusName(uint id) => StatusCache.GetStatusName(id);
+
     [Obsolete("Use the IBattleChara extension .HasDamageDown")]
     public static bool TargetHasDamageDown(IGameObject? target) => StatusCache.HasDamageDown(target);
 
@@ -194,8 +199,8 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    //[Obsolete("Use the IBattleChara extension .HasBeneficialStatus")]
-    //public static bool HasBeneficialStatus(IGameObject? target) => StatusCache.HasBeneficialStatus(target);
+    [Obsolete("Use the IBattleChara extension .HasBeneficialStatus")]
+    public static bool HasBeneficialStatus(IGameObject? target) => StatusCache.HasBeneficialStatus(target);
 
     [Obsolete("Use the IBattleChara extension .HasPhantomDispelStatus")]
     public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || StatusCache.HasEvasionUp(target) || HasStatusEffect(4355, target) || ((target as IBattleChara)?.IsInvincible ?? false);
@@ -216,14 +221,14 @@ internal abstract partial class CustomComboFunctions
             hasActionPenalty =
                 Player.Status.Any(s =>
                     // Acceleration Bomb within Timeframe
-                    (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
+                    (StatusCache.Dictionaries.AccelerationBombs.Contains(s.StatusId) &&
                         s.RemainingTimeOrZero(false) <= userSetting) ||
 
                     // Pyretic
-                    StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
+                    StatusCache.Dictionaries.Pyretics.Contains(s.StatusId) ||
 
                     // Others
-                    (StatusCache.PausingStatuses.Misc.Contains(s.StatusId) && s.RemainingTimeOrZero(false) <= userSetting)
+                    (StatusCache.Dictionaries.MiscPausing.Contains(s.StatusId) && s.RemainingTimeOrZero(false) <= userSetting)
 
                 );
         }
@@ -266,7 +271,7 @@ internal abstract partial class CustomComboFunctions
             // Are we to bother with checking statuses per Battle Data
             BattleData.Invincible.False => false,
             // General invincibility check, not using StatusCache.HasStatusInCacheList because statuses is derived from SafeStatusList
-            BattleData.Invincible.CheckStatuses => statuses.Any(s => StatusCache.InvincibleStatuses.Contains(s.StatusId)),
+            BattleData.Invincible.CheckStatuses => statuses.Any(s => StatusCache.Dictionaries.InvincibleStatuses.Contains(s.StatusId)),
             _ => false,
         };
     }

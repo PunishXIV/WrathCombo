@@ -11,9 +11,9 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using Lumina.Excel;
 using Lumina.Excel.Sheets;
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -30,30 +30,35 @@ using Action = Lumina.Excel.Sheets.Action;
 using Task = System.Threading.Tasks.Task;
 namespace WrathCombo.Data;
 
-public static class ActionWatching
+public class ActionWatching
 {
-    // Dictionaries
-    internal static readonly FrozenDictionary<uint, BNpcBase> BNPCSheet =
-        Svc.Data.GetExcelSheet<BNpcBase>()!
-            .ToFrozenDictionary(i => i.RowId);
+    public static ActionWatching Instance { get; internal set; } = null!;
 
-    internal static readonly FrozenDictionary<uint, Action> ActionSheet =
-        Svc.Data.GetExcelSheet<Action>()!
-            .ToFrozenDictionary(i => i.RowId);
+    // Static accessors for backward compatibility with "using static ActionWatching"
+    public static ExcelSheet<BNpcBase> BNPCSheet => Instance._bNPCSheet;
+    public static ExcelSheet<Action> ActionSheet => Instance._actionSheet;
+    public static ExcelSheet<Trait> TraitSheet => Instance._traitSheet;
+    public static Dictionary<uint, long> ActionTimestamps => Instance._actionTimestamps;
+    public static Dictionary<uint, long> LastSuccessfulUseTime => Instance._lastSuccessfulUseTime;
+    public static Dictionary<(uint, ulong), long> UsedOnDict => Instance._usedOnDict;
+    public static List<uint> WeaveActions => Instance._weaveActions;
+    public static List<(uint ActionID, ActionType ActionType)> CombatActions => Instance._combatActions;
+    public static HashSet<uint> BossesBaseIds => Instance._bossesBaseIds;
+    public static List<PendingHPChange> PendingHPChanges => Instance._pendingHPChanges;
 
-    internal static readonly FrozenDictionary<uint, Trait> TraitSheet =
-        Svc.Data.GetExcelSheet<Trait>()!
-            .ToFrozenDictionary(i => i.RowId);
+    private ExcelSheet<BNpcBase> _bNPCSheet = null!;
+    private ExcelSheet<Action> _actionSheet = null!;
+    private ExcelSheet<Trait> _traitSheet = null!;
 
-    internal static readonly Dictionary<uint, long> ActionTimestamps = [];
-    internal static readonly Dictionary<uint, long> LastSuccessfulUseTime = [];
-    internal static readonly Dictionary<(uint, ulong), long> UsedOnDict = [];
+    internal readonly Dictionary<uint, long> _actionTimestamps = [];
+    internal readonly Dictionary<uint, long> _lastSuccessfulUseTime = [];
+    internal readonly Dictionary<(uint, ulong), long> _usedOnDict = [];
 
     // Lists
-    internal readonly static List<uint> WeaveActions = [];
-    internal readonly static List<(uint ActionID, ActionType ActionType)> CombatActions = [];
-    internal readonly static HashSet<uint> BossesBaseIds = [.. Svc.Data.GetExcelSheet<BNpcBase>().Where(charaSheet => charaSheet.Rank is 2 or 6).Select(charaSheet => charaSheet.RowId)];
-    internal readonly static List<PendingHPChange> PendingHPChanges = [];
+    internal readonly List<uint> _weaveActions = [];
+    internal readonly List<(uint ActionID, ActionType ActionType)> _combatActions = [];
+    internal readonly HashSet<uint> _bossesBaseIds = [];
+    internal readonly List<PendingHPChange> _pendingHPChanges = [];
 
     // Delegates
     public delegate void LastActionChangeDelegate();
@@ -62,26 +67,30 @@ public static class ActionWatching
     public delegate void ActionSendDelegate();
     public static event ActionSendDelegate? OnActionSend;
 
-    private readonly static Hook<Delegates.Receive>? ReceiveActionEffectHook;
-    private readonly static Hook<ActionManager.Delegates.UseAction>? UseActionHook;
-    private readonly static Hook<ActionManager.Delegates.UseActionLocation>? UseActionLocHook;
+    private Hook<Delegates.Receive>? ReceiveActionEffectHook;
+    private Hook<ActionManager.Delegates.UseAction>? UseActionHook;
+    private Hook<ActionManager.Delegates.UseActionLocation>? UseActionLocHook;
 
     private delegate void SendActionDelegate(ulong targetObjectId, ActionType actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
-    private static readonly Hook<SendActionDelegate>? SendActionHook;
-    public static readonly Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction;
-    public static readonly Hook<PacketDispatcher.Delegates.HandleActorControlPacket> ActorControlPacketHook;
-    public static readonly Hook<PacketDispatcher.Delegates.OnReceivePacket> OnRecievePacketHook;
+    private Hook<SendActionDelegate>? SendActionHook;
+    public Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction = null!;
+    public Hook<PacketDispatcher.Delegates.HandleActorControlPacket> ActorControlPacketHook = null!;
+    public Hook<PacketDispatcher.Delegates.OnReceivePacket> OnRecievePacketHook = null!;
 
-    private static Task UpdateActionTask = null!;
-    private static CancellationTokenSource source = new CancellationTokenSource();
-    private static CancellationToken token;
+    private Task UpdateActionTask = null!;
+    private CancellationTokenSource source = new CancellationTokenSource();
+    private CancellationToken token;
 
-    public static bool UpdatingActions;
-    private static bool _tainted;
-    private static bool _gcdRolling;
+    public bool UpdatingActions;
+    private bool _tainted;
+    private bool _gcdRolling;
 
-    static unsafe ActionWatching()
+    public unsafe void Init()
     {
+        _bNPCSheet = Svc.Data.GetExcelSheet<BNpcBase>()!;
+        _actionSheet = Svc.Data.GetExcelSheet<Action>()!;
+        _traitSheet = Svc.Data.GetExcelSheet<Trait>()!;
+        _bossesBaseIds.AddRange(_bNPCSheet.Where(charaSheet => charaSheet.Rank is 2 or 6).Select(charaSheet => charaSheet.RowId));
         ReceiveActionEffectHook ??= Svc.Hook.HookFromAddress<Delegates.Receive>(Addresses.Receive.Value, ReceiveActionEffectDetour);
         SendActionHook ??= Svc.Hook.HookFromSignature<SendActionDelegate>("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B E9 41 0F B7 D9", SendActionDetour);
         UseActionHook ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.UseAction>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
@@ -93,15 +102,15 @@ public static class ActionWatching
         OnGCDRoll += UpdateWeaves;
     }
 
-    private static void UpdateWeaves(bool rolling)
+    private void UpdateWeaves(bool rolling)
     {
         if (!rolling)
-            WeaveActions.Clear();
+            _weaveActions.Clear();
 
         _gcdRolling = rolling;
     }
 
-    private static unsafe void OnReceivePacketDetour(PacketDispatcher* thisPtr, uint targetId, nint packet)
+    private unsafe void OnReceivePacketDetour(PacketDispatcher* thisPtr, uint targetId, nint packet)
     {
         OnRecievePacketHook.Original(thisPtr, targetId, packet);
         var opCode = *(ushort*)(packet + 2);
@@ -133,7 +142,7 @@ public static class ActionWatching
                 var globalSequence = *(uint*)(packet + 20);
                 var val = *(uint*)(packet + 16);
                 Svc.Log.Verbose($"[OpCode] Effect Resolved on {tar?.Name} with GS {globalSequence}.");
-                PendingHPChanges.RemoveAll(x => x.globalSequence == globalSequence);
+                _pendingHPChanges.RemoveAll(x => x.globalSequence == globalSequence);
                 SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
             }
 
@@ -142,12 +151,12 @@ public static class ActionWatching
                 //This is an interesting one, for heals you get this right away but if the heal does not actually change HP it
                 //doesn't get resolved above so maybe worth just timing these out after 1.5s if not resolved
                 var globalSequence = *(uint*)(packet + 28);
-                Svc.Framework.RunOnTick(() => PendingHPChanges.RemoveAll(x => x.globalSequence == globalSequence), TimeSpan.FromSeconds(1.5f));
+                Svc.Framework.RunOnTick(() => _pendingHPChanges.RemoveAll(x => x.globalSequence == globalSequence), TimeSpan.FromSeconds(1.5f));
             }
         }
     }
 
-    private static void ActorControlDetour(uint entityId, uint category, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, uint arg8, GameObjectId targetId, bool isRecorded)
+    private void ActorControlDetour(uint entityId, uint category, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, uint arg8, GameObjectId targetId, bool isRecorded)
     {
         Svc.Log.Verbose($"[ActorControl] {entityId} {category} {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {targetId.Id} {isRecorded}");
         ActorControlPacketHook.Original(entityId, category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, targetId, isRecorded);
@@ -166,7 +175,7 @@ public static class ActionWatching
 
     }
 
-    private static unsafe bool UseActionLocationDetour(ActionManager* thisPtr, ActionType actionType, uint actionId, ulong targetId, Vector3* location, uint extraParam, byte a7)
+    private unsafe bool UseActionLocationDetour(ActionManager* thisPtr, ActionType actionType, uint actionId, ulong targetId, Vector3* location, uint extraParam, byte a7)
     {
         // TODO Revisit maybe
         //if (actionType == ActionType.Action && !_tainted && !(location->X != 0 || location->Y != 0 || location->Z != 0))
@@ -191,7 +200,7 @@ public static class ActionWatching
         return UseActionLocHook.Original(thisPtr, actionType, actionId, targetId, location, extraParam, a7);
     }
 
-    public static void Enable()
+    public void Enable()
     {
         ReceiveActionEffectHook?.Enable();
         SendActionHook?.Enable();
@@ -204,7 +213,7 @@ public static class ActionWatching
     }
 
 
-    public static void Dispose()
+    public void Dispose()
     {
         Disable();
         ReceiveActionEffectHook?.Dispose();
@@ -219,7 +228,7 @@ public static class ActionWatching
     }
 
     /// <summary> Handles logic when an action causes an effect. </summary>
-    private unsafe static void ReceiveActionEffectDetour(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds)
+    private unsafe void ReceiveActionEffectDetour(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds)
     {
         ReceiveActionEffectHook!.Original(casterEntityId, casterPtr, targetPos, header, effects, targetEntityIds);
 
@@ -292,7 +301,7 @@ public static class ActionWatching
                         }
 
                         if (Service.Configuration.OpCodes is { } codes && codes.GameVersion == Framework.Instance()->GameVersionString)
-                            PendingHPChanges.Add(new PendingHPChange(effObjectId, eff.DamageHealValue, effType == ActionEffectType.Heal, header->GlobalSequence));
+                            _pendingHPChanges.Add(new PendingHPChange(effObjectId, eff.DamageHealValue, effType == ActionEffectType.Heal, header->GlobalSequence));
                     }
 
                     // Event: MP Gain or MP Loss
@@ -350,7 +359,7 @@ public static class ActionWatching
                 }
             }
 
-            if (casterEntityId == Player.Object.EntityId && (actionType == ActionType.Action && ActionSheet.TryGetValue(actionId, out var actionSheet) && actionSheet.TargetArea) || actionType == ActionType.Item)
+            if (casterEntityId == Player.Object.EntityId && (actionType == ActionType.Action && _actionSheet.TryGetRow(actionId, out var actionSheet) && actionSheet.TargetArea) || actionType == ActionType.Item)
             {
                 UpdateLastUsedAction(actionId, actionType, 0, 0);
             }
@@ -362,7 +371,7 @@ public static class ActionWatching
         }
     }
 
-    private static unsafe void UpdateLastUsedAction(uint actionId, ActionType actionType, ulong targetObjectId, int castTime)
+    private unsafe void UpdateLastUsedAction(uint actionId, ActionType actionType, ulong targetObjectId, int castTime)
     {
         // Update Trackers
         if (actionType == ActionType.Action)
@@ -383,7 +392,7 @@ public static class ActionWatching
         LastSuccessfulUseTime[actionId] = currentTick;
         if (actionType == ActionType.Action)
         {
-            if (ActionSheet.TryGetValue(actionId, out var actionSheet))
+            if (_actionSheet.TryGetRow(actionId, out var actionSheet))
             {
                 switch (actionSheet.ActionCategory.Value.RowId)
                 {
@@ -429,7 +438,7 @@ public static class ActionWatching
     }
 
     /// <summary> Handles logic when an action is sent. </summary>
-    private unsafe static void SendActionDetour(ulong targetObjectId, ActionType actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9)
+    private unsafe void SendActionDetour(ulong targetObjectId, ActionType actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9)
     {
         try
         {
@@ -447,8 +456,8 @@ public static class ActionWatching
 
                 if (!InCombat())
                 {
-                    CombatActions.Clear();
-                    WeaveActions.Clear();
+                    _combatActions.Clear();
+                    _weaveActions.Clear();
                 }
 
                 var castTime = ActionManager.GetAdjustedCastTime((ActionType)actionType, actionId);
@@ -489,9 +498,9 @@ public static class ActionWatching
         }
     }
 
-    public unsafe static bool CanQueueCS(uint actionId) => CanQueueActionDetour(ActionManager.Instance(), ActionType.Action, actionId);
+    public unsafe static bool CanQueueCS(uint actionId) => Instance.CanQueueActionDetour(ActionManager.Instance(), ActionType.Action, actionId);
 
-    private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, ActionType actionType, uint actionID)
+    private unsafe bool CanQueueActionDetour(ActionManager* actionManager, ActionType actionType, uint actionID)
     {
         float threshold = Service.Configuration.QueueAdjust ? Service.Configuration.QueueAdjustThreshold : 0.5f;
 
@@ -514,7 +523,7 @@ public static class ActionWatching
     }
 
     /// <summary> Gets the amount of GCDs used since combat started. </summary>
-    public static int NumberOfGcdsUsed => CombatActions.Count(x => x.ActionType is ActionType.Action && x.ActionID.ActionAttackType() is ActionAttackType.Spell or ActionAttackType.Weaponskill);
+    public static int NumberOfGcdsUsed => Instance._combatActions.Count(x => x.ActionType is ActionType.Action && x.ActionID.ActionAttackType() is ActionAttackType.Spell or ActionAttackType.Weaponskill);
 
     private static uint _lastAction = 0;
     public static uint LastAction
@@ -538,9 +547,9 @@ public static class ActionWatching
     public static TimeSpan TimeSinceLastAction => DateTime.Now - TimeLastActionUsed;
     public static DateTime TimeLastActionUsed { get; set; } = DateTime.Now;
 
-    public static void OutputLog()
+    public void OutputLog()
     {
-        var lastAct = CombatActions.LastOrDefault();
+        var lastAct = _combatActions.LastOrDefault();
         string name = lastAct.ActionType switch
         {
             ActionType.Action => lastAct.ActionID.ActionName(),
@@ -551,7 +560,7 @@ public static class ActionWatching
     }
 
 
-    private static void CancelPendingLastActionUpdate(uint interruptedAction)
+    private void CancelPendingLastActionUpdate(uint interruptedAction)
     {
         source.Cancel();
         source = new CancellationTokenSource();
@@ -559,7 +568,7 @@ public static class ActionWatching
     }
 
     /// <summary> Handles logic when an action is used. </summary>
-    private unsafe static bool UseActionDetour(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted)
+    private unsafe bool UseActionDetour(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted)
     {
         try
         {
@@ -631,7 +640,7 @@ public static class ActionWatching
                 if (actionManager->QueuedTargetId.Id != 0)
                     targetId = actionManager->QueuedTargetId.Id;
 
-                var areaTargeted = replacedWith >= 1_000_000 ? false : ActionSheet.TryGetValue(replacedWith, out var s) && s.TargetArea;
+                var areaTargeted = replacedWith >= 1_000_000 ? false : _actionSheet.TryGetRow(replacedWith, out var s) && s.TargetArea;
 
                 if (areaTargeted && disablingReplacingTemp) //Ground targets don't hit the send method, so it has to be re-enabled here. Could be re-enabled further down the line if it causes output issues.
                     Service.ActionReplacer.EnableActionReplacingIfRequired();
@@ -714,7 +723,7 @@ public static class ActionWatching
         }
     }
 
-    public static bool CheckForChangedTarget(uint actionId, ref ulong targetObjectId, out uint replacedWith)
+    public bool CheckForChangedTarget(uint actionId, ref ulong targetObjectId, out uint replacedWith)
     {
         replacedWith = actionId;
         if (!P.ActionRetargeting.TryGetTargetFor(actionId, out var target, out replacedWith) ||
@@ -731,24 +740,24 @@ public static class ActionWatching
         return true;
     }
 
-    private static void ResetActions(ConditionFlag flag, bool value)
+    private void ResetActions(ConditionFlag flag, bool value)
     {
         if (flag == ConditionFlag.InCombat && !value)
         {
-            CombatActions.Clear();
-            WeaveActions.Clear();
-            ActionTimestamps.Clear();
+            _combatActions.Clear();
+            _weaveActions.Clear();
+            _actionTimestamps.Clear();
             LastAbility = 0;
             LastAction = 0;
             LastWeaponskill = 0;
             LastSpell = 0;
-            UsedOnDict.Clear();
+            _usedOnDict.Clear();
         }
     }
 
-    public static void Disable()
+    public void Disable()
     {
-        ReceiveActionEffectHook.Disable();
+        ReceiveActionEffectHook?.Disable();
         SendActionHook?.Disable();
         UseActionHook?.Disable();
         UseActionLocHook?.Disable();
@@ -761,14 +770,14 @@ public static class ActionWatching
     [Obsolete("Use CustomComboFunctions.GetActionName instead. This method will be removed in a future update.")]
     public static string GetActionName(uint id) => CustomComboFunctions.GetActionName(id);
 
-    public static unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)
+    public unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)
     {
         return ActionManager.GetActionInRangeOrLoS(actionId, source.Struct(), target.Struct()) is 566;
     }
 
     public static ActionAttackType GetAttackType(uint actionId)
     {
-        if (!ActionSheet.TryGetValue(actionId, out var actionSheet))
+        if (!ActionSheet.TryGetRow(actionId, out var actionSheet))
             return ActionAttackType.Unknown;
 
         return Enum.IsDefined(typeof(ActionAttackType), actionSheet.ActionCategory.RowId)

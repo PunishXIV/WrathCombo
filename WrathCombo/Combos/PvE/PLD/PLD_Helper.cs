@@ -44,7 +44,7 @@ internal partial class PLD
     ///     <see cref="ActionLearned(uint)">level-checked</see>.<br />
     ///     Do not add any of these checks to <c>Logic</c>.
     /// </remarks>
-    private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
+    private static (uint Action, Preset Preset, Func<bool> Logic)[]
         PrioritizedMitigation =>
     [
         //Sheltron

@@ -15,6 +15,7 @@ using WrathCombo.Core;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using AW = WrathCombo.Data.ActionWatching;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 namespace WrathCombo.CustomComboNS.Functions;
 
@@ -71,7 +72,7 @@ internal abstract partial class CustomComboFunctions
         if (EnemiesThatShouldNotBeConsideredBosses.Contains(chara.BaseId))
             return false;
 
-        return chara.NameId == 541 || ActionWatching.BossesBaseIds.Contains(chara.BaseId);
+        return chara.NameId == 541 || AW.BossesBaseIds.Contains(chara.BaseId);
     }
 
     /// <summary> Checks if an object is quest-related. Defaults to CurrentTarget unless specified. </summary>
@@ -138,7 +139,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara || HasStatusEffect(3808, chara, true))
             return false;
 
-        return ActionWatching.BNPCSheet.TryGetValue(chara.BaseId, out var charaSheet) && !charaSheet.IsOmnidirectional;
+        return AW.BNPCSheet.TryGetRow(chara.BaseId, out var charaSheet) && !charaSheet.IsOmnidirectional;
     }
 
     /// <summary>
@@ -424,7 +425,7 @@ internal abstract partial class CustomComboFunctions
 
     public static IEnumerable<IGameObject> EnemiesInRange(uint aoeSpell, IGameObject? target = null, bool checkIgnoredList = false)
     {
-        if (!ActionWatching.ActionSheet.TryGetValue(aoeSpell, out var sheetSpell))
+        if (!AW.ActionSheet.TryGetRow(aoeSpell, out var sheetSpell))
             return Enumerable.Empty<IGameObject>();
 
         if (sheetSpell.CanTargetHostile && sheetSpell.CastType == 1)
@@ -466,7 +467,7 @@ internal abstract partial class CustomComboFunctions
     public static int NumberOfAlliesInRange
         (uint aoeSpell, IGameObject? target = null)
     {
-        if (!ActionWatching.ActionSheet.TryGetValue(aoeSpell, out var sheetSpell))
+        if (!AW.ActionSheet.TryGetRow(aoeSpell, out var sheetSpell))
             return 0;
 
         if (sheetSpell.CanTargetAlly &&
@@ -780,7 +781,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="checkInvincible">
     ///     Whether enemies should be checked for invincibility.<br />
     ///     Should only be set to <see langword="false" /> by
-    ///     <see cref="StatusExtensions.get_IsInvincible(IBattleChara)"/>
+    ///     <see cref="TargetIsInvincible"/>.
     /// </param>
     /// <returns>
     ///     Number of enemies within the specified AoE shape.
