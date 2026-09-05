@@ -666,7 +666,7 @@ internal partial class MCH
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat() || IsNotEnabled(Preset.MCH_ST_Opener_BlockEarly))
+            ([1], () => CountdownActive || InCombat() || !MCH_Opener_PrepullBlock)
         ];
 
         public override bool HasCooldowns() =>

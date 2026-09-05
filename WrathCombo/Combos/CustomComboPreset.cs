@@ -2579,10 +2579,6 @@ public enum Preset
     [JobInfo(Job.DNC)]
     DNC_ST_BalanceOpener = 4011,
 
-    [ParentCombo(DNC_ST_BalanceOpener)]
-    [JobInfo(Job.DNC)]
-    DNC_ST_Opener_BlockEarly = 4031,
-
     [ParentCombo(DNC_ST_AdvancedMode)]
     [JobInfo(Job.DNC)]
     DNC_ST_Adv_Partner = 4012,
@@ -4131,10 +4127,6 @@ public enum Preset
     [ParentCombo(MCH_ST_AdvancedMode)]
     [JobInfo(Job.MCH)]
     MCH_ST_Adv_Opener = 8101,
-
-    [ParentCombo(MCH_ST_Adv_Opener)]
-    [JobInfo(Job.MCH)]
-    MCH_ST_Opener_BlockEarly = 8123,
 
     #region BS
 

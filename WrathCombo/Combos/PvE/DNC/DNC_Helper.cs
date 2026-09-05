@@ -206,7 +206,7 @@ internal partial class DNC
                     return field;
                 // Cached partner no longer ready (cutscene, etc.) — refresh
             }
-            
+
             if (Player.Object is null ||
                 Player.Job != Job.DNC ||
                 IsOccupied() ||
@@ -259,7 +259,7 @@ internal partial class DNC
         return IsDancePartnerReady(fallback) ? fallback : null;
     }
 
-    private static bool TryGetDancePartner (out IGameObject? partner)
+    private static bool TryGetDancePartner(out IGameObject? partner)
     {
         partner = null;
 
@@ -625,86 +625,21 @@ internal partial class DNC
 
     #region Standard Openers
 
-    internal static FifteenSecondOpener Opener15S = new();
-
-    internal class FifteenSecondOpener : WrathOpener
+    /// <summary>
+    /// Base class for DNC openers containing common properties and logic shared across all DNC opener variants.
+    /// </summary>
+    internal abstract class DNCOpenerBase : WrathOpener
     {
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => StandardStep, // 1
-            () => Emboite, // 2
-            () => Emboite, // 3
-            () => Peloton, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => StandardFinish2, // 6
-            () => TechnicalStep, // 7
-            () => Emboite, // 8
-            () => Emboite, // 9
-            () => Emboite, // 10
-            () => Emboite, // 11
-            () => TechnicalFinish4, // 12
-            () => Devilment, // 13
-            () => Tillana, // 14
-            () => Flourish, // 15
-            () => DanceOfTheDawn, // 16
-            () => FanDance4, // 17
-            () => LastDance, // 18
-            () => FanDance3, // 19
-            () => FinishingMove, // 20
-            () => StarfallDance, // 21
-            () => ReverseCascade, // 22
-            () => ReverseCascade, // 23
-            () => ReverseCascade, // 24
-        ];
-
-        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
-        {
-            get;
-            set;
-        } =
-        [
-            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 5),
-            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 1),
-            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining)),
-        ];
-
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps
-        {
-            get;
-            set;
-        } =
-        [
-            ([2, 3, 8, 9, 10, 11], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 8, 9, 10, 11], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 8, 9, 10, 11], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([21], SaberDance, () => Gauge.Esprit >= 50),
-            ([22, 23, 24], SaberDance, () => Gauge.Esprit > 80),
-            ([22, 23, 24], StarfallDance,
-                () => HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([22, 23, 24], SaberDance, () => Gauge.Esprit >= 50),
-            ([22, 23, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([22, 23, 24], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
-        {
-            get;
-            set;
-        } =
-        [
-            ([4], () => !DNC_ST_OpenerOption_Peloton),
-        ];
-
         public override Preset Preset => Preset.DNC_ST_BalanceOpener;
+        internal override UserData? ContentCheckConfig => DNC_ST_OpenerDifficulty;
+        internal override bool IncludePot => DNC_Opener_Potion;
+        internal static uint ReverseCascadeSteps => Gauge.Esprit >= 80 ? SaberDance : ActionReady(StarfallDance) ? StarfallDance : Gauge.Esprit >= 50 ? SaberDance : ActionReady(LastDance) ? LastDance : ActionReady(Fountainfall) ? Fountainfall : ReverseCascade;
 
-        internal override UserData? ContentCheckConfig =>
-            DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => DNC_Opener_Potion;
-
+        /// <summary>
+        /// Template method for HasCooldowns validation. Performs common checks then delegates to ValidateCountdown() for opener-specific validation.
+        /// </summary>
         public override bool HasCooldowns()
         {
             if (!ActionReady(StandardStep))
@@ -717,115 +652,106 @@ internal partial class DNC
                 return false;
 
             if (InCombat())
-                return false;
-
-            // go at 15s, with some leeway
-            if (CountdownRemaining is < 13.5f or > 16f)
                 return false;
 
             return true;
         }
     }
 
-    internal static SevenSecondOpener Opener07S = new();
+    internal static FifteenSecondOpener Opener15S = new();
 
-    internal class SevenSecondOpener : WrathOpener
+    internal class FifteenSecondOpener : DNCOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => StandardStep, // 1
-            () => Emboite, // 2
-            () => Emboite, // 3
-            () => Peloton, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => StandardFinish2, // 6
-            () => TechnicalStep, // 7
-            () => Emboite, // 8
-            () => Emboite, // 9
-            () => Emboite, // 10
-            () => Emboite, // 11
-            () => TechnicalFinish4, // 12
-            () => Devilment, // 13
-            () => Tillana, // 14
-            () => Flourish, // 15
-            () => DanceOfTheDawn, // 16
-            () => FanDance4, // 17
-            () => LastDance, // 18
-            () => FanDance3, // 19
-            () => StarfallDance, // 20
-            () => ReverseCascade, // 21
-            () => ReverseCascade, // 22
-            () => FinishingMove, // 23
-            () => ReverseCascade, // 24
+            () => All.Cease, // 1
+            () => StandardStep, // 2
+            () => Gauge.NextStep, // 3
+            () => Gauge.NextStep, // 4
+            () => Peloton, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            () => StandardFinish2, // 7
+            () => TechnicalStep, // 8
+            () => Gauge.NextStep, // 9
+            () => Gauge.NextStep, // 10
+            () => Gauge.NextStep, // 11
+            () => Gauge.NextStep, // 12
+            () => TechnicalFinish4, // 13
+            () => Devilment, // 14
+            () => Tillana, // 15
+            () => Flourish, // 16
+            () => DanceOfTheDawn, // 17
+            () => FanDance4, // 18
+            () => LastDance, // 19
+            () => FanDance3, // 20
+            () => FinishingMove, // 21
+            () => StarfallDance, // 22
+            () => ReverseCascadeSteps, // 23
+            () => ReverseCascadeSteps, // 24
+            () => ReverseCascadeSteps, // 25
         ];
 
-        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 3),
-            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 1),
-            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining)),
+            ([2], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 15)),
+            ([5], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5)),
+            ([6], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1)),
+            ([7], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining)),
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([2, 3, 8, 9, 10, 11], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 8, 9, 10, 11], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 8, 9, 10, 11], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([23], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 24], SaberDance, () => Gauge.Esprit > 80),
-            ([21, 22, 24], StarfallDance,
-                () => HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([21, 22, 24], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([21, 22, 24], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
-        {
-            get;
-            set;
-        } =
-        [
+            ([1], () => CountdownActive || InCombat() || !DNC_Opener_PrepullBlock),
             ([4], () => !DNC_ST_OpenerOption_Peloton),
         ];
+    }
 
-        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
-        internal override UserData? ContentCheckConfig =>
-            DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => DNC_Opener_Potion;
+    internal static SevenSecondOpener Opener07S = new();
 
-        public override bool HasCooldowns()
-        {
-            if (!ActionReady(StandardStep))
-                return false;
+    internal class SevenSecondOpener : DNCOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => StandardStep, // 2
+            () => Gauge.NextStep, // 3
+            () => Gauge.NextStep, // 4
+            () => Peloton, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            () => StandardFinish2, // 7
+            () => TechnicalStep, // 8
+            () => Gauge.NextStep, // 9
+            () => Gauge.NextStep, // 10
+            () => Gauge.NextStep, // 11
+            () => Gauge.NextStep, // 12
+            () => TechnicalFinish4, // 13
+            () => Devilment, // 14
+            () => Tillana, // 15
+            () => Flourish, // 16
+            () => DanceOfTheDawn, // 17
+            () => FanDance4, // 18
+            () => LastDance, // 19
+            () => FanDance3, // 20
+            () => StarfallDance, // 21
+            () => ReverseCascadeSteps, // 22
+            () => ReverseCascadeSteps, // 23
+            () => FinishingMove, // 24
+            () => ReverseCascadeSteps, // 25
+        ];
 
-            if (!ActionReady(TechnicalStep))
-                return false;
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 7)),
+            ([5], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 3)),
+            ([6], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1)),
+            ([7], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
+        ];
 
-            if (!IsOffCooldown(Devilment))
-                return false;
-
-            if (InCombat())
-                return false;
-
-            // go at 7s, with some leeway
-            if (CountdownRemaining is < 5.5f or > 8f)
-                return false;
-
-            return true;
-        }
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !DNC_Opener_PrepullBlock),
+            ([5], () => !DNC_ST_OpenerOption_Peloton),
+        ];
     }
 
     #endregion
@@ -834,174 +760,98 @@ internal partial class DNC
 
     internal static ThirtySecondTechOpener Opener30STech = new();
 
-    internal class ThirtySecondTechOpener : WrathOpener
+    internal class ThirtySecondTechOpener : DNCOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => StandardStep, // 1
-            () => Emboite, // 2
-            () => Emboite, // 3
-            () => StandardFinish2, // 4
-            () => Peloton, // 5
-            () => TechnicalStep, // 6
-            () => Emboite, // 7
-            () => Emboite, // 8
-            () => Emboite, // 9
-            () => Emboite, // 10
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 11
-            () => TechnicalFinish4, // 12
-            () => Devilment, // 13
-            () => LastDance, // 14
-            () => Flourish, // 15
-            () => FinishingMove, // 16
-            () => Tillana, // 17
-            () => DanceOfTheDawn, // 18
-            () => FanDance4, // 19
-            () => StarfallDance, // 20
-            () => FanDance3, // 21
-            () => ReverseCascade, // 22
-            () => ReverseCascade, // 23
-            () => ReverseCascade, // 24
+            () => All.Cease, // 1
+            () => StandardStep, // 2
+            () => Gauge.NextStep, // 3
+            () => Gauge.NextStep, // 4
+            () => StandardFinish2, // 5
+            () => Peloton, // 6
+            () => TechnicalStep, // 7
+            () => Gauge.NextStep, // 8
+            () => Gauge.NextStep, // 9
+            () => Gauge.NextStep, // 10
+            () => Gauge.NextStep, // 11
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 12
+            () => TechnicalFinish4, // 13
+            () => Devilment, // 14
+            () => LastDance, // 15
+            () => Flourish, // 16
+            () => FinishingMove, // 17
+            () => Tillana, // 18
+            () => DanceOfTheDawn, // 19
+            () => FanDance4, // 20
+            () => StarfallDance, // 21
+            () => FanDance3, // 22
+            () => ReverseCascadeSteps, // 23
+            () => ReverseCascadeSteps, // 24
+            () => ReverseCascadeSteps, // 25
         ];
 
-        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([4], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 15),
-            ([5], () => Math.Min(GetStatusEffectRemainingTime(Buffs.StandardStep) - 0.5f, CountdownRemaining) - 13),
-            ([11], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining) - 1),
-            ([12], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining)),
+            ([2], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 30)),
+            ([5], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 15)),
+            ([6], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 13)),
+            ([7], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 7)),
+            ([12], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1)),
+            ([13], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining)),
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([20], SaberDance, () => Gauge.Esprit >= 50),
-            ([22, 23, 24], SaberDance, () => Gauge.Esprit > 80),
-            ([22, 23, 24], StarfallDance,
-                () => HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([22, 23, 24], SaberDance, () => Gauge.Esprit >= 50),
-            ([22, 23, 24], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([22, 23, 24], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
-        {
-            get;
-            set;
-        } =
-        [
+            ([1], () => CountdownActive || InCombat() || !DNC_Opener_PrepullBlock),
             ([5], () => !DNC_ST_OpenerOption_Peloton),
         ];
-
-        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
-        internal override UserData? ContentCheckConfig =>
-            DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => DNC_Opener_Potion;
-
-        public override bool HasCooldowns()
-        {
-            if (!ActionReady(StandardStep))
-                return false;
-
-            if (!ActionReady(TechnicalStep))
-                return false;
-
-            if (!IsOffCooldown(Devilment))
-                return false;
-
-            if (InCombat())
-                return false;
-
-            // go at 30s, with some leeway
-            if (CountdownRemaining < 28.5f)
-                return false;
-
-            return true;
-        }
     }
 
     internal static SevenPlusSecondTechOpener Opener07PlusSTech = new();
 
-    internal class SevenPlusSecondTechOpener : WrathOpener
+    internal class SevenPlusSecondTechOpener : DNCOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => TechnicalStep, // 1
-            () => Emboite, // 2
-            () => Emboite, // 3
-            () => Emboite, // 4
-            () => Emboite, // 5
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
-            () => TechnicalFinish4, // 7
-            () => Devilment, // 8
-            () => LastDance, // 9
-            () => Flourish, // 10
-            () => FinishingMove, // 11
-            () => Tillana, // 12
-            () => DanceOfTheDawn, // 13
-            () => FanDance4, // 14
-            () => StarfallDance, // 15
-            () => FanDance3, // 16
-            () => ReverseCascade, // 17
-            () => ReverseCascade, // 18
-            () => ReverseCascade, // 19
+            () => All.Cease, // 1
+            () => TechnicalStep, // 2
+            () => Gauge.NextStep, // 3
+            () => Gauge.NextStep, // 4
+            () => Gauge.NextStep, // 5
+            () => Gauge.NextStep, // 6
+            () => Peloton, // 7
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 8
+            () => TechnicalFinish4, // 9
+            () => Devilment, // 10
+            () => LastDance, // 11
+            () => Flourish, // 12
+            () => FinishingMove, // 13
+            () => Tillana, // 14
+            () => DanceOfTheDawn, // 15
+            () => FanDance4, // 16
+            () => StarfallDance, // 17
+            () => FanDance3, // 18
+            () => ReverseCascadeSteps, // 19
+            () => ReverseCascadeSteps, // 20
         ];
 
-        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 1)),
+            ([2], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 7)),
+            ([7], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2)),
+            ([8], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1)),
+            ([9], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([2, 3, 4, 5], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 4, 5], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 4, 5], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([15], SaberDance, () => Gauge.Esprit >= 50),
-            ([17, 18, 19], SaberDance, () => Gauge.Esprit > 80),
-            ([17, 18, 19], StarfallDance, () =>
-                HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([17, 18, 19], SaberDance, () => Gauge.Esprit >= 50),
-            ([17, 18, 19], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([17, 18, 19], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+            ([1], () => CountdownActive || InCombat() || !DNC_Opener_PrepullBlock),
+            ([7], () => !DNC_ST_OpenerOption_Peloton),
         ];
-
-        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
-        internal override UserData? ContentCheckConfig =>
-            DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => DNC_Opener_Potion;
 
         public override bool HasCooldowns()
         {
-            if (ActionReady(StandardStep))
-                return false;
-
             if (!ActionReady(TechnicalStep))
                 return false;
 
@@ -1009,10 +859,6 @@ internal partial class DNC
                 return false;
 
             if (InCombat())
-                return false;
-
-            // go at 7s, with some leeway
-            if (CountdownRemaining is < 5.5f or > 8f)
                 return false;
 
             return true;
@@ -1021,98 +867,46 @@ internal partial class DNC
 
     internal static SevenSecondTechOpener Opener07STech = new();
 
-    internal class SevenSecondTechOpener : WrathOpener
+    internal class SevenSecondTechOpener : DNCOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => TechnicalStep, // 1
-            () => Emboite, // 2
-            () => Emboite, // 3
-            () => Emboite, // 4
-            () => Emboite, // 5
-            () => Peloton, // 6
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 7
-            () => TechnicalFinish4, // 8
-            () => Devilment, // 9
-            () => Tillana, // 10
-            () => Flourish, // 11
-            () => FinishingMove, // 12
-            () => DanceOfTheDawn, // 13
-            () => FanDance4, // 14
-            () => StarfallDance, // 15
-            () => FanDance3, // 16
-            () => ReverseCascade, // 17
-            () => ReverseCascade, // 18
-            () => ReverseCascade, // 19
+            () => All.Cease, // 1
+            () => TechnicalStep, // 2
+            () => Gauge.NextStep, // 3
+            () => Gauge.NextStep, // 4
+            () => Gauge.NextStep, // 5
+            () => Gauge.NextStep, // 6
+            () => Peloton, // 7
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 8
+            () => TechnicalFinish4, // 9
+            () => Devilment, // 10
+            () => Tillana, // 11
+            () => Flourish, // 12
+            () => FinishingMove, // 13
+            () => DanceOfTheDawn, // 14
+            () => FanDance4, // 15
+            () => StarfallDance, // 16
+            () => FanDance3, // 17
+            () => ReverseCascadeSteps, // 18
+            () => ReverseCascadeSteps, // 19
+            () => ReverseCascadeSteps, // 20
+
         ];
 
-        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([6], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 2)),
-            ([7], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining - 1)),
-            ([8], () => Math.Min(GetStatusEffectRemainingTime(Buffs.TechnicalStep) - 0.5f, CountdownRemaining)),
+            ([2], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 7)),
+            ([7], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2)),
+            ([8], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1)),
+            ([9], () => !DNC_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([2, 3, 4, 5], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 4, 5], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 4, 5], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([15], SaberDance, () => Gauge.Esprit >= 50),
-            ([17, 18, 19], SaberDance, () => Gauge.Esprit > 80),
-            ([17, 18, 19], StarfallDance, () =>
-                HasStatusEffect(Buffs.FlourishingStarfall)),
-            ([17, 18, 19], SaberDance, () => Gauge.Esprit >= 50),
-            ([17, 18, 19], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
-            ([17, 18, 19], Fountainfall, () =>
-                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+            ([1], () => CountdownActive || InCombat() || !DNC_Opener_PrepullBlock),
+            ([7], () => !DNC_ST_OpenerOption_Peloton),
         ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
-        {
-            get;
-            set;
-        } =
-        [
-            ([6], () => !DNC_ST_OpenerOption_Peloton),
-        ];
-
-        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
-        internal override UserData? ContentCheckConfig =>
-            DNC_ST_OpenerDifficulty;
-            internal override bool IncludePot => DNC_Opener_Potion;
-
-        public override bool HasCooldowns()
-        {
-            if (!ActionReady(StandardStep))
-                return false;
-
-            if (!ActionReady(TechnicalStep))
-                return false;
-
-            if (!IsOffCooldown(Devilment))
-                return false;
-
-            if (InCombat())
-                return false;
-
-            // go at 7s, with some leeway
-            if (CountdownRemaining is < 5.5f or > 8f)
-                return false;
-
-            return true;
-        }
     }
 
     #endregion

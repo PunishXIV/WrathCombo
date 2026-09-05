@@ -836,6 +836,11 @@ public static class UserConfig
 
     }
 
+    internal static void DrawOpenerPrepullBlockChoice(UserBool config)
+    {
+        DrawAdditionalBoolChoice(config, "Include Prepull Block?", "Adds a block to the opener that will wait for countdown timings.");
+    }
+
     internal static void DrawOpenerPotionChoice(UserBool config)
     {
         using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.HealerGreen))

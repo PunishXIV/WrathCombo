@@ -123,12 +123,6 @@ internal partial class DNC : PhysicalRanged
 
             #region Pre-pull
 
-            if (!InCombat() && ContentCheck.IsInConfiguredContent(
-                    DNC_ST_OpenerDifficulty, ContentCheck.ListSet.BossOnly) &&
-                IsEnabled(Preset.DNC_ST_BalanceOpener) &&
-                IsEnabled(Preset.DNC_ST_Opener_BlockEarly))
-                return All.Cease;
-
             if (!InCombat() && HasBattleTarget())
             {
                 // ST Standard Step (Pre-pull)
