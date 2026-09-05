@@ -31,6 +31,7 @@ These are the settings that are accessible via the IPC:
 - PvE Options state
 - Variant Dungeon skills
 - Occult Crescent Phantom Job skills
+- **Upcoming positional hints** (read-only; no lease required)
 
 These are the settings that are not accessible via the IPC:
 - **All** Auto-Rotation configuration options
@@ -49,6 +50,81 @@ These are the settings that are not accessible via the IPC:
       settings, so there should be no need to change them
     - If you do want to change them, this would be seen as a bug with the default
       values or the range of the config, and should be reported
+
+## Upcoming Positional Hints (read-only)
+
+WrathCombo can publish upcoming one-button positional requirements for overlay
+plugins such as Avarice. This is **read-only** — no lease registration is required.
+
+### Gates
+
+| Gate | Type | Description |
+|------|------|-------------|
+| `WrathCombo.GetUpcomingPositionalHint` | Pull (`uint[]?`) | Current hint snapshot, or `null` when inactive |
+| `OnUpcomingPositionalHint` | Push (`object`) | Fires when the hint changes; query pull gate for payload |
+
+Use [WrathCombo.API](https://github.com/PunishXIV/WrathCombo.API) `0.5.7+` for
+`PositionalHintSnapshot`, `PositionalDirection`, and `WrathIPCWrapper` helpers.
+
+### Wire format (`uint[]`, 7 fields)
+
+| Index | Field | Values |
+|-------|-------|--------|
+| 0 | Direction | `0` None, `1` Rear, `2` Flank, `3` Unknown |
+| 1 | ActionId | Expected positional GCD |
+| 2 | GcdsUntil | `1`–`3` GCDs before the positional |
+| 3 | TargetObjectId | Target entity id |
+| 4 | ExpiresInMs | Remaining validity (refresh on pull after events) |
+| 5 | CurrentAngle | `0` Front, `1` Flank, `2` Rear, `3` Unknown |
+| 6 | IsSatisfied | `1` if player is already on the required facing |
+
+Hints are emitted conservatively from one-button ST rotations for DRG, MNK, VPR,
+NIN, SAM, and RPR when the next positional is deterministic. `GcdsUntil = 2` is
+only reported when the following two GCDs are predictable.
+
+### Avarice consumer example (C#)
+
+```csharp
+using WrathCombo.API;
+using WrathCombo.API.Enum;
+
+public sealed class WrathPositionalBridge : IDisposable
+{
+    private readonly Action _onHintChanged;
+
+    public WrathPositionalBridge()
+    {
+        _onHintChanged = OnHintChanged;
+        WrathIPCWrapper.SubscribeUpcomingPositionalHint(_onHintChanged);
+        OnHintChanged(); // initial pull after subscribe
+    }
+
+    private void OnHintChanged()
+    {
+        var hint = WrathIPCWrapper.GetUpcomingPositionalHint();
+        if (hint is not { IsActive: true } active || active.IsSatisfied)
+        {
+            ClearOverlay();
+            return;
+        }
+
+        DrawPositional(active.TargetObjectId, active.Direction, active.GcdsUntil);
+    }
+
+    public void Dispose() =>
+        WrathIPCWrapper.UnsubscribeUpcomingPositionalHint(_onHintChanged);
+}
+```
+
+### Manual validation
+
+1. Enable a one-button ST combo on a melee job with positionals (e.g. DRG Simple).
+2. Target a boss that requires positionals; confirm hint appears ~2 GCDs before
+   Chaos Thrust / Wheeling Thrust / Fang and Claw as applicable.
+3. Confirm `GcdsUntil` decrements to `1` on the GCD before the positional.
+4. Confirm hint clears on target loss, omnidirectional target, combo timeout, job
+   change, and after the positional resolves.
+5. Subscribe to `OnUpcomingPositionalHint` and verify events fire only on changes.
 
 ## Working with the Wrath Combo IPC
 
@@ -500,6 +576,11 @@ resources below, or the first several sections of this guide.
 
 - Added methods to enable Occult Crescent Phantom Job setup:
   `GetOccultParentComboName`, `GetOccultOptionNames`, `SetOccultReadyForPhantomJob`.
+- **Upcoming positional hints** — read-only `WrathCombo.GetUpcomingPositionalHint`
+  pull gate and `OnUpcomingPositionalHint` push event for overlay plugins (Avarice).
+  Requires `WrathCombo.API` `0.5.7+`. Supports DRG, MNK, VPR, NIN, SAM, RPR ST
+  one-button combos.
+
 - PunishXIV/WrathCombo#1181 - Added methods to enable Variant setup :
   `GetVariantParentComboName`, `GetVariantOptionNames`, `SetVariantReadyForJob`
   `1.0.4.8`.

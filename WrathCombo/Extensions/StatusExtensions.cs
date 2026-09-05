@@ -83,7 +83,7 @@ namespace WrathCombo.Extensions
         /// <summary>
         /// Extensions applied to IBattleChara, revolving around status effects
         /// </summary>
-        extension(IBattleChara chara)
+        extension(IBattleChara? chara)
         {
             /// <summary>
             /// Extracts a specific status effect from the character. Returns Null if it fails
@@ -91,7 +91,10 @@ namespace WrathCombo.Extensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public IStatus? Status(uint id, bool anyOwner = false)
             {
-                // Determine the source ID for ownership filtering
+                if (chara is null)
+                    return null;
+
+                // Player-owned when anyOwner is false, matching GetStatusEffect / HasStatusEffects.
                 ulong? sourceId = !anyOwner ? Player.Object?.GameObjectId : null;
                 return Service.ComboCache.GetStatus(id, chara, sourceId);
             }
@@ -113,7 +116,7 @@ namespace WrathCombo.Extensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private bool HasStatusInCacheList(FrozenSet<uint> statusList)
             {
-                var statuses = chara.SafeStatusList;
+                var statuses = chara?.SafeStatusList;
                 if (statuses is null)
                     return false;
 
@@ -154,7 +157,7 @@ namespace WrathCombo.Extensions
             {
                 get
                 {
-                    if (chara.SafeStatusList is not { } statuses)
+                    if (chara is null || chara.SafeStatusList is not { } statuses)
                         return false;
 
                     // Turn Target's status to uint hashset
@@ -184,6 +187,9 @@ namespace WrathCombo.Extensions
             {
                 get
                 {
+                    if (chara is null)
+                        return false;
+
                     var statusList = chara.SafeStatusList;
                     return statusList is not null && statusList.Count(x => x.StatusId != 0) == chara.Struct()->StatusManager.NumValidStatuses;
                 }
@@ -195,6 +201,9 @@ namespace WrathCombo.Extensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool CanApplyStatus(uint statusId)
             {
+                if (chara is null)
+                    return false;
+
                 //Check to see if it's a buff or debuff and therefore if the target is suitable for the status
                 var status = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>().GetRow(statusId);
                 if ((chara.IsHostile() && status.StatusCategory != 2) || (chara.IsFriendly() && status.StatusCategory != 1))
@@ -222,6 +231,7 @@ namespace WrathCombo.Extensions
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool IsImmuneToStatus(uint status) =>
+                chara is not null &&
                 Service.Configuration.StatusBlacklist.Any(x => x.Status == status && x.BaseId == chara.BaseId);
 
             public bool HasStatusEffects(
@@ -229,7 +239,7 @@ namespace WrathCombo.Extensions
                 bool anyOwner = false,
                 bool matchAll = false)
             {
-                var statuses = chara.SafeStatusList;
+                var statuses = chara?.SafeStatusList;
                 if (statuses is null)
                     return false;
 
@@ -254,5 +264,45 @@ namespace WrathCombo.Extensions
             }
         }
         #endregion
+
+        /// <summary>
+        /// Forwards status helpers onto IGameObject by treating the object as IBattleChara.
+        /// No LocalPlayer fallback — a non-chara or null object has no statuses.
+        /// </summary>
+        extension(IGameObject? obj)
+        {
+            public IStatus? Status(uint id, bool anyOwner = false) =>
+                (obj as IBattleChara).Status(id, anyOwner);
+
+            public bool HasStatus(uint id, bool anyOwner = false) =>
+                (obj as IBattleChara).HasStatus(id, anyOwner);
+
+            public bool HasStatus(uint id, [NotNullWhen(true)] out IStatus? status, bool anyOwner = false) =>
+                (obj as IBattleChara).HasStatus(id, out status, anyOwner);
+
+            public bool HasStatusEffects(uint[] statusIds, bool anyOwner = false, bool matchAll = false) =>
+                (obj as IBattleChara).HasStatusEffects(statusIds, anyOwner, matchAll);
+
+            public bool CanApplyStatus(uint statusId) => (obj as IBattleChara).CanApplyStatus(statusId);
+
+            public bool CanApplyStatus(uint[] statuses) => (obj as IBattleChara).CanApplyStatus(statuses);
+
+            public bool IsImmuneToStatus(uint status) => (obj as IBattleChara).IsImmuneToStatus(status);
+
+            public bool HasRezWeakness(bool checkForWeakness = true) =>
+                (obj as IBattleChara).HasRezWeakness(checkForWeakness);
+
+            public bool HasDamageDown => (obj as IBattleChara).HasDamageDown;
+            public bool HasDamageUp => (obj as IBattleChara).HasDamageUp;
+            public bool HasEvasionUp => (obj as IBattleChara).HasEvasionUp;
+            public bool HasRaiseInvincibility => (obj as IBattleChara).HasRaiseInvincibility;
+            public bool HasRaiseStatus => (obj as IBattleChara).HasRaiseStatus;
+            public bool HasCleansableDebuff => (obj as IBattleChara).HasCleansableDebuff;
+            public bool HasCleansableDoom => (obj as IBattleChara).HasCleansableDoom;
+            public bool HasBeneficialStatus => (obj as IBattleChara).HasBeneficialStatus;
+            public bool HasPhantomDispelStatus => (obj as IBattleChara).HasPhantomDispelStatus;
+            public bool IsInvincible => (obj as IBattleChara).IsInvincible;
+            public bool IsStatusCapped => (obj as IBattleChara).IsStatusCapped;
+        }
     }
 }

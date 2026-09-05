@@ -1,6 +1,7 @@
 using WrathCombo.CustomComboNS;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.DRG.Config;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class DRG : Melee
@@ -13,6 +14,8 @@ internal partial class DRG : Melee
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, TrueThrust))
                 return actionID;
+
+            ReportDRGPositionalHints();
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
@@ -160,6 +163,8 @@ internal partial class DRG : Melee
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, TrueThrust))
                 return actionID;
+
+            ReportDRGPositionalHints();
 
             if (IsEnabled(Preset.DRG_ST_Opener) &&
                 Opener().FullOpener(ref actionID))
@@ -402,8 +407,8 @@ internal partial class DRG : Melee
                 if (ComboAction is TrueThrust or RaidenThrust && ActionLearned(VorpalThrust))
                     return DRG_ChaoticCombo && ActionLearned(Disembowel) &&
                            (ActionLearned(ChaosThrust) && ChaosDebuff is null &&
-                            CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
-                            GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
+                            CurrentTarget.CanApplyStatus(ChaoticList[OriginalHook(ChaosThrust)]) ||
+                            LocalPlayer.Status(Buffs.PowerSurge).RemainingTimeOrZero() < 15)
                         ? OriginalHook(Disembowel)
                         : OriginalHook(VorpalThrust);
 

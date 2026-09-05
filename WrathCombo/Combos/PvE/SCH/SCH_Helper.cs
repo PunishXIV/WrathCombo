@@ -52,8 +52,8 @@ internal partial class SCH
     internal static bool ShieldCheck => GetPartyBuffPercent(Buffs.Galvanize) <= SCH_AoE_Heal_SuccorShieldOption &&
                                         GetPartyBuffPercent(SGE.Buffs.EukrasianPrognosis) <= SCH_AoE_Heal_SuccorShieldOption;
     internal static bool CanChainStrategem => ActionReady(ChainStratagem) &&
-                                              CanApplyStatus(CurrentTarget, Debuffs.ChainStratagem) &&
-                                              !HasStatusEffect(Debuffs.ChainStratagem, CurrentTarget, true);
+                                              CurrentTarget.CanApplyStatus(Debuffs.ChainStratagem) &&
+                                              !CurrentTarget.HasStatus(Debuffs.ChainStratagem, true);
 
     internal static float AetherflowCD => GetCooldownRemainingTime(Aetherflow);
     
@@ -101,10 +101,10 @@ internal partial class SCH
         var hpThreshold = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? ComputeHpThreshold(CurrentTarget) : 0;
         BioList.TryGetValue(dotAction, out var dotDebuffID);
         var dotRefresh = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? SCH_ST_DPS_BioUptime_Threshold : 2.5;
-        var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
+        var dotRemaining = CurrentTarget.Status(dotDebuffID).RemainingTimeOrZero();
 
         return ActionReady(dotAction) &&
-               CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               CurrentTarget.CanApplyStatus(dotDebuffID) &&
                !JustUsedOn(dotAction, CurrentTarget, 5f) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
@@ -130,12 +130,12 @@ internal partial class SCH
         IGameObject? healTarget = target ?? SimpleTarget.Stack.AllyToHeal;
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
         bool ShieldCheck = !SCH_ST_Heal_AldoquimOpts[0] || 
-                           !HasStatusEffect(Buffs.Galvanize, healTarget, true) || 
-                           HasStatusEffect(Buffs.EmergencyTactics);
+                           !healTarget.HasStatus(Buffs.Galvanize, true) || 
+                           LocalPlayer.HasStatus(Buffs.EmergencyTactics);
         bool SageShieldCheck = !SCH_ST_Heal_AldoquimOpts[1] ||
-                               !HasStatusEffect(SGE.Buffs.EukrasianDiagnosis, healTarget, true) || 
-                               !HasStatusEffect(SGE.Buffs.EukrasianPrognosis, healTarget, true) ||
-                               HasStatusEffect(Buffs.EmergencyTactics);
+                               !healTarget.HasStatus(SGE.Buffs.EukrasianDiagnosis, true) || 
+                               !healTarget.HasStatus(SGE.Buffs.EukrasianPrognosis, true) ||
+                               LocalPlayer.HasStatus(Buffs.EmergencyTactics);
         bool EmergencyAdlo = SCH_ST_Heal_AldoquimOpts[2] && ActionReady(EmergencyTactics) &&
                              GetTargetHPPercent(healTarget, SCH_ST_Heal_IncludeShields) <=
                              SCH_ST_Heal_AdloquiumOption_Emergency;
@@ -149,7 +149,7 @@ internal partial class SCH
             case 1:
                 action = Excogitation;
                 enabled = IsEnabled(Preset.SCH_ST_Heal_Excogitation) && 
-                          (HasAetherflow || HasStatusEffect(Buffs.Recitation)) &&
+                          (HasAetherflow || LocalPlayer.HasStatus(Buffs.Recitation)) &&
                           (tankCheck || !IsInParty() || !SCH_ST_Heal_ExcogitationTankOption) &&
                           (!SCH_ST_Heal_ExcogitationBossOption || !InBossEncounter());;
                 return SCH_ST_Heal_ExcogitationOption;

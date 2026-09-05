@@ -3,6 +3,7 @@ using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.PCT.Config;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class PCT : Caster
@@ -185,14 +186,14 @@ internal partial class PCT : Caster
 
             if (actionID == BlizzardinCyan && choice is 0 or 1)
             {
-                return HasStatusEffect(Buffs.SubtractivePalette)
+                return LocalPlayer.HasStatus(Buffs.SubtractivePalette)
                     ? OriginalHook(BlizzardinCyan)
                     : OriginalHook(FireInRed);
 
             }
             if (actionID == BlizzardIIinCyan && choice is 0 or 2)
             {
-                return HasStatusEffect(Buffs.SubtractivePalette)
+                return LocalPlayer.HasStatus(Buffs.SubtractivePalette)
                     ? OriginalHook(BlizzardIIinCyan)
                     : OriginalHook(FireIIinRed);
             }
@@ -216,7 +217,7 @@ internal partial class PCT : Caster
             }
             if (actionID == WeaponMotif)
             {
-                if (CombinedMotifsWeapon && HasStatusEffect(Buffs.HammerTime))
+                if (CombinedMotifsWeapon && LocalPlayer.HasStatus(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
                 if (gauge.WeaponMotifDrawn)
@@ -224,7 +225,7 @@ internal partial class PCT : Caster
             }
             if (actionID == LandscapeMotif)
             {
-                if (CombinedMotifsLandscape && HasStatusEffect(Buffs.Starstruck))
+                if (CombinedMotifsLandscape && LocalPlayer.HasStatus(Buffs.Starstruck))
                     return OriginalHook(StarPrism);
 
                 if (gauge.LandscapeMotifDrawn)
@@ -240,7 +241,7 @@ internal partial class PCT : Caster
         {
             if (actionID != HolyInWhite)
                 return actionID;
-            if (HasStatusEffect(Buffs.MonochromeTones))
+            if (LocalPlayer.HasStatus(Buffs.MonochromeTones))
                 return CometinBlack;
             return actionID;
         }

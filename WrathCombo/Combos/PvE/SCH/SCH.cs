@@ -43,7 +43,7 @@ internal partial class SCH : Healer
                 if (!WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
                     return Aetherflow;
 
-                if (HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
+                if (LocalPlayer.HasStatus(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
                     return BanefulImpaction;
 
                 if (ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem)
@@ -61,7 +61,7 @@ internal partial class SCH : Healer
             BioList.TryGetValue(dotAction, out var dotDebuffID);
             var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 99);
             
-            if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && PartyInCombat())
+            if (target is not null && ActionReady(dotAction) && target.CanApplyStatus(dotDebuffID) && !JustUsedOn(dotAction, target) && PartyInCombat())
                 return dotAction.Retarget(BroilList.ToArray(), target);
 
             //Ruin 2 Movement
@@ -96,7 +96,7 @@ internal partial class SCH : Healer
             if (!WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow && CanWeave())
                 return Aetherflow;
 
-            if (HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
+            if (LocalPlayer.HasStatus(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
                 return BanefulImpaction;
 
             if (ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem && CanWeave())
@@ -141,7 +141,7 @@ internal partial class SCH : Healer
             
             bool cleansableTarget =
                 HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
-                HasCleansableDebuff(healTarget);
+                healTarget.HasCleansableDebuff;
             
             if (ActionReady(Role.Esuna) && GetTargetHPPercent(healTarget) >= 40 &&
                 cleansableTarget)
@@ -201,7 +201,7 @@ internal partial class SCH : Healer
                 return Expedient;
             
             if (ActionReady(OriginalHook(Adloquium)))
-                return ActionReady(OriginalHook(EmergencyTactics)) && (HasStatusEffect(Buffs.Galvanize, healTarget, true) || !HasStatusEffect(Buffs.EmergencyTactics))
+                return ActionReady(OriginalHook(EmergencyTactics)) && (healTarget.HasStatus(Buffs.Galvanize, true) || !LocalPlayer.HasStatus(Buffs.EmergencyTactics))
                     ? OriginalHook(EmergencyTactics)
                     : OriginalHook(Adloquium).RetargetIfEnabled(actionID);
             
@@ -316,7 +316,7 @@ internal partial class SCH : Healer
                 if (IsEnabled(Preset.SCH_ST_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
                     return Aetherflow;
 
-                if (IsEnabled(Preset.SCH_ST_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
+                if (IsEnabled(Preset.SCH_ST_ADV_DPS_BanefulImpact) && LocalPlayer.HasStatus(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
                     return BanefulImpaction;
 
 
@@ -348,7 +348,7 @@ internal partial class SCH : Healer
                     return OriginalHook(Bio);
                 
                 //2 target Dotting System to maintain dots on 2 enemies. Works with the same sliders and one target
-                if (target is not null && ActionReady(dotAction) && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && SCH_ST_ADV_DPS_Bio_TwoTarget)
+                if (target is not null && ActionReady(dotAction) && target.CanApplyStatus(dotDebuffID) && !JustUsedOn(dotAction, target) && SCH_ST_ADV_DPS_Bio_TwoTarget)
                     return dotAction.Retarget(replacedActions, target);
             }
 
@@ -395,7 +395,7 @@ internal partial class SCH : Healer
             if (IsEnabled(Preset.SCH_AoE_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow && CanWeave())
                 return Aetherflow;
 
-            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_BanefulImpact) && LocalPlayer.HasStatus(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
                 return BanefulImpaction;
 
             if (IsEnabled(Preset.SCH_AoE_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem &&
@@ -447,7 +447,7 @@ internal partial class SCH : Healer
             
             bool cleansableTarget =
                 HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
-                HasCleansableDebuff(healTarget);
+                healTarget.HasCleansableDebuff;
 
             if (IsEnabled(Preset.SCH_ST_Heal_Esuna) &&
                 ActionReady(Role.Esuna) && cleansableTarget &&
@@ -619,7 +619,7 @@ internal partial class SCH : Healer
             if (ActionReady(Recitation))
                 return Recitation;
 
-            if (!HasStatusEffect(Buffs.Recitation) || !ActionReady(Recitation))
+            if (!LocalPlayer.HasStatus(Buffs.Recitation) || !ActionReady(Recitation))
             {
                 if (SCH_Recitation_Mode == 1 && ActionReady(OriginalHook(Succor)))
                     return OriginalHook(Succor);
@@ -675,7 +675,7 @@ internal partial class SCH : Healer
 
             if (IsEnabled(Preset.SCH_Aetherflow_Recite) &&
                 ActionLearned(Recitation) &&
-                (IsOffCooldown(Recitation) || HasStatusEffect(Buffs.Recitation)))
+                (IsOffCooldown(Recitation) || LocalPlayer.HasStatus(Buffs.Recitation)))
             {
                 //Recitation Indominability and Excogitation, with optional check against AF zero stack count
                 bool alwaysShowReciteExcog = SCH_Aetherflow_Recite_ExcogMode == 1;
@@ -685,7 +685,7 @@ internal partial class SCH : Healer
                      !alwaysShowReciteExcog && !hasAetherFlows) && actionID is Excogitation)
                 {
                     //Do not merge this nested if with above. Won't procede with next set
-                    return HasStatusEffect(Buffs.Recitation) && IsOffCooldown(Excogitation)
+                    return LocalPlayer.HasStatus(Buffs.Recitation) && IsOffCooldown(Excogitation)
                         ? Excogitation
                         : Recitation;
                 }
@@ -697,7 +697,7 @@ internal partial class SCH : Healer
                      !alwaysShowReciteIndom && !hasAetherFlows) && actionID is Indomitability)
                 {
                     //Same as above, do not nest with above. It won't procede with the next set
-                    return HasStatusEffect(Buffs.Recitation) && IsOffCooldown(Excogitation)
+                    return LocalPlayer.HasStatus(Buffs.Recitation) && IsOffCooldown(Excogitation)
                         ? Indomitability
                         : Recitation;
                 }
@@ -761,7 +761,7 @@ internal partial class SCH : Healer
             IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
 
             //Check for the Galvanize shield buff. Start applying if it doesn't exist
-            if (!HasStatusEffect(Buffs.Galvanize, healStack))
+            if (!healStack.HasStatus(Buffs.Galvanize))
             {
                 if (IsEnabled(Preset.SCH_DeploymentTactics_Recitation) && ActionReady(Recitation))
                     return Recitation;
@@ -828,14 +828,14 @@ internal partial class SCH : Healer
                 return Recitation;
 
             if (ActionReady(Adloquium) &&
-                !HasStatusEffect(Buffs.Galvanize, healStack))
+                !healStack.HasStatus(Buffs.Galvanize))
                 return IsEnabled(Preset.SCH_Retarget_Adloquium)
                 ? OriginalHook(Adloquium).Retarget(Protraction, healStack)
                 : OriginalHook(Adloquium);
 
             if (SCH_Mit_STOptions[1] &&
                 ActionReady(DeploymentTactics) &&
-                HasStatusEffect(Buffs.Catalyze, healStack))
+                healStack.HasStatus(Buffs.Catalyze))
                 return IsEnabled(Preset.SCH_Retarget_DeploymentTactics)
                     ? DeploymentTactics.Retarget(Protraction, healStack)
                     : DeploymentTactics;
@@ -879,15 +879,15 @@ internal partial class SCH : Healer
                 if (ActionReady(Recitation) && ActionReady(DeploymentTactics))
                     return Recitation;
 
-                if (HasStatusEffect(Buffs.Recitation))
+                if (LocalPlayer.HasStatus(Buffs.Recitation))
                     return Adloquium.Retarget(SacredSoil, SimpleTarget.Self);
 
-                if (ActionReady(DeploymentTactics) && HasStatusEffect(Buffs.Catalyze))
+                if (ActionReady(DeploymentTactics) && LocalPlayer.HasStatus(Buffs.Catalyze))
                     return DeploymentTactics.Retarget(SacredSoil, SimpleTarget.Self);
             }
 
-            if (!HasStatusEffect(Buffs.Galvanize) &&
-                !HasStatusEffect(SGE.Buffs.EukrasianPrognosis))
+            if (!LocalPlayer.HasStatus(Buffs.Galvanize) &&
+                !LocalPlayer.HasStatus(SGE.Buffs.EukrasianPrognosis))
                 return OriginalHook(Succor);
 
             if (SCH_Mit_AoEOptions[2] &&

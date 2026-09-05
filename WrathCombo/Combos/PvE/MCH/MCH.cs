@@ -3,6 +3,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.MCH.Config;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class MCH : PhysicalRanged
@@ -53,8 +54,8 @@ internal partial class MCH : PhysicalRanged
                         return actionID;
 
                     if (ActionReady(Dismantle) &&
-                        !HasStatusEffect(Debuffs.Dismantled, CurrentTarget, true) &&
-                        CanApplyStatus(CurrentTarget, Debuffs.Dismantled) &&
+                        !CurrentTarget.HasStatus(Debuffs.Dismantled, true) &&
+                        CurrentTarget.CanApplyStatus(Debuffs.Dismantled) &&
                         !JustUsed(Tactician, 6) && GroupDamageIncoming())
                         return Dismantle;
 
@@ -91,7 +92,7 @@ internal partial class MCH : PhysicalRanged
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpreadShot, Scattergun))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
+            if (LocalPlayer.HasStatus(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
                 return All.Cease;
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
@@ -136,7 +137,7 @@ internal partial class MCH : PhysicalRanged
                     return FullMetalField;
 
                 if (ActionReady(Flamethrower) &&
-                    !HasStatusEffect(Buffs.Reassembled) &&
+                    !LocalPlayer.HasStatus(Buffs.Reassembled) &&
                     !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(3))
                     return Flamethrower;
 
@@ -238,14 +239,14 @@ internal partial class MCH : PhysicalRanged
 
                     if (IsEnabled(Preset.MCH_ST_Dismantle) &&
                         ActionReady(Dismantle) && GroupDamageIncoming() &&
-                        !JustUsed(Tactician, 6) && CanApplyStatus(CurrentTarget, Debuffs.Dismantled) &&
-                        GetStatusEffectRemainingTime(Debuffs.Dismantled, CurrentTarget, true) > MCH_DismantledDuration)
+                        !JustUsed(Tactician, 6) && CurrentTarget.CanApplyStatus(Debuffs.Dismantled) &&
+                        CurrentTarget.Status(Debuffs.Dismantled, true).RemainingTimeOrZero() > MCH_DismantledDuration)
                         return Dismantle;
 
                     if (IsEnabled(Preset.MCH_ST_Adv_Tactician) &&
                         ActionReady(Tactician) && GroupDamageIncoming() &&
                         !JustUsed(Dismantle, 6) && NumberOfAlliesInRange(Tactician) >= GetPartyMembers().Count * .75 &&
-                        !HasStatusEffects([BRD.Buffs.Troubadour, DNC.Buffs.ShieldSamba, Buffs.Tactician], anyOwner: true))
+                        !LocalPlayer.HasStatusEffects([BRD.Buffs.Troubadour, DNC.Buffs.ShieldSamba, Buffs.Tactician], true))
                         return Tactician;
 
                     if (IsEnabled(Preset.MCH_ST_Adv_SecondWind) &&
@@ -312,7 +313,7 @@ internal partial class MCH : PhysicalRanged
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpreadShot, Scattergun))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
+            if (LocalPlayer.HasStatus(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
                 return All.Cease;
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
@@ -373,7 +374,7 @@ internal partial class MCH : PhysicalRanged
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_FlameThrower) &&
                     ActionReady(Flamethrower) &&
-                    !HasStatusEffect(Buffs.Reassembled) &&
+                    !LocalPlayer.HasStatus(Buffs.Reassembled) &&
                     (MCH_AoE_FlamethrowerMovement == 1 ||
                      MCH_AoE_FlamethrowerMovement == 0 && !IsMoving() &&
                      TimeStoodStill > TimeSpan.FromSeconds(MCH_AoE_FlamethrowerTimeStill)) &&
@@ -422,7 +423,7 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not Dismantle)
                 return actionID;
 
-            return HasStatusEffect(Debuffs.Dismantled, CurrentTarget, true) && IsOffCooldown(Dismantle)
+            return CurrentTarget.HasStatus(Debuffs.Dismantled, true) && IsOffCooldown(Dismantle)
                 ? All.Cease
                 : actionID;
         }
@@ -438,7 +439,7 @@ internal partial class MCH : PhysicalRanged
                 return actionID;
 
             return (IsOnCooldown(Dismantle) || !ActionLearned(Dismantle) || !HasBattleTarget()) &&
-                   ActionReady(Tactician) && !HasStatusEffect(Buffs.Tactician)
+                   ActionReady(Tactician) && !LocalPlayer.HasStatus(Buffs.Tactician)
                 ? Tactician
                 : actionID;
         }
@@ -455,17 +456,17 @@ internal partial class MCH : PhysicalRanged
 
             if (IsEnabled(Preset.MCH_Heatblast_AutoBarrel) &&
                 ActionReady(BarrelStabilizer) && !IsOverheated &&
-                !HasStatusEffect(Buffs.FullMetalMachinist))
+                !LocalPlayer.HasStatus(Buffs.FullMetalMachinist))
                 return BarrelStabilizer;
 
             if (IsEnabled(Preset.MCH_Heatblast_Wildfire) &&
                 ActionReady(Wildfire) && JustUsed(Hypercharge) &&
-                !HasStatusEffect(Buffs.Wildfire) &&
-                CanApplyStatus(CurrentTarget, Debuffs.Wildfire))
+                !LocalPlayer.HasStatus(Buffs.Wildfire) &&
+                CurrentTarget.CanApplyStatus(Debuffs.Wildfire))
                 return Wildfire;
 
             if (!IsOverheated &&
-                (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)))
+                (ActionReady(Hypercharge) || LocalPlayer.HasStatus(Buffs.Hypercharged)))
                 return Hypercharge;
 
             if (IsEnabled(Preset.MCH_Heatblast_GaussRound) &&
@@ -491,11 +492,11 @@ internal partial class MCH : PhysicalRanged
 
             if (IsEnabled(Preset.MCH_AutoCrossbow_AutoBarrel) &&
                 ActionReady(BarrelStabilizer) && !IsOverheated &&
-                !HasStatusEffect(Buffs.FullMetalMachinist))
+                !LocalPlayer.HasStatus(Buffs.FullMetalMachinist))
                 return BarrelStabilizer;
 
             if (!IsOverheated &&
-                (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)))
+                (ActionReady(Hypercharge) || LocalPlayer.HasStatus(Buffs.Hypercharged)))
                 return Hypercharge;
 
             if (IsEnabled(Preset.MCH_AutoCrossbow_GaussRound) &&
@@ -536,7 +537,7 @@ internal partial class MCH : PhysicalRanged
 
             return actionID switch
             {
-                HotShot when ActionLearned(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) => CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill),
+                HotShot when ActionLearned(Excavator) && LocalPlayer.HasStatus(Buffs.ExcavatorReady) => CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill),
                 HotShot when ActionLearned(Chainsaw) => CalcBestAction(actionID, Chainsaw, AirAnchor, Drill),
                 HotShot when ActionLearned(AirAnchor) => CalcBestAction(actionID, AirAnchor, Drill),
                 HotShot when ActionLearned(Drill) => CalcBestAction(actionID, Drill, HotShot),

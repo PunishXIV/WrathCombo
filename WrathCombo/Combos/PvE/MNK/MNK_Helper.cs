@@ -8,6 +8,7 @@ using WrathCombo.CustomComboNS.Functions;
 using static ECommons.DalamudServices.Svc;
 using static WrathCombo.Combos.PvE.MNK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 using static MNKExtensions;
@@ -18,7 +19,7 @@ internal partial class MNK
 
     private static bool DoPerfectBalanceCombo(ref uint actionID, bool onAoE = false)
     {
-        if (!HasStatusEffect(Buffs.PerfectBalance))
+        if (!LocalPlayer.HasStatus(Buffs.PerfectBalance))
             return false;
 
         if (onAoE)
@@ -109,12 +110,13 @@ internal partial class MNK
 
     private static uint DoBasicCombo(bool useTrueNorth = true, bool onAoE = false, int trueNorthCharges = 0)
     {
+        int tnCharges = IsNotEnabled(Preset.MNK_ST_SimpleMode) ? MNK_ManualTN : 0;
         if (onAoE)
         {
-            if (HasStatusEffect(Buffs.OpoOpoForm))
+            if (LocalPlayer.HasStatus(Buffs.OpoOpoForm))
                 return OriginalHook(ArmOfTheDestroyer);
 
-            if (HasStatusEffect(Buffs.RaptorForm))
+            if (LocalPlayer.HasStatus(Buffs.RaptorForm))
             {
                 if (ActionLearned(FourPointFury))
                     return FourPointFury;
@@ -123,7 +125,7 @@ internal partial class MNK
                     return TwinSnakes;
             }
 
-            if (HasStatusEffect(Buffs.CoeurlForm) && ActionLearned(Rockbreaker))
+            if (LocalPlayer.HasStatus(Buffs.CoeurlForm) && ActionLearned(Rockbreaker))
                 return Rockbreaker;
 
             return OriginalHook(ArmOfTheDestroyer);
@@ -132,13 +134,13 @@ internal partial class MNK
         if (!ActionLearned(TrueStrike))
             return Bootshine;
 
-        if (HasStatusEffect(Buffs.OpoOpoForm) || HasStatusEffect(Buffs.FormlessFist))
+        if (LocalPlayer.HasStatus(Buffs.OpoOpoForm) || LocalPlayer.HasStatus(Buffs.FormlessFist))
             return OpoFormGCD();
 
-        if (HasStatusEffect(Buffs.RaptorForm))
+        if (LocalPlayer.HasStatus(Buffs.RaptorForm))
             return RaptorFormGCD();
 
-        if (HasStatusEffect(Buffs.CoeurlForm))
+        if (LocalPlayer.HasStatus(Buffs.CoeurlForm))
         {
             if (CoeurlStacks is 0 && ActionLearned(Demolish))
                 return !OnTargetsRear() &&
@@ -208,8 +210,8 @@ internal partial class MNK
 
     private static bool ShouldUsePostRoFLunarOddPerfectBalance(bool useOpenerBalance) =>
         IsDoubleLunarOpener(useOpenerBalance) &&
-        HasStatusEffect(Buffs.RiddleOfFire) &&
-        !HasStatusEffect(Buffs.Brotherhood);
+        LocalPlayer.HasStatus(Buffs.RiddleOfFire) &&
+        !LocalPlayer.HasStatus(Buffs.Brotherhood);
 
     private static bool HasUsedBlitzRecently(float window) =>
         JustUsed(ElixirBurst, window) || JustUsed(RisingPhoenix, window) ||
@@ -235,10 +237,10 @@ internal partial class MNK
         if (useFiresReply && ActionLearned(FiresReply))
             return false;
 
-        if (!HasStatusEffect(Buffs.Brotherhood) || !HasStatusEffect(Buffs.RiddleOfFire))
+        if (!LocalPlayer.HasStatus(Buffs.Brotherhood) || !LocalPlayer.HasStatus(Buffs.RiddleOfFire))
             return false;
 
-        if (HasStatusEffect(Buffs.PerfectBalance) || HasStatusEffect(Buffs.FormlessFist))
+        if (LocalPlayer.HasStatus(Buffs.PerfectBalance) || LocalPlayer.HasStatus(Buffs.FormlessFist))
             return false;
 
         if (!IsOriginal(MasterfulBlitz) || GetRemainingCharges(PerfectBalance) >= GetMaxCharges(PerfectBalance))
@@ -247,7 +249,7 @@ internal partial class MNK
         if (!HasUsedBlitzRecently(GCD * 12))
             return false;
 
-        if (HasStatusEffect(Buffs.FiresRumination) ||
+        if (LocalPlayer.HasStatus(Buffs.FiresRumination) ||
             JustUsed(FiresReply, GCD * 12))
             return false;
 
@@ -262,7 +264,7 @@ internal partial class MNK
 
     private static bool ShouldUseSecondPerfectBalance(bool useFiresReply)
     {
-        if (!HasStatusEffect(Buffs.Brotherhood) || !HasStatusEffect(Buffs.RiddleOfFire))
+        if (!LocalPlayer.HasStatus(Buffs.Brotherhood) || !LocalPlayer.HasStatus(Buffs.RiddleOfFire))
             return false;
 
         if (!IsOriginal(MasterfulBlitz))
@@ -275,7 +277,7 @@ internal partial class MNK
             return false;
 
         if (useFiresReply && ActionLearned(FiresReply))
-            return JustUsed(FiresReply, GCD * 6) && !HasStatusEffect(Buffs.FiresRumination);
+            return JustUsed(FiresReply, GCD * 6) && !LocalPlayer.HasStatus(Buffs.FiresRumination);
 
         return HasElapsedSinceBlitz(2.5f);
     }
@@ -299,14 +301,14 @@ internal partial class MNK
 
     private static bool IsBurstHoldReleaseReady()
     {
-        if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
-            HasStatusEffect(Buffs.FormlessFist) || JustUsed(PerfectBalance))
+        if (!ActionReady(PerfectBalance) || LocalPlayer.HasStatus(Buffs.PerfectBalance) ||
+            LocalPlayer.HasStatus(Buffs.FormlessFist) || JustUsed(PerfectBalance))
             return false;
 
         if (!ActionReady(Brotherhood) || !ActionReady(RiddleOfFire))
             return false;
 
-        if (HasStatusEffect(Buffs.Brotherhood) || HasStatusEffect(Buffs.RiddleOfFire))
+        if (LocalPlayer.HasStatus(Buffs.Brotherhood) || LocalPlayer.HasStatus(Buffs.RiddleOfFire))
             return false;
 
         if (IsRoFInPerfectBalanceWindow())
@@ -325,8 +327,8 @@ internal partial class MNK
         if (isBurstHolding && !IsBurstHoldReleaseReady())
             return false;
 
-        if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
-            HasStatusEffect(Buffs.FormlessFist) || !IsOriginal(MasterfulBlitz) ||
+        if (!ActionReady(PerfectBalance) || LocalPlayer.HasStatus(Buffs.PerfectBalance) ||
+            LocalPlayer.HasStatus(Buffs.FormlessFist) || !IsOriginal(MasterfulBlitz) ||
             !HasBattleTarget() || JustUsed(PerfectBalance) || !JustUsedOpoGCD(GCD, onAoE))
             return false;
 
@@ -354,7 +356,7 @@ internal partial class MNK
             return true;
 
         if (!ActionLearned(RiddleOfFire) ||
-            HasStatusEffect(Buffs.RiddleOfFire) && !ActionLearned(Brotherhood))
+            LocalPlayer.HasStatus(Buffs.RiddleOfFire) && !ActionLearned(Brotherhood))
             return JustUsedOpoGCD(GCD * 3, onAoE);
 
         return onAoE && UsePerfectBalanceMaxChargeAoE();
@@ -395,17 +397,17 @@ internal partial class MNK
 
     private static bool UseMantra() =>
         ActionReady(Mantra) &&
-        !HasStatusEffect(Buffs.Mantra) &&
+        !LocalPlayer.HasStatus(Buffs.Mantra) &&
         GroupDamageIncoming(3f);
 
     private static bool UseRoE() =>
         ActionReady(OriginalHook(RiddleOfEarth)) &&
         GroupDamageIncoming(2f) &&
-        !HasStatusEffect(Buffs.RiddleOfEarth) &&
-        !HasStatusEffect(Buffs.EarthsRumination);
+        !LocalPlayer.HasStatus(Buffs.RiddleOfEarth) &&
+        !LocalPlayer.HasStatus(Buffs.EarthsRumination);
 
     private static bool UseEarthsReply(int earthsReplyHpThreshold = 25) =>
-        HasStatusEffect(Buffs.EarthsRumination) &&
+        LocalPlayer.HasStatus(Buffs.EarthsRumination) &&
         NumberOfAlliesInRange(EarthsReply) >= GetPartyMembers().Count * .75 &&
         GetPartyAvgHPPercent() <= earthsReplyHpThreshold;
 
@@ -424,7 +426,7 @@ internal partial class MNK
         if (onAoE)
             return true;
 
-        if (HasStatusEffect(Buffs.RiddleOfFire))
+        if (LocalPlayer.HasStatus(Buffs.RiddleOfFire))
             return true;
 
         return !ActionLearned(RiddleOfFire);
@@ -435,7 +437,7 @@ internal partial class MNK
         if (!ActionLearned(MasterfulBlitz) || !InMasterfulRange() || IsOriginal(MasterfulBlitz))
             return false;
 
-        if (HasStatusEffect(Buffs.PerfectBalance))
+        if (LocalPlayer.HasStatus(Buffs.PerfectBalance))
             return true;
 
         return ShouldSpendMasterfulBlitz(onAoE);
@@ -453,11 +455,11 @@ internal partial class MNK
 
     private static bool UseFormshift() =>
         ActionLearned(FormShift) && !InCombat() &&
-        !HasStatusEffect(Buffs.FormlessFist) &&
-        !HasStatusEffect(Buffs.PerfectBalance) &&
-        !HasStatusEffect(Buffs.OpoOpoForm) &&
-        !HasStatusEffect(Buffs.RaptorForm) &&
-        !HasStatusEffect(Buffs.CoeurlForm);
+        !LocalPlayer.HasStatus(Buffs.FormlessFist) &&
+        !LocalPlayer.HasStatus(Buffs.PerfectBalance) &&
+        !LocalPlayer.HasStatus(Buffs.OpoOpoForm) &&
+        !LocalPlayer.HasStatus(Buffs.RaptorForm) &&
+        !LocalPlayer.HasStatus(Buffs.CoeurlForm);
 
     private static bool UseMeditate(bool onAoE = false)
     {
@@ -468,9 +470,9 @@ internal partial class MNK
                (!InCombat() || NumberOfEnemiesInRange(rangeCheck) < 1) &&
                Chakra < 5 &&
                IsOriginal(MasterfulBlitz) &&
-               !HasStatusEffect(Buffs.RiddleOfFire) &&
-               !HasStatusEffect(Buffs.WindsRumination) &&
-               !HasStatusEffect(Buffs.FiresRumination);
+               !LocalPlayer.HasStatus(Buffs.RiddleOfFire) &&
+               !LocalPlayer.HasStatus(Buffs.WindsRumination) &&
+               !LocalPlayer.HasStatus(Buffs.FiresRumination);
     }
 
     private static bool UseChakra(bool onAoE = false)
@@ -478,7 +480,7 @@ internal partial class MNK
         if (UseBrotherhood() || UseRoF())
             return false;
 
-        if (!HasStatusEffect(Buffs.Brotherhood) &&
+        if (!LocalPlayer.HasStatus(Buffs.Brotherhood) &&
             ActionReady(RiddleOfFire) && ActionLearned(Brotherhood) &&
             GetCooldownRemainingTime(Brotherhood) <= GCD)
             return false;
@@ -499,45 +501,45 @@ internal partial class MNK
     private static bool UseRoF() =>
         !IsBurstHoldReleaseReady() &&
         ActionReady(RiddleOfFire) &&
-        !HasStatusEffect(Buffs.FiresRumination) &&
-        !HasStatusEffect(Buffs.RiddleOfFire) &&
+        !LocalPlayer.HasStatus(Buffs.FiresRumination) &&
+        !LocalPlayer.HasStatus(Buffs.RiddleOfFire) &&
         (!ActionLearned(Brotherhood) ||
          JustUsed(Brotherhood, GCD * 5) ||
-         HasStatusEffect(Buffs.Brotherhood) ||
+         LocalPlayer.HasStatus(Buffs.Brotherhood) ||
          GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 ||
          !ActionLearned(Brotherhood));
 
     private static bool UseFiresReply(bool onAoE = false) =>
         ActionLearned(FiresReply) &&
-        HasStatusEffect(Buffs.FiresRumination) &&
-        !HasStatusEffect(Buffs.FormlessFist) &&
+        LocalPlayer.HasStatus(Buffs.FiresRumination) &&
+        !LocalPlayer.HasStatus(Buffs.FormlessFist) &&
         IsOriginal(MasterfulBlitz) &&
         InActionRange(FiresReply) &&
         !JustUsed(RiddleOfFire, GCD) &&
-        !HasStatusEffect(Buffs.PerfectBalance) &&
+        !LocalPlayer.HasStatus(Buffs.PerfectBalance) &&
         (JustUsedOpoGCD(GCD * 1.5f, onAoE) ||
-         GetStatusEffectRemainingTime(Buffs.FiresRumination) < GCD * 2 ||
+         LocalPlayer.Status(Buffs.FiresRumination).RemainingTimeOrZero() < GCD * 2 ||
          !InMeleeRange());
 
     private static bool UseBrotherhood() =>
         !IsBurstHoldReleaseReady() &&
         ActionReady(Brotherhood) &&
         ActionReady(RiddleOfFire) &&
-        !HasStatusEffect(Buffs.Brotherhood) &&
+        !LocalPlayer.HasStatus(Buffs.Brotherhood) &&
         (InBossEncounter() || TimeStoodStill.Seconds >= 2);
 
     private static bool UseRoW() =>
         ActionReady(RiddleOfWind) &&
-        !HasStatusEffect(Buffs.WindsRumination);
+        !LocalPlayer.HasStatus(Buffs.WindsRumination);
 
     private static bool UseWindsReply() =>
-        HasStatusEffect(Buffs.WindsRumination) &&
+        LocalPlayer.HasStatus(Buffs.WindsRumination) &&
         InActionRange(WindsReply) &&
-        (GetStatusEffectRemainingTime(Buffs.WindsRumination) <= 3f ||
-         !HasStatusEffect(Buffs.FiresRumination) &&
+        (LocalPlayer.Status(Buffs.WindsRumination).RemainingTimeOrZero() <= 3f ||
+         !LocalPlayer.HasStatus(Buffs.FiresRumination) &&
          (GetCooldownRemainingTime(RiddleOfFire) > 10 ||
-          HasStatusEffect(Buffs.RiddleOfFire) ||
-          GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
+          LocalPlayer.HasStatus(Buffs.RiddleOfFire) ||
+          LocalPlayer.Status(Buffs.WindsRumination).RemainingTimeOrZero() < GCD * 2 ||
           !InMeleeRange()));
 
     #endregion
@@ -584,7 +586,7 @@ internal partial class MNK
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
-            ([2], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift))
+            ([2], () => LocalPlayer.HasStatus(Buffs.FormlessFist) || JustUsed(FormShift))
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
@@ -699,7 +701,7 @@ internal partial class MNK
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
-            ([2], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift)),
+            ([2], () => LocalPlayer.HasStatus(Buffs.FormlessFist) || JustUsed(FormShift)),
             ([11], () => Chakra < 5)
         ];
     }
@@ -739,7 +741,7 @@ internal partial class MNK
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
-            ([2], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift)),
+            ([2], () => LocalPlayer.HasStatus(Buffs.FormlessFist) || JustUsed(FormShift)),
             ([11], () => Chakra < 5)
         ];
     }
@@ -778,7 +780,7 @@ internal partial class MNK
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => Chakra >= 5),
-            ([2], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift)),
+            ([2], () => LocalPlayer.HasStatus(Buffs.FormlessFist) || JustUsed(FormShift)),
             ([10], () => Chakra < 5)
         ];
 

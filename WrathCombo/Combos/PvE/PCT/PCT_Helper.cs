@@ -7,6 +7,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.PCT.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 #endregion
 
 namespace WrathCombo.Combos.PvE;
@@ -16,9 +17,9 @@ internal partial class PCT
     #region Variables
     internal static PCTGauge gauge = GetJobGauge<PCTGauge>();
     internal static bool HasPaint => gauge.Paint > 0;
-    internal static bool CreatureMotifReady => !gauge.CreatureMotifDrawn && ActionLearned(CreatureMotif) && !HasStatusEffect(Buffs.StarryMuse);
-    internal static bool WeaponMotifReady => !gauge.WeaponMotifDrawn && ActionLearned(WeaponMotif) && !HasStatusEffect(Buffs.StarryMuse) && !HasStatusEffect(Buffs.HammerTime);
-    internal static bool LandscapeMotifReady => !gauge.LandscapeMotifDrawn && ActionLearned(LandscapeMotif) && !HasStatusEffect(Buffs.StarryMuse);
+    internal static bool CreatureMotifReady => !gauge.CreatureMotifDrawn && ActionLearned(CreatureMotif) && !LocalPlayer.HasStatus(Buffs.StarryMuse);
+    internal static bool WeaponMotifReady => !gauge.WeaponMotifDrawn && ActionLearned(WeaponMotif) && !LocalPlayer.HasStatus(Buffs.StarryMuse) && !LocalPlayer.HasStatus(Buffs.HammerTime);
+    internal static bool LandscapeMotifReady => !gauge.LandscapeMotifDrawn && ActionLearned(LandscapeMotif) && !LocalPlayer.HasStatus(Buffs.StarryMuse);
     internal static float ScenicCD => GetCooldownRemainingTime(StarryMuse);
     internal static float SteelCD => GetCooldownRemainingTime(StrikingMuse);
     #endregion
@@ -114,13 +115,13 @@ internal partial class PCT
         
         bool scenicMuseReady = ActionReady(OriginalHook(ScenicMuse)) && gauge.LandscapeMotifDrawn; 
         bool livingMuseReady = ActionReady(OriginalHook(LivingMuse)) && gauge.CreatureMotifDrawn;
-        bool steelMuseReady = ActionReady(OriginalHook(SteelMuse))  && gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime);
+        bool steelMuseReady = ActionReady(OriginalHook(SteelMuse))  && gauge.WeaponMotifDrawn && !LocalPlayer.HasStatus(Buffs.HammerTime);
         bool portraitReady = ActionReady(OriginalHook(MogoftheAges)) && (gauge.MooglePortraitReady || gauge.MadeenPortraitReady); //Check for either portrait being ready
         bool paletteReady = ActionLearned(SubtractivePalette) && 
-                            !HasStatusEffect(Buffs.SubtractivePalette) && !HasStatusEffect(Buffs.MonochromeTones) && //Don't overwrite self of comet in black
-                                         (HasStatusEffect(Buffs.SubtractiveSpectrum) || //Free use from Starry Muse
+                            !LocalPlayer.HasStatus(Buffs.SubtractivePalette) && !LocalPlayer.HasStatus(Buffs.MonochromeTones) && //Don't overwrite self of comet in black
+                                         (LocalPlayer.HasStatus(Buffs.SubtractiveSpectrum) || //Free use from Starry Muse
                                           gauge.PalleteGauge >= 50 && ScenicCD > 35 || //Use freely before pooling
-                                          gauge.PalleteGauge == 100 && HasStatusEffect(Buffs.Aetherhues2)||  //Pool but don't overcap
+                                          gauge.PalleteGauge == 100 && LocalPlayer.HasStatus(Buffs.Aetherhues2)||  //Pool but don't overcap
                                           gauge.PalleteGauge >= 50 && ScenicCD < 3 && scenicMuseEnabled); //Use As it is time to start buff window
 
         bool almostCappedOrCappedSteelMuse = GetRemainingCharges(SteelMuse) == GetMaxCharges(SteelMuse) ||
@@ -162,7 +163,7 @@ internal partial class PCT
             // SteelMuse
             if (steelMuseEnabled && steelMuseReady && 
                 (TargetIsBoss() && GetTargetHPPercent() < burnBossThreshold || //Burn Boss Threshold
-                 HasStatusEffect(Buffs.StarryMuse) && CanWeave() || //Use in burst if you need to
+                 LocalPlayer.HasStatus(Buffs.StarryMuse) && CanWeave() || //Use in burst if you need to
                  hammerStampMovementEnabled && IsMoving() && ScenicCD >= 30  || //Use When Moving but not if itll get in way of burst
                  !hammerStampMovementEnabled && ScenicCD > SteelCD && ScenicCD >= 40|| //
                  almostCappedOrCappedSteelMuse && CanWeave() || //Use because Capped
@@ -222,7 +223,7 @@ internal partial class PCT
                     
             if (ActionLearned(TemperaGrassa) && IsInParty() &&
                 NumberOfAlliesInRange(TemperaGrassa) >= GetPartyMembers().Count * .75 && //75% of group in range for Spreading your Tempura
-                HasStatusEffect(Buffs.TempuraCoat))
+                LocalPlayer.HasStatus(Buffs.TempuraCoat))
             {
                 actionID = TemperaGrassa;
                 return true;
@@ -276,32 +277,32 @@ internal partial class PCT
 
         if (!movementEnabled || !IsMoving() || !InCombat()) return false; //Quick Bailout
         
-        if (rainbowDripEnabled && HasStatusEffect(Buffs.RainbowBright)) //Needs to be here in case you are moving in back half of Burst window
+        if (rainbowDripEnabled && LocalPlayer.HasStatus(Buffs.RainbowBright)) //Needs to be here in case you are moving in back half of Burst window
         {
             actionID = OriginalHook(RainbowDrip);
             return true;
         }
 
-        if (hammerStampEnabled && ActionLearned(HammerStamp) && !HasStatusEffect(Buffs.Hyperphantasia) &&
-            HasStatusEffect(Buffs.HammerTime))
+        if (hammerStampEnabled && ActionLearned(HammerStamp) && !LocalPlayer.HasStatus(Buffs.Hyperphantasia) &&
+            LocalPlayer.HasStatus(Buffs.HammerTime))
         {
             actionID = OriginalHook(HammerStamp);
             return true;
         }
         
-        if (starPrismEnabled && HasStatusEffect(Buffs.Starstruck)) //Move with Starstruck, will spend Hyper Fantasia
+        if (starPrismEnabled && LocalPlayer.HasStatus(Buffs.Starstruck)) //Move with Starstruck, will spend Hyper Fantasia
         {
             actionID = StarPrism;
             return true;
         }
 
-        if (cometInBlackEnabled && HasStatusEffect(Buffs.MonochromeTones) && HasPaint) //Move with Comet, will spend Hyper Fantasia
+        if (cometInBlackEnabled && LocalPlayer.HasStatus(Buffs.MonochromeTones) && HasPaint) //Move with Comet, will spend Hyper Fantasia
         {
             actionID = OriginalHook(CometinBlack);
             return true;
         }
 
-        if (swiftcastEnabled && ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.StarryMuse) &&
+        if (swiftcastEnabled && ActionReady(Role.Swiftcast) && !LocalPlayer.HasStatus(Buffs.StarryMuse) &&
             (CreatureMotifReady || WeaponMotifReady || LandscapeMotifReady))
         {
             actionID = Role.Swiftcast;
@@ -359,7 +360,7 @@ internal partial class PCT
         #endregion
         
         //Star Prism
-        if (starPrismEnabled && HasStatusEffect(Buffs.Starstruck) && 
+        if (starPrismEnabled && LocalPlayer.HasStatus(Buffs.Starstruck) && 
             !JustUsed(StarryMuse)) //Buff propagation issue prevention
         {
             actionID = StarPrism;
@@ -367,16 +368,16 @@ internal partial class PCT
         }
 
         //Rainbow Drip
-        if (rainbowDripEnabled && HasStatusEffect(Buffs.RainbowBright)) 
+        if (rainbowDripEnabled && LocalPlayer.HasStatus(Buffs.RainbowBright)) 
         {
             actionID = RainbowDrip;
             return true;
         }
        
         //Comet in Black
-        if (cometInBlackEnabled && HasStatusEffect(Buffs.MonochromeTones) && HasPaint && 
+        if (cometInBlackEnabled && LocalPlayer.HasStatus(Buffs.MonochromeTones) && HasPaint && 
             !JustUsed(StarryMuse) && //Buff propagation issue prevention
-            (!HasStatusEffect(Buffs.StarryMuse) || HasStatusEffect(Buffs.Hyperphantasia)) && //Only use for hyperfantasia in the window
+            (!LocalPlayer.HasStatus(Buffs.StarryMuse) || LocalPlayer.HasStatus(Buffs.Hyperphantasia)) && //Only use for hyperfantasia in the window
             (ScenicCD > 10 || !ActionLearned(ScenicMuse) || !scenicMuseEnabled)) //Hold for Buffs if close
         {
             actionID = OriginalHook(CometinBlack);
@@ -385,11 +386,11 @@ internal partial class PCT
         
         //Hammer Stamp Combo
         if (hammerStampComboEnabled && ActionReady(OriginalHook(HammerStamp)) &&
-            !HasStatusEffect(Buffs.Hyperphantasia) && //Dont use until hyperfantasia is spent
+            !LocalPlayer.HasStatus(Buffs.Hyperphantasia) && //Dont use until hyperfantasia is spent
             (ScenicCD >= 10 || !ActionLearned(ScenicMuse)) &&  // Dont use if close to window. 
             (TargetIsBoss() && GetTargetHPPercent() < burnBossThreshold || //Burn Boss Threshold
-             HasStatusEffect(Buffs.StarryMuse) || //Use in window
-             GetStatusEffectRemainingTime(Buffs.HammerTime) <= TimeRemainingToUseHammer || //Use when time is almost up on Hammer time
+             LocalPlayer.HasStatus(Buffs.StarryMuse) || //Use in window
+             LocalPlayer.Status(Buffs.HammerTime).RemainingTimeOrZero() <= TimeRemainingToUseHammer || //Use when time is almost up on Hammer time
              ScenicCD <= 30)) //But dont hold so long you mess with burst prep
         {
             actionID = OriginalHook(HammerStamp);
@@ -470,7 +471,7 @@ internal partial class PCT
             if (creatureEnabled && CreatureMotifReady &&
                 (prepullEnabled && !InCombat() || //Prepull Motifs
                  noTargetEnabled && InCombat() && CurrentTarget == null || //Downtime Motifs
-                 swiftcastEnabled && HasStatusEffect(Role.Buffs.Swiftcast) && creatureHealthCheck || //Swiftcast Motifs
+                 swiftcastEnabled && LocalPlayer.HasStatus(Role.Buffs.Swiftcast) && creatureHealthCheck || //Swiftcast Motifs
                  ActionLearned(ScenicMuse) && ScenicCD <= 20 && creatureHealthCheck || //Burst Prep
                  hasLivingMuseCharges && creatureHealthCheck)) //Standard Use
             {
@@ -481,7 +482,7 @@ internal partial class PCT
             if (weaponEnabled && WeaponMotifReady &&
                 (prepullEnabled && !InCombat() || //Prepull Motifs
                  noTargetEnabled && InCombat() && CurrentTarget == null || //Downtime Motifs
-                 swiftcastEnabled && HasStatusEffect(Role.Buffs.Swiftcast) && weaponHealthCheck || //Swiftcast Motifs
+                 swiftcastEnabled && LocalPlayer.HasStatus(Role.Buffs.Swiftcast) && weaponHealthCheck || //Swiftcast Motifs
                  ActionLearned(ScenicMuse) && ScenicCD <= 20 && weaponHealthCheck || //Burst Prep
                  hasSteelMuseCharges && weaponHealthCheck)) //Standard Use
             {
@@ -492,7 +493,7 @@ internal partial class PCT
             if (landscapeEnabled && LandscapeMotifReady &&
                 (prepullEnabled && !InCombat() || //Prepull Motifs
                  noTargetEnabled && InCombat() && CurrentTarget == null || //Downtime Motifs
-                 swiftcastEnabled && HasStatusEffect(Role.Buffs.Swiftcast) && landscapeHealthCheck || //Swiftcast Motifs
+                 swiftcastEnabled && LocalPlayer.HasStatus(Role.Buffs.Swiftcast) && landscapeHealthCheck || //Swiftcast Motifs
                  ActionLearned(ScenicMuse) && ScenicCD <= 20 && landscapeHealthCheck)) //Standard Use is Burst prep
             {
                 actionID = OriginalHook(LandscapeMotif);
@@ -527,12 +528,12 @@ internal partial class PCT
 
         if (flags.HasFlag(Combo.ST))
         {
-            if (subComboEnabled && HasStatusEffect(Buffs.SubtractivePalette))
+            if (subComboEnabled && LocalPlayer.HasStatus(Buffs.SubtractivePalette))
             {
                 actionID = OriginalHook(BlizzardinCyan);
                 return true;
             }
-            if (holyInWhiteEnabled && !HasStatusEffect(Buffs.MonochromeTones) && 
+            if (holyInWhiteEnabled && !LocalPlayer.HasStatus(Buffs.MonochromeTones) && 
                 gauge.Paint > holdPaintCharges && //Charge retention check
                 NumberOfEnemiesInRange(HolyInWhite) > 1) //Only use on 2 or more targets for a gain
             {
@@ -544,13 +545,13 @@ internal partial class PCT
         
         if (flags.HasFlag(Combo.AoE))
         {
-            if (subComboEnabled && HasStatusEffect(Buffs.SubtractivePalette))
+            if (subComboEnabled && LocalPlayer.HasStatus(Buffs.SubtractivePalette))
             {
                 actionID = OriginalHook(BlizzardIIinCyan);
                 return true;
             }
 
-            if (holyInWhiteEnabled && !HasStatusEffect(Buffs.MonochromeTones) && 
+            if (holyInWhiteEnabled && !LocalPlayer.HasStatus(Buffs.MonochromeTones) && 
                 gauge.Paint > holdPaintCharges) //Charge retention check
             {
                 actionID = OriginalHook(HolyInWhite);
@@ -709,9 +710,9 @@ internal partial class PCT
             ([11, 9, 10], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
             ([11, 9, 10], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
             ([11, 9, 10], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([12], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+            ([12], HolyInWhite, () => !LocalPlayer.HasStatus(Buffs.MonochromeTones)),
         ];
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([17], () => !HasStatusEffect(Buffs.RainbowBright))];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([17], () => !LocalPlayer.HasStatus(Buffs.RainbowBright))];
 
         public override bool HasCooldowns()
         {
@@ -727,7 +728,7 @@ internal partial class PCT
             if (!HasMotifs())
                 return false;
 
-            if (HasStatusEffect(Buffs.SubtractivePalette))
+            if (LocalPlayer.HasStatus(Buffs.SubtractivePalette))
                 return false;
 
             if (IsOnCooldown(Role.Swiftcast))
@@ -775,15 +776,15 @@ internal partial class PCT
             7
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([18], () => !HasStatusEffect(Buffs.RainbowBright))];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([18], () => !LocalPlayer.HasStatus(Buffs.RainbowBright))];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
-            ([4], CometinBlack, () => HasStatusEffect(Buffs.MonochromeTones)),
+            ([4], CometinBlack, () => LocalPlayer.HasStatus(Buffs.MonochromeTones)),
             ([10, 11, 12], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
              ([10, 11, 12], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
             ([10, 11, 12], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([13], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+            ([13], HolyInWhite, () => !LocalPlayer.HasStatus(Buffs.MonochromeTones)),
         ];
         public override Preset Preset => Preset.PCT_ST_Advanced_Openers;
         public override bool HasCooldowns()
@@ -800,7 +801,7 @@ internal partial class PCT
             if (!HasMotifs())
                 return false;
 
-            if (HasStatusEffect(Buffs.SubtractivePalette))
+            if (LocalPlayer.HasStatus(Buffs.SubtractivePalette))
                 return false;
 
             if (IsOnCooldown(Role.Swiftcast))
@@ -846,7 +847,7 @@ internal partial class PCT
             ([14, 15, 16], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
             ([14, 15, 16], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
             ([14, 15, 17], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([17], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+            ([17], HolyInWhite, () => !LocalPlayer.HasStatus(Buffs.MonochromeTones)),
         ];
         public override Preset Preset => Preset.PCT_ST_Advanced_Openers;
         public override bool HasCooldowns()
@@ -863,7 +864,7 @@ internal partial class PCT
             if (!HasMotifs())
                 return false;
 
-            if (HasStatusEffect(Buffs.SubtractivePalette))
+            if (LocalPlayer.HasStatus(Buffs.SubtractivePalette))
                 return false;
 
             return true;
@@ -908,7 +909,7 @@ internal partial class PCT
             ([15, 16, 17], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
              ([15, 16, 17], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
             ([15, 16, 17], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([18], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+            ([18], HolyInWhite, () => !LocalPlayer.HasStatus(Buffs.MonochromeTones)),
         ];
         public override Preset Preset => Preset.PCT_ST_Advanced_Openers;
         public override bool HasCooldowns()
@@ -925,7 +926,7 @@ internal partial class PCT
             if (!HasMotifs())
                 return false;
 
-            if (HasStatusEffect(Buffs.SubtractivePalette))
+            if (LocalPlayer.HasStatus(Buffs.SubtractivePalette))
                 return false;
 
             if (IsOnCooldown(Role.Swiftcast))
