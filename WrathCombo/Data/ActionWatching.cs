@@ -775,14 +775,6 @@ public class ActionWatching
         return ActionManager.GetActionInRangeOrLoS(actionId, source.Struct(), target.Struct()) is 566;
     }
 
-    public string GetBLUIndex(uint id)
-    {
-        var aozKey = Svc.Data.GetExcelSheet<AozAction>()!.First(x => x.Action.RowId == id).RowId;
-        var index = Svc.Data.GetExcelSheet<AozActionTransient>().GetRow(aozKey).Number;
-
-        return $"#{index} ";
-    }
-
     public static ActionAttackType GetAttackType(uint actionId)
     {
         if (!ActionSheet.TryGetRow(actionId, out var actionSheet))
