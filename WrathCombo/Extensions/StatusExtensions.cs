@@ -125,14 +125,14 @@ namespace WrathCombo.Extensions
                 return false;
             }
 
-            public bool HasDamageDown => chara.HasStatusInCacheList(Instance.DamageDownStatuses);
-            public bool HasDamageUp => chara.HasStatusInCacheList(Instance.DamageUpStatuses);
-            public bool HasEvasionUp => chara.HasStatusInCacheList(Instance.EvasionUpStatuses);
-            public bool HasRaiseInvincibility => chara.HasStatusInCacheList(Instance.RaiseInvincibilityStatuses);
-            public bool HasRaiseStatus => chara.HasStatusInCacheList(Instance.RaiseStatuses);
-            public bool HasCleansableDebuff => chara.HasStatusInCacheList(Instance.DispellableStatuses);
-            public bool HasCleansableDoom => chara.HasStatusInCacheList(Instance.CleansableDoomStatuses);
-            public bool HasBeneficialStatus => chara.HasStatusInCacheList(Instance.BeneficialStatuses);
+            public bool HasDamageDown => chara.HasStatusInCacheList(Dictionaries.DamageDownStatuses);
+            public bool HasDamageUp => chara.HasStatusInCacheList(Dictionaries.DamageUpStatuses);
+            public bool HasEvasionUp => chara.HasStatusInCacheList(Dictionaries.EvasionUpStatuses);
+            public bool HasRaiseInvincibility => chara.HasStatusInCacheList(Dictionaries.RaiseInvincibilityStatuses);
+            public bool HasRaiseStatus => chara.HasStatusInCacheList(Dictionaries.RaiseStatuses);
+            public bool HasCleansableDebuff => chara.HasStatusInCacheList(Dictionaries.DispellableStatuses);
+            public bool HasCleansableDoom => chara.HasStatusInCacheList(Dictionaries.CleansableDoomStatuses);
+            public bool HasBeneficialStatus => chara.HasStatusInCacheList(Dictionaries.BeneficialStatuses);
             public bool HasPhantomDispelStatus => chara.HasDamageUp || chara.HasEvasionUp || chara.HasStatus(OCDarkDefensesStatusId) || chara.IsInvincible;
 
 
@@ -171,7 +171,7 @@ namespace WrathCombo.Extensions
                         // Are we to bother with checking statuses per Battle Data
                         BattleData.Invincible.False => false,
                         // General invincibility check, not using StatusCache.HasStatusInCacheList because statuses is derived from SafeStatusList
-                        BattleData.Invincible.CheckStatuses => statuses.Any(s => Instance.InvincibleStatuses.Contains(s.StatusId)),
+                        BattleData.Invincible.CheckStatuses => statuses.Any(s => Dictionaries.InvincibleStatuses.Contains(s.StatusId)),
                         _ => false,
                     };
                 }

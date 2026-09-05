@@ -167,10 +167,10 @@ internal abstract partial class CustomComboFunctions
     public static string GetStatusName(uint id) => StatusCache.GetStatusName(id);
 
     [Obsolete("Use the IBattleChara extension .HasDamageDown")]
-    public static bool TargetHasDamageDown(IGameObject? target) => StatusCache.Instance.HasDamageDown(target);
+    public static bool TargetHasDamageDown(IGameObject? target) => StatusCache.HasDamageDown(target);
 
     [Obsolete("Use the IBattleChara extension .HasDamageUp")]
-    public static bool TargetHasDamageUp(IGameObject? target) => StatusCache.Instance.HasDamageUp(target);
+    public static bool TargetHasDamageUp(IGameObject? target) => StatusCache.HasDamageUp(target);
 
     [Obsolete("Use the IBattleChara extension .HasRezWeakness")]
     public static bool TargetHasRezWeakness(IGameObject? target, bool checkForWeakness = true)
@@ -182,9 +182,9 @@ internal abstract partial class CustomComboFunctions
     }
 
     [Obsolete("Use the IBattleChara extension .HasRaiseInvincibility")]
-    public static bool TargetHasRaiseInvincibility(IBattleChara? target) => StatusCache.Instance.HasRaiseInvincibility(target);
+    public static bool TargetHasRaiseInvincibility(IBattleChara? target) => StatusCache.HasRaiseInvincibility(target);
     [Obsolete("Use the IBattleChara extension .HasRaiseStatus")]
-    public static bool TargetHasRaiseStatus(IBattleChara? target) => StatusCache.Instance.HasRaiseStatus(target);
+    public static bool TargetHasRaiseStatus(IBattleChara? target) => StatusCache.HasRaiseStatus(target);
 
     /// <summary>
     /// Checks if the target has a debuff that can be dispelled.
@@ -192,7 +192,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target">The game object to check. Defaults to the current target if null.</param>
     /// <returns>True if the target has a cleansable debuff; otherwise, false.</returns>
     [Obsolete("Use the IBattleChara extension .HasCleansableDebuff")]
-    public static bool HasCleansableDebuff(IGameObject? target) => StatusCache.Instance.HasCleansableDebuff(target);
+    public static bool HasCleansableDebuff(IGameObject? target) => StatusCache.HasCleansableDebuff(target);
 
     /// <summary>
     /// Checks if the target has a beneficial status.
@@ -200,10 +200,10 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target"></param>
     /// <returns></returns>
     [Obsolete("Use the IBattleChara extension .HasBeneficialStatus")]
-    public static bool HasBeneficialStatus(IGameObject? target) => StatusCache.Instance.HasBeneficialStatus(target);
+    public static bool HasBeneficialStatus(IGameObject? target) => StatusCache.HasBeneficialStatus(target);
 
     [Obsolete("Use the IBattleChara extension .HasPhantomDispelStatus")]
-    public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.Instance.HasDamageUp(target) || StatusCache.Instance.HasEvasionUp(target) || HasStatusEffect(4355, target) || ((target as IBattleChara)?.IsInvincible ?? false);
+    public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || StatusCache.HasEvasionUp(target) || HasStatusEffect(4355, target) || ((target as IBattleChara)?.IsInvincible ?? false);
 
     /// <summary>
     /// Checks to see if the player has a status that should stop all actions and unselect targets
@@ -221,14 +221,14 @@ internal abstract partial class CustomComboFunctions
             hasActionPenalty =
                 Player.Status.Any(s =>
                     // Acceleration Bomb within Timeframe
-                    (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
+                    (StatusCache.Dictionaries.AccelerationBombs.Contains(s.StatusId) &&
                         Player.Object!.Status(s.StatusId).RemainingTimeOrZero(false) <= userSetting) ||
 
                     // Pyretic
-                    StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
+                    StatusCache.Dictionaries.Pyretics.Contains(s.StatusId) ||
 
                     // Others
-                    (StatusCache.PausingStatuses.Misc.Contains(s.StatusId) && Player.Object!.Status(s.StatusId).RemainingTimeOrZero(false) <= userSetting)
+                    (StatusCache.Dictionaries.MiscPausing.Contains(s.StatusId) && Player.Object!.Status(s.StatusId).RemainingTimeOrZero(false) <= userSetting)
 
                 );
         }
@@ -271,7 +271,7 @@ internal abstract partial class CustomComboFunctions
             // Are we to bother with checking statuses per Battle Data
             BattleData.Invincible.False => false,
             // General invincibility check, not using StatusCache.HasStatusInCacheList because statuses is derived from SafeStatusList
-            BattleData.Invincible.CheckStatuses => statuses.Any(s => StatusCache.Instance.InvincibleStatuses.Contains(s.StatusId)),
+            BattleData.Invincible.CheckStatuses => statuses.Any(s => StatusCache.Dictionaries.InvincibleStatuses.Contains(s.StatusId)),
             _ => false,
         };
     }
@@ -345,7 +345,7 @@ internal abstract partial class CustomComboFunctions
         if (target is not IBattleChara { } chara)
             return false;
 
-        return StatusCache.Instance.HasCleansableDoom(target);
+        return StatusCache.HasCleansableDoom(target);
     }
 
     [Obsolete("Use the IBattleChara extension .IsImmuneToStatus")]

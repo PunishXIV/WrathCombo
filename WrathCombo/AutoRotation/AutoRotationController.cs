@@ -1286,7 +1286,7 @@ internal unsafe class AutoRotationController
                             x.BattleChara.IsTargetable &&
                             GetTargetDistance(x.BattleChara) <= QueryRange &&
                             !TargetHasImmortality(x.BattleChara) &&
-                            !StatusCache.HasStatusInCacheList(StatusCache.Instance.DoNotHealStatuses, x.BattleChara) &&
+                            !StatusCache.HasStatusInCacheList(StatusCache.Dictionaries.DoNotHealStatuses, x.BattleChara) &&
                             GetTargetHPPercent(x.BattleChara, cfg.HealerSettings.IncludeShields) <=
                             (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP :
                                 TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP :
@@ -1303,7 +1303,7 @@ internal unsafe class AutoRotationController
                             !x.BattleChara.IsDead &&
                             x.BattleChara.IsTargetable &&
                             !x.IsOutOfPartyNPC &&
-                            !(x.BattleChara.SafeStatusList?.Any(s => StatusCache.Instance.DoNotHealStatuses.Contains(s.StatusId)) ?? false) &&
+                            !(x.BattleChara.SafeStatusList?.Any(s => StatusCache.Dictionaries.DoNotHealStatuses.Contains(s.StatusId)) ?? false) &&
                             (outAct == 0
                                 ? GetTargetDistance(x.BattleChara) <= 20f
                                 : InActionRange(outAct, x.BattleChara)) &&
