@@ -513,9 +513,9 @@ internal partial class BLU
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => Math.Max(0, CountdownRemaining - 5)),
-            ([3], () => Math.Max(0, CountdownRemaining - 3)),
-            ([4], () => Math.Max(0, CountdownRemaining))
+            ([2], () => !BLU_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5)),
+            ([3], () => !BLU_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 3)),
+            ([4], () => !BLU_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
         ];
 
         public override bool HasCooldowns() =>
@@ -556,7 +556,7 @@ internal partial class BLU
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat()),
+            ([1], () => CountdownActive || InCombat() || !BLU_Opener_PrepullBlock),
             ([2], () => !IsSpellActive(Whistle) || HasStatusEffect(Buffs.Whistle)),
             ([3], () => !IsSpellActive(Tingle) || HasStatusEffect(Buffs.Tingle, Target, true)),
             ([4], () => !IsSpellActive(RoseOfDestruction)),
