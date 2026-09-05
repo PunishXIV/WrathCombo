@@ -64,7 +64,9 @@ public abstract class WrathOpener
         get => currentState switch
         {
             OpenerState.OpenerReady when openerStep > 1 &&
-                                         openerStep <= OpenerActions.Count =>
+                                         openerStep <= OpenerActions.Count &&
+                                         !Enumerable.Range(0, openerStep - 1)
+                                             .All(i => OpenerActions[i].Invoke() == All.Cease) =>
                 OpenerState.InOpener,
             _ => currentState,
         };
@@ -319,13 +321,13 @@ public abstract class WrathOpener
         return false;
     }
 
-    public void ResetOpener()
+    public void ResetOpener(bool stayReady = false)
     {
         Svc.Log.Debug($"Opener Reset");
         DelayedStep = 0;
-        OpenerStep = 0;
-        CurrentOpenerAction = 0;
-        CurrentState = OpenerState.OpenerNotReady;
+        OpenerStep = stayReady ? 1 : 0;
+        CurrentOpenerAction = stayReady ? OpenerActions[0].Invoke() : 0;
+        CurrentState = stayReady ? CurrentState : OpenerState.OpenerNotReady;
     }
 
     internal static void SelectOpener()

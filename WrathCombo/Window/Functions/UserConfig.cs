@@ -4,6 +4,7 @@ using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using ECommons.DalamudServices;
+using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using System;
 using System.Linq;
@@ -17,6 +18,7 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Resources.Localization.JobConfigs;
 using WrathCombo.Services;
+using WrathCombo.Window.Tabs;
 namespace WrathCombo.Window.Functions;
 
 public static class UserConfig
@@ -453,8 +455,9 @@ public static class UserConfig
     /// <param name="itemWidth"></param>
     /// <param name="isConditionalChoice"></param>
     /// <param name="indentDescription"></param>
-    public static void DrawAdditionalBoolChoice(string config, string checkBoxName, string checkboxDescription, float itemWidth = 150, bool isConditionalChoice = false, bool indentDescription = false)
+    public static bool DrawAdditionalBoolChoice(string config, string checkBoxName, string checkboxDescription, float itemWidth = 150, bool isConditionalChoice = false, bool indentDescription = false)
     {
+        bool valChanged = false;
         bool output = Configuration.GetCustomBoolValue(config);
         ImGui.PushItemWidth(itemWidth);
         if (!isConditionalChoice)
@@ -474,7 +477,10 @@ public static class UserConfig
             if (isConditionalChoice) ImGui.Indent(); //Align checkbox after the + symbol
         }
         if (ImGui.Checkbox($"{checkBoxName}##{config}", ref output))
+        {
             Configuration.SetCustomBoolValue(config, output);
+            valChanged = true;
+        }
 
         DrawResetContextMenu(config);
 
@@ -492,6 +498,8 @@ public static class UserConfig
         //!isConditionalChoice
         ImGui.Unindent();
         ImGui.Spacing();
+
+        return valChanged;
     }
 
     /// <summary> Draws multi choice checkboxes in a horizontal configuration. </summary>
@@ -838,7 +846,11 @@ public static class UserConfig
 
     internal static void DrawOpenerPrepullBlockChoice(UserBool config)
     {
-        DrawAdditionalBoolChoice(config, "Include Prepull Block?", "Adds a block to the opener that will wait for countdown timings.");
+        if (DrawAdditionalBoolChoice(config, "Include Pre-pull Blocks?", "Adds Cease to the opener that will wait for correct countdown timings."))
+        {
+            if (PvEFeatures.OpenJob == Player.Job)
+                WrathOpener.CurrentOpener?.ResetOpener(true);
+        }
     }
 
     internal static void DrawOpenerPotionChoice(UserBool config)
