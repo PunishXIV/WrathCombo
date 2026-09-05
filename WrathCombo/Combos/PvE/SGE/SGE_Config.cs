@@ -33,6 +33,8 @@ internal partial class SGE
                     DrawRadioButton(SGE_SelectedOpener,
                         FormatAndCache(Generics.Action_Opener, Pneuma.ActionName()),
                         FormatAndCache(Generics.Use_0_Opener, Pneuma.ActionName()), 1, descriptionAsTooltip: true);
+
+                    DrawOpenerPrepullBlockChoice(SGE_Opener_PrepullBlock);
                     break;
 
                 case Preset.SGE_ST_Advanced_DPS:
@@ -425,6 +427,7 @@ internal partial class SGE
 
         public static UserBool
             SGE_Opener_Potion = new("SGE_Opener_Potion"),
+            SGE_Opener_PrepullBlock = new("SGE_Opener_PrepullBlock", true),
             SGE_ST_Adv_DPS_EDosis_TwoTarget = new("SGE_ST_DPS_EDosis_TwoTarget", true),
             SGE_ST_Adv_DPS_Phlegma_Burst = new("SGE_ST_DPS_Phlegma_Burst", true);
 

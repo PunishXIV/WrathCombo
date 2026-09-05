@@ -37,6 +37,7 @@ internal partial class SAM
 
         public static UserBool
             SAM_ST_Opener_Potion = new("SAM_ST_Opener_Potion"),
+            SAM_ST_Opener_PrepullBlock = new("SAM_ST_Opener_PrepullBlock", true),
             SAM_Gekko_KenkiOvercap = new("SAM_Gekko_KenkiOvercap"),
             SAM_Kasha_KenkiOvercap = new("SAM_Kasha_KenkiOvercap"),
             SAM_Yukikaze_KenkiOvercap = new("SAM_Yukikaze_KenkiOvercap"),
@@ -59,6 +60,7 @@ internal partial class SAM
                 case Preset.SAM_ST_Adv_Opener:
                     DrawBossOnlyChoice(SAM_Balance_Content);
                     DrawOpenerPotionChoice(SAM_ST_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(SAM_ST_Opener_PrepullBlock);
 
                     ImGui.TextWrapped(SAM_Config.SecondsDelayFromFirstStep);
                     if (ImGui.IsItemHovered())

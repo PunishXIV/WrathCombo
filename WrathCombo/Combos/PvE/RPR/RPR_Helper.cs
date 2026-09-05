@@ -750,13 +750,13 @@ internal partial class RPR
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat()),
+            ([1], () => CountdownActive || InCombat() || !RPR_Opener_PrepullBlock),
             ([2], () => InMeleeRange())
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => Math.Max(0, CountdownRemaining - 1))
+            ([2], () => !RPR_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1))
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } = [4];
@@ -848,13 +848,13 @@ internal partial class RPR
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat()),
+            ([1], () => CountdownActive || InCombat() || !RPR_Opener_PrepullBlock),
             ([2], () => InMeleeRange())
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => Math.Max(0, CountdownRemaining - 1))
+            ([2], () => !RPR_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1))
         ];
     }
 

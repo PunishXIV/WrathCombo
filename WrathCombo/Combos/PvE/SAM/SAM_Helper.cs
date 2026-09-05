@@ -562,14 +562,14 @@ internal partial class SAM
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => Math.Max(0, CountdownRemaining - 13)),
-            ([3], () => Math.Max(0, CountdownRemaining - 5)),
-            ([4], () => Math.Max(0, CountdownRemaining - 0.5f))
+            ([2], () => !SAM_ST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 13)),
+            ([3], () => !SAM_ST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5)),
+            ([4], () => !SAM_ST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 0.5f))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat()),
+            ([1], () => CountdownActive || InCombat() || !SAM_ST_Opener_PrepullBlock),
             ([3], () => !TargetNeedsPositionals())
         ];
 
@@ -725,6 +725,8 @@ internal partial class SAM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
+            ([1], () => CountdownActive || InCombat() || !SAM_ST_Opener_PrepullBlock),
+            ([3], () => !TargetNeedsPositionals()),
             ([20, 25], () => !ActionReady(Shinten)),
             ([22], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 2),
             ([27], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 3),
@@ -778,6 +780,8 @@ internal partial class SAM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
+            ([1], () => CountdownActive || InCombat() || !SAM_ST_Opener_PrepullBlock),
+            ([3], () => !TargetNeedsPositionals()),
             ([19, 21], () => !ActionReady(Shinten)),
             ([9, 22], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))),
             ([11, 25], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka))

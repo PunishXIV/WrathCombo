@@ -650,15 +650,15 @@ internal partial class SGE
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat()),
+            ([1], () => CountdownActive || InCombat() || !SGE_Opener_PrepullBlock),
             ([2], () => HasStatusEffect(Buffs.Eukrasia))
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => Math.Max(0, CountdownRemaining - 5)),
-            ([3], () => Math.Max(0, CountdownRemaining - 2)),
-            ([4], () => Math.Max(0, CountdownRemaining - 1))
+            ([2], () => !SGE_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5)),
+            ([3], () => !SGE_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2)),
+            ([4], () => !SGE_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1))
         ];
 
         protected static bool SharedOpenerCooldowns() =>

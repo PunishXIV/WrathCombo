@@ -363,8 +363,8 @@ internal partial class DRK
             set;
         } =
         [
-            ([2], () => Math.Max(0, CountdownRemaining - 3)),
-            ([3], () => Math.Max(0, CountdownRemaining - 1)),
+            ([2], () => !DRK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 3)),
+            ([3], () => !DRK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1)),
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps
@@ -385,7 +385,7 @@ internal partial class DRK
             set;
         } =
         [
-            ([1], () => CountdownActive || InCombat()),
+            ([1], () => CountdownActive || InCombat() || !DRK_Opener_PrepullBlock),
             // Skip the duplicate HardSlash, if pulling with HardSlash
             ([6], () =>
                 DRK_ST_OpenerAction == (int)PullAction.HardSlash),

@@ -203,6 +203,7 @@ internal partial class DRK
                         descriptionAsTooltip: true);
                     DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
                     DrawOpenerPotionChoice(DRK_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(DRK_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(DRK_ST_OpenerAction,
@@ -1239,6 +1240,7 @@ internal partial class DRK
         
         public static readonly UserBool
             DRK_Opener_Potion = new("DRK_Opener_Potion"),
+            DRK_Opener_PrepullBlock = new("DRK_Opener_PrepullBlock", true),
             DRK_Retarget_Unmend_FieldMO = new("DRK_Retarget_Unmend_FieldMO"),
             DRK_Retarget_Unmend_RangeBasedTargeting = new("DRK_Retarget_Unmend_RangeBasedTargeting"),
             DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer  = new("DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer");
