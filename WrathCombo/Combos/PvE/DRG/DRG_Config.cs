@@ -26,6 +26,8 @@ internal partial class DRG
                     DrawRadioButton(DRG_SelectedOpener,
                         FormatAndCache(Generics.Action_Opener, PiercingTalon.ActionName()),
                         FormatAndCache(Generics.Use_0_Opener, PiercingTalon.ActionName()), 1, descriptionAsTooltip: true);
+
+                    DrawOpenerPrepullBlockChoice(DRG_Opener_PrepullBlock);
                     break;
 
                 case Preset.DRG_ST_BattleLitany:
@@ -230,6 +232,7 @@ internal partial class DRG
 
         public static UserBool
             DRG_Opener_Potion = new("DRG_Opener_Potion"),
+            DRG_Opener_PrepullBlock = new("DRG_Opener_PrepullBlock", true),
             DRG_ST_DoubleMirage = new("DRG_ST_DoubleMirage"),
             DRG_ChaoticCombo = new("DRG_ChaoticCombo");
 

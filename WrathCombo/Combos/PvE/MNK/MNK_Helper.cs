@@ -587,15 +587,15 @@ internal partial class MNK
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat()),
+            ([1], () => CountdownActive || InCombat() || !MNK_Opener_PrepullBlock),
             ([2], () => Chakra >= 5),
             ([3], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift))
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => Math.Max(0, CountdownRemaining - 8)),
-            ([3], () => Math.Max(0, CountdownRemaining - 5))
+            ([2], () => !MNK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 8)),
+            ([3], () => !MNK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5))
         ];
 
         public override bool HasCooldowns() =>
@@ -778,7 +778,7 @@ internal partial class MNK
         public MNKLvl100DMUOpener()
         {
             base.SkipSteps.Add(([11], () => Chakra < 5));
-            base.PrepullDelays.Add(([4], () => Math.Max(0, CountdownRemaining - 2)));
+            base.PrepullDelays.Add(([4], () => !MNK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2)));
         }
     }
 

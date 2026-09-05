@@ -578,12 +578,12 @@ internal partial class DRG
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2, 3], () => Math.Max(0, CountdownRemaining - 2))
+            ([2, 3], () => !DRG_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => CountdownActive || InCombat())
+            ([1], () => CountdownActive || InCombat() || !DRG_Opener_PrepullBlock)
         ];
     }
 

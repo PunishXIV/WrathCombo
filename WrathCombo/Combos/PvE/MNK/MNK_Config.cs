@@ -29,6 +29,8 @@ internal partial class MNK
                     DrawRadioButton(MNK_SelectedOpener,
                         MNK_Config.SolarLunarOpener,
                         MNK_Config.SolarLunarOpenerDesc, 1, descriptionAsTooltip: true);
+
+                    DrawOpenerPrepullBlockChoice(MNK_Opener_PrepullBlock);
                     break;
 
                 case Preset.MNK_STUseBrotherhood:
@@ -210,6 +212,7 @@ internal partial class MNK
 
         public static UserBool
             MNK_Opener_Potion = new("MNK_Opener_Potion"),
+            MNK_Opener_PrepullBlock = new("MNK_Opener_PrepullBlock", true),
             MNK_Thunderclap_FieldMouseover = new("MNK_Thunderclap_FieldMouseover"),
             MNK_BasicCombo_MasterfulBlitz = new("MNK_BasicCombo_MasterfulBlitz"),
             MNK_BasicCombo_Chakra = new("MNK_BasicCombo_Chakra"),
