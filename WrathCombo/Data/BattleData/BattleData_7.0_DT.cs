@@ -185,14 +185,14 @@ namespace WrathCombo.Data.BattleData
                     break;
 
                 case 1346: //The Forked Tower: Magic
-                    // Two-headed Aevis Green Head = 19474
-                    // Two-headed Aevis Blue Head = 19475
+                    // Two-headed Aevis Green Head = 19474 / Ex 19481
+                    // Two-headed Aevis Blue Head = 19475 / Ex 19482
                     _invincibleCheck = (_, targetID, _) =>
                     {
-                        if (targetID is 19474 or 19475)
+                        if (targetID is 19474 or 19475 or 19481 or 19482)
                         {
-                            if (HasStatusEffect(4192)) return Result(targetID != 19474); // Epic Hero (α)  — Green
-                            if (HasStatusEffect(4194)) return Result(targetID != 19475); // Fated Hero (β) — Blue
+                            if (HasStatusEffect(4192)) return Result(targetID is not (19474 or 19481)); // Epic Hero (α)  — Green
+                            if (HasStatusEffect(4194)) return Result(targetID is not (19475 or 19482)); // Fated Hero (β) — Blue
                         }
                         return Invincible.False;
                     };
