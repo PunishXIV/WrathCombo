@@ -6,13 +6,14 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
+using ECommons.Logging;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -47,12 +48,14 @@ internal sealed class ActionReplacer : IDisposable
     /// <summary> Initializes a new instance of the <see cref="ActionReplacer" /> class. </summary>
     public ActionReplacer()
     {
-        CustomCombos = Assembly.GetAssembly(typeof(CustomCombo))!.GetTypes()
+        var timer = Stopwatch.StartNew();
+        CustomCombos = typeof(CustomCombo).Assembly.GetTypes()
             .Where(t => !t.IsAbstract && t.BaseType == typeof(CustomCombo))
             .Select(Activator.CreateInstance)
             .Cast<CustomCombo>()
             .OrderByDescending(x => x.Preset)
             .ToList();
+        PluginLog.Information($"ActionReplacer combos initialized in {timer.ElapsedMilliseconds} ms. {CustomCombos.Count} Combos");
 
         // ReSharper disable once RedundantCast
         // Must keep the nint cast

@@ -46,8 +46,8 @@ internal abstract partial class CustomCombo : CustomComboFunctions
     ///     Without the action also being checked, the preset would block all
     ///     other presets.
     /// </remarks>
-    private readonly Dictionary<Preset, uint>
-        _presetsAllowedToReturnUnchanged = new()
+    private static readonly Dictionary<Preset, uint>
+        PresetsAllowedToReturnUnchanged = new()
         {
             { Preset.DNC_DesirablePartner, DNC.ClosedPosition },
         };
@@ -67,12 +67,12 @@ internal abstract partial class CustomCombo : CustomComboFunctions
         if (Player.Object is null) return false; //Safeguard. LocalPlayer shouldn't be null at this point anyways.
         if (Player.IsDead) return false; //Don't do combos while dead
 
-        Job classJobID = Player.Job.GetUpgradedJob();
+        ECommonsJob classJobID = Player.Job.GetUpgradedJob();
 
-        if (classJobID is Job.MIN or Job.BTN or Job.FSH)
-            classJobID = Job.MIN;
+        if (classJobID is ECommonsJob.MIN or ECommonsJob.BTN or ECommonsJob.FSH)
+            classJobID = ECommonsJob.MIN;
 
-        if (Job != Job.ADV && Job != classJobID)
+        if (Job != ECommonsJob.ADV && Job != classJobID)
             return false;
 
 
@@ -84,7 +84,7 @@ internal abstract partial class CustomCombo : CustomComboFunctions
 
         uint resultingActionID = Invoke(actionID);
 
-        var presetException = _presetsAllowedToReturnUnchanged
+        var presetException = PresetsAllowedToReturnUnchanged
             .TryGetValue(Preset, out var actionException);
         var hasException = presetException && resultingActionID == actionException;
         if (resultingActionID == 0 ||

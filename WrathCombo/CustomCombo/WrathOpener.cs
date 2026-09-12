@@ -197,7 +197,7 @@ public abstract class WrathOpener
 
         if (CurrentState is OpenerState.OpenerReady or OpenerState.InOpener)
         {
-            if (!ActionWatching.UpdatingActions && !HasCooldowns() && OpenerStep == 1)
+            if (!ActionWatching.Instance.UpdatingActions && !HasCooldowns() && OpenerStep == 1)
             {
                 ResetOpener();
                 return false;

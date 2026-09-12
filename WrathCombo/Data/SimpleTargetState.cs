@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Extensions;
+using AW = WrathCombo.Data.ActionWatching;
 
 namespace WrathCombo.Data
 {
@@ -54,7 +55,7 @@ namespace WrathCombo.Data
             {
                 if (o.GameObjectID.GetObject() is IBattleChara t)
                 {
-                    int hpDelta = ActionWatching.PendingHPChanges
+                    int hpDelta = AW.PendingHPChanges
                                 .Where(x => x.gameObjectId == o.GameObjectID)
                                 .Sum(x => x.positiveChange ? x.value : -x.value);
 
@@ -71,7 +72,7 @@ namespace WrathCombo.Data
             Svc.Framework.RunOnTick(() =>
             {
                 TargetStates.ForEach(x => { if (x.GameObjectID == entityId) x.CurrentHP = x.MaxHP; });
-                ActionWatching.PendingHPChanges.RemoveAll(x => x.gameObjectId == entityId);
+                AW.PendingHPChanges.RemoveAll(x => x.gameObjectId == entityId);
             }, TimeSpan.FromTicks(100));
         }
 

@@ -315,7 +315,7 @@ public static class DebugFile
         if (target is IBattleChara)
         {
             battleTarget = target as IBattleChara;
-            if (ActionWatching.BNPCSheet.TryGetValue(battleTarget.BaseId,
+            if (ActionWatching.BNPCSheet.TryGetRow(battleTarget.BaseId,
                     out var sheetRow))
             {
                 battleNPCRow = sheetRow;
