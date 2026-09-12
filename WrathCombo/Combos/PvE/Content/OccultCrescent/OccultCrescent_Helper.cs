@@ -1,8 +1,10 @@
 #region Dependencies
 
+using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
 using System;
 using System.Reflection;
+using WrathCombo.Services;
 using static WrathCombo.Combos.PvE.JobIDExtensions;
 using static WrathCombo.Combos.PvE.OccultCrescent.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -184,6 +186,20 @@ internal partial class OccultCrescent
 
 
     internal static bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && ActionReady(action);
+
+    internal static bool StatusNeedsRefresh(uint status, IGameObject? target = null, bool anyOwner = false, int? remainingOverride = null)
+    {
+        if (!HasStatusEffect(status, target, anyOwner))
+            return true;
+
+        int remaining = remainingOverride ?? Phantom_StatusRefresh_Remaining;
+        return GetStatusEffectRemainingTime(status, target, anyOwner) <= remaining;
+    }
+
+    internal static bool WantOccultAero =>
+        IsEnabled(Preset.Phantom_BlueMage_OccultAero) ||
+        Service.Configuration.EnabledActions.Contains(Preset.Phantom_BlueMage_OccultAeroII) ||
+        Service.Configuration.EnabledActions.Contains(Preset.Phantom_BlueMage_OccultAeroIII);
 
     private const int HoldOnlyWhenStationary = 0;
     private const int HoldOnlyInMeleeRange = 1;

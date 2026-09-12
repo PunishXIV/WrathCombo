@@ -95,7 +95,7 @@ internal partial class DNC : PhysicalRanged
                 GetCooldownRemainingTime(StandardStep) <
                 longAlignment && // Up or about to be (some anti-drift)
                 !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
-                !LocalPlayer.HasStatus(Buffs.TechnicalFinish);
+                !ShouldHoldStandardForFinishingMove;
 
             #endregion
 
@@ -470,7 +470,7 @@ internal partial class DNC : PhysicalRanged
                 !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
                 (IsOffCooldown(Flourish) ||
                  GetCooldownRemainingTime(Flourish) > 5) &&
-                !LocalPlayer.HasStatus(Buffs.TechnicalFinish);
+                !ShouldHoldStandardForFinishingMove;
 
             #endregion
 
@@ -762,7 +762,7 @@ internal partial class DNC : PhysicalRanged
                 IsEnabled(Preset.DNC_AoE_Adv_SS) && // Enabled
                 DNC_AoE_Adv_SS_IncludeSS == (int)IncludeStep.Yes &&
                 !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
-                !LocalPlayer.HasStatus(Buffs.TechnicalFinish);
+                !ShouldHoldStandardForFinishingMove;
 
             #endregion
 
@@ -1040,7 +1040,7 @@ internal partial class DNC : PhysicalRanged
                 !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
                 (IsOffCooldown(Flourish) ||
                  GetCooldownRemainingTime(Flourish) > 5) &&
-                !LocalPlayer.HasStatus(Buffs.TechnicalFinish);
+                !ShouldHoldStandardForFinishingMove;
 
             #endregion
 

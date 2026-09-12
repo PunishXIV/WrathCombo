@@ -28,7 +28,7 @@ internal partial class MNK
             // Open Lunar
             if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
             {
-                actionID = ActionLearned(ShadowOfTheDestroyer) ? ShadowOfTheDestroyer : Rockbreaker;
+                actionID = OriginalHook(ArmOfTheDestroyer);
                 return true;
             }
 
@@ -168,9 +168,7 @@ internal partial class MNK
 
     private static bool JustUsedOpoGCD(float window, bool onAoE = false) =>
         onAoE
-            ? JustUsed(ShadowOfTheDestroyer, window) ||
-              JustUsed(OriginalHook(ArmOfTheDestroyer), window) ||
-              !ActionLearned(ShadowOfTheDestroyer) && JustUsed(Rockbreaker, window)
+            ? JustUsed(OriginalHook(ArmOfTheDestroyer), window)
             : JustUsed(OriginalHook(Bootshine), window) ||
               JustUsed(DragonKick, window);
 
@@ -225,9 +223,7 @@ internal partial class MNK
     private static uint ForcedOpoGCD(bool onAoE)
     {
         if (onAoE)
-            return ActionLearned(ShadowOfTheDestroyer)
-                ? ShadowOfTheDestroyer
-                : Rockbreaker;
+            return OriginalHook(ArmOfTheDestroyer);
 
         return OpoFormGCD();
     }

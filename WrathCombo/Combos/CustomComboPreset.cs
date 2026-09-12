@@ -1134,6 +1134,7 @@ public enum Preset
     Phantom_BlueMage_OccultMightyGuard = 110123,
 
     [OccultCrescent]
+    [Hidden]
     [ParentCombo(Phantom_BlueMage)]
     [JobInfo(Job.ADV)]
     Phantom_BlueMage_OccultAeroII = 110124,
@@ -1144,6 +1145,7 @@ public enum Preset
     Phantom_BlueMage_OccultWhiteWind = 110125,
 
     [OccultCrescent]
+    [Hidden]
     [ParentCombo(Phantom_BlueMage)]
     [JobInfo(Job.ADV)]
     Phantom_BlueMage_OccultAeroIII = 110126,
@@ -1172,6 +1174,11 @@ public enum Preset
     [ParentCombo(Phantom_RedMage)]
     [JobInfo(Job.ADV)]
     Phantom_RedMage_OccultLibra = 110130,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_RedMage_OccultLibra)]
+    [JobInfo(Job.ADV)]
+    Phantom_RedMage_OccultLibra_Refresh = 110140,
 
     [OccultCrescent]
     [ParentCombo(Phantom_RedMage)]
@@ -1212,7 +1219,7 @@ public enum Preset
     [JobInfo(Job.ADV)]
     Phantom_Necromancer_Doomsday = 110138,
 
-    //Last Value = 110139
+    //Last Value = 110140
     #endregion
 
     #region Deep Dungeon
@@ -2305,6 +2312,67 @@ public enum Preset
     [BlueInactive(BLU.PeatPelt, BLU.DeepClean)]
     [JobInfo(Job.BLU)]
     BLU_PeatClean = 70023,
+
+    [BlueInactive(BLU.SongOfTorment, BLU.Bristle)]
+    [ReplaceSkill(BLU.SongOfTorment)]
+    [JobInfo(Job.BLU)]
+    BLU_BuffedSoT = 70000,
+
+    [BlueInactive(BLU.MoonFlute, BLU.Whistle, BLU.Tingle, BLU.RoseOfDestruction, BLU.JKick, BLU.TripleTrident, BLU.Nightbloom, BLU.WingedReprobation, BLU.FeatherRain, BLU.SeaShanty, BLU.ShockStrike, BLU.BeingMortal, BLU.Bristle, BLU.Surpanakha, BLU.MatraMagic, BLU.PhantomFlurry)]
+    [ReplaceSkill(BLU.MoonFlute)]
+    [JobInfo(Job.BLU)]
+    [Retargeted(BLU.FeatherRain)]
+    BLU_NewMoonFluteOpener = 70021,
+
+    [ParentCombo(BLU_NewMoonFluteOpener)]
+    [BlueInactive(BLU.BreathOfMagic, BLU.MortalFlame)]
+    [JobInfo(Job.BLU)]
+    BLU_NewMoonFluteOpener_DoTOpener = 70022,
+
+    [BlueInactive(BLU.FeatherRain, BLU.Eruption, BLU.ShockStrike, BLU.RoseOfDestruction, BLU.GlassDance)]
+    [ReplaceSkill(BLU.FeatherRain, BLU.Eruption)]
+    [JobInfo(Job.BLU)]
+    [Retargeted(BLU.FeatherRain)]
+    BLU_PrimalCombo = 70008,
+
+    [ParentCombo(BLU_PrimalCombo)]
+    [JobInfo(Job.BLU)]
+    BLU_PrimalCombo_Pool = 70015,
+
+    [ParentCombo(BLU_PrimalCombo)]
+    [BlueInactive(BLU.JKick)]
+    [JobInfo(Job.BLU)]
+    BLU_PrimalCombo_JKick = 70013,
+
+    [ParentCombo(BLU_PrimalCombo)]
+    [BlueInactive(BLU.Nightbloom)]
+    [JobInfo(Job.BLU)]
+    BLU_PrimalCombo_Nightbloom = 70020,
+
+    [ParentCombo(BLU_PrimalCombo)]
+    [BlueInactive(BLU.MatraMagic)]
+    [JobInfo(Job.BLU)]
+    BLU_PrimalCombo_Matra = 70017,
+
+    [ParentCombo(BLU_PrimalCombo)]
+    [BlueInactive(BLU.Surpanakha)]
+    [JobInfo(Job.BLU)]
+    BLU_PrimalCombo_Suparnakha = 70018,
+
+    [ParentCombo(BLU_PrimalCombo)]
+    [BlueInactive(BLU.WingedReprobation)]
+    [JobInfo(Job.BLU)]
+    BLU_PrimalCombo_WingedReprobation = 70025,
+
+    [ParentCombo(BLU_PrimalCombo)]
+    [BlueInactive(BLU.SeaShanty)]
+    [JobInfo(Job.BLU)]
+    BLU_PrimalCombo_SeaShanty = 70024,
+
+    [ParentCombo(BLU_PrimalCombo)]
+    [BlueInactive(BLU.PhantomFlurry)]
+    [JobInfo(Job.BLU)]
+    BLU_PrimalCombo_PhantomFlurry = 70019,
 
     #endregion
 
@@ -6258,7 +6326,7 @@ public enum Preset
 
     [ParentCombo(SGE_ST_Advanced_DPS)]
     [JobInfo(Job.SGE)]
-    [PossiblyRetargeted(SGE.Druochole)]
+    [Retargeted(SGE.Druochole)]
     SGE_ST_Adv_DPS_AddersgallProtect = 14054,
 
     [ParentCombo(SGE_ST_Advanced_DPS)]

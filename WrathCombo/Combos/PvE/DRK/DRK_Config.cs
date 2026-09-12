@@ -340,7 +340,7 @@ internal partial class DRK
 
                 case Preset.DRK_ST_Sp_Edge:
                     DrawSliderInt(0, 3000, DRK_ST_ManaSpenderPooling,
-                        "Mana to always save for TBN (0 = Use All)",
+                        "Mana to always save for TBN (0 = Use All). Spent freely until you have The Blackest Night.",
                         itemWidth: biggest,
                         sliderIncrement: SliderIncrements.Thousands);
                     DrawDifficultyMultiChoice(
@@ -430,7 +430,7 @@ internal partial class DRK
 
                 case Preset.DRK_AoE_Sp_Flood:
                     DrawSliderInt(0, 3000, DRK_AoE_ManaSpenderPooling,
-                        "Mana to save for TBN (0 = Use All)",
+                        "Mana to save for TBN (0 = Use All). Spent freely until you have The Blackest Night.",
                         itemWidth: biggest,
                         sliderIncrement: SliderIncrements.Thousands);
 
@@ -931,6 +931,7 @@ internal partial class DRK
 
         /// <summary>
         ///     How much mana to save for TBN.
+        ///     Ignored until The Blackest Night is available.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: 3000 <br />
@@ -1117,6 +1118,7 @@ internal partial class DRK
 
         /// <summary>
         ///     How much mana to save for TBN in AoE.
+        ///     Ignored until The Blackest Night is available.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: 0 <br />

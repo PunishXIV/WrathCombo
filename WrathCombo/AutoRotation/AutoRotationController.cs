@@ -930,7 +930,6 @@ internal unsafe class AutoRotationController
                 var s = ActionSheet.TryGetValue(outAct, out var sheet);
                 var targetsHostile = s && sheet.CanTargetHostile;
 
-                bool switched = SwitchOnDChole(attributes, outAct, ref target);
                 var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
                 bool orbwalking = cfg.OrbwalkerIntegration && OrbwalkerIPC.CanOrbwalk;
 
@@ -1006,7 +1005,6 @@ internal unsafe class AutoRotationController
                 return false;
             }
 
-            bool switched = SwitchOnDChole(attributes, outAct, ref target);
             if (outAct is DNC.ClosedPosition && DNC.DancePartnerResolver() is IBattleChara dp)
                 target = dp;
 
@@ -1056,26 +1054,6 @@ internal unsafe class AutoRotationController
                     _lockedST = false;
 
                 return true;
-            }
-
-            return false;
-        }
-
-        private static bool SwitchOnDChole(PresetStorage.PresetData attributes, uint outAct, ref IBattleChara? newtarget)
-        {
-            if (outAct is SGE.Druochole && !attributes.AutoAction!.IsHeal)
-            {
-                if (GetPartyMembers()
-                    .Where(x => !x.BattleChara.IsDead &&
-                                x.BattleChara.IsTargetable &&
-                                GetTargetDistance(x.BattleChara) <= QueryRange &&
-                                IsInLineOfSight(x.BattleChara))
-                    .OrderBy(x => GetTargetHPPercent(x.BattleChara))
-                    .Select(x => x.BattleChara)
-                    .TryGetFirst(out newtarget))
-                {
-                    return true;
-                }
             }
 
             return false;

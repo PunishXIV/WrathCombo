@@ -888,6 +888,10 @@ internal partial class DRK
                   (int)SimpleMitigation.On)))
                 manaPool = 3000;
 
+            // No TBN to save for (unlearned or synced below 70)
+            if (!ActionLearned(BlackestNight))
+                manaPool = 0;
+
             var hasEnoughMana = mana >= (manaPool + 3000) || Gauge.HasDarkArts;
             var secondsBeforeBurst =
                 flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST)

@@ -278,5 +278,210 @@ internal partial class BLU : Caster
         }
     }
 
+    internal class BLU_BuffedSoT : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLU_BuffedSoT;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not SongOfTorment)
+                return actionID;
+
+            if (IsSpellActive(Bristle) && ActionReady(Bristle) && !LocalPlayer.HasStatus(Buffs.Bristle))
+                return Bristle;
+
+            return ActionReady(SongOfTorment) ? SongOfTorment : actionID;
+        }
+    }
+
+    internal class BLU_PrimalCombo : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLU_PrimalCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (FeatherRain or Eruption))
+                return actionID;
+
+            if (LocalPlayer.HasStatus(Buffs.PhantomFlurry))
+                return OriginalHook(PhantomFlurry);
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_WingedReprobation) &&
+                LocalPlayer.Status(Buffs.WingedReprobation)?.Param > 1 &&
+                ActionReady(WingedReprobation))
+                return OriginalHook(WingedReprobation);
+
+            if (UseConvictionMarcato(ref actionID))
+                return actionID;
+
+            uint[] retargetFrom = [FeatherRain, Eruption];
+
+            if (WantFeatherRainPrimal(0) && ActionReady(FeatherRain) && CanUsePooledPrimal(30))
+                return FeatherRain.Retarget(retargetFrom, Target);
+
+            if (WantFeatherRainPrimal(1) && ActionReady(Eruption) && CanUsePooledPrimal(30))
+                return Eruption;
+
+            if (WantFeatherRainPrimal(2) && ActionReady(ShockStrike) && CanUsePooledPrimal(60))
+                return ShockStrike;
+
+            if (WantFeatherRainPrimal(3) && ActionReady(RoseOfDestruction) && CanUsePooledPrimal(30))
+                return RoseOfDestruction;
+
+            if (WantFeatherRainPrimal(4) && ActionReady(GlassDance) && CanUsePooledPrimal(90))
+                return GlassDance;
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_JKick) && ActionReady(JKick) && CanUsePooledPrimal(60))
+                return JKick;
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_Nightbloom) && ActionReady(Nightbloom))
+                return Nightbloom;
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_Matra) && ActionReady(MatraMagic))
+                return MatraMagic;
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_Suparnakha) && IsSpellActive(Surpanakha))
+            {
+                if (GetRemainingCharges(Surpanakha) == 4)
+                    _surpanakhaReady = true;
+                if (_surpanakhaReady && GetRemainingCharges(Surpanakha) > 0)
+                    return Surpanakha;
+                if (GetRemainingCharges(Surpanakha) == 0)
+                    _surpanakhaReady = false;
+            }
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_WingedReprobation) && ActionReady(WingedReprobation))
+                return OriginalHook(WingedReprobation);
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_SeaShanty) && ActionReady(SeaShanty))
+                return SeaShanty;
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_PhantomFlurry) && ActionReady(PhantomFlurry))
+                return PhantomFlurry;
+
+            return actionID;
+        }
+    }
+
+    internal class BLU_NewMoonFluteOpener : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLU_NewMoonFluteOpener;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not MoonFlute)
+                return actionID;
+
+            if (LocalPlayer.HasStatus(Buffs.WaningNocturne))
+                return actionID;
+
+            if (LocalPlayer.Status(Buffs.PhantomFlurry).RemainingTimeOrZero() > 0)
+                return All.Cease;
+
+            if (!LocalPlayer.HasStatus(Buffs.MoonFlute))
+            {
+                if (ActionReady(Whistle) && !LocalPlayer.HasStatus(Buffs.Whistle) && !WasLastAction(Whistle))
+                    return Whistle;
+
+                if (ActionReady(Tingle) && !LocalPlayer.HasStatus(Buffs.Tingle))
+                    return Tingle;
+
+                if (IsSpellActive(RoseOfDestruction) && GetCooldownRemainingTime(RoseOfDestruction) < 1f)
+                    return RoseOfDestruction;
+
+                if (ActionReady(MoonFlute) && !JustUsed(MoonFlute))
+                    return MoonFlute;
+            }
+
+            if (!Config.BLU_ManualJKick && ActionReady(JKick))
+                return JKick;
+
+            if (ActionReady(TripleTrident))
+                return TripleTrident;
+
+            if (ActionReady(Nightbloom))
+                return Nightbloom;
+
+            if (UseConvictionMarcato(ref actionID))
+                return actionID;
+
+            if (IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
+            {
+                if ((!CurrentTarget.HasStatus(Debuffs.BreathOfMagic, true) && IsSpellActive(BreathOfMagic)) ||
+                    (!CurrentTarget.HasStatus(Debuffs.MortalFlame, true) && IsSpellActive(MortalFlame)))
+                {
+                    if (ActionReady(Bristle) && !LocalPlayer.HasStatus(Buffs.Bristle))
+                        return Bristle;
+
+                    if (ActionReady(FeatherRain))
+                        return FeatherRain.Retarget(MoonFlute, Target);
+
+                    if (ActionReady(SeaShanty))
+                        return SeaShanty;
+
+                    if (IsSpellActive(BreathOfMagic) && !CurrentTarget.HasStatus(Debuffs.BreathOfMagic, true))
+                        return BreathOfMagic;
+
+                    if (IsSpellActive(MortalFlame) && !CurrentTarget.HasStatus(Debuffs.MortalFlame, true))
+                        return MortalFlame;
+                }
+            }
+            else
+            {
+                if (ActionReady(WingedReprobation) &&
+                    !WasLastSpell(WingedReprobation) &&
+                    !WasLastAbility(FeatherRain) &&
+                    (!LocalPlayer.HasStatus(Buffs.WingedReprobation) ||
+                     LocalPlayer.Status(Buffs.WingedReprobation)?.Param < 2))
+                    return WingedReprobation;
+
+                if (ActionReady(FeatherRain))
+                    return FeatherRain.Retarget(MoonFlute, Target);
+
+                if (ActionReady(SeaShanty))
+                    return SeaShanty;
+            }
+
+            if (UseConvictionMarcato(ref actionID))
+                return actionID;
+
+            if (ActionReady(WingedReprobation) &&
+                !WasLastAbility(ShockStrike) &&
+                LocalPlayer.Status(Buffs.WingedReprobation)?.Param < 2)
+                return WingedReprobation;
+
+            if (ActionReady(ShockStrike))
+                return ShockStrike;
+
+            if (ActionReady(BeingMortal) && IsNotEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
+                return BeingMortal;
+
+            if (ActionReady(Bristle) &&
+                !LocalPlayer.HasStatus(Buffs.Bristle) &&
+                ActionReady(MatraMagic))
+                return Bristle;
+
+            if (ActionReady(Role.Swiftcast))
+                return Role.Swiftcast;
+
+            if (IsSpellActive(Surpanakha) && GetRemainingCharges(Surpanakha) > 0)
+                return Surpanakha;
+
+            if (ActionReady(MatraMagic) && LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
+                return MatraMagic;
+
+            if (ActionReady(BeingMortal) && IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
+                return BeingMortal;
+
+            if (ActionReady(PhantomFlurry))
+                return PhantomFlurry;
+
+            if (LocalPlayer.HasStatus(Buffs.MoonFlute))
+                return All.Cease;
+
+            return actionID;
+        }
+    }
+
     #endregion
 }

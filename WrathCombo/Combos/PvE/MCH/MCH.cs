@@ -73,7 +73,7 @@ internal partial class MCH : PhysicalRanged
             if (UseReassemble(false, 0) && !IsOverheated)
                 return Reassemble;
 
-            if (UseTools(ref actionID, false) && !IsOverheated)
+            if (UseTools(ref actionID, false, reassembleChoice: 0) && !IsOverheated)
                 return actionID;
 
             if (IsOverheated && ActionReady(OriginalHook(Heatblast)))

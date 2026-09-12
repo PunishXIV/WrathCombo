@@ -36,6 +36,7 @@ internal partial class OccultCrescent
                     DrawAdditionalBoolChoice(Phantom_Knight_Pray_KeepUp,
                         "Keep Pray up",
                         "Also use Pray whenever the buff is missing, not only below the HP threshold.");
+                    DrawStatusRefreshSlider();
                     break;
                 case Preset.Phantom_Knight_OccultHeal:
                     DrawSliderInt(1, 100, Phantom_Knight_OccultHeal_Health,
@@ -107,6 +108,26 @@ internal partial class OccultCrescent
                     DrawAdditionalBoolChoice(Phantom_BlackMage_OccultToad_RequireAoE,
                         "Only as AoE mit",
                         "Only use Occult Toad with 2+ targets in range, or when raidwide damage is incoming.");
+                    break;
+
+                case Preset.Phantom_Monk_Counterstance:
+                case Preset.Phantom_Thief_PilferWeapon:
+                case Preset.Phantom_Ninja_Smoke:
+                case Preset.Phantom_TimeMage_OccultMageMasher:
+                case Preset.Phantom_Bard_OffensiveAria:
+                case Preset.Phantom_Dancer_QuickStep:
+                    DrawStatusRefreshSlider();
+                    break;
+
+                case Preset.Phantom_RedMage_OccultLibra_Refresh:
+                    DrawSliderInt(1, 60, Phantom_RedMage_OccultLibra_RefreshRemaining,
+                        "Refresh Occult Libra when remaining time is at or below this many seconds.",
+                        200);
+                    break;
+
+                case Preset.Phantom_MysticKnight_BlazingSpellblade:
+                    DrawStatusRefreshSlider(
+                        "Blazing Spellblade also refreshes at 30s remaining so other Spellblades do not take its cooldown.");
                     break;
 
                 case Preset.Phantom_Ranger_OccultUnicorn:
@@ -282,6 +303,16 @@ internal partial class OccultCrescent
                     break;
             }
         }
+
+        private static void DrawStatusRefreshSlider(string extraNote = "")
+        {
+            DrawSliderInt(0, 15, Phantom_StatusRefresh_Remaining,
+                "Refresh this buff or debuff when remaining time is at or below this many seconds. 0 waits until it drops.",
+                200);
+            if (extraNote.Length > 0)
+                ImGui.TextWrapped(extraNote);
+        }
+
         #region Variables
 
         public static UserInt
@@ -315,7 +346,9 @@ internal partial class OccultCrescent
             Phantom_Necromancer_DrainTouch_Mode = new("Phantom_Necromancer_DrainTouch_Mode", 0),
             Phantom_Necromancer_SpellDuringDrainTouch = new("Phantom_Necromancer_SpellDuringDrainTouch", 0),
             Phantom_Cannoneer_DarkShockPrefer = new("Phantom_Cannoneer_DarkShockPrefer", 0),
-            Phantom_Cannoneer_DarkShockImmunePrefer = new("Phantom_Cannoneer_DarkShockImmunePrefer", 0);
+            Phantom_Cannoneer_DarkShockImmunePrefer = new("Phantom_Cannoneer_DarkShockImmunePrefer", 0),
+            Phantom_StatusRefresh_Remaining = new("Phantom_StatusRefresh_Remaining", 5),
+            Phantom_RedMage_OccultLibra_RefreshRemaining = new("Phantom_RedMage_OccultLibra_RefreshRemaining", 30);
 
         public static UserBool
             Phantom_Chemist_OccultElixir_RequireParty = new("Phantom_Chemist_OccultElixir_RequireParty", true),

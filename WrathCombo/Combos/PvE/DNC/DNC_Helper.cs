@@ -56,6 +56,13 @@ internal partial class DNC
     private static bool EnemyIn15Yalms => NumberOfEnemiesInRange(FinishingMove) > 0;
 
     /// <summary>
+    ///     Hold Standard Step during Technical Finish so Finishing Move can replace it.
+    ///     Below 96 there is no Finishing Move, so Standard should still go out on cooldown.
+    /// </summary>
+    private static bool ShouldHoldStandardForFinishingMove =>
+        ActionLearned(FinishingMove) && LocalPlayer.HasStatus(Buffs.TechnicalFinish);
+
+    /// <summary>
     ///     Checks if any enemy is within 8 yalms.
     /// </summary>
     /// <remarks>

@@ -1,5 +1,6 @@
 using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
 using static WrathCombo.Window.Functions.UserConfig;
 
@@ -15,7 +16,10 @@ internal partial class BLU
             BLU_Balance_Content = new("BLU_Balance_Content", 1),
             BLU_SelectedOpener = new("BLU_SelectedOpener", 0);
         public static UserBool
-            BLU_Opener_PrepullBlock = new("BLU_Opener_PrepullBlock", true);
+            BLU_Opener_PrepullBlock = new("BLU_Opener_PrepullBlock", true),
+            BLU_ManualJKick = new("BLU_ManualJKick", false);
+        public static UserBoolArray
+            BLU_PrimalCombo_Spells = new("BLU_PrimalCombo_Spells", [true, true, true, true, true]);
 
         internal static void Draw(Preset preset)
         {
@@ -34,6 +38,24 @@ internal partial class BLU
                         1, descriptionAsTooltip: true);
 
                     DrawOpenerPrepullBlockChoice(BLU_Opener_PrepullBlock);
+                    DrawAdditionalBoolChoice(BLU_ManualJKick,
+                        "Input J Kick yourself",
+                        "Skips J Kick in the opener and 1-button primals so you can gap-close with it. Reopeners will not wait for J Kick.");
+                    break;
+
+                case Preset.BLU_NewMoonFluteOpener:
+                    DrawAdditionalBoolChoice(BLU_ManualJKick,
+                        "Input J Kick yourself",
+                        "Skips J Kick in this opener so you can gap-close with it. Reopeners will not wait for J Kick.");
+                    break;
+
+                case Preset.BLU_PrimalCombo:
+                    ImGuiEx.TextUnderlined("Primals to use on this button");
+                    DrawHorizontalMultiChoice(BLU_PrimalCombo_Spells, FeatherRain.ActionName(), "Use Feather Rain.", 5, 0);
+                    DrawHorizontalMultiChoice(BLU_PrimalCombo_Spells, Eruption.ActionName(), "Use Eruption.", 5, 1);
+                    DrawHorizontalMultiChoice(BLU_PrimalCombo_Spells, ShockStrike.ActionName(), "Use Shock Strike.", 5, 2);
+                    DrawHorizontalMultiChoice(BLU_PrimalCombo_Spells, RoseOfDestruction.ActionName(), "Use Rose of Destruction.", 5, 3);
+                    DrawHorizontalMultiChoice(BLU_PrimalCombo_Spells, GlassDance.ActionName(), "Use Glass Dance.", 5, 4);
                     break;
 
                 case Preset.BLU_ST_DPS_SongOfTorment:
