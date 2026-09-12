@@ -1,5 +1,4 @@
 using Dalamud.Interface.Colors;
-using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
@@ -20,6 +19,7 @@ internal partial class VPR
                 case Preset.VPR_ST_Opener:
                     DrawBossOnlyChoice(VPR_Balance_Content);
                     DrawOpenerPotionChoice(VPR_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(VPR_Opener_PrepullBlock);
                     DrawAdditionalBoolChoice(VPR_Opener_ExcludeUF,
                         FormatAndCache(Generics.Exclude0, UncoiledFury.ActionName()),
                         "");
@@ -210,6 +210,7 @@ internal partial class VPR
 
         public static UserBool
             VPR_Opener_Potion = new("VPR_Opener_Potion"),
+            VPR_Opener_PrepullBlock = new("VPR_Opener_PrepullBlock", true),
             VPR_Opener_ExcludeUF = new("VPR_Opener_ExcludeUF"),
             VPR_TrueNorthVicewinder = new("VPR_TrueNorthVicewinder"),
             VPR_Slither_FieldMouseover = new("VPR_Slither_FieldMouseover"),

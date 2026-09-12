@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static ECommons.DalamudServices.Svc;
 using static FFXIVClientStructs.FFXIV.Client.Game.ActionManager;
 using static WrathCombo.Combos.PvE.VPR.Config;
@@ -190,7 +191,7 @@ internal partial class VPR
 
     private static bool ShouldSaveOfferingForBurst =>
         UsesBurstAlignment &&
-        (LocalPlayer.HasStatus(Buffs.ReadyToReawaken) || IreCD > 0 && IreCD <= IreOfferingSaveWindow);
+        (LocalPlayer.HasStatus(Buffs.ReadyToReawaken) || IreCD is > 0 and <= IreOfferingSaveWindow);
 
     #endregion
 
@@ -515,28 +516,60 @@ internal partial class VPR
 
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
             ActionLearned(Vicewinder) &&
-            !LocalPlayer.HasStatus(Buffs.Reawakened))
+            !LocalPlayer.HasStatus(Buffs.Reawakened) &&
+            TryGetNextVicewinderCoil(vicewinderBuffPrio, out uint coil))
         {
-            if (UsedVicewinder &&
-                (!LocalPlayer.HasStatus(Buffs.Swiftscaled) ||
-                 HasBothBuffs && (!OnTargetsFlank() || !TargetNeedsPositionals()) ||
-                 vicewinderBuffPrio && LocalPlayer.Status(Buffs.Swiftscaled).RemainingTimeOrZero() < GCD * 6) ||
-                UsedHuntersCoil)
-            {
-                actionId = SwiftskinsCoil;
-                return true;
-            }
-
-            if (UsedVicewinder &&
-                (!LocalPlayer.HasStatus(Buffs.HuntersInstinct) ||
-                 HasBothBuffs && (!OnTargetsRear() || !TargetNeedsPositionals()) ||
-                 vicewinderBuffPrio && LocalPlayer.Status(Buffs.HuntersInstinct).RemainingTimeOrZero() < GCD * 6) ||
-                UsedSwiftskinsCoil)
-            {
-                actionId = HuntersCoil;
-                return true;
-            }
+            actionId = coil;
+            return true;
         }
+
+        return false;
+    }
+
+    /// <summary> Next coil in the dread combo (shared by rotation and positional hints). </summary>
+    private static bool TryGetNextVicewinderCoil(bool vicewinderBuffPrio, out uint coil)
+    {
+        coil = 0;
+
+        if (UsedHuntersCoil)
+        {
+            coil = SwiftskinsCoil;
+            return true;
+        }
+
+        if (UsedSwiftskinsCoil)
+        {
+            coil = HuntersCoil;
+            return true;
+        }
+
+        if (!UsedVicewinder)
+            return false;
+
+        return TryGetFirstVicewinderCoil(vicewinderBuffPrio, out coil);
+    }
+
+    /// <summary> First coil after Vicewinder (buffs / facing / buff-prio). </summary>
+    private static bool TryGetFirstVicewinderCoil(bool vicewinderBuffPrio, out uint coil)
+    {
+        coil = 0;
+
+        if (!LocalPlayer.HasStatus(Buffs.Swiftscaled) ||
+            HasBothBuffs && (!OnTargetsFlank() || !TargetNeedsPositionals()) ||
+            vicewinderBuffPrio && LocalPlayer.Status(Buffs.Swiftscaled).RemainingTimeOrZero() < GCD * 6)
+        {
+            coil = SwiftskinsCoil;
+            return true;
+        }
+
+        if (!LocalPlayer.HasStatus(Buffs.HuntersInstinct) ||
+            HasBothBuffs && (!OnTargetsRear() || !TargetNeedsPositionals()) ||
+            vicewinderBuffPrio && LocalPlayer.Status(Buffs.HuntersInstinct).RemainingTimeOrZero() < GCD * 6)
+        {
+            coil = HuntersCoil;
+            return true;
+        }
+
         return false;
     }
 
@@ -547,7 +580,7 @@ internal partial class VPR
     internal static WrathOpener Opener()
     {
         if (DMUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1363)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU)
             return DMUOpener;
 
         if (StandardOpener.LevelChecked)
@@ -583,131 +616,135 @@ internal partial class VPR
             !LocalPlayer.HasStatus(Buffs.SwiftskinsVenom) &&
             !JustUsed(HuntersCoil) &&
             !JustUsed(SwiftskinsCoil);
+
+        internal static uint HuntersCoilOrSwiftskinsCoil =>
+            OnTargetsRear() ? SwiftskinsCoil : HuntersCoil;
+
+        internal static uint TwinfangBiteOrTwinbloodBite =>
+            LocalPlayer.HasStatus(Buffs.SwiftskinsVenom) ? TwinbloodBite : TwinfangBite;
+
+        internal static uint TwinbloodBiteOrTwinfangBite =>
+            LocalPlayer.HasStatus(Buffs.HuntersVenom) ? TwinfangBite : TwinbloodBite;
+
+        internal static uint SwiftskinsCoilOrHuntersCoil =>
+            UsedSwiftskinsCoil ? HuntersCoil : SwiftskinsCoil;
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !VPR_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !VPR_Opener_PrepullBlock)
+        ];
     }
 
     internal class VPRStandardOpener : VPROpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => ReavingFangs, // 1
-            () => SerpentsIre, // 2
-            () => SwiftskinsSting, // 3
-            () => Vicewinder, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => HuntersCoil, // 6
-            () => TwinfangBite, // 7
-            () => TwinbloodBite, // 8
-            () => SwiftskinsCoil, // 9
-            () => TwinbloodBite, // 10
-            () => TwinfangBite, // 11
-            () => Reawaken, // 12
-            () => FirstGeneration, // 13
-            () => FirstLegacy, // 14
-            () => SecondGeneration, // 15
-            () => SecondLegacy, // 16
-            () => ThirdGeneration, // 17
-            () => ThirdLegacy, // 18
-            () => FourthGeneration, // 19
-            () => FourthLegacy, // 20
-            () => Ouroboros, // 21
-            () => UncoiledFury, // 22
-            () => UncoiledTwinfang, // 23
-            () => UncoiledTwinblood, // 24
-            () => UncoiledFury, // 25
-            () => UncoiledTwinfang, // 26
-            () => UncoiledTwinblood, // 27
-            () => HindstingStrike, // 28
-            () => DeathRattle, // 29
-            () => Vicewinder, // 30
-            () => HuntersCoil, // 31
-            () => TwinfangBite, // 32
-            () => TwinbloodBite, // 33
-            () => SwiftskinsCoil, // 34
-            () => TwinbloodBite, // 35
-            () => TwinfangBite // 36
+            () => All.Cease, // 1
+            () => ReavingFangs, // 2
+            () => SerpentsIre, // 3
+            () => SwiftskinsSting, // 4
+            () => Vicewinder, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            () => HuntersCoil, // 7
+            () => TwinfangBite, // 8
+            () => TwinbloodBite, // 9
+            () => SwiftskinsCoil, // 10
+            () => TwinbloodBite, // 11
+            () => TwinfangBite, // 12
+            () => Reawaken, // 13
+            () => FirstGeneration, // 14
+            () => FirstLegacy, // 15
+            () => SecondGeneration, // 16
+            () => SecondLegacy, // 17
+            () => ThirdGeneration, // 18
+            () => ThirdLegacy, // 19
+            () => FourthGeneration, // 20
+            () => FourthLegacy, // 21
+            () => Ouroboros, // 22
+            () => UncoiledFury, // 23
+            () => UncoiledTwinfang, // 24
+            () => UncoiledTwinblood, // 25
+            () => UncoiledFury, // 26
+            () => UncoiledTwinfang, // 27
+            () => UncoiledTwinblood, // 28
+            () => HindstingStrike, // 29
+            () => DeathRattle, // 30
+            () => Vicewinder, // 31
+            () => HuntersCoilOrSwiftskinsCoil, // 32
+            () => TwinfangBiteOrTwinbloodBite, // 33
+            () => TwinbloodBiteOrTwinfangBite, // 34
+            () => SwiftskinsCoilOrHuntersCoil, // 35
+            () => TwinbloodBiteOrTwinfangBite, // 36
+            () => TwinfangBiteOrTwinbloodBite // 37
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([31], SwiftskinsCoil, OnTargetsRear),
-            ([32], TwinbloodBite, () => LocalPlayer.HasStatus(Buffs.SwiftskinsVenom)),
-            ([33], TwinfangBite, () => LocalPlayer.HasStatus(Buffs.HuntersVenom)),
-            ([34], HuntersCoil, () => UsedSwiftskinsCoil),
-            ([35], TwinfangBite, () => LocalPlayer.HasStatus(Buffs.HuntersVenom)),
-            ([36], TwinbloodBite, () => LocalPlayer.HasStatus(Buffs.SwiftskinsVenom))
-        ];
+        public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([22, 23, 24, 25, 26, 27], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)),
-            ([28], () => ComboAction is not SwiftskinsSting),
-            ([29], () => !IsDeathRattleWeave && !JustUsed(HindstingStrike)),
-            ([7, 8, 10, 11, 32, 33, 35, 36], OpenerTwinBiteMissed),
-            ([12], OpenerReawakenAlreadyUsed)
-        ];
-
-        public override List<int> DelayedWeaveSteps { get; set; } = [5];
+        public VPRStandardOpener()
+        {
+            SkipSteps.Add(([23, 24, 25, 26, 27, 28], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)));
+            SkipSteps.Add(([29], () => ComboAction is not SwiftskinsSting));
+            SkipSteps.Add(([30], () => !IsDeathRattleWeave && !JustUsed(HindstingStrike)));
+            SkipSteps.Add(([8, 9, 11, 12, 33, 34, 36, 37], OpenerTwinBiteMissed));
+            SkipSteps.Add(([13], OpenerReawakenAlreadyUsed));
+        }
     }
 
     internal class VPRDMUOpener : VPROpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Vicewinder, // 1
-            () => SerpentsIre, // 2
-            () => HuntersCoil, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 4
-            () => TwinfangBite, // 5
-            () => TwinbloodBite, // 6
-            () => SwiftskinsCoil, // 7
-            () => TwinbloodBite, // 8
-            () => TwinfangBite, // 9
-            () => Reawaken, // 10
-            () => FirstGeneration, // 11
-            () => FirstLegacy, // 12
-            () => SecondGeneration, // 13
-            () => SecondLegacy, // 14
-            () => ThirdGeneration, // 15
-            () => ThirdLegacy, // 16
-            () => FourthGeneration, // 17
-            () => FourthLegacy, // 18
-            () => Ouroboros, // 19
-            () => UncoiledFury, // 20
-            () => UncoiledTwinfang, // 21
-            () => UncoiledTwinblood, // 22
-            () => Vicewinder, // 23
-            () => HuntersCoil, // 24
-            () => TwinfangBite, // 25
-            () => TwinbloodBite, // 26
-            () => SwiftskinsCoil, // 27
-            () => TwinbloodBite, // 28
-            () => TwinfangBite, // 29
-            () => UncoiledFury, // 30
-            () => UncoiledTwinfang, // 31
-            () => UncoiledTwinblood, // 32
-            () => UncoiledFury, // 33
-            () => UncoiledTwinfang, // 34
-            () => UncoiledTwinblood // 35
+            () => All.Cease, // 1
+            () => Vicewinder, // 2
+            () => SerpentsIre, // 3
+            () => HuntersCoil, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
+            () => TwinfangBite, // 6
+            () => TwinbloodBite, // 7
+            () => SwiftskinsCoil, // 8
+            () => TwinbloodBite, // 9
+            () => TwinfangBite, // 10
+            () => Reawaken, // 11
+            () => FirstGeneration, // 12
+            () => FirstLegacy, // 13
+            () => SecondGeneration, // 14
+            () => SecondLegacy, // 15
+            () => ThirdGeneration, // 16
+            () => ThirdLegacy, // 17
+            () => FourthGeneration, // 18
+            () => FourthLegacy, // 19
+            () => Ouroboros, // 20
+            () => UncoiledFury, // 21
+            () => UncoiledTwinfang, // 22
+            () => UncoiledTwinblood, // 23
+            () => Vicewinder, // 24
+            () => HuntersCoilOrSwiftskinsCoil, // 25
+            () => TwinfangBiteOrTwinbloodBite, // 26
+            () => TwinbloodBiteOrTwinfangBite, // 27
+            () => SwiftskinsCoilOrHuntersCoil, // 28
+            () => TwinbloodBiteOrTwinfangBite, // 29
+            () => TwinfangBiteOrTwinbloodBite, // 30
+            () => UncoiledFury, // 31
+            () => UncoiledTwinfang, // 32
+            () => UncoiledTwinblood, // 33
+            () => UncoiledFury, // 34
+            () => UncoiledTwinfang, // 35
+            () => UncoiledTwinblood // 36
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([24], SwiftskinsCoil, OnTargetsRear),
-            ([25], TwinbloodBite, () => LocalPlayer.HasStatus(Buffs.SwiftskinsVenom)),
-            ([26], TwinfangBite, () => LocalPlayer.HasStatus(Buffs.HuntersVenom)),
-            ([27], HuntersCoil, () => UsedSwiftskinsCoil),
-            ([28], TwinfangBite, () => LocalPlayer.HasStatus(Buffs.HuntersVenom)),
-            ([29], TwinbloodBite, () => LocalPlayer.HasStatus(Buffs.SwiftskinsVenom))
-        ];
+        public override List<int> DelayedWeaveSteps { get; set; } = [5];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([20, 21, 22, 30, 31, 32, 33, 34, 35], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)),
-            ([5, 6, 8, 9, 25, 26, 28, 29], OpenerTwinBiteMissed),
-            ([10], OpenerReawakenAlreadyUsed)
-        ];
-
-        public override List<int> DelayedWeaveSteps { get; set; } = [4];
+        public VPRDMUOpener()
+        {
+            SkipSteps.Add(([21, 22, 23, 31, 32, 33, 34, 35, 36], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)));
+            SkipSteps.Add(([6, 7, 9, 10, 26, 27, 29, 30], OpenerTwinBiteMissed));
+            SkipSteps.Add(([11], OpenerReawakenAlreadyUsed));
+        }
     }
 
     #endregion

@@ -46,10 +46,8 @@ namespace WrathCombo.Extensions
             public ushort Stacks => status?.Param ?? 0;
 
             /// <summary>
-            /// Returns the name of the Status, empty if null
+            /// Returns the name of the Status, empty if null.
             /// </summary>
-            /// <param name="id"></param>
-            /// <returns></returns>
             public string Name
                 => status is null ? string.Empty : ActionAndStatusLocalization.GetStatusName(status.StatusId);
 

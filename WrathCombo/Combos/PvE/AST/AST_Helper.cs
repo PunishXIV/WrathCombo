@@ -492,34 +492,9 @@ internal partial class AST
     }
     
     public static ASTOpenerMaxLevel1 Opener1 = new();
-    
-    internal class ASTOpenerMaxLevel1 : WrathOpener
+
+    internal abstract class ASTOpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => EarthlyStar, // 1
-            () => FallMalefic, // 2
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 3
-            () => Combust3, // 4
-            () => Lightspeed, // 5
-            () => FallMalefic, // 6
-            () => FallMalefic, // 7
-            () => Divination, // 8
-            () => Balance, // 9
-            () => FallMalefic, // 10
-            () => LordOfCrowns, // 11
-            () => UmbralDraw, // 12
-            () => FallMalefic, // 13
-            () => Spear, // 14
-            () => Oracle, // 15
-            () => FallMalefic, // 16
-            () => FallMalefic, // 17
-            () => FallMalefic, // 18
-            () => FallMalefic, // 19
-            () => FallMalefic, // 20
-            () => Combust3, // 21
-            () => FallMalefic // 22
-        ];
         public override int MinOpenerLevel => 92;
         public override int MaxOpenerLevel => 109;
 
@@ -527,10 +502,17 @@ internal partial class AST
 
         internal override UserData? ContentCheckConfig => AST_ST_DPS_Balance_Content;
         internal override bool IncludePot => AST_Opener_Potion;
-        
+
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => AST_ST_DPS_Opener_SkipStar == 1)
+            ([1], () => CountdownActive || InCombat() || !AST_Opener_PrepullBlock),
+            ([2], () => AST_ST_DPS_Opener_SkipStar == 1)
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !AST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (AST_ST_DPS_Opener_SkipStar == 1 ? 2.1f : 4))),
+            ([3], () => !AST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2.1f))
         ];
 
         public override bool HasCooldowns()
@@ -555,6 +537,36 @@ internal partial class AST
 
             return true;
         }
+    }
+
+    internal class ASTOpenerMaxLevel1 : ASTOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => EarthlyStar, // 2
+            () => FallMalefic, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 4
+            () => Combust3, // 5
+            () => Lightspeed, // 6
+            () => FallMalefic, // 7
+            () => FallMalefic, // 8
+            () => Divination, // 9
+            () => Balance, // 10
+            () => FallMalefic, // 11
+            () => LordOfCrowns, // 12
+            () => UmbralDraw, // 13
+            () => FallMalefic, // 14
+            () => Spear, // 15
+            () => Oracle, // 16
+            () => FallMalefic, // 17
+            () => FallMalefic, // 18
+            () => FallMalefic, // 19
+            () => FallMalefic, // 20
+            () => FallMalefic, // 21
+            () => Combust3, // 22
+            () => FallMalefic // 23
+        ];
     }
     #endregion
 

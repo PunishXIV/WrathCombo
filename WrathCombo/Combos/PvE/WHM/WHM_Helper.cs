@@ -314,37 +314,24 @@ internal partial class WHM
         return WrathOpener.Dummy;
     }
 
-    internal class WHMOpenerMaxLevel1 : WrathOpener
+    internal abstract class WHMOpenerBase : WrathOpener
     {
         public override int MinOpenerLevel => 92;
-
         public override int MaxOpenerLevel => 109;
-
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Glare3, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
-            () => Dia, // 3
-            () => Glare3, // 4
-            () => Glare3, // 5
-            () => PresenceOfMind, // 6
-            () => Glare4, // 7
-            () => AfflatusMisery, // 8
-            () => Assize, // 9
-            () => Glare4, // 10
-            () => Glare4, // 11
-            () => Glare3, // 12
-            () => Glare3, // 13
-            () => Glare3, // 14
-            () => Glare3, // 15
-            () => Glare3, // 16
-            () => Dia // 17
-        ];
-
+        public override Preset Preset => Preset.WHM_ST_MainCombo_Opener;
         internal override UserData ContentCheckConfig => WHM_Balance_Content;
         internal override bool IncludePot => WHM_Opener_Potion;
-        public override Preset Preset => Preset.WHM_ST_MainCombo_Opener;
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([8], () => !BloodLilyReady)];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !WHM_Opener_PrepullBlock),
+            ([9], () => !BloodLilyReady)
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !WHM_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2.3f))
+        ];
 
         public override bool HasCooldowns()
         {
@@ -356,6 +343,31 @@ internal partial class WHM
 
             return true;
         }
+    }
+
+    internal class WHMOpenerMaxLevel1 : WHMOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Glare3, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 3
+            () => Dia, // 4
+            () => Glare3, // 5
+            () => Glare3, // 6
+            () => PresenceOfMind, // 7
+            () => Glare4, // 8
+            () => AfflatusMisery, // 9
+            () => Assize, // 10
+            () => Glare4, // 11
+            () => Glare4, // 12
+            () => Glare3, // 13
+            () => Glare3, // 14
+            () => Glare3, // 15
+            () => Glare3, // 16
+            () => Glare3, // 17
+            () => Dia // 18
+        ];
     }
 
     #endregion

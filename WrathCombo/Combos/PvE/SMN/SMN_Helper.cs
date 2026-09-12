@@ -780,52 +780,30 @@ internal partial class SMN
         return Opener1.LevelChecked ? Opener1 : WrathOpener.Dummy;
     }
 
-    internal class SMNOpenerMaxLevel1 : WrathOpener
+    internal abstract class SMNOpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Ruin3, // 1
-            () => SummonSolarBahamut, // 2
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 3
-            () => UmbralImpulse, // 4
-            () => SearingLight, // 5
-            () => UmbralImpulse, // 6
-            () => UmbralImpulse, // 7
-            () => EnergyDrain, // 8
-            () => UmbralImpulse, // 9
-            () => EnkindleSolarBahamut, // 10
-            () => Necrotize, // 11
-            () => UmbralImpulse, // 12
-            () => Sunflare, // 13
-            () => Necrotize, // 14
-            () => UmbralImpulse, // 15
-            () => SearingFlash, // 16
-            () => SummonTitan2, // 17
-            () => TopazRite, // 18
-            () => MountainBuster, // 19
-            () => TopazRite, // 20
-            () => MountainBuster, // 21
-            () => TopazRite, // 22
-            () => MountainBuster, // 23
-            () => TopazRite, // 24
-            () => MountainBuster, // 25
-            () => SummonGaruda2, // 26
-            () => Role.Swiftcast, // 27
-            () => Slipstream, // 28
-
-        ];
-
-        public override List<int> DelayedWeaveSteps { get; set; } =
-        [
-            4,
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([26], () => SMN_Opener_SkipSwiftcast == 2)];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData? ContentCheckConfig => SMN_Balance_Content;
         internal override bool IncludePot => SMN_Opener_Potion;
         public override Preset Preset => Preset.SMN_ST_Advanced_Combo_Balance_Opener;
+
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            5,
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !SMN_Opener_PrepullBlock),
+            ([28], () => SMN_Opener_SkipSwiftcast == 2)
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !SMN_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1.5f))
+        ];
+
         public override bool HasCooldowns()
         {
             if (!HasPetPresent())
@@ -840,6 +818,42 @@ internal partial class SMN
 
             return true;
         }
+    }
+
+    internal class SMNOpenerMaxLevel1 : SMNOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Ruin3, // 2
+            () => SummonSolarBahamut, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 4
+            () => UmbralImpulse, // 5
+            () => SearingLight, // 6
+            () => UmbralImpulse, // 7
+            () => UmbralImpulse, // 8
+            () => EnergyDrain, // 9
+            () => UmbralImpulse, // 10
+            () => EnkindleSolarBahamut, // 11
+            () => Necrotize, // 12
+            () => UmbralImpulse, // 13
+            () => Sunflare, // 14
+            () => Necrotize, // 15
+            () => UmbralImpulse, // 16
+            () => SearingFlash, // 17
+            () => SummonTitan2, // 18
+            () => TopazRite, // 19
+            () => MountainBuster, // 20
+            () => TopazRite, // 21
+            () => MountainBuster, // 22
+            () => TopazRite, // 23
+            () => MountainBuster, // 24
+            () => TopazRite, // 25
+            () => MountainBuster, // 26
+            () => SummonGaruda2, // 27
+            () => Role.Swiftcast, // 28
+            () => Slipstream, // 29
+        ];
     }
     #endregion
 }

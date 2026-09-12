@@ -786,47 +786,23 @@ internal partial class PLD
         return Lvl100StandardOpener.LevelChecked ? Lvl100StandardOpener : WrathOpener.Dummy;
     }
 
-    internal class PLDLvl100StandardOpener : WrathOpener
+    internal abstract class PLDOpenerBase : WrathOpener
     {
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 100;
 
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => HolySpirit, // 1
-            () => FastBlade, // 2
-            () => RiotBlade, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
-            () => RoyalAuthority, // 5
-            () => FightOrFlight, // 6
-            () => Imperator, // 7
-            () => Confiteor, // 8
-            () => CircleOfScorn, // 9
-            () => Expiacion, // 10
-            () => BladeOfFaith, // 11
-            () => Intervene, // 12
-            () => BladeOfTruth, // 13
-            () => Intervene, // 14
-            () => BladeOfValor, // 15
-            () => BladeOfHonor, // 16
-            () => GoringBlade, // 17
-            () => Atonement, // 18
-            () => Supplication, // 19
-            () => Sepulchre, // 20
-            () => HolySpirit // 21
-        ];
+        public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
+
+        internal override UserData ContentCheckConfig => PLD_Balance_Content;
+        internal override bool IncludePot => PLD_Opener_Potion;
+
+        internal static uint HolySpiritOrFastBlade =>
+            !HasTarget() || InCombat() ? FastBlade : HolySpirit;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => InMeleeRange()),
-            ([12, 14], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0)
+            ([1], () => CountdownActive || InCombat() || !PLD_Opener_PrepullBlock)
         ];
-
-        public override List<int> AllowUpgradeSteps { get; set; } = [8, 11, 13, 15, 16];
-
-        public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
-        internal override UserData ContentCheckConfig => PLD_Balance_Content;
-        internal override bool IncludePot => PLD_Opener_Potion;
 
         public override bool HasCooldowns() =>
             IsOffCooldown(FightOrFlight) &&
@@ -836,60 +812,89 @@ internal partial class PLD
             IsOffCooldown(GoringBlade);
     }
 
-    internal class PLDLvl100EarlyBuffOpener : WrathOpener
+    internal class PLDLvl100StandardOpener : PLDOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 100;
-
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => HolySpirit, // 1
-            () => FastBlade, // 2
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
-            () => FightOrFlight, // 4
-            () => Imperator, // 5
-            () => RiotBlade, // 6
-            () => CircleOfScorn, // 7
-            () => Expiacion, // 8
-            () => RoyalAuthority, // 9
-            () => Intervene, // 10
-            () => GoringBlade, // 11
-            () => Intervene, // 12
-            () => Confiteor, // 13
-            () => BladeOfFaith, // 14
-            () => BladeOfTruth, // 15
+            () => All.Cease, // 1
+            () => HolySpirit, // 2
+            () => FastBlade, // 3
+            () => RiotBlade, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            () => RoyalAuthority, // 6
+            () => FightOrFlight, // 7
+            () => Imperator, // 8
+            () => Confiteor, // 9
+            () => CircleOfScorn, // 10
+            () => Expiacion, // 11
+            () => BladeOfFaith, // 12
+            () => Intervene, // 13
+            () => BladeOfTruth, // 14
+            () => Intervene, // 15
             () => BladeOfValor, // 16
             () => BladeOfHonor, // 17
-            () => HolySpirit, // 18
+            () => GoringBlade, // 18
             () => Atonement, // 19
             () => Supplication, // 20
-            () => Sepulchre // 21
+            () => Sepulchre, // 21
+            () => HolySpirit // 22
         ];
 
-        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], FastBlade, () => !HasTarget() || InCombat())
+            ([2], () => !PLD_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (InMeleeRange() ? 0 : 1.75f)))
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        public override List<int> AllowUpgradeSteps { get; set; } = [9, 12, 14, 16, 17];
+
+        public PLDLvl100StandardOpener()
+        {
+            SkipSteps.Add(([2], () => InMeleeRange()));
+            SkipSteps.Add(([13, 15], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0));
+        }
+    }
+
+    internal class PLDLvl100EarlyBuffOpener : PLDOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            ([2], () => ComboAction == FastBlade),
-            ([10, 12], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0),
-            ([19, 20, 21], () => !InMeleeRange())
+            () => All.Cease, // 1
+            () => HolySpiritOrFastBlade, // 2
+            () => FastBlade, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            () => FightOrFlight, // 5
+            () => Imperator, // 6
+            () => RiotBlade, // 7
+            () => CircleOfScorn, // 8
+            () => Expiacion, // 9
+            () => RoyalAuthority, // 10
+            () => Intervene, // 11
+            () => GoringBlade, // 12
+            () => Intervene, // 13
+            () => Confiteor, // 14
+            () => BladeOfFaith, // 15
+            () => BladeOfTruth, // 16
+            () => BladeOfValor, // 17
+            () => BladeOfHonor, // 18
+            () => HolySpirit, // 19
+            () => Atonement, // 20
+            () => Supplication, // 21
+            () => Sepulchre // 22
         ];
 
-        public override List<int> AllowUpgradeSteps { get; set; } = [13, 14, 15, 16, 17];
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !PLD_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (HolySpiritOrFastBlade == HolySpirit ? 1.75f : 0)))
+        ];
 
-        public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
-        internal override UserData ContentCheckConfig => PLD_Balance_Content;
-        internal override bool IncludePot => PLD_Opener_Potion;
+        public override List<int> AllowUpgradeSteps { get; set; } = [14, 15, 16, 17, 18];
 
-        public override bool HasCooldowns() =>
-            IsOffCooldown(FightOrFlight) &&
-            IsOffCooldown(Imperator) &&
-            IsOffCooldown(CircleOfScorn) &&
-            IsOffCooldown(Expiacion) &&
-            IsOffCooldown(GoringBlade);
+        public PLDLvl100EarlyBuffOpener()
+        {
+            SkipSteps.Add(([3], () => ComboAction == FastBlade));
+            SkipSteps.Add(([11, 13], () => !HasCharges(Intervene) || PLD_ST_AdvancedMode_BalanceOpener_Intervene != 0));
+            SkipSteps.Add(([20, 21, 22], () => !InMeleeRange()));
+        }
     }
 
     #endregion

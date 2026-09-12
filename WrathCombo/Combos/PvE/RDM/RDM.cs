@@ -219,7 +219,7 @@ internal partial class RDM : Caster
 
             #region Opener
 
-            if (!InCombat() && RDM_Opener_Selection == 2 && HasAccelerate && Opener().OpenerStep == 2)
+            if (!InCombat() && RDM_Opener_Selection == 2 && HasAccelerate && Opener().OpenerStep == 3)
                 StatusManager.ExecuteStatusOff(Buffs.Acceleration);
 
             if (IsEnabled(Preset.RDM_Balance_Opener) &&

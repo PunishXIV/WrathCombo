@@ -14,6 +14,7 @@ internal partial class RDM
         #region Options
         public static UserBool RDM_ST_ThunderAero_Pull = new("RDM_ST_ThunderAero_Pull", true),
             RDM_Opener_Potion = new("RDM_Opener_Potion"),
+            RDM_Opener_PrepullBlock = new("RDM_Opener_PrepullBlock", true),
             RDM_VerAero_Dynamic = new("RDM_VerAero_Dynamic", true),
             RDM_VerThunder_Dynamic = new("RDM_VerThunder_Dynamic", true),
             RDM_VerAero2_Dynamic = new("RDM_VerAero2_Dynamic", true),
@@ -21,7 +22,6 @@ internal partial class RDM
 
 
         public static UserInt
-            RDMFirstGCDOpenerAccelerationTime = new("RDMFirstGCDOpenerAccelerationTime", 10),
             RDM_ST_Lucid_Threshold = new("RDM_LucidDreaming_Threshold", 6500),
             RDM_AoE_Lucid_Threshold = new("RDM_AoE_Lucid_Threshold", 6500),
             RDM_BalanceOpener_Content = new("RDM_BalanceOpener_Content", 1),
@@ -77,6 +77,7 @@ internal partial class RDM
                 case Preset.RDM_Balance_Opener:
                     DrawBossOnlyChoice(RDM_BalanceOpener_Content);
                     DrawOpenerPotionChoice(RDM_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(RDM_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(RDM_Opener_Selection, Generics.StandardOpener,
@@ -85,11 +86,6 @@ internal partial class RDM
                         RDM_Config.RDMOpenerWarning, 1, descriptionAsTooltip: true);
                     DrawRadioButton(RDM_Opener_Selection, RDM_Config.RDMFirstGCDOpener,
                         FormatAndCache(RDM_Config.RDMFirstGCDOpenerWarning, Acceleration.ActionName(), Veraero3.ActionName()), 2, descriptionAsTooltip: true);
-
-                    if (RDM_Opener_Selection == 2)
-                    {
-                        DrawSliderInt(7, 25, RDMFirstGCDOpenerAccelerationTime, RDM_Config.RDMFirstGCDOpenerWarningTimer);
-                    }
                     break;
 
                 case Preset.RDM_ST_ThunderAero:

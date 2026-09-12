@@ -758,7 +758,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Lucid Dreaming when MP drops below slider value.
+        ///   Looks up a localized string similar to Adds Lucid Dreaming when MP drops below slider value..
         /// </summary>
         internal static string AST_AoE_Heals_Lucid_Desc {
             get {
@@ -1888,7 +1888,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Lucid Dreaming when MP drops below slider value.
+        ///   Looks up a localized string similar to Adds Lucid Dreaming when MP drops below slider value..
         /// </summary>
         internal static string AST_ST_Heals_Lucid_Desc {
             get {
@@ -3210,12 +3210,66 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adds Basic Instinct when solo in a duty..
+        /// </summary>
+        internal static string BLU_AoE_DPS_BasicInstinct_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_BasicInstinct_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic Instinct.
+        /// </summary>
+        internal static string BLU_AoE_DPS_BasicInstinct_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_BasicInstinct_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaces Electrogenesis with a full one-button AoE rotation.
-        ///Also used with Healer Mimicry when the party does not need healing.
+        ///Also used with Healer Mimicry when the party does not need healing..
         /// </summary>
         internal static string BLU_AoE_DPS_Desc {
             get {
                 return ResourceManager.GetString("BLU_AoE_DPS_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Flying Sardine..
+        /// </summary>
+        internal static string BLU_AoE_DPS_FlyingSardine_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_FlyingSardine_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flying Sardine.
+        /// </summary>
+        internal static string BLU_AoE_DPS_FlyingSardine_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_FlyingSardine_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Hydro Pull..
+        /// </summary>
+        internal static string BLU_AoE_DPS_HydroPull_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_HydroPull_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hydro Pull.
+        /// </summary>
+        internal static string BLU_AoE_DPS_HydroPull_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_HydroPull_Name", resourceCulture);
             }
         }
         
@@ -3225,6 +3279,349 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string BLU_AoE_DPS_Name {
             get {
                 return ResourceManager.GetString("BLU_AoE_DPS_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds equipped primals on cooldown..
+        /// </summary>
+        internal static string BLU_AoE_DPS_Primals_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_Primals_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Primals.
+        /// </summary>
+        internal static string BLU_AoE_DPS_Primals_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_DPS_Primals_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Angel&apos;s Snack..
+        /// </summary>
+        internal static string BLU_AoE_Heal_AngelsSnack_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_AngelsSnack_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Angel&apos;s Snack.
+        /// </summary>
+        internal static string BLU_AoE_Heal_AngelsSnack_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_AngelsSnack_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces White Wind with a full one-button AoE healing utility.
+        ///Pair with DPS Mode to damage when the party is healthy..
+        /// </summary>
+        internal static string BLU_AoE_Heal_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Gobskin..
+        /// </summary>
+        internal static string BLU_AoE_Heal_Gobskin_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_Gobskin_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gobskin.
+        /// </summary>
+        internal static string BLU_AoE_Heal_Gobskin_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_Gobskin_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Lucid Dreaming..
+        /// </summary>
+        internal static string BLU_AoE_Heal_Lucid_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_Lucid_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lucid Dreaming.
+        /// </summary>
+        internal static string BLU_AoE_Heal_Lucid_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_Lucid_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Healing Mode - AoE.
+        /// </summary>
+        internal static string BLU_AoE_Heal_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Stotram..
+        /// </summary>
+        internal static string BLU_AoE_Heal_Stotram_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_Stotram_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stotram.
+        /// </summary>
+        internal static string BLU_AoE_Heal_Stotram_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Heal_Stotram_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Bad Breath..
+        /// </summary>
+        internal static string BLU_AoE_Tank_BadBreath_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_BadBreath_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad Breath.
+        /// </summary>
+        internal static string BLU_AoE_Tank_BadBreath_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_BadBreath_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Basic Instinct when solo in a duty..
+        /// </summary>
+        internal static string BLU_AoE_Tank_BasicInstinct_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_BasicInstinct_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic Instinct.
+        /// </summary>
+        internal static string BLU_AoE_Tank_BasicInstinct_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_BasicInstinct_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Chelonian Gate for tankbusters and raidwides..
+        /// </summary>
+        internal static string BLU_AoE_Tank_ChelonianGate_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_ChelonianGate_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chelonian Gate.
+        /// </summary>
+        internal static string BLU_AoE_Tank_ChelonianGate_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_ChelonianGate_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Right Round with a full one-button AoE tank rotation..
+        /// </summary>
+        internal static string BLU_AoE_Tank_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Devour..
+        /// </summary>
+        internal static string BLU_AoE_Tank_Devour_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_Devour_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Devour.
+        /// </summary>
+        internal static string BLU_AoE_Tank_Devour_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_Devour_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Dragon Force for tankbusters and raidwides..
+        /// </summary>
+        internal static string BLU_AoE_Tank_DragonForce_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_DragonForce_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dragon Force.
+        /// </summary>
+        internal static string BLU_AoE_Tank_DragonForce_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_DragonForce_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Flying Sardine..
+        /// </summary>
+        internal static string BLU_AoE_Tank_FlyingSardine_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_FlyingSardine_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flying Sardine.
+        /// </summary>
+        internal static string BLU_AoE_Tank_FlyingSardine_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_FlyingSardine_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Frog Legs..
+        /// </summary>
+        internal static string BLU_AoE_Tank_FrogLegs_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_FrogLegs_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Frog Legs.
+        /// </summary>
+        internal static string BLU_AoE_Tank_FrogLegs_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_FrogLegs_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Hydro Pull..
+        /// </summary>
+        internal static string BLU_AoE_Tank_HydroPull_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_HydroPull_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hydro Pull.
+        /// </summary>
+        internal static string BLU_AoE_Tank_HydroPull_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_HydroPull_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Lucid Dreaming..
+        /// </summary>
+        internal static string BLU_AoE_Tank_Lucid_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_Lucid_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lucid Dreaming.
+        /// </summary>
+        internal static string BLU_AoE_Tank_Lucid_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_Lucid_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Mighty Guard..
+        /// </summary>
+        internal static string BLU_AoE_Tank_MightyGuard_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_MightyGuard_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mighty Guard.
+        /// </summary>
+        internal static string BLU_AoE_Tank_MightyGuard_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_MightyGuard_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tank Mode - AoE.
+        /// </summary>
+        internal static string BLU_AoE_Tank_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds equipped primals on cooldown..
+        /// </summary>
+        internal static string BLU_AoE_Tank_Primals_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_Primals_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Primals.
+        /// </summary>
+        internal static string BLU_AoE_Tank_Primals_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_Primals_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Sticky Tongue..
+        /// </summary>
+        internal static string BLU_AoE_Tank_StickyTongue_Desc {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_StickyTongue_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sticky Tongue.
+        /// </summary>
+        internal static string BLU_AoE_Tank_StickyTongue_Name {
+            get {
+                return ResourceManager.GetString("BLU_AoE_Tank_StickyTongue_Name", resourceCulture);
             }
         }
         
@@ -3652,12 +4049,84 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adds Basic Instinct when solo in a duty..
+        /// </summary>
+        internal static string BLU_ST_DPS_BasicInstinct_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_BasicInstinct_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic Instinct.
+        /// </summary>
+        internal static string BLU_ST_DPS_BasicInstinct_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_BasicInstinct_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Breath of Magic to DPS Mode..
+        /// </summary>
+        internal static string BLU_ST_DPS_Breath_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Breath_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Breath of Magic.
+        /// </summary>
+        internal static string BLU_ST_DPS_Breath_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Breath_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaces Sonic Boom with a full one-button single target rotation.
-        ///Also used with Healer Mimicry when the party does not need healing.
+        ///Also used with Healer Mimicry when the party does not need healing..
         /// </summary>
         internal static string BLU_ST_DPS_Desc {
             get {
                 return ResourceManager.GetString("BLU_ST_DPS_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Mortal Flame to DPS Mode..
+        /// </summary>
+        internal static string BLU_ST_DPS_Flame_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Flame_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mortal Flame.
+        /// </summary>
+        internal static string BLU_ST_DPS_Flame_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Flame_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Flying Sardine..
+        /// </summary>
+        internal static string BLU_ST_DPS_FlyingSardine_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_FlyingSardine_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flying Sardine.
+        /// </summary>
+        internal static string BLU_ST_DPS_FlyingSardine_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_FlyingSardine_Name", resourceCulture);
             }
         }
         
@@ -3667,6 +4136,424 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string BLU_ST_DPS_Name {
             get {
                 return ResourceManager.GetString("BLU_ST_DPS_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds the Moon Flute opener, repeated every two minutes.
+        ///Prepull: Whistle at -5, Tingle at -3, Rose of Destruction on pull.
+        ///Keep Nightbloom or bristled Song of Torment up between bursts.
+        ///Feather Rain is Retargeted to your target..
+        /// </summary>
+        internal static string BLU_ST_DPS_Opener_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Opener_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moon Flute Opener.
+        /// </summary>
+        internal static string BLU_ST_DPS_Opener_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Opener_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds equipped primals on cooldown..
+        /// </summary>
+        internal static string BLU_ST_DPS_Primals_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Primals_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Primals.
+        /// </summary>
+        internal static string BLU_ST_DPS_Primals_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_Primals_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Sharpened Knife..
+        /// </summary>
+        internal static string BLU_ST_DPS_SharpenedKnife_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_SharpenedKnife_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharpened Knife.
+        /// </summary>
+        internal static string BLU_ST_DPS_SharpenedKnife_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_SharpenedKnife_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Song of Torment..
+        /// </summary>
+        internal static string BLU_ST_DPS_SongOfTorment_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_SongOfTorment_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Song of Torment.
+        /// </summary>
+        internal static string BLU_ST_DPS_SongOfTorment_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_SongOfTorment_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Triple Trident..
+        /// </summary>
+        internal static string BLU_ST_DPS_TripleTrident_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_TripleTrident_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Triple Trident.
+        /// </summary>
+        internal static string BLU_ST_DPS_TripleTrident_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_DPS_TripleTrident_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Angel&apos;s Snack..
+        /// </summary>
+        internal static string BLU_ST_Heal_AngelsSnack_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Heal_AngelsSnack_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Angel&apos;s Snack.
+        /// </summary>
+        internal static string BLU_ST_Heal_AngelsSnack_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Heal_AngelsSnack_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Pom Cure with a full one-button single target healing utility.
+        ///Pair with DPS Mode to damage when the party is healthy..
+        /// </summary>
+        internal static string BLU_ST_Heal_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Heal_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Exuviation..
+        /// </summary>
+        internal static string BLU_ST_Heal_Exuviation_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Heal_Exuviation_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exuviation.
+        /// </summary>
+        internal static string BLU_ST_Heal_Exuviation_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Heal_Exuviation_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Lucid Dreaming..
+        /// </summary>
+        internal static string BLU_ST_Heal_Lucid_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Heal_Lucid_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lucid Dreaming.
+        /// </summary>
+        internal static string BLU_ST_Heal_Lucid_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Heal_Lucid_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Healing Mode - Single Target.
+        /// </summary>
+        internal static string BLU_ST_Heal_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Heal_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Bad Breath..
+        /// </summary>
+        internal static string BLU_ST_Tank_BadBreath_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_BadBreath_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad Breath.
+        /// </summary>
+        internal static string BLU_ST_Tank_BadBreath_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_BadBreath_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Basic Instinct when solo in a duty..
+        /// </summary>
+        internal static string BLU_ST_Tank_BasicInstinct_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_BasicInstinct_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic Instinct.
+        /// </summary>
+        internal static string BLU_ST_Tank_BasicInstinct_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_BasicInstinct_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Chelonian Gate for tankbusters and raidwides..
+        /// </summary>
+        internal static string BLU_ST_Tank_ChelonianGate_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_ChelonianGate_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chelonian Gate.
+        /// </summary>
+        internal static string BLU_ST_Tank_ChelonianGate_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_ChelonianGate_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Goblin Punch with a full one-button single target tank rotation..
+        /// </summary>
+        internal static string BLU_ST_Tank_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Devour..
+        /// </summary>
+        internal static string BLU_ST_Tank_Devour_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Devour_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Devour.
+        /// </summary>
+        internal static string BLU_ST_Tank_Devour_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Devour_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Dragon Force for tankbusters and raidwides..
+        /// </summary>
+        internal static string BLU_ST_Tank_DragonForce_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_DragonForce_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dragon Force.
+        /// </summary>
+        internal static string BLU_ST_Tank_DragonForce_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_DragonForce_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Flying Sardine..
+        /// </summary>
+        internal static string BLU_ST_Tank_FlyingSardine_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_FlyingSardine_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flying Sardine.
+        /// </summary>
+        internal static string BLU_ST_Tank_FlyingSardine_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_FlyingSardine_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Frog Legs..
+        /// </summary>
+        internal static string BLU_ST_Tank_FrogLegs_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_FrogLegs_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Frog Legs.
+        /// </summary>
+        internal static string BLU_ST_Tank_FrogLegs_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_FrogLegs_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Lucid Dreaming..
+        /// </summary>
+        internal static string BLU_ST_Tank_Lucid_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Lucid_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lucid Dreaming.
+        /// </summary>
+        internal static string BLU_ST_Tank_Lucid_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Lucid_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Mighty Guard..
+        /// </summary>
+        internal static string BLU_ST_Tank_MightyGuard_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_MightyGuard_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mighty Guard.
+        /// </summary>
+        internal static string BLU_ST_Tank_MightyGuard_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_MightyGuard_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tank Mode - Single Target.
+        /// </summary>
+        internal static string BLU_ST_Tank_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Off-guard..
+        /// </summary>
+        internal static string BLU_ST_Tank_Offguard_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Offguard_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Off-guard.
+        /// </summary>
+        internal static string BLU_ST_Tank_Offguard_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Offguard_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds equipped primals on cooldown..
+        /// </summary>
+        internal static string BLU_ST_Tank_Primals_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Primals_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Primals.
+        /// </summary>
+        internal static string BLU_ST_Tank_Primals_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_Primals_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Song of Torment..
+        /// </summary>
+        internal static string BLU_ST_Tank_SongOfTorment_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_SongOfTorment_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Song of Torment.
+        /// </summary>
+        internal static string BLU_ST_Tank_SongOfTorment_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_SongOfTorment_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Sticky Tongue..
+        /// </summary>
+        internal static string BLU_ST_Tank_StickyTongue_Desc {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_StickyTongue_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sticky Tongue.
+        /// </summary>
+        internal static string BLU_ST_Tank_StickyTongue_Name {
+            get {
+                return ResourceManager.GetString("BLU_ST_Tank_StickyTongue_Name", resourceCulture);
             }
         }
         
@@ -5424,6 +6311,132 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string BRDPvP_Wardens_Name {
             get {
                 return ResourceManager.GetString("BRDPvP_Wardens_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Axeblade Bite with the basic combo chain..
+        /// </summary>
+        internal static string BST_Basic_Combo_Desc {
+            get {
+                return ResourceManager.GetString("BST_Basic_Combo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic Combo.
+        /// </summary>
+        internal static string BST_Basic_Combo_Name {
+            get {
+                return ResourceManager.GetString("BST_Basic_Combo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locks out using battlehorns whilst in combat and you already have a beast out. This feature may help doing dungeon runs where you&apos;ll be swapping your beasts a lot between pulls and don&apos;t want them to go on cooldown..
+        /// </summary>
+        internal static string BST_Battlehorn_Lockout_Desc {
+            get {
+                return ResourceManager.GetString("BST_Battlehorn_Lockout_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Battlehorn Lockout Feature.
+        /// </summary>
+        internal static string BST_Battlehorn_Lockout_Name {
+            get {
+                return ResourceManager.GetString("BST_Battlehorn_Lockout_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Borrow with your beast&apos;s borrowed ability. May make it trickier to swap borrows in a pinch, use cautiously..
+        /// </summary>
+        internal static string BST_Borrow_Feature_Desc {
+            get {
+                return ResourceManager.GetString("BST_Borrow_Feature_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Borrow Feature.
+        /// </summary>
+        internal static string BST_Borrow_Feature_Name {
+            get {
+                return ResourceManager.GetString("BST_Borrow_Feature_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locks out Capture if your current target is either not an eligible pet for capture, or you already have it unlocked. Disclaimer: May not be perfect. Detection methods are hypothetical at best..
+        /// </summary>
+        internal static string BST_Capture_Helper_Desc {
+            get {
+                return ResourceManager.GetString("BST_Capture_Helper_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capture Helper.
+        /// </summary>
+        internal static string BST_Capture_Helper_Name {
+            get {
+                return ResourceManager.GetString("BST_Capture_Helper_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Avalanche Axe, Mistral Axe, Spinning Axe and Gale Axe with Trick when it&apos;s ready. Locks out the actions if Trick is the wrong affinity or until ready to complete an Instinctual Combo. Order of actions prioritises getting to 2 Mastered Instinct stacks and 1 Natural Instinct stack..
+        /// </summary>
+        internal static string BST_Instinctual_Combo_Desc {
+            get {
+                return ResourceManager.GetString("BST_Instinctual_Combo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instinctual Combo.
+        /// </summary>
+        internal static string BST_Instinctual_Combo_Name {
+            get {
+                return ResourceManager.GetString("BST_Instinctual_Combo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Trick with the correct Instinctual skill to complete an Intentional Combo. Order of actions prioritises getting to 2 Mastered Instinct stacks and 1 Natural Instinct stack..
+        /// </summary>
+        internal static string BST_Intentional_Combo_Desc {
+            get {
+                return ResourceManager.GetString("BST_Intentional_Combo_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Intentional Combo.
+        /// </summary>
+        internal static string BST_Intentional_Combo_Name {
+            get {
+                return ResourceManager.GetString("BST_Intentional_Combo_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Smash Axe with  a full one-button rotation. This is the ideal option for newcomers to the job..
+        /// </summary>
+        internal static string BST_SimpleMode_Desc {
+            get {
+                return ResourceManager.GetString("BST_SimpleMode_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple Mode.
+        /// </summary>
+        internal static string BST_SimpleMode_Name {
+            get {
+                return ResourceManager.GetString("BST_SimpleMode_Name", resourceCulture);
             }
         }
         
@@ -9810,6 +10823,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string DRKPvP_Shadowbringer_Name {
             get {
                 return ResourceManager.GetString("DRKPvP_Shadowbringer_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Orthos Potion to one button rotations.
+        /// </summary>
+        internal static string EO_OrthosPotion_Desc {
+            get {
+                return ResourceManager.GetString("EO_OrthosPotion_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eureka Orthos - Orthos Potion.
+        /// </summary>
+        internal static string EO_OrthosPotion_Name {
+            get {
+                return ResourceManager.GetString("EO_OrthosPotion_Name", resourceCulture);
             }
         }
         
@@ -20788,6 +21819,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string PoTD_SustainingPotion_Name {
             get {
                 return ResourceManager.GetString("PoTD_SustainingPotion_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Pilgrim&apos;s Potion to one button rotations.
+        /// </summary>
+        internal static string PT_PilgrimsPotion_Desc {
+            get {
+                return ResourceManager.GetString("PT_PilgrimsPotion_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pilgrim&apos;s Traverse - Pilgrim&apos;s Potion.
+        /// </summary>
+        internal static string PT_PilgrimsPotion_Name {
+            get {
+                return ResourceManager.GetString("PT_PilgrimsPotion_Name", resourceCulture);
             }
         }
         

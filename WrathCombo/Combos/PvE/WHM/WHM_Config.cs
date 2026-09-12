@@ -41,6 +41,7 @@ internal partial class WHM
                 case Preset.WHM_ST_MainCombo_Opener:
                     DrawBossOnlyChoice(WHM_Balance_Content);
                     DrawOpenerPotionChoice(WHM_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(WHM_Opener_PrepullBlock);
                     break;
 
                 case Preset.WHM_ST_MainCombo_DoT:
@@ -452,6 +453,9 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_ST_MainCombo_DoT" />
         public static UserBool WHM_Opener_Potion =
             new("WHM_Opener_Potion");
+
+        public static UserBool WHM_Opener_PrepullBlock =
+            new("WHM_Opener_PrepullBlock", true);
 
         public static UserBool WHM_ST_MainCombo_DoT_TwoTarget =
             new("WHM_ST_MainCombo_DoT_TwoTarget", true);

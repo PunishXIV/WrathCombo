@@ -1031,6 +1031,12 @@ internal unsafe class AutoRotationController
             var canUse = (canUseSelf || canUseTarget || areaTargeted) && outAct.ActionAttackType() is { } type && ((type is ActionAttackType.Ability && AnimationLock <= cfg.QueueWindow) || (type is not ActionAttackType.Ability && RemainingGCD <= cfg.QueueWindow));
             var isHeal = attributes.AutoAction!.IsHeal;
 
+            if (target is not null)
+            {
+                if ((!isHeal && cfg.DPSSettings.DPSAlwaysHardTarget && mode is not DPSRotationMode.Manual) || (isHeal && cfg.HealerSettings.HealerAlwaysHardTarget && mode is not HealerRotationMode.Manual))
+                    Svc.Targets.Target = target;
+            }
+
             var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
             bool orbwalking = cfg.OrbwalkerIntegration && OrbwalkerIPC.CanOrbwalk;
             if (TimeMoving.TotalMilliseconds > 0 && castTime > 0 && !orbwalking)
@@ -1038,12 +1044,6 @@ internal unsafe class AutoRotationController
 
             if (canUse && (inRange || areaTargeted))
             {
-                if (target is not null)
-                {
-                    if ((!isHeal && cfg.DPSSettings.DPSAlwaysHardTarget && mode is not DPSRotationMode.Manual) || (isHeal && cfg.HealerSettings.HealerAlwaysHardTarget && mode is not HealerRotationMode.Manual))
-                        Svc.Targets.Target = target;
-                }
-
                 WouldLikeToGroundTarget = areaTargeted;
                 if (changed)
                     Svc.Log.Debug($"Updated target to {target.Name} for {replacedWith.ActionName()}");

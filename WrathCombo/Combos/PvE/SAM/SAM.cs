@@ -1,4 +1,5 @@
 using WrathCombo.CustomComboNS;
+using WrathCombo.Data;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.SAM.Config;
 using WrathCombo.Extensions;
@@ -14,6 +15,8 @@ internal partial class SAM : Melee
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Hakaze, Gyofu))
                 return actionID;
+
+            ReportSAMPositionalHints(true, true);
 
             if (UsePrepullMeikyo())
                 return MeikyoShisui;
@@ -128,6 +131,10 @@ internal partial class SAM : Melee
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Hakaze, Gyofu))
                 return actionID;
+
+            ReportSAMPositionalHints(
+                IsEnabled(Preset.SAM_ST_Adv_Gekko),
+                IsEnabled(Preset.SAM_ST_Adv_Kasha));
 
             if (IsEnabled(Preset.SAM_ST_Adv_Opener) &&
                 Opener().FullOpener(ref actionID) &&

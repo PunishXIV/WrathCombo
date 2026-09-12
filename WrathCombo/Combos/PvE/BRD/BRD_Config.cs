@@ -17,7 +17,8 @@ internal partial class BRD
             BRD_ST_Wardens_Auto = new("BRD_ST_Wardens_Auto"),
             BRD_IronJaws_Apex = new("BRD_IronJaws_Apex"),
             BRD_IronJaws_Alternate = new("BRD_IronJaws_Alternate"),
-            BRD_Opener_Potion = new("BRD_Opener_Potion");
+            BRD_Opener_Potion = new("BRD_Opener_Potion"),
+            BRD_Opener_PrepullBlock = new("BRD_Opener_PrepullBlock", true);
 
         public static UserInt
             BRD_RagingJawsRenewTime = new("ragingJawsRenewTime", 5),
@@ -54,6 +55,7 @@ internal partial class BRD
                 case Preset.BRD_ST_Adv_Balance_Standard:
                     DrawBossOnlyChoice(BRD_Balance_Content);
                     DrawOpenerPotionChoice(BRD_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(BRD_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(BRD_Adv_Opener_Selection, Generics.StandardOpener, "", 0, descriptionAsTooltip: true);

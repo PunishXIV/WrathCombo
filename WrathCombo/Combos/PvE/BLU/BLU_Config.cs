@@ -14,6 +14,8 @@ internal partial class BLU
             BLU_DoTTime = new("BLU_DoTTime", 3),
             BLU_Balance_Content = new("BLU_Balance_Content", 1),
             BLU_SelectedOpener = new("BLU_SelectedOpener", 0);
+        public static UserBool
+            BLU_Opener_PrepullBlock = new("BLU_Opener_PrepullBlock", true);
 
         internal static void Draw(Preset preset)
         {
@@ -30,6 +32,8 @@ internal partial class BLU
                         "DoT Opener",
                         "Mortal Flame or Breath of Magic instead of Winged Reprobation. Requires 2.20 or faster spell speed.",
                         1, descriptionAsTooltip: true);
+
+                    DrawOpenerPrepullBlockChoice(BLU_Opener_PrepullBlock);
                     break;
 
                 case Preset.BLU_ST_DPS_SongOfTorment:

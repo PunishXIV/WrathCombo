@@ -39,7 +39,9 @@ internal partial class MCH
                     DrawRadioButton(MCH_HaveTarget,
                         Generics.NoTarget,
                         Generics.NoRequireTarget, 1, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(MCH_Opener_PrepullBlock);
                     break;
+
 
                 case Preset.MCH_ST_Adv_WildFire:
                     DrawHorizontalRadioButton(MCH_ST_WildfireBossOnlyOption,
@@ -371,7 +373,8 @@ internal partial class MCH
 
         public static UserBool
             MCH_Opener_Potion = new("MCH_Opener_Potion"),
-            MCH_AoE_AirAnchor = new("MCH_AoE_AirAnchor");
+            MCH_AoE_AirAnchor = new("MCH_AoE_AirAnchor"),
+            MCH_Opener_PrepullBlock = new("MCH_Opener_PrepullBlock", true);
 
         #endregion
     }

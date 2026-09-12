@@ -736,10 +736,16 @@ internal partial class BLM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([7], () => LocalPlayer.HasStatus(Buffs.LeyLines))
+            ([1], () => CountdownActive || InCombat() || !BLM_Opener_PrepullBlock),
+            ([8], () => LocalPlayer.HasStatus(Buffs.LeyLines))
         ];
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [7];
+        public override List<int> DelayedWeaveSteps { get; set; } = [8];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !BLM_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 4))
+        ];
 
         public override bool HasCooldowns() =>
             MP.Full &&
@@ -754,38 +760,39 @@ internal partial class BLM
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Fire3, // 1
-            () => HighThunder, // 2
-            () => Role.Swiftcast, // 3
-            () => Amplifier, // 4
-            () => Fire4, // 5
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 6
-            () => LeyLines, // 7
-            () => Fire4, // 8
+            () => All.Cease, // 1
+            () => Fire3, // 2
+            () => HighThunder, // 3
+            () => Role.Swiftcast, // 4
+            () => Amplifier, // 5
+            () => Fire4, // 6
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 7
+            () => LeyLines, // 8
             () => Fire4, // 9
             () => Fire4, // 10
             () => Fire4, // 11
-            () => Xenoglossy, // 12
-            () => Manafont, // 13
-            () => Fire4, // 14
-            () => FlareStar, // 15
-            () => Fire4, // 16
+            () => Fire4, // 12
+            () => Xenoglossy, // 13
+            () => Manafont, // 14
+            () => Fire4, // 15
+            () => FlareStar, // 16
             () => Fire4, // 17
-            () => HighThunder, // 18
-            () => Fire4, // 19
+            () => Fire4, // 18
+            () => HighThunder, // 19
             () => Fire4, // 20
             () => Fire4, // 21
             () => Fire4, // 22
-            () => FlareStar, // 23
-            () => Despair, // 24
-            () => Transpose, // 25
-            () => Triplecast, // 26
-            () => Blizzard3, // 27
-            () => Blizzard4, // 28
-            () => Paradox, // 29
-            () => Transpose, // 30
-            () => Paradox, // 31
-            () => Fire3 // 32
+            () => Fire4, // 23
+            () => FlareStar, // 24
+            () => Despair, // 25
+            () => Transpose, // 26
+            () => Triplecast, // 27
+            () => Blizzard3, // 28
+            () => Blizzard4, // 29
+            () => Paradox, // 30
+            () => Transpose, // 31
+            () => Paradox, // 32
+            () => Fire3 // 33
         ];
     }
 
@@ -793,37 +800,38 @@ internal partial class BLM
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Fire3, // 1
-            () => HighThunder, // 2
-            () => Role.Swiftcast, // 3
-            () => Amplifier, // 4
-            () => Fire4, // 5
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 6
-            () => LeyLines, // 7
-            () => Fire4, // 8
-            () => Xenoglossy, // 9
-            () => Fire4, // 10
+            () => All.Cease, // 1
+            () => Fire3, // 2
+            () => HighThunder, // 3
+            () => Role.Swiftcast, // 4
+            () => Amplifier, // 5
+            () => Fire4, // 6
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 7
+            () => LeyLines, // 8
+            () => Fire4, // 9
+            () => Xenoglossy, // 10
             () => Fire4, // 11
-            () => Despair, // 12
-            () => Manafont, // 13
-            () => Fire4, // 14
+            () => Fire4, // 12
+            () => Despair, // 13
+            () => Manafont, // 14
             () => Fire4, // 15
-            () => FlareStar, // 16
-            () => Fire4, // 17
-            () => HighThunder, // 18
-            () => Fire4, // 19
+            () => Fire4, // 16
+            () => FlareStar, // 17
+            () => Fire4, // 18
+            () => HighThunder, // 19
             () => Fire4, // 20
             () => Fire4, // 21
-            () => Paradox, // 22
-            () => Triplecast, // 23
-            () => Flare, // 24
-            () => FlareStar, // 25
-            () => Transpose, // 26
-            () => Blizzard3, // 27
-            () => Blizzard4, // 28
-            () => Paradox, // 29
-            () => Transpose, // 30
-            () => Fire3 // 31
+            () => Fire4, // 22
+            () => Paradox, // 23
+            () => Triplecast, // 24
+            () => Flare, // 25
+            () => FlareStar, // 26
+            () => Transpose, // 27
+            () => Blizzard3, // 28
+            () => Blizzard4, // 29
+            () => Paradox, // 30
+            () => Transpose, // 31
+            () => Fire3 // 32
         ];
     }
 

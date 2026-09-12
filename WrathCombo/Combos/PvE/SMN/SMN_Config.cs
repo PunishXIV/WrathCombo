@@ -29,7 +29,8 @@ internal partial class SMN
             SMN_Balance_Content = new("SMN_Balance_Content", 1);
 
         public static UserBool
-            SMN_Opener_Potion = new("SMN_Opener_Potion");
+            SMN_Opener_Potion = new("SMN_Opener_Potion"),
+            SMN_Opener_PrepullBlock = new("SMN_Opener_PrepullBlock", true);
 
         public static UserBoolArray
             SMN_ST_Egi_AstralFlow = new("SMN_ST_Egi_AstralFlow"),
@@ -62,6 +63,7 @@ internal partial class SMN
                 case Preset.SMN_ST_Advanced_Combo_Balance_Opener:
                     DrawBossOnlyChoice(SMN_Balance_Content);
                     DrawOpenerPotionChoice(SMN_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(SMN_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Swiftcast Settings");
                     ImGui.Spacing();
                     DrawRadioButton(SMN_Opener_SkipSwiftcast, "Use Swiftcast",

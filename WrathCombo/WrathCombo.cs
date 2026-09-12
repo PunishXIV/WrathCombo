@@ -139,6 +139,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     {
         ActionRequestIPCProvider.ResetAllBlacklist();
         ActionRequestIPCProvider.ResetAllRequests();
+        UpcomingPositionalHintService.Reset();
         CustomComboFunctions.CleanupExpiredLineOfSightCache();
         TM.DelayNext(1000);
         TM.Enqueue(() =>
@@ -366,6 +367,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
             TargetHelper.Draw();
 
             AutoRotationController.Run();
+
+            UpcomingPositionalHintService.Tick();
 
             if (Player.IsDead)
             {

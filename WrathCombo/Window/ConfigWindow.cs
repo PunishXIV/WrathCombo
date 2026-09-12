@@ -57,7 +57,8 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
         JobRole.MeleeDPS => 2,
         JobRole.RangedDPS => 3,
         JobRole.MagicalDPS => 4,
-        _ => 5
+        JobRole.Limited => 5,
+        _ => 99
     };
 
     internal static Dictionary<Job, List<PresetData>> GetGroupedPresets()

@@ -126,6 +126,27 @@ public unsafe class TmpBLMGauge
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x10)]
+public struct TmpBSTGauge
+{
+    [FieldOffset(0x08)] public byte PlayerTP;
+    [FieldOffset(0x09)] public byte BeastTP;
+    [FieldOffset(0x0A)] public byte LastBeastTPSpent;
+    [FieldOffset(0x0B)] public byte BattleHorn;
+
+    [FieldOffset(0x0C)] public InstinctualAffinity AffinityStatus; 
+    [FieldOffset(0x0D)] public InstinctualAffinity ActiveAffinity;
+    [FieldOffset(0x0E)] public byte Chain;
+    [FieldOffset(0x0F)] private byte Kinship;
+    [FieldOffset(0x10)] private byte Instinct;
+
+    public BeastmasterKinType KinshipKinType => (BeastmasterKinType)(Kinship >> 4);
+    public byte KinshipBattlehorn => (byte)(Kinship & 0x0F);
+
+    public int PetInstinct => Instinct & 0x3;
+    public int MasterInstinct => (Instinct & 0xC) >> 2;
+}
+
+[StructLayout(LayoutKind.Explicit, Size = 0x10)]
 public struct TmpScholarGauge
 {
     [FieldOffset(0x08)] public byte Aetherflow;
@@ -247,4 +268,29 @@ public enum CreatureFlags : byte
 
     MooglePortrait = 16,
     MadeenPortrait = 32,
+}
+
+public enum InstinctualAffinity : byte
+{
+    None = 0,
+    Volant = 1,
+    Rampant = 2,
+    Durant = 3,
+    Eldritch = 4,
+    Sunstrider = 5,
+    Moonstalker = 6,
+    WaveringHeart = 7,
+}
+
+public enum BeastmasterKinType : byte
+{
+    None = 0,
+    Beastkin = 1,
+    Vilekin = 2,
+    Cloudkin = 3,
+    Seedkin = 4,
+    Wavekin = 5,
+    Scalekin = 6,
+    Soulkin = 7,
+    Ashkin = 8,
 }

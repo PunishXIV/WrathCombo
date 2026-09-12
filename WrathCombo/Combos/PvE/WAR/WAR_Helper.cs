@@ -39,54 +39,71 @@ internal partial class WAR : Tank
         return WrathOpener.Dummy;
     }
 
-    internal class WAROpenerMaxLevel1 : WrathOpener
+    internal abstract class WAROpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Tomahawk, // 1
-            () => Infuriate, // 2
-            () => HeavySwing, // 3
-            () => Maim, // 4
-            () => StormsEye, // 5
-            () => InnerRelease, // 6
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 7
-            () => InnerChaos, // 8
-            () => Upheaval, // 9
-            () => Onslaught, // 10
-            () => FellCleave, // 11
-            () => Onslaught, // 12
-            () => FellCleave, // 13
-            () => Onslaught, // 14
-            () => FellCleave, // 15
-            () => PrimalWrath, // 16
-            () => Infuriate, // 17
-            () => PrimalRend, // 18
-            () => PrimalRuination, // 19
-            () => InnerChaos, // 20
-            () => HeavySwing, // 21
-            () => Maim, // 22
-            () => StormsPath, // 23
-            () => FellCleave, // 24
-            () => Infuriate, // 25
-            () => InnerChaos // 26
-        ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-        
+
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([1], HeavySwing, () => InMeleeRange()),
+            ([2], HeavySwing, () => InMeleeRange()),
+        ];
+
+        public override Preset Preset => Preset.WAR_ST_BalanceOpener;
+        internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
+        internal override bool IncludePot => WAR_Opener_Potion;
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !WAR_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (InMeleeRange() ? 0 : 0.7f)))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([3], () => ComboAction is HeavySwing),
-            ([10, 12, 14], () => !HasCharges(Onslaught) || WAR_ST_BalanceOpener_GapcloserChoice == 0)
+            ([1], () => CountdownActive || InCombat() || !WAR_Opener_PrepullBlock),
+            ([4], () => ComboAction is HeavySwing),
+            ([11, 13, 15], () => !HasCharges(Onslaught) || WAR_ST_BalanceOpener_GapcloserChoice == 0)
         ];
-        public override Preset Preset => Preset.WAR_ST_BalanceOpener;
-        internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
-        internal override bool IncludePot => WAR_Opener_Potion;
-        public override bool HasCooldowns() => IsOffCooldown(InnerRelease) && IsOffCooldown(Upheaval) && GetRemainingCharges(Infuriate) >= 2 && GetRemainingCharges(Onslaught) >= 3;
+
+        public override bool HasCooldowns() =>
+            IsOffCooldown(InnerRelease) &&
+            IsOffCooldown(Upheaval) &&
+            GetRemainingCharges(Infuriate) >= 2 &&
+            GetRemainingCharges(Onslaught) >= 3;
+    }
+
+    internal class WAROpenerMaxLevel1 : WAROpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Tomahawk, // 2
+            () => Infuriate, // 3
+            () => HeavySwing, // 4
+            () => Maim, // 5
+            () => StormsEye, // 6
+            () => InnerRelease, // 7
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 8
+            () => InnerChaos, // 9
+            () => Upheaval, // 10
+            () => Onslaught, // 11
+            () => FellCleave, // 12
+            () => Onslaught, // 13
+            () => FellCleave, // 14
+            () => Onslaught, // 15
+            () => FellCleave, // 16
+            () => PrimalWrath, // 17
+            () => Infuriate, // 18
+            () => PrimalRend, // 19
+            () => PrimalRuination, // 20
+            () => InnerChaos, // 21
+            () => HeavySwing, // 22
+            () => Maim, // 23
+            () => StormsPath, // 24
+            () => FellCleave, // 25
+            () => Infuriate, // 26
+            () => InnerChaos // 27
+        ];
     }
 
     #endregion

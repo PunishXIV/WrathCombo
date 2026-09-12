@@ -261,6 +261,7 @@ internal class Presets : ConfigWindow
                     case Job.BLM: BLM.Config.Draw(preset); break;
                     case Job.BLU: BLU.Config.Draw(preset); break;
                     case Job.BRD: BRD.Config.Draw(preset); break;
+                    case Job.BST: BST.Config.Draw(preset); break;
                     case Job.DNC: DNC.Config.Draw(preset); break;
                     case Job.MIN: DOL.Config.Draw(preset); break;
                     case Job.DRG: DRG.Config.Draw(preset); break;

@@ -110,6 +110,8 @@ internal partial class PLD
                     DrawRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
                         FormatAndCache(Generics.DontUse0, Intervene.ActionName()),
                         FormatAndCache(Generics.GapcloseSkip, Intervene.ActionName()), 1, descriptionAsTooltip: true);
+
+                    DrawOpenerPrepullBlockChoice(PLD_Opener_PrepullBlock);
                     break;
 
                 case Preset.PLD_ST_AdvancedMode_GoringBlade:
@@ -413,6 +415,7 @@ internal partial class PLD
 
         public static UserBool
             PLD_Opener_Potion = new("PLD_Opener_Potion"),
+            PLD_Opener_PrepullBlock = new("PLD_Opener_PrepullBlock", true),
             PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling = new("PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling"),
             PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling = new("PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling"),
             PLD_ST_AdvancedMode_Intervene_ManualPooling = new("PLD_ST_AdvancedMode_Intervene_ManualPooling"),

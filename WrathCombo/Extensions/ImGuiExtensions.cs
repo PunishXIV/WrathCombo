@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using ECommons.ImGuiMethods;
+using System.Numerics;
 namespace WrathCombo.Extensions;
 
 internal class ImGuiExtensions
@@ -18,4 +19,10 @@ internal class ImGuiExtensions
     }
 
     public static void Prefix(bool isLast) => Prefix(isLast ? "└" : "├");
+
+    public static void TextUnderlinedAndCentered(string text)
+    {
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + ImGui.GetContentRegionAvail().X / 2 - ImGui.CalcTextSize(text).X / 2);
+        ImGuiEx.TextUnderlined(text);
+    }
 }

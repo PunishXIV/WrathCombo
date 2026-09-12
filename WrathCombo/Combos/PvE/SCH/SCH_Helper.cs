@@ -270,51 +270,30 @@ internal partial class SCH
         return WrathOpener.Dummy;
     }
 
-    internal class SCHOpenerMaxLevel1 : WrathOpener
+    internal abstract class SCHOpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Broil4, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
-            () => Biolysis, // 3
-            () => Dissipation, // 4
-            () => Broil4, // 5
-            () => ChainStratagem, // 6
-            () => Broil4, // 7
-            () => EnergyDrain, // 8
-            () => Broil4, // 9
-            () => EnergyDrain, // 10
-            () => Broil4, // 11
-            () => EnergyDrain, // 12
-            () => Broil4, // 13
-            () => Aetherflow, // 14
-            () => Broil4, // 15
-            () => BanefulImpaction, // 16
-            () => Broil4, // 17
-            () => EnergyDrain, // 18
-            () => Broil4, // 19
-            () => EnergyDrain, // 20
-            () => Broil4, // 21
-            () => EnergyDrain, // 22
-            () => Biolysis // 23
-        ];
-
-        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
-        [
-            ([3], Aetherflow, () => SCH_ST_DPS_OpenerOption == 1),
-            ([13], Dissipation, () => SCH_ST_DPS_OpenerOption == 1)
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([7,9,11,17,19,21], () => Gauge.Aetherflow == 0)
-        ];
-
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         public override Preset Preset => Preset.SCH_ST_ADV_DPS_Balance_Opener;
         internal override UserData ContentCheckConfig => SCH_ST_DPS_OpenerContent;
         internal override bool IncludePot => SCH_Opener_Potion;
+
+        internal static uint BiolysisOrAetherflow =>
+            SCH_ST_DPS_OpenerOption == 1 ? Aetherflow : Biolysis;
+
+        internal static uint Broil4OrDissipation =>
+            SCH_ST_DPS_OpenerOption == 1 ? Dissipation : Broil4;
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !SCH_Opener_PrepullBlock),
+            ([8, 10, 12, 18, 20, 22], () => Gauge.Aetherflow == 0)
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !SCH_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1.5f))
+        ];
 
         public override bool HasCooldowns()
         {
@@ -328,6 +307,37 @@ internal partial class SCH
 
             return true;
         }
+    }
+
+    internal class SCHOpenerMaxLevel1 : SCHOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Broil4, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 3
+            () => BiolysisOrAetherflow, // 4
+            () => Dissipation, // 5
+            () => Broil4, // 6
+            () => ChainStratagem, // 7
+            () => Broil4, // 8
+            () => EnergyDrain, // 9
+            () => Broil4, // 10
+            () => EnergyDrain, // 11
+            () => Broil4, // 12
+            () => EnergyDrain, // 13
+            () => Broil4OrDissipation, // 14
+            () => Aetherflow, // 15
+            () => Broil4, // 16
+            () => BanefulImpaction, // 17
+            () => Broil4, // 18
+            () => EnergyDrain, // 19
+            () => Broil4, // 20
+            () => EnergyDrain, // 21
+            () => Broil4, // 22
+            () => EnergyDrain, // 23
+            () => Biolysis // 24
+        ];
     }
     
     #endregion

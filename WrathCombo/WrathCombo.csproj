@@ -21,6 +21,7 @@
         <Configurations>Debug;Release</Configurations>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <!--<NoWarn>CS1591</NoWarn>-->
+		<NoWarn>PendingExcelSchema</NoWarn>
         <LangVersion>preview</LangVersion>
 
         <Platforms>x64</Platforms>
@@ -156,6 +157,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>BRD_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\BST_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>BST_Config.resx</DependentUpon>
       </Compile>
       <Compile Update="Resources\Localization\JobConfigs\DNC_Config.Designer.cs">
         <DesignTime>True</DesignTime>
@@ -314,6 +320,10 @@
       <EmbeddedResource Update="Resources\Localization\JobConfigs\BRD_Config.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>BRD_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\BST_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>BST_Config.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Update="Resources\Localization\JobConfigs\DNC_Config.resx">
         <Generator>ResXFileCodeGenerator</Generator>

@@ -822,137 +822,137 @@ internal partial class BRD
             IsOffCooldown(RagingStrikes) &&
             IsOffCooldown(Barrage) &&
             IsOffCooldown(Sidewinder);
+
+        internal static uint RefulgentArrowOr(uint fallback) =>
+            LocalPlayer.HasStatus(Buffs.HawksEye) ? RefulgentArrow : fallback;
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !BRD_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !BRD_Opener_PrepullBlock),
+        ];
     }
 
     internal class BRDStandard : BRDOpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Stormbite, // 1
-            () => WanderersMinuet, // 2
-            () => EmpyrealArrow, // 3
-            () => CausticBite, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => BattleVoice, // 6
-            () => BurstShot, // 7
-            () => RadiantFinale, // 8
-            () => RagingStrikes, // 9
-            () => BurstShot, // 10
-            () => RadiantEncore, // 11
-            () => Barrage, // 12
-            () => RefulgentArrow, // 13
-            () => Sidewinder, // 14
-            () => ResonantArrow, // 15
-            () => EmpyrealArrow, // 16
-            () => BurstShot, // 17
-            () => BurstShot, // 18
-            () => IronJaws, // 19
-            () => BurstShot // 20
-        ];
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([7, 9, 16, 17, 19], RefulgentArrow, () => LocalPlayer.HasStatus(Buffs.HawksEye))
-        ];
-        public override List<int> DelayedWeaveSteps { get; set; } =
-        [
-            6
-        ];
-    }
-    internal class BRDAdjusted : BRDOpenerBase
-    {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => HeartbreakShot, // 1
+            () => All.Cease, // 1
             () => Stormbite, // 2
             () => WanderersMinuet, // 3
             () => EmpyrealArrow, // 4
             () => CausticBite, // 5
             () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
             () => BattleVoice, // 7
-            () => BurstShot, // 8
+            () => RefulgentArrowOr(BurstShot), // 8
             () => RadiantFinale, // 9
-            () => RagingStrikes, // 10
+            () => RefulgentArrowOr(RagingStrikes), // 10
             () => BurstShot, // 11
-            () => Barrage, // 12
-            () => RefulgentArrow, // 13
-            () => Sidewinder, // 14
-            () => RadiantEncore, // 15
+            () => RadiantEncore, // 12
+            () => Barrage, // 13
+            () => RefulgentArrow, // 14
+            () => Sidewinder, // 15
             () => ResonantArrow, // 16
-            () => EmpyrealArrow, // 17
-            () => BurstShot, // 18
+            () => RefulgentArrowOr(EmpyrealArrow), // 17
+            () => RefulgentArrowOr(BurstShot), // 18
             () => BurstShot, // 19
-            () => IronJaws, // 20
+            () => RefulgentArrowOr(IronJaws), // 20
             () => BurstShot // 21
-        ];
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([8, 11, 18, 19, 21], RefulgentArrow, () => LocalPlayer.HasStatus(Buffs.HawksEye))
         ];
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
             7
         ];
     }
+    internal class BRDAdjusted : BRDOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => HeartbreakShot, // 2
+            () => Stormbite, // 3
+            () => WanderersMinuet, // 4
+            () => EmpyrealArrow, // 5
+            () => CausticBite, // 6
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 7
+            () => BattleVoice, // 8
+            () => RefulgentArrowOr(BurstShot), // 9
+            () => RadiantFinale, // 10
+            () => RagingStrikes, // 11
+            () => RefulgentArrowOr(BurstShot), // 12
+            () => Barrage, // 13
+            () => RefulgentArrow, // 14
+            () => Sidewinder, // 15
+            () => RadiantEncore, // 16
+            () => ResonantArrow, // 17
+            () => EmpyrealArrow, // 18
+            () => RefulgentArrowOr(BurstShot), // 19
+            () => RefulgentArrowOr(BurstShot), // 20
+            () => IronJaws, // 21
+            () => RefulgentArrowOr(BurstShot) // 22
+        ];
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            8
+        ];
+    }
     internal class BRDComfy : BRDOpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Stormbite, // 1
-            () => HeartbreakShot, // 2
-            () => WanderersMinuet, // 3
-            () => CausticBite, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => EmpyrealArrow, // 6
-            () => RadiantFinale, // 7
-            () => BurstShot, // 8
-            () => BattleVoice, // 9
-            () => RagingStrikes, // 10
-            () => BurstShot, // 11
-            () => Barrage, // 12
-            () => RefulgentArrow, // 13
-            () => Sidewinder, // 14
-            () => RadiantEncore, // 15
-            () => ResonantArrow, // 16
-            () => BurstShot, // 17
-            () => EmpyrealArrow, // 18
-            () => BurstShot, // 19
-            () => IronJaws, // 20
-            () => BurstShot // 21
-        ];
-
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([8, 11, 17, 19, 21], RefulgentArrow, () => LocalPlayer.HasStatus(Buffs.HawksEye))
+            () => All.Cease, // 1
+            () => Stormbite, // 2
+            () => HeartbreakShot, // 3
+            () => WanderersMinuet, // 4
+            () => CausticBite, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            () => EmpyrealArrow, // 7
+            () => RadiantFinale, // 8
+            () => RefulgentArrowOr(BurstShot), // 9
+            () => BattleVoice, // 10
+            () => RagingStrikes, // 11
+            () => RefulgentArrowOr(BurstShot), // 12
+            () => Barrage, // 13
+            () => RefulgentArrow, // 14
+            () => Sidewinder, // 15
+            () => RadiantEncore, // 16
+            () => ResonantArrow, // 17
+            () => RefulgentArrowOr(BurstShot), // 18
+            () => EmpyrealArrow, // 19
+            () => RefulgentArrowOr(BurstShot), // 20
+            () => IronJaws, // 21
+            () => RefulgentArrowOr(BurstShot) // 22
         ];
     }
     internal class BRDEarly : BRDOpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Stormbite, // 1
-            () => WanderersMinuet, // 2
-            () => BattleVoice, // 3
-            () => CausticBite, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => RagingStrikes, // 6
-            () => RadiantFinale, // 7
-            () => BurstShot, // 8
-            () => EmpyrealArrow, // 9
-            () => BurstShot, // 10
-            () => Barrage, // 11
-            () => RefulgentArrow, // 12
-            () => Sidewinder, // 13
-            () => RadiantEncore, // 14
-            () => ResonantArrow, // 15
-            () => BurstShot, // 16
-            () => IronJaws, // 17
-            () => EmpyrealArrow, // 18
-            () => BurstShot, // 19
-            () => BurstShot, // 20
-        ];
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([8, 10, 16, 19, 20], RefulgentArrow, () => LocalPlayer.HasStatus(Buffs.HawksEye))
+            () => All.Cease, // 1
+            () => Stormbite, // 2
+            () => WanderersMinuet, // 3
+            () => BattleVoice, // 4
+            () => CausticBite, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            () => RagingStrikes, // 7
+            () => RadiantFinale, // 8
+            () => RefulgentArrowOr(BurstShot), // 9
+            () => EmpyrealArrow, // 10
+            () => RefulgentArrowOr(BurstShot), // 11
+            () => Barrage, // 12
+            () => RefulgentArrow, // 13
+            () => Sidewinder, // 14
+            () => RadiantEncore, // 15
+            () => ResonantArrow, // 16
+            () => RefulgentArrowOr(BurstShot), // 17
+            () => IronJaws, // 18
+            () => EmpyrealArrow, // 19
+            () => RefulgentArrowOr(BurstShot), // 20
+            () => RefulgentArrowOr(BurstShot), // 21
         ];
     }
     #endregion

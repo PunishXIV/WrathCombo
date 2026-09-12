@@ -15,6 +15,8 @@ internal partial class DRG : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, TrueThrust))
                 return actionID;
 
+            ReportDRGPositionalHints();
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
@@ -161,6 +163,8 @@ internal partial class DRG : Melee
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, TrueThrust))
                 return actionID;
+
+            ReportDRGPositionalHints();
 
             if (IsEnabled(Preset.DRG_ST_Opener) &&
                 Opener().FullOpener(ref actionID))

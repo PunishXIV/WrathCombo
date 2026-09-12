@@ -530,7 +530,7 @@ internal partial class SAM
     internal static WrathOpener Opener()
     {
         if (FRUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1283)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.FRU)
             return FRUOpener;
 
         if (Lvl70.LevelChecked)
@@ -563,17 +563,18 @@ internal partial class SAM
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], () => CountdownRemaining - 13),
-            ([2], () => CountdownRemaining - 5),
-            ([3], () => CountdownRemaining - 0.5f)
+            ([2], () => !SAM_ST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 14)),
+            ([3], () => !SAM_ST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (TargetNeedsPositionals() ? 5 : 0))),
+            ([4], () => !SAM_ST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([2], () => !TargetNeedsPositionals())
+            ([1], () => CountdownActive || InCombat() || !SAM_ST_Opener_PrepullBlock),
+            ([3], () => !TargetNeedsPositionals())
         ];
 
-        protected static bool SharedOpenerCooldowns() =>
+        public override bool HasCooldowns() =>
             GetRemainingCharges(Role.TrueNorth) >= 1 &&
             IsOffCooldown(Ikishoten) &&
             SenCount is 0;
@@ -586,27 +587,28 @@ internal partial class SAM
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => MeikyoShisui, // 1
-            () => Role.TrueNorth, // 2
-            () => Gekko, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
-            () => Kasha, // 5
-            () => Ikishoten, // 6
-            () => Yukikaze, // 7
-            () => Shinten, // 8
-            () => MidareSetsugekka, // 9
-            () => Shinten, // 10
-            () => Hakaze, // 11
-            () => Guren, // 12
-            () => Yukikaze, // 13
-            () => Shinten, // 14
-            () => Higanbana // 15
+            () => All.Cease, // 1
+            () => MeikyoShisui, // 2
+            () => Role.TrueNorth, // 3
+            () => Gekko, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            () => Kasha, // 6
+            () => Ikishoten, // 7
+            () => Yukikaze, // 8
+            () => Shinten, // 9
+            () => MidareSetsugekka, // 10
+            () => Shinten, // 11
+            () => Hakaze, // 12
+            () => Guren, // 13
+            () => Yukikaze, // 14
+            () => Shinten, // 15
+            () => Higanbana // 16
         ];
 
         public override bool HasCooldowns() =>
+            base.HasCooldowns() &&
             IsOffCooldown(MeikyoShisui) &&
-            IsOffCooldown(Guren) &&
-            SharedOpenerCooldowns();
+            IsOffCooldown(Guren);
     }
 
     internal class SAMLvl80Opener : SAMOpenerBase
@@ -616,32 +618,33 @@ internal partial class SAM
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => MeikyoShisui, // 1
-            () => Role.TrueNorth, // 2
-            () => Gekko, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
-            () => Ikishoten, // 5
-            () => Kasha, // 6
-            () => Yukikaze, // 7
-            () => MidareSetsugekka, // 8
-            () => Senei, // 9
-            () => KaeshiSetsugekka, // 10
-            () => MeikyoShisui, // 11
-            () => Gekko, // 12
-            () => Higanbana, // 13
-            () => Gekko, // 14
-            () => Kasha, // 15
-            () => Hakaze, // 16
-            () => Yukikaze, // 17
-            () => MidareSetsugekka, // 18
-            () => Shoha, // 19
-            () => KaeshiSetsugekka // 20
+            () => All.Cease, // 1
+            () => MeikyoShisui, // 2
+            () => Role.TrueNorth, // 3
+            () => Gekko, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            () => Ikishoten, // 6
+            () => Kasha, // 7
+            () => Yukikaze, // 8
+            () => MidareSetsugekka, // 9
+            () => Senei, // 10
+            () => KaeshiSetsugekka, // 11
+            () => MeikyoShisui, // 12
+            () => Gekko, // 13
+            () => Higanbana, // 14
+            () => Gekko, // 15
+            () => Kasha, // 16
+            () => Hakaze, // 17
+            () => Yukikaze, // 18
+            () => MidareSetsugekka, // 19
+            () => Shoha, // 20
+            () => KaeshiSetsugekka // 21
         ];
 
         public override bool HasCooldowns() =>
+            base.HasCooldowns() &&
             GetRemainingCharges(MeikyoShisui) is 2 &&
-            IsOffCooldown(Senei) &&
-            SharedOpenerCooldowns();
+            IsOffCooldown(Senei);
     }
 
     internal class SAMLvl90Opener : SAMOpenerBase
@@ -651,36 +654,37 @@ internal partial class SAM
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => MeikyoShisui, // 1
-            () => Role.TrueNorth, // 2
-            () => Gekko, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
-            () => Ikishoten, // 5
-            () => Kasha, // 6
-            () => Yukikaze, // 7
-            () => MidareSetsugekka, // 8
-            () => Senei, // 9
-            () => KaeshiSetsugekka, // 10
-            () => MeikyoShisui, // 11
-            () => Gekko, // 12
-            () => Higanbana, // 13
-            () => OgiNamikiri, // 14
-            () => Shoha, // 15
-            () => KaeshiNamikiri, // 16
-            () => Kasha, // 17
-            () => Gekko, // 18
-            () => Hakaze, // 19
-            () => Yukikaze, // 20
-            () => MidareSetsugekka, // 21
-            () => KaeshiSetsugekka // 22
+            () => All.Cease, // 1
+            () => MeikyoShisui, // 2
+            () => Role.TrueNorth, // 3
+            () => Gekko, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            () => Ikishoten, // 6
+            () => Kasha, // 7
+            () => Yukikaze, // 8
+            () => MidareSetsugekka, // 9
+            () => Senei, // 10
+            () => KaeshiSetsugekka, // 11
+            () => MeikyoShisui, // 12
+            () => Gekko, // 13
+            () => Higanbana, // 14
+            () => OgiNamikiri, // 15
+            () => Shoha, // 16
+            () => KaeshiNamikiri, // 17
+            () => Kasha, // 18
+            () => Gekko, // 19
+            () => Hakaze, // 20
+            () => Yukikaze, // 21
+            () => MidareSetsugekka, // 22
+            () => KaeshiSetsugekka // 23
         ];
 
-        public override List<int> AllowUpgradeSteps { get; set; } = [19];
+        public override List<int> AllowUpgradeSteps { get; set; } = [20];
 
         public override bool HasCooldowns() =>
+            base.HasCooldowns() &&
             GetRemainingCharges(MeikyoShisui) is 2 &&
-            IsOffCooldown(Senei) &&
-            SharedOpenerCooldowns();
+            IsOffCooldown(Senei);
     }
 
     internal class SAMLvl100Opener : SAMOpenerBase
@@ -690,50 +694,50 @@ internal partial class SAM
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => MeikyoShisui, // 1
-            () => Role.TrueNorth, // 2
-            () => Gekko, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
-            () => Kasha, // 5
-            () => Ikishoten, // 6
-            () => Yukikaze, // 7
-            () => TendoSetsugekka, // 8
-            () => Senei, // 9
-            () => TendoKaeshiSetsugekka, // 10
-            () => MeikyoShisui, // 11
-            () => Gekko, // 12
-            () => Zanshin, // 13
-            () => Higanbana, // 14
-            () => OgiNamikiri, // 15
-            () => Shoha, // 16
-            () => KaeshiNamikiri, // 17
-            () => Kasha, // 18
-            () => Shinten, // 19
-            () => Gekko, // 20
-            () => Gyoten, // 21
-            () => Gyofu, // 22
-            () => Yukikaze, // 23
-            () => Shinten, // 24
-            () => TendoSetsugekka, // 25
-            () => Gyoten, // 26
-            () => TendoKaeshiSetsugekka // 27
+            () => All.Cease, // 1
+            () => MeikyoShisui, // 2
+            () => Role.TrueNorth, // 3
+            () => Gekko, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            () => Kasha, // 6
+            () => Ikishoten, // 7
+            () => Yukikaze, // 8
+            () => TendoSetsugekka, // 9
+            () => Senei, // 10
+            () => TendoKaeshiSetsugekka, // 11
+            () => MeikyoShisui, // 12
+            () => Gekko, // 13
+            () => Zanshin, // 14
+            () => Higanbana, // 15
+            () => OgiNamikiri, // 16
+            () => Shoha, // 17
+            () => KaeshiNamikiri, // 18
+            () => Kasha, // 19
+            () => Shinten, // 20
+            () => Gekko, // 21
+            () => Gyoten, // 22
+            () => Gyofu, // 23
+            () => Yukikaze, // 24
+            () => Shinten, // 25
+            () => TendoSetsugekka, // 26
+            () => Gyoten, // 27
+            () => TendoKaeshiSetsugekka // 28
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([2], () => !TargetNeedsPositionals()),
-            ([19, 24], () => !ActionReady(Shinten)),
-            ([21], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 2),
-            ([26], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 3),
-            ([8, 25], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))),
-            ([10, 27], () => !LocalPlayer.HasStatus(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)),
-            ([14], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko)))
-        ];
+        public SAMLvl100Opener()
+        {
+            SkipSteps.Add(([20, 25], () => !ActionReady(Shinten)));
+            SkipSteps.Add(([22], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 2));
+            SkipSteps.Add(([27], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 3));
+            SkipSteps.Add(([9, 26], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))));
+            SkipSteps.Add(([11, 28], () => !LocalPlayer.HasStatus(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)));
+            SkipSteps.Add(([15], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko))));
+        }
 
         public override bool HasCooldowns() =>
+            base.HasCooldowns() &&
             GetRemainingCharges(MeikyoShisui) is 2 &&
-            IsOffCooldown(Senei) &&
-            SharedOpenerCooldowns();
+            IsOffCooldown(Senei);
     }
 
     internal class SAMFRUOpener : SAMOpenerBase
@@ -743,46 +747,47 @@ internal partial class SAM
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => MeikyoShisui, // 1
-            () => Role.TrueNorth, // 2
-            () => Gekko, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
-            () => Kasha, // 5
-            () => Ikishoten, // 6
-            () => Yukikaze, // 7
-            () => TendoSetsugekka, // 8
-            () => Senei, // 9
-            () => TendoKaeshiSetsugekka, // 10
-            () => Zanshin, // 11
-            () => OgiNamikiri, // 12
-            () => KaeshiNamikiri, // 13
-            () => Gyofu, // 14
-            () => Yukikaze, // 15
-            () => MeikyoShisui, // 16
-            () => Gekko, // 17
-            () => Shinten, // 18
-            () => Kasha, // 19
-            () => Shinten, // 20
-            () => TendoSetsugekka, // 21
-            () => Shoha, // 22
-            () => Yukikaze, // 23
-            () => TendoKaeshiSetsugekka, // 24
-            () => Kasha, // 25
-            () => Gyofu, // 26
-            () => Yukikaze // 27
+            () => All.Cease, // 1
+            () => MeikyoShisui, // 2
+            () => Role.TrueNorth, // 3
+            () => Gekko, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
+            () => Kasha, // 6
+            () => Ikishoten, // 7
+            () => Yukikaze, // 8
+            () => TendoSetsugekka, // 9
+            () => Senei, // 10
+            () => TendoKaeshiSetsugekka, // 11
+            () => Zanshin, // 12
+            () => OgiNamikiri, // 13
+            () => KaeshiNamikiri, // 14
+            () => Gyofu, // 15
+            () => Yukikaze, // 16
+            () => MeikyoShisui, // 17
+            () => Gekko, // 18
+            () => Shinten, // 19
+            () => Kasha, // 20
+            () => Shinten, // 21
+            () => TendoSetsugekka, // 22
+            () => Shoha, // 23
+            () => Yukikaze, // 24
+            () => TendoKaeshiSetsugekka, // 25
+            () => Kasha, // 26
+            () => Gyofu, // 27
+            () => Yukikaze // 28
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([18, 20], () => !ActionReady(Shinten)),
-            ([8, 21], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))),
-            ([10, 24], () => !LocalPlayer.HasStatus(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka))
-        ];
+        public SAMFRUOpener()
+        {
+            SkipSteps.Add(([19, 21], () => !ActionReady(Shinten)));
+            SkipSteps.Add(([9, 22], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))));
+            SkipSteps.Add(([11, 25], () => !LocalPlayer.HasStatus(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)));
+        }
 
         public override bool HasCooldowns() =>
+            base.HasCooldowns() &&
             GetRemainingCharges(MeikyoShisui) is 2 &&
-            IsOffCooldown(Senei) &&
-            SharedOpenerCooldowns();
+            IsOffCooldown(Senei);
     }
 
     #endregion

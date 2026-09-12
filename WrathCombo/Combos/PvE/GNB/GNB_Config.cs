@@ -63,6 +63,7 @@ internal partial class GNB
 
         public static UserBool
             GNB_Opener_Potion = new("GNB_Opener_Potion"),
+            GNB_Opener_PrepullBlock = new("GNB_Opener_PrepullBlock", true),
             GNB_Mit_Advanced_Boss_Camouflage_Align = new("GNB_Mit_Advanced_Boss_Camouflage_Align", true),
             GNB_Mit_Advanced_Boss_Nebula_First = new("GNB_Mit_Advanced_Boss_Nebula_First", true),
             GNB_RetargetLightningShot_FieldMO = new("GNB_RetargetLightningShot_FieldMO"),
@@ -171,6 +172,7 @@ internal partial class GNB
                 case Preset.GNB_ST_Opener:
                     DrawBossOnlyChoice(GNB_ST_Balance_Content);
                     DrawOpenerPotionChoice(GNB_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(GNB_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined($"{NoMercy.ActionName()} Settings");
                     ImGui.Spacing();
                     DrawRadioButton(GNB_Opener_NM,

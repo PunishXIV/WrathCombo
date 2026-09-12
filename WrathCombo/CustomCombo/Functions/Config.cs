@@ -60,6 +60,7 @@ internal class UserInt : UserData
 
     public int Value
     {
+        get => Configuration.GetCustomIntValue(ConfigName);
         set => Configuration.SetCustomIntValue(ConfigName, value);
     }
 

@@ -242,80 +242,14 @@ internal partial class DRK
     internal static DRKOpenerMaxLevel1 Opener1 = new();
     internal static DRKOpenerEarlyBuff OpenerEarlyBuff = new();
 
-    internal class DRKOpenerMaxLevel1 : WrathOpener
+    internal abstract class DRKOpenerBase : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
-
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Unmend, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 2
-            () => HardSlash, // 3
-            () => EdgeOfShadow, // 4
-            () => LivingShadow, // 5
-            () => SyphonStrike, // 6
-            () => LivingShadow, // 7
-            () => Souleater, // 8
-            () => Delirium, // 9
-            () => HardSlash, // 10
-            () => Disesteem, // 11
-            () => SaltedEarth, // 12
-            () => ScarletDelirium, // 13
-            () => Shadowbringer, // 14
-            () => Comeuppance, // 15
-            () => CarveAndSpit, // 16
-            () => Torcleaver, // 17
-            () => Shadowbringer, // 18
-            () => Bloodspiller, // 19
-            () => SaltAndDarkness, // 20
-        ];
-
-        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps
-        {
-            get;
-            set;
-        } =
-        [
-            // Pull with Shadowstride as selected
-            ([1], Shadowstride, () =>
-                DRK_ST_OpenerAction == (int)PullAction.Shadowstride),
-            // Pull with HardSlash as selected (requires skipping the now-duplicate HardSlash)
-            ([1], HardSlash, () =>
-                DRK_ST_OpenerAction == (int)PullAction.HardSlash),
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
-        {
-            get;
-            set;
-        } =
-        [
-            // Skip the duplicate HardSlash, if pulling with HardSlash
-            ([3], () =>
-                DRK_ST_OpenerAction == (int)PullAction.HardSlash),
-            // Skip the early LivingShadow, if non-standard
-            ([5], () =>
-                DRK_ST_OpenerAction != (int)PullAction.Unmend),
-            // Skip the late LivingShadow and aligning HardSlash, if Standard
-            ([7, 10], () => Bursting.PartyIsBursting ||
-                DRK_ST_OpenerAction == (int)PullAction.Unmend),
-            // Skip Salted Earth
-            ([12], () =>
-                IsOnCooldown(SaltedEarth)),
-            // Skip Blood spenders when no Blood
-            ([19], () =>
-                Gauge.Blood < 50),
-            // Skip Salt and Darkness
-            ([20], () =>
-                !ActionReady(SaltAndDarkness)),
-        ];
 
         public override Preset Preset => Preset.DRK_ST_BalanceOpener;
 
-        internal override UserData? ContentCheckConfig =>
-            DRK_ST_OpenerDifficulty;
+        internal override UserData? ContentCheckConfig => DRK_ST_OpenerDifficulty;
 
         internal override bool IncludePot => DRK_Opener_Potion;
 
@@ -325,24 +259,75 @@ internal partial class DRK
             IsOffCooldown(SaltedEarth) &&
             GetRemainingCharges(Shadowbringer) >= 2 &&
             (!InCombat() || CombatEngageDuration().TotalSeconds < 3);
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !DRK_Opener_PrepullBlock),
+        ];
+
+        public static uint Pull => DRK_ST_OpenerAction.Value switch
+        {
+            1 => Shadowstride,
+            2 => HardSlash,
+            _ => Unmend
+        };
     }
 
-    internal class DRKOpenerEarlyBuff : WrathOpener
+    internal class DRKOpenerMaxLevel1 : DRKOpenerBase
     {
-        public override int MinOpenerLevel => 100;
-
-        public override int MaxOpenerLevel => 109;
-
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => LivingShadow, // 1
-            () => Unmend, // 2
+            () => All.Cease, // 1
+            () => Pull, // 2
             () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 3
-            () => EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 4
-            () => HardSlash, // 5
-            () => Delirium, // 6
-            () => SaltedEarth, // 7
-            () => HardSlash, // 8
+            () => HardSlash, // 4
+            () => EdgeOfShadow, // 5
+            () => LivingShadow, // 6
+            () => SyphonStrike, // 7
+            () => LivingShadow, // 8
+            () => Souleater, // 9
+            () => Delirium, // 10
+            () => HardSlash, // 11
+            () => Disesteem, // 12
+            () => SaltedEarth, // 13
+            () => ScarletDelirium, // 14
+            () => Shadowbringer, // 15
+            () => Comeuppance, // 16
+            () => CarveAndSpit, // 17
+            () => Torcleaver, // 18
+            () => Shadowbringer, // 19
+            () => Bloodspiller, // 20
+            () => SaltAndDarkness, // 21
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+[
+            ([2], () => !DRK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (Pull is Unmend ? 1 : Pull is Shadowstride ? 0.7f : 0))),
+        ];
+
+        public DRKOpenerMaxLevel1()
+        {
+            SkipSteps.Add(([4], () => DRK_ST_OpenerAction == (int)PullAction.HardSlash)); // Skip the duplicate HardSlash, if pulling with HardSlash
+            SkipSteps.Add(([6], () => DRK_ST_OpenerAction != (int)PullAction.Unmend)); // Skip the early LivingShadow, if non-standard
+            SkipSteps.Add(([8, 11], () => Bursting.PartyIsBursting || DRK_ST_OpenerAction == (int)PullAction.Unmend)); // Skip the late LivingShadow and aligning HardSlash, if Standard
+            SkipSteps.Add(([13], () => IsOnCooldown(SaltedEarth))); // Skip Salted Earth
+            SkipSteps.Add(([20], () => Gauge.Blood < 50)); // Skip Blood spenders when no Blood
+            SkipSteps.Add(([21], () => !ActionReady(SaltAndDarkness))); // Skip Salt and Darkness
+        }
+    }
+
+    internal class DRKOpenerEarlyBuff : DRKOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => LivingShadow, // 2
+            () => Pull, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 4
+            () => EdgeOfShadow, // Not handled like a procc, since it sets up Darkside | 5
+            () => HardSlash, // 6
+            () => Delirium, // 7
+            () => SaltedEarth, // 8
             () => Disesteem, // 9
             () => CarveAndSpit, // 10
             () => ScarletDelirium, // 11
@@ -357,65 +342,20 @@ internal partial class DRK
             () => HardSlash, // 20
         ];
 
-        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
-        {
-            get;
-            set;
-        } =
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], () => CountdownRemaining - 3),
-            ([2], () => CountdownRemaining - 1),
+            ([2], () => !DRK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 3)),
+            ([3], () => !DRK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (Pull is Unmend ? 1 : Pull is Shadowstride ? 0.7f : 0))),
         ];
 
-        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps
+        public DRKOpenerEarlyBuff()
         {
-            get;
-            set;
-        } =
-        [
-            ([2], Shadowstride, () =>
-                DRK_ST_OpenerAction == (int)PullAction.Shadowstride),
-            ([2], HardSlash, () =>
-                DRK_ST_OpenerAction == (int)PullAction.HardSlash),
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
-        {
-            get;
-            set;
-        } =
-        [
-            // Skip the duplicate HardSlash, if pulling with HardSlash
-            ([5], () =>
-                DRK_ST_OpenerAction == (int)PullAction.HardSlash),
-            // Skip Salted Earth if on cooldown
-            ([7], () =>
-                IsOnCooldown(SaltedEarth)),
-            // Skip the aligning HardSlash, if pulling with Unmend
-            ([8], () =>
-                DRK_ST_OpenerAction == (int)PullAction.Unmend),
-            // Skip Salt and Darkness when not ready
-            ([16], () =>
-                !ActionReady(SaltAndDarkness)),
-            // Skip Blood spenders when no Blood
-            ([19], () =>
-                Gauge.Blood < 50),
-        ];
-
-        public override Preset Preset => Preset.DRK_ST_BalanceOpener;
-
-        internal override UserData? ContentCheckConfig =>
-            DRK_ST_OpenerDifficulty;
-
-        internal override bool IncludePot => DRK_Opener_Potion;
-
-        public override bool HasCooldowns() =>
-            CountdownActive &&
-            LocalPlayer.CurrentMp > 7000 && IsOffCooldown(LivingShadow) &&
-            IsOffCooldown(Delirium) && IsOffCooldown(CarveAndSpit) &&
-            IsOffCooldown(SaltedEarth) &&
-            GetRemainingCharges(Shadowbringer) >= 2 &&
-            (!InCombat() || CombatEngageDuration().TotalSeconds < 3);
+            SkipSteps.Add(([6], () => DRK_ST_OpenerAction == (int)PullAction.HardSlash)); // Skip the duplicate HardSlash, if pulling with HardSlash
+            SkipSteps.Add(([8], () => IsOnCooldown(SaltedEarth))); // Skip Salted Earth if on cooldown
+            SkipSteps.Add(([9], () => DRK_ST_OpenerAction == (int)PullAction.Unmend)); // Skip the aligning HardSlash, if pulling with Unmend
+            SkipSteps.Add(([16], () => !ActionReady(SaltAndDarkness))); // Skip Salt and Darkness when not ready
+            SkipSteps.Add(([19], () => Gauge.Blood < 50)); // Skip Blood spenders when no Blood
+        }
     }
 
     #endregion
