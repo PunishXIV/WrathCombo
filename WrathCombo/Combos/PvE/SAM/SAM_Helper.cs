@@ -730,7 +730,7 @@ internal partial class SAM
             SkipSteps.Add(([22], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 2));
             SkipSteps.Add(([27], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 3));
             SkipSteps.Add(([9, 26], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))));
-            SkipSteps.Add(([11, 28], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)));
+            SkipSteps.Add(([11, 28], () => !LocalPlayer.HasStatus(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)));
             SkipSteps.Add(([15], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko))));
         }
 
@@ -781,7 +781,7 @@ internal partial class SAM
         {
             SkipSteps.Add(([19, 21], () => !ActionReady(Shinten)));
             SkipSteps.Add(([9, 22], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))));
-            SkipSteps.Add(([11, 25], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)));
+            SkipSteps.Add(([11, 25], () => !LocalPlayer.HasStatus(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)));
         }
 
         public override bool HasCooldowns() =>

@@ -43,9 +43,13 @@ internal partial class WAR : Tank
     {
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
+
         public override Preset Preset => Preset.WAR_ST_BalanceOpener;
         internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
         internal override bool IncludePot => WAR_Opener_Potion;
+
+        internal static uint TomahawkOrHeavySwing =>
+            InMeleeRange() ? HeavySwing : Tomahawk;
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
@@ -55,7 +59,7 @@ internal partial class WAR : Tank
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => CountdownActive || InCombat() || !WAR_Opener_PrepullBlock),
-            ([2], () => InMeleeRange()),
+            ([4], () => ComboAction is HeavySwing),
             ([11, 13, 15], () => !HasCharges(Onslaught) || WAR_ST_BalanceOpener_GapcloserChoice == 0)
         ];
 
@@ -71,7 +75,7 @@ internal partial class WAR : Tank
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
             () => All.Cease, // 1
-            () => Tomahawk, // 2
+            () => TomahawkOrHeavySwing, // 2
             () => Infuriate, // 3
             () => HeavySwing, // 4
             () => Maim, // 5

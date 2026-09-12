@@ -717,19 +717,19 @@ internal partial class RPR
             OnTargetsRear() ? ExecutionersGallows : ExecutionersGibbet;
 
         internal static uint ExecutionersGallowsOrGibbet =>
-            HasStatusEffect(Buffs.EnhancedGibbet) ? ExecutionersGibbet : ExecutionersGallows;
+            LocalPlayer.HasStatus(Buffs.EnhancedGibbet) ? ExecutionersGibbet : ExecutionersGallows;
 
         internal static uint UnveiledGibbetOrGallows =>
-            HasStatusEffect(Buffs.EnhancedGallows) ? UnveiledGallows : UnveiledGibbet;
+            LocalPlayer.HasStatus(Buffs.EnhancedGallows) ? UnveiledGallows : UnveiledGibbet;
 
         internal static uint GibbetOrGallows =>
-            HasStatusEffect(Buffs.EnhancedGallows) ? Gallows : Gibbet;
+            LocalPlayer.HasStatus(Buffs.EnhancedGallows) ? Gallows : Gibbet;
 
         internal static uint GibbetOrGallowsRear =>
             OnTargetsRear() ? Gallows : Gibbet;
 
         internal static uint GallowsOrGibbet =>
-            HasStatusEffect(Buffs.EnhancedGibbet) ? Gibbet : Gallows;
+            LocalPlayer.HasStatus(Buffs.EnhancedGibbet) ? Gibbet : Gallows;
     }
 
     internal class RPRStandardOpenerLvl100 : RPROpenerBase

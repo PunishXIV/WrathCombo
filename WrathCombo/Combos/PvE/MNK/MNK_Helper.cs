@@ -590,7 +590,7 @@ internal partial class MNK
         [
             ([1], () => CountdownActive || InCombat() || !MNK_Opener_PrepullBlock),
             ([2], () => Chakra >= 5),
-            ([3], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift))
+            ([3], () => LocalPlayer.HasStatus(Buffs.FormlessFist) || JustUsed(FormShift))
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =

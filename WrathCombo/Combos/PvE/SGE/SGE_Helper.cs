@@ -74,11 +74,13 @@ internal partial class SGE
     {
         uint dotAction = OriginalHook(Dosis);
         int hpThreshold = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? EDosisHpThreshold(CurrentTarget) : 0;
-        EukrasianDosisList.TryGetValue(dotAction, out ushort dotDebuffID);
+        DosisList.TryGetValue(dotAction, out var debuff);
+        ushort dotDebuffID = debuff.Debuff;
         double dotRefresh = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? SGE_ST_Adv_DPS_EukrasianDosisUptime_Threshold : 2.5;
         float dotRemaining = CurrentTarget.Status(dotDebuffID).RemainingTimeOrZero();
 
         return ActionReady(Eukrasia) &&
+               dotDebuffID != 0 &&
                CurrentTarget.CanApplyStatus(dotDebuffID) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
@@ -651,12 +653,12 @@ internal partial class SGE
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => CountdownActive || InCombat() || !SGE_Opener_PrepullBlock),
-            ([2], () => HasStatusEffect(Buffs.Eukrasia))
+            ([2], () => LocalPlayer.HasStatus(Buffs.Eukrasia))
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => !SGE_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (HasStatusEffect(Buffs.Eukrasia) ? 2.1f : 5))),
+            ([2], () => !SGE_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (LocalPlayer.HasStatus(Buffs.Eukrasia) ? 2.1f : 5))),
             ([3], () => !SGE_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2.1f)),
             ([4], () => !SGE_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1.5f))
         ];

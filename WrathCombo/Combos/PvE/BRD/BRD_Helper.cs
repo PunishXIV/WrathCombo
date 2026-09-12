@@ -824,7 +824,7 @@ internal partial class BRD
             IsOffCooldown(Sidewinder);
 
         internal static uint RefulgentArrowOr(uint fallback) =>
-            HasStatusEffect(Buffs.HawksEye) ? RefulgentArrow : fallback;
+            LocalPlayer.HasStatus(Buffs.HawksEye) ? RefulgentArrow : fallback;
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [

@@ -621,10 +621,10 @@ internal partial class VPR
             OnTargetsRear() ? SwiftskinsCoil : HuntersCoil;
 
         internal static uint TwinfangBiteOrTwinbloodBite =>
-            HasStatusEffect(Buffs.SwiftskinsVenom) ? TwinbloodBite : TwinfangBite;
+            LocalPlayer.HasStatus(Buffs.SwiftskinsVenom) ? TwinbloodBite : TwinfangBite;
 
         internal static uint TwinbloodBiteOrTwinfangBite =>
-            HasStatusEffect(Buffs.HuntersVenom) ? TwinfangBite : TwinbloodBite;
+            LocalPlayer.HasStatus(Buffs.HuntersVenom) ? TwinfangBite : TwinbloodBite;
 
         internal static uint SwiftskinsCoilOrHuntersCoil =>
             UsedSwiftskinsCoil ? HuntersCoil : SwiftskinsCoil;
