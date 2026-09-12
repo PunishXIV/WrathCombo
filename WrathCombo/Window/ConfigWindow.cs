@@ -66,7 +66,7 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
             .Where(kvp => (int)kvp.Key > 100)
             .Where(kvp => kvp.Value.Parent == null)
             .Where(kvp => kvp.Value.JobInfo != null)
-            .OrderBy(kvp => GetRoleOrder(kvp.Value.JobInfo.Role))
+            .OrderBy(kvp => kvp.Value.JobInfo.Job is Job.ADV ? 5 : GetRoleOrder(kvp.Value.JobInfo.Role))
             .ThenByDescending(kvp => kvp.Value.JobInfo.Job is Job.ADV)
             .ThenByDescending(kvp => kvp.Value.JobInfo.Job is Job.MIN)
             .ThenBy(kvp => kvp.Value.JobInfo.Job)
