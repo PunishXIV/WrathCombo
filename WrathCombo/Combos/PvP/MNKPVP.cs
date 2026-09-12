@@ -2,6 +2,7 @@
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.MNKPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -76,16 +77,16 @@ internal static class MNKPvP
                     GetTargetHPPercent() <= MNKPvP_SmiteThreshold)
                     return PvPMelee.Smite;
                 
-                if (HasStatusEffect(Buffs.FireResonance) && ComboAction is PouncingCoeurl)
+                if (LocalPlayer.HasStatus(Buffs.FireResonance) && ComboAction is PouncingCoeurl)
                     return actionID;
 
                 if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && NumberOfEnemiesInRange(RisingPhoenix) >= 1 &&
-                    (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || // capped on charges
+                    (!LocalPlayer.HasStatus(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || // capped on charges
                      ComboAction is PouncingCoeurl && GetRemainingCharges(RisingPhoenix) > 0)) // use last charge to buff phantom rush
                     return OriginalHook(RisingPhoenix);
 
-                if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && !HasStatusEffect(Buffs.EarthResonance) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95 || //Pop Riddle of earth
-                    HasStatusEffect(Buffs.EarthResonance) && GetStatusEffectRemainingTime(Buffs.EarthResonance) <= 2) //Fire earths reply before it expires
+                if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && !LocalPlayer.HasStatus(Buffs.EarthResonance) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95 || //Pop Riddle of earth
+                    LocalPlayer.HasStatus(Buffs.EarthResonance) && LocalPlayer.Status(Buffs.EarthResonance).RemainingTimeOrZero() <= 2) //Fire earths reply before it expires
                     return OriginalHook(RiddleOfEarth);
 
                 if (IsEnabled(Preset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(Thunderclap) > 0 && !InMeleeRange())

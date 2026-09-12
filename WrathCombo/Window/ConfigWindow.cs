@@ -21,7 +21,6 @@ using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 using WrathCombo.Window.Tabs;
 using static WrathCombo.Core.PresetStorage;
-using static WrathCombo.CustomComboNS.Functions.Jobs;
 using Debug = WrathCombo.Window.Tabs.Debug;
 using PunishGui = PunishLib.ImGuiMethods;
 namespace WrathCombo.Window;

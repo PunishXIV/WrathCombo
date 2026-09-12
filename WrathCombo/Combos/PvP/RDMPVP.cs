@@ -4,6 +4,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.RDMPvP.Config;
+using WrathCombo.Extensions;
 
 
 namespace WrathCombo.Combos.PvP;
@@ -129,13 +130,13 @@ internal static class RDMPvP
             bool inCombat = InCombat();
             bool hasTarget = HasTarget();
             bool isTargetNPC = CurrentTarget is IBattleNpc && CurrentTarget.BaseId != 8016;
-            bool hasBind = HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true);
+            bool hasBind = LocalPlayer.HasStatus(PvPCommon.Debuffs.Bind, true);
             bool isCorpsAvailable = chargesCorps > 0 && !hasBind;
             bool hasScorch = OriginalHook(EnchantedRiposte) is Scorch;
             bool hasViceOfThorns = OriginalHook(Forte) is ViceOfThorns;
             bool hasPrefulgence = OriginalHook(Embolden) is Prefulgence;
             bool hasGrandImpact = OriginalHook(actionID) is GrandImpact;
-            bool targetHasGuard = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
+            bool targetHasGuard = CurrentTarget.HasStatus(PvPCommon.Buffs.Guard, true);
             bool hasForte = IsOffCooldown(Forte) && OriginalHook(Forte) is Forte;
             bool hasEmbolden = IsOffCooldown(Embolden) && OriginalHook(Embolden) is Embolden;
             bool isEmboldenDelayDependant = !JustUsed(Embolden, 5f) || IsOnCooldown(EnchantedRiposte);
@@ -143,11 +144,11 @@ internal static class RDMPvP
             bool isEnabledViceOfThorns = IsEnabled(Preset.RDMPvP_Forte) && RDMPvP_Forte_SubOption;
             bool isEnabledPrefulgence = IsEnabled(Preset.RDMPvP_Embolden) && RDMPvP_Embolden_SubOption;
             bool hasEnchantedRiposte = IsOffCooldown(EnchantedRiposte) && OriginalHook(EnchantedRiposte) is EnchantedRiposte;
-            bool isViceOfThornsExpiring = HasStatusEffect(Buffs.ThornedFlourish) && GetStatusEffectRemainingTime(Buffs.ThornedFlourish) <= 3;
-            bool isPrefulgenceExpiring = HasStatusEffect(Buffs.PrefulgenceReady) && GetStatusEffectRemainingTime(Buffs.PrefulgenceReady) <= 3;
+            bool isViceOfThornsExpiring = LocalPlayer.HasStatus(Buffs.ThornedFlourish) && LocalPlayer.Status(Buffs.ThornedFlourish).RemainingTimeOrZero() <= 3;
+            bool isPrefulgenceExpiring = LocalPlayer.HasStatus(Buffs.PrefulgenceReady) && LocalPlayer.Status(Buffs.PrefulgenceReady).RemainingTimeOrZero() <= 3;
             bool isMovementDependant = !RDMPvP_Displacement_SubOption || (RDMPvP_Displacement_SubOption && !isMoving);
-            bool targetHasImmunity = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
-            bool isDisplacementPrimed = !hasBind && !JustUsed(Displacement, 8f) && !HasStatusEffect(Buffs.Displacement) && hasScorch && InActionRange(Displacement);
+            bool targetHasImmunity = CurrentTarget.HasStatus(PLDPvP.Buffs.HallowedGround, true) || CurrentTarget.HasStatus(DRKPvP.Buffs.UndeadRedemption, true);
+            bool isDisplacementPrimed = !hasBind && !JustUsed(Displacement, 8f) && !LocalPlayer.HasStatus(Buffs.Displacement) && hasScorch && InActionRange(Displacement);
             bool isCorpsPrimed = !hasBind && !JustUsed(CorpsACorps, 8f) && chargesCorps > RDMPvP_Corps_Charges && GetTargetDistance() <= RDMPvP_Corps_Range;
             #endregion
 
@@ -234,9 +235,9 @@ internal static class RDMPvP
             if (actionID is not (CorpsACorps or Displacement)) 
                 return actionID;
             
-            bool hasCrowdControl = HasStatusEffect(PvPCommon.Debuffs.Stun, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.DeepFreeze, anyOwner: true) ||
-                                   HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.Silence, anyOwner: true) ||
-                                   HasStatusEffect(PvPCommon.Debuffs.MiracleOfNature, anyOwner: true);
+            bool hasCrowdControl = LocalPlayer.HasStatus(PvPCommon.Debuffs.Stun, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.DeepFreeze, true) ||
+                                   LocalPlayer.HasStatus(PvPCommon.Debuffs.Bind, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.Silence, true) ||
+                                   LocalPlayer.HasStatus(PvPCommon.Debuffs.MiracleOfNature, true);
             
             if (HasCharges(CorpsACorps) && IsOffCooldown(PvPCommon.Purify) && hasCrowdControl && LocalPlayer.CurrentMp >= RDMPvP_Dash_Feature_PurifyMPThreshold)
                 return OriginalHook(PvPCommon.Purify);

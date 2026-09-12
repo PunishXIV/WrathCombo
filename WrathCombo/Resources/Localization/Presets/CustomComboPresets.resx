@@ -12169,4 +12169,46 @@ This is the ideal option for newcomers to the job.</value>
   <data name="PT_PilgrimsPotion_Desc" xml:space="preserve">
     <value>Adds Pilgrim's Potion to one button rotations</value>
   </data>
+  <data name="BST_Basic_Combo_Name" xml:space="preserve">
+    <value>Basic Combo</value>
+  </data>
+  <data name="BST_Basic_Combo_Desc" xml:space="preserve">
+    <value>Replaces Axeblade Bite with the basic combo chain.</value>
+  </data>
+  <data name="BST_Instinctual_Combo_Name" xml:space="preserve">
+    <value>Instinctual Combo</value>
+  </data>
+  <data name="BST_Instinctual_Combo_Desc" xml:space="preserve">
+    <value>Replaces Avalanche Axe, Mistral Axe, Spinning Axe and Gale Axe with Trick when it's ready. Locks out the actions if Trick is the wrong affinity or until ready to complete an Instinctual Combo. Order of actions prioritises getting to 2 Mastered Instinct stacks and 1 Natural Instinct stack.</value>
+  </data>
+  <data name="BST_Intentional_Combo_Name" xml:space="preserve">
+    <value>Intentional Combo</value>
+  </data>
+  <data name="BST_Intentional_Combo_Desc" xml:space="preserve">
+    <value>Replaces Trick with the correct Instinctual skill to complete an Intentional Combo. Order of actions prioritises getting to 2 Mastered Instinct stacks and 1 Natural Instinct stack.</value>
+  </data>
+  <data name="BST_Capture_Helper_Name" xml:space="preserve">
+    <value>Capture Helper</value>
+  </data>
+  <data name="BST_Capture_Helper_Desc" xml:space="preserve">
+    <value>Locks out Capture if your current target is either not an eligible pet for capture, or you already have it unlocked. Disclaimer: May not be perfect. Detection methods are hypothetical at best.</value>
+  </data>
+  <data name="BST_SimpleMode_Name" xml:space="preserve">
+    <value>Simple Mode</value>
+  </data>
+  <data name="BST_SimpleMode_Desc" xml:space="preserve">
+    <value>Replaces Smash Axe with  a full one-button rotation. This is the ideal option for newcomers to the job.</value>
+  </data>
+  <data name="BST_Battlehorn_Lockout_Name" xml:space="preserve">
+    <value>Battlehorn Lockout Feature</value>
+  </data>
+  <data name="BST_Battlehorn_Lockout_Desc" xml:space="preserve">
+    <value>Locks out using battlehorns whilst in combat and you already have a beast out. This feature may help doing dungeon runs where you'll be swapping your beasts a lot between pulls and don't want them to go on cooldown.</value>
+  </data>
+  <data name="BST_Borrow_Feature_Name" xml:space="preserve">
+    <value>Borrow Feature</value>
+  </data>
+  <data name="BST_Borrow_Feature_Desc" xml:space="preserve">
+    <value>Replaces Borrow with your beast's borrowed ability. May make it trickier to swap borrows in a pinch, use cautiously.</value>
+  </data>
 </root>

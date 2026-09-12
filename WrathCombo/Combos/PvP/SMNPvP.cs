@@ -4,6 +4,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.SMNPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -81,7 +82,7 @@ internal static class SMNPvP
             int radiantThreshold = SMNPvP_RadiantAegisThreshold;
             #endregion
 
-            if (PvPCommon.TargetImmuneToDamage() && HasStatusEffect(Buffs.FurtherRuin)) // Block for ruin 4 because it is on action ID
+            if (PvPCommon.TargetImmuneToDamage() && LocalPlayer.HasStatus(Buffs.FurtherRuin)) // Block for ruin 4 because it is on action ID
                 return All.Cease;
                     
             if (!PvPCommon.TargetImmuneToDamage())
@@ -103,10 +104,10 @@ internal static class SMNPvP
                 if (IsEnabled(Preset.SMNPvP_BurstMode_DeathFlare) && bahamutBurst && IsOffCooldown(DeathFlare))
                     return DeathFlare;
 
-                if (HasStatusEffect(Buffs.FurtherRuin))
+                if (LocalPlayer.HasStatus(Buffs.FurtherRuin))
                     return actionID;
 
-                if (IsEnabled(Preset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !HasStatusEffect(Buffs.FurtherRuin))
+                if (IsEnabled(Preset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !LocalPlayer.HasStatus(Buffs.FurtherRuin))
                     return Necrotize;
                         
                 // Ifrit (check CrimsonCyclone conditions)

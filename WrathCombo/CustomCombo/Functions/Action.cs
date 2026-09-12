@@ -36,7 +36,7 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Checks if the player has learned an action, does not check if the action is ready </summary>
     /// <param name="actionId"> The action ID. </param>
-    public unsafe static bool ActionLearned(uint actionId) => ActionManager.Instance()->GetActionStatus(ActionType.Action, actionId, checkRecastActive: false, checkCastingActive: false) is not 573; //573 = Action not yet learned
+    public unsafe static bool ActionLearned(uint actionId) => actionId is not 0 && ActionManager.Instance()->GetActionStatus(ActionType.Action, actionId, checkRecastActive: false, checkCastingActive: false) is not 573; //573 = Action not yet learned
 
     /// <summary> Checks if the player is high enough level to benefit from a trait. </summary>
     /// <param name="traitId"> The trait ID. </param>
@@ -167,6 +167,9 @@ internal abstract partial class CustomComboFunctions
     /// <param name="actionId"> The action ID. </param>
     public static unsafe bool ActionReady(uint actionId, bool recastCheck = false, bool castCheck = false)
     {
+        if (actionId == 0)
+            return false;
+
         if (actionId >= All.SingleTargetDPS)
             return true;
 

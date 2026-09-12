@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static ECommons.DalamudServices.Svc;
 using static WrathCombo.Combos.PvE.MNK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 using static MNKExtensions;
@@ -18,7 +20,7 @@ internal partial class MNK
 
     private static bool DoPerfectBalanceCombo(ref uint actionID, bool onAoE = false)
     {
-        if (!HasStatusEffect(Buffs.PerfectBalance))
+        if (!LocalPlayer.HasStatus(Buffs.PerfectBalance))
             return false;
 
         if (onAoE)
@@ -111,10 +113,10 @@ internal partial class MNK
     {
         if (onAoE)
         {
-            if (HasStatusEffect(Buffs.OpoOpoForm))
+            if (LocalPlayer.HasStatus(Buffs.OpoOpoForm))
                 return OriginalHook(ArmOfTheDestroyer);
 
-            if (HasStatusEffect(Buffs.RaptorForm))
+            if (LocalPlayer.HasStatus(Buffs.RaptorForm))
             {
                 if (ActionLearned(FourPointFury))
                     return FourPointFury;
@@ -123,7 +125,7 @@ internal partial class MNK
                     return TwinSnakes;
             }
 
-            if (HasStatusEffect(Buffs.CoeurlForm) && ActionLearned(Rockbreaker))
+            if (LocalPlayer.HasStatus(Buffs.CoeurlForm) && ActionLearned(Rockbreaker))
                 return Rockbreaker;
 
             return OriginalHook(ArmOfTheDestroyer);
@@ -132,13 +134,13 @@ internal partial class MNK
         if (!ActionLearned(TrueStrike))
             return Bootshine;
 
-        if (HasStatusEffect(Buffs.OpoOpoForm) || HasStatusEffect(Buffs.FormlessFist))
+        if (LocalPlayer.HasStatus(Buffs.OpoOpoForm) || LocalPlayer.HasStatus(Buffs.FormlessFist))
             return OpoFormGCD();
 
-        if (HasStatusEffect(Buffs.RaptorForm))
+        if (LocalPlayer.HasStatus(Buffs.RaptorForm))
             return RaptorFormGCD();
 
-        if (HasStatusEffect(Buffs.CoeurlForm))
+        if (LocalPlayer.HasStatus(Buffs.CoeurlForm))
         {
             if (CoeurlStacks is 0 && ActionLearned(Demolish))
                 return !OnTargetsRear() &&
@@ -184,7 +186,7 @@ internal partial class MNK
 
     private static bool IsDoubleLunarOpener(bool useOpenerBalance) =>
         useOpenerBalance &&
-        (MNK_SelectedOpener != 1 || ClientState.TerritoryType == 1363);
+        (MNK_SelectedOpener != 1 || ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU);
 
     private static bool ShouldUsePreRoFPerfectBalance(bool useOpenerBalance)
     {
@@ -208,8 +210,8 @@ internal partial class MNK
 
     private static bool ShouldUsePostRoFLunarOddPerfectBalance(bool useOpenerBalance) =>
         IsDoubleLunarOpener(useOpenerBalance) &&
-        HasStatusEffect(Buffs.RiddleOfFire) &&
-        !HasStatusEffect(Buffs.Brotherhood);
+        LocalPlayer.HasStatus(Buffs.RiddleOfFire) &&
+        !LocalPlayer.HasStatus(Buffs.Brotherhood);
 
     private static bool HasUsedBlitzRecently(float window) =>
         JustUsed(ElixirBurst, window) || JustUsed(RisingPhoenix, window) ||
@@ -235,10 +237,10 @@ internal partial class MNK
         if (useFiresReply && ActionLearned(FiresReply))
             return false;
 
-        if (!HasStatusEffect(Buffs.Brotherhood) || !HasStatusEffect(Buffs.RiddleOfFire))
+        if (!LocalPlayer.HasStatus(Buffs.Brotherhood) || !LocalPlayer.HasStatus(Buffs.RiddleOfFire))
             return false;
 
-        if (HasStatusEffect(Buffs.PerfectBalance) || HasStatusEffect(Buffs.FormlessFist))
+        if (LocalPlayer.HasStatus(Buffs.PerfectBalance) || LocalPlayer.HasStatus(Buffs.FormlessFist))
             return false;
 
         if (!IsOriginal(MasterfulBlitz) || GetRemainingCharges(PerfectBalance) >= GetMaxCharges(PerfectBalance))
@@ -247,7 +249,7 @@ internal partial class MNK
         if (!HasUsedBlitzRecently(GCD * 12))
             return false;
 
-        if (HasStatusEffect(Buffs.FiresRumination) ||
+        if (LocalPlayer.HasStatus(Buffs.FiresRumination) ||
             JustUsed(FiresReply, GCD * 12))
             return false;
 
@@ -262,7 +264,7 @@ internal partial class MNK
 
     private static bool ShouldUseSecondPerfectBalance(bool useFiresReply)
     {
-        if (!HasStatusEffect(Buffs.Brotherhood) || !HasStatusEffect(Buffs.RiddleOfFire))
+        if (!LocalPlayer.HasStatus(Buffs.Brotherhood) || !LocalPlayer.HasStatus(Buffs.RiddleOfFire))
             return false;
 
         if (!IsOriginal(MasterfulBlitz))
@@ -275,7 +277,7 @@ internal partial class MNK
             return false;
 
         if (useFiresReply && ActionLearned(FiresReply))
-            return JustUsed(FiresReply, GCD * 6) && !HasStatusEffect(Buffs.FiresRumination);
+            return JustUsed(FiresReply, GCD * 6) && !LocalPlayer.HasStatus(Buffs.FiresRumination);
 
         return HasElapsedSinceBlitz(2.5f);
     }
@@ -299,14 +301,14 @@ internal partial class MNK
 
     private static bool IsBurstHoldReleaseReady()
     {
-        if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
-            HasStatusEffect(Buffs.FormlessFist) || JustUsed(PerfectBalance))
+        if (!ActionReady(PerfectBalance) || LocalPlayer.HasStatus(Buffs.PerfectBalance) ||
+            LocalPlayer.HasStatus(Buffs.FormlessFist) || JustUsed(PerfectBalance))
             return false;
 
         if (!ActionReady(Brotherhood) || !ActionReady(RiddleOfFire))
             return false;
 
-        if (HasStatusEffect(Buffs.Brotherhood) || HasStatusEffect(Buffs.RiddleOfFire))
+        if (LocalPlayer.HasStatus(Buffs.Brotherhood) || LocalPlayer.HasStatus(Buffs.RiddleOfFire))
             return false;
 
         if (IsRoFInPerfectBalanceWindow())
@@ -325,8 +327,8 @@ internal partial class MNK
         if (isBurstHolding && !IsBurstHoldReleaseReady())
             return false;
 
-        if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
-            HasStatusEffect(Buffs.FormlessFist) || !IsOriginal(MasterfulBlitz) ||
+        if (!ActionReady(PerfectBalance) || LocalPlayer.HasStatus(Buffs.PerfectBalance) ||
+            LocalPlayer.HasStatus(Buffs.FormlessFist) || !IsOriginal(MasterfulBlitz) ||
             !HasBattleTarget() || JustUsed(PerfectBalance) || !JustUsedOpoGCD(GCD, onAoE))
             return false;
 
@@ -354,7 +356,7 @@ internal partial class MNK
             return true;
 
         if (!ActionLearned(RiddleOfFire) ||
-            HasStatusEffect(Buffs.RiddleOfFire) && !ActionLearned(Brotherhood))
+            LocalPlayer.HasStatus(Buffs.RiddleOfFire) && !ActionLearned(Brotherhood))
             return JustUsedOpoGCD(GCD * 3, onAoE);
 
         return onAoE && UsePerfectBalanceMaxChargeAoE();
@@ -395,17 +397,17 @@ internal partial class MNK
 
     private static bool UseMantra() =>
         ActionReady(Mantra) &&
-        !HasStatusEffect(Buffs.Mantra) &&
+        !LocalPlayer.HasStatus(Buffs.Mantra) &&
         GroupDamageIncoming(3f);
 
     private static bool UseRoE() =>
         ActionReady(OriginalHook(RiddleOfEarth)) &&
         GroupDamageIncoming(2f) &&
-        !HasStatusEffect(Buffs.RiddleOfEarth) &&
-        !HasStatusEffect(Buffs.EarthsRumination);
+        !LocalPlayer.HasStatus(Buffs.RiddleOfEarth) &&
+        !LocalPlayer.HasStatus(Buffs.EarthsRumination);
 
     private static bool UseEarthsReply(int earthsReplyHpThreshold = 25) =>
-        HasStatusEffect(Buffs.EarthsRumination) &&
+        LocalPlayer.HasStatus(Buffs.EarthsRumination) &&
         NumberOfAlliesInRange(EarthsReply) >= GetPartyMembers().Count * .75 &&
         GetPartyAvgHPPercent() <= earthsReplyHpThreshold;
 
@@ -424,7 +426,7 @@ internal partial class MNK
         if (onAoE)
             return true;
 
-        if (HasStatusEffect(Buffs.RiddleOfFire))
+        if (LocalPlayer.HasStatus(Buffs.RiddleOfFire))
             return true;
 
         return !ActionLearned(RiddleOfFire);
@@ -435,7 +437,7 @@ internal partial class MNK
         if (!ActionLearned(MasterfulBlitz) || !InMasterfulRange() || IsOriginal(MasterfulBlitz))
             return false;
 
-        if (HasStatusEffect(Buffs.PerfectBalance))
+        if (LocalPlayer.HasStatus(Buffs.PerfectBalance))
             return true;
 
         return ShouldSpendMasterfulBlitz(onAoE);
@@ -453,11 +455,11 @@ internal partial class MNK
 
     private static bool UseFormshift() =>
         ActionLearned(FormShift) && !InCombat() &&
-        !HasStatusEffect(Buffs.FormlessFist) &&
-        !HasStatusEffect(Buffs.PerfectBalance) &&
-        !HasStatusEffect(Buffs.OpoOpoForm) &&
-        !HasStatusEffect(Buffs.RaptorForm) &&
-        !HasStatusEffect(Buffs.CoeurlForm);
+        !LocalPlayer.HasStatus(Buffs.FormlessFist) &&
+        !LocalPlayer.HasStatus(Buffs.PerfectBalance) &&
+        !LocalPlayer.HasStatus(Buffs.OpoOpoForm) &&
+        !LocalPlayer.HasStatus(Buffs.RaptorForm) &&
+        !LocalPlayer.HasStatus(Buffs.CoeurlForm);
 
     private static bool UseMeditate(bool onAoE = false)
     {
@@ -468,9 +470,9 @@ internal partial class MNK
                (!InCombat() || NumberOfEnemiesInRange(rangeCheck) < 1) &&
                Chakra < 5 &&
                IsOriginal(MasterfulBlitz) &&
-               !HasStatusEffect(Buffs.RiddleOfFire) &&
-               !HasStatusEffect(Buffs.WindsRumination) &&
-               !HasStatusEffect(Buffs.FiresRumination);
+               !LocalPlayer.HasStatus(Buffs.RiddleOfFire) &&
+               !LocalPlayer.HasStatus(Buffs.WindsRumination) &&
+               !LocalPlayer.HasStatus(Buffs.FiresRumination);
     }
 
     private static bool UseChakra(bool onAoE = false)
@@ -478,7 +480,7 @@ internal partial class MNK
         if (UseBrotherhood() || UseRoF())
             return false;
 
-        if (!HasStatusEffect(Buffs.Brotherhood) &&
+        if (!LocalPlayer.HasStatus(Buffs.Brotherhood) &&
             ActionReady(RiddleOfFire) && ActionLearned(Brotherhood) &&
             GetCooldownRemainingTime(Brotherhood) <= GCD)
             return false;
@@ -499,45 +501,45 @@ internal partial class MNK
     private static bool UseRoF() =>
         !IsBurstHoldReleaseReady() &&
         ActionReady(RiddleOfFire) &&
-        !HasStatusEffect(Buffs.FiresRumination) &&
-        !HasStatusEffect(Buffs.RiddleOfFire) &&
+        !LocalPlayer.HasStatus(Buffs.FiresRumination) &&
+        !LocalPlayer.HasStatus(Buffs.RiddleOfFire) &&
         (!ActionLearned(Brotherhood) ||
          JustUsed(Brotherhood, GCD * 5) ||
-         HasStatusEffect(Buffs.Brotherhood) ||
+         LocalPlayer.HasStatus(Buffs.Brotherhood) ||
          GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 ||
          !ActionLearned(Brotherhood));
 
     private static bool UseFiresReply(bool onAoE = false) =>
         ActionLearned(FiresReply) &&
-        HasStatusEffect(Buffs.FiresRumination) &&
-        !HasStatusEffect(Buffs.FormlessFist) &&
+        LocalPlayer.HasStatus(Buffs.FiresRumination) &&
+        !LocalPlayer.HasStatus(Buffs.FormlessFist) &&
         IsOriginal(MasterfulBlitz) &&
         InActionRange(FiresReply) &&
         !JustUsed(RiddleOfFire, GCD) &&
-        !HasStatusEffect(Buffs.PerfectBalance) &&
+        !LocalPlayer.HasStatus(Buffs.PerfectBalance) &&
         (JustUsedOpoGCD(GCD * 1.5f, onAoE) ||
-         GetStatusEffectRemainingTime(Buffs.FiresRumination) < GCD * 2 ||
+         LocalPlayer.Status(Buffs.FiresRumination).RemainingTimeOrZero() < GCD * 2 ||
          !InMeleeRange());
 
     private static bool UseBrotherhood() =>
         !IsBurstHoldReleaseReady() &&
         ActionReady(Brotherhood) &&
         ActionReady(RiddleOfFire) &&
-        !HasStatusEffect(Buffs.Brotherhood) &&
+        !LocalPlayer.HasStatus(Buffs.Brotherhood) &&
         (InBossEncounter() || TimeStoodStill.Seconds >= 2);
 
     private static bool UseRoW() =>
         ActionReady(RiddleOfWind) &&
-        !HasStatusEffect(Buffs.WindsRumination);
+        !LocalPlayer.HasStatus(Buffs.WindsRumination);
 
     private static bool UseWindsReply() =>
-        HasStatusEffect(Buffs.WindsRumination) &&
+        LocalPlayer.HasStatus(Buffs.WindsRumination) &&
         InActionRange(WindsReply) &&
-        (GetStatusEffectRemainingTime(Buffs.WindsRumination) <= 3f ||
-         !HasStatusEffect(Buffs.FiresRumination) &&
+        (LocalPlayer.Status(Buffs.WindsRumination).RemainingTimeOrZero() <= 3f ||
+         !LocalPlayer.HasStatus(Buffs.FiresRumination) &&
          (GetCooldownRemainingTime(RiddleOfFire) > 10 ||
-          HasStatusEffect(Buffs.RiddleOfFire) ||
-          GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
+          LocalPlayer.HasStatus(Buffs.RiddleOfFire) ||
+          LocalPlayer.Status(Buffs.WindsRumination).RemainingTimeOrZero() < GCD * 2 ||
           !InMeleeRange()));
 
     #endregion
@@ -547,9 +549,18 @@ internal partial class MNK
     internal static WrathOpener Opener()
     {
         if (DMUOpener.LevelChecked &&
-            ClientState.TerritoryType == 1363)
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU)
             return DMUOpener;
 
+        if (MNK_SelectedOpener == 0)
+        {
+            if (Lvl100LLOpener.LevelChecked)
+                return Lvl100LLOpener;
+
+            if (Lvl90LLOpener.LevelChecked)
+                return Lvl90LLOpener;
+        }
+        
         if (MNK_SelectedOpener == 1)
         {
             if (Lvl100SLOpener.LevelChecked)
@@ -558,13 +569,7 @@ internal partial class MNK
             if (Lvl90SLOpener.LevelChecked)
                 return Lvl90SLOpener;
         }
-
-        if (Lvl100LLOpener.LevelChecked)
-            return Lvl100LLOpener;
-
-        if (Lvl90LLOpener.LevelChecked)
-            return Lvl90LLOpener;
-
+        
         return WrathOpener.Dummy;
     }
 
@@ -583,14 +588,15 @@ internal partial class MNK
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => Chakra >= 5),
-            ([2], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift))
+            ([1], () => CountdownActive || InCombat() || !MNK_Opener_PrepullBlock),
+            ([2], () => Chakra >= 5),
+            ([3], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift))
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], () => CountdownRemaining - 8),
-            ([2], () => CountdownRemaining - 5)
+            ([2], () => !MNK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 8)),
+            ([3], () => !MNK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5))
         ];
 
         public override bool HasCooldowns() =>
@@ -611,27 +617,28 @@ internal partial class MNK
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => ForbiddenMeditation, // 1
-            () => FormShift, // 2
-            () => DragonKick, // 3
-            () => PerfectBalance, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
-            () => Bootshine, // 6
-            () => DragonKick, // 7
-            () => Bootshine, // 8
-            () => RiddleOfFire, // 9
-            () => Brotherhood, // 10
-            () => ElixirField, // 11
-            () => DragonKick, // 12
-            () => PerfectBalance, // 13
-            () => Bootshine, // 14
-            () => DragonKick, // 15
-            () => Bootshine, // 16
-            () => ElixirField, // 17
-            () => DragonKick // 18
+            () => All.Cease, // 1
+            () => ForbiddenMeditation, // 2
+            () => FormShift, // 3
+            () => DragonKick, // 4
+            () => PerfectBalance, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
+            () => Bootshine, // 7
+            () => DragonKick, // 8
+            () => Bootshine, // 9
+            () => RiddleOfFire, // 10
+            () => Brotherhood, // 11
+            () => ElixirField, // 12
+            () => DragonKick, // 13
+            () => PerfectBalance, // 14
+            () => Bootshine, // 15
+            () => DragonKick, // 16
+            () => Bootshine, // 17
+            () => ElixirField, // 18
+            () => DragonKick // 19
         ];
 
-        public override List<int> AllowUpgradeSteps { get; set; } = [6, 8, 11, 14, 16, 17];
+        public override List<int> AllowUpgradeSteps { get; set; } = [7, 9, 12, 15, 17, 18];
     }
 
     internal class MNKLvl90SLOpener : MNKOpenerBase
@@ -641,27 +648,28 @@ internal partial class MNK
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => ForbiddenMeditation, // 1
-            () => FormShift, // 2
-            () => DragonKick, // 3
-            () => PerfectBalance, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
-            () => Bootshine, // 6
-            () => DragonKick, // 7
-            () => Bootshine, // 8
-            () => Brotherhood, // 9
-            () => RiddleOfFire, // 10
-            () => ElixirField, // 11
-            () => DragonKick, // 12
-            () => PerfectBalance, // 13
-            () => Bootshine, // 14
-            () => TwinSnakes, // 15
-            () => Demolish, // 16
-            () => RisingPhoenix, // 17
-            () => DragonKick // 18
+            () => All.Cease, // 1
+            () => ForbiddenMeditation, // 2
+            () => FormShift, // 3
+            () => DragonKick, // 4
+            () => PerfectBalance, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
+            () => Bootshine, // 7
+            () => DragonKick, // 8
+            () => Bootshine, // 9
+            () => Brotherhood, // 10
+            () => RiddleOfFire, // 11
+            () => ElixirField, // 12
+            () => DragonKick, // 13
+            () => PerfectBalance, // 14
+            () => Bootshine, // 15
+            () => TwinSnakes, // 16
+            () => Demolish, // 17
+            () => RisingPhoenix, // 18
+            () => DragonKick // 19
         ];
 
-        public override List<int> AllowUpgradeSteps { get; set; } = [6, 8, 11, 14];
+        public override List<int> AllowUpgradeSteps { get; set; } = [7, 9, 12, 15];
     }
 
     internal class MNKLvl100LLOpener : MNKOpenerBase
@@ -671,37 +679,33 @@ internal partial class MNK
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => ForbiddenMeditation, // 1
-            () => FormShift, // 2
-            () => DragonKick, // 3
-            () => PerfectBalance, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
-            () => LeapingOpo, // 6
-            () => DragonKick, // 7
-            () => Brotherhood, // 8
-            () => RiddleOfFire, // 9
-            () => LeapingOpo, // 10
-            () => TheForbiddenChakra, // 11
-            () => RiddleOfWind, // 12
-            () => ElixirBurst, // 13
-            () => DragonKick, // 14
-            () => WindsReply, // 15
-            () => FiresReply, // 16
-            () => LeapingOpo, // 17
-            () => PerfectBalance, // 18
-            () => DragonKick, // 19
-            () => LeapingOpo, // 20
-            () => DragonKick, // 21
-            () => ElixirBurst, // 22
-            () => LeapingOpo // 23
+            () => All.Cease, // 1
+            () => ForbiddenMeditation, // 2
+            () => FormShift, // 3
+            () => DragonKick, // 4
+            () => PerfectBalance, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
+            () => LeapingOpo, // 7
+            () => DragonKick, // 8
+            () => Brotherhood, // 9
+            () => RiddleOfFire, // 10
+            () => LeapingOpo, // 11
+            () => TheForbiddenChakra, // 12
+            () => RiddleOfWind, // 13
+            () => ElixirBurst, // 14
+            () => DragonKick, // 15
+            () => WindsReply, // 16
+            () => FiresReply, // 17
+            () => LeapingOpo, // 18
+            () => PerfectBalance, // 19
+            () => DragonKick, // 20
+            () => LeapingOpo, // 21
+            () => DragonKick, // 22
+            () => ElixirBurst, // 23
+            () => LeapingOpo // 24
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([1], () => Chakra >= 5),
-            ([2], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift)),
-            ([11], () => Chakra < 5)
-        ];
+        public MNKLvl100LLOpener() => SkipSteps.Add(([12], () => Chakra < 5));
     }
 
     internal class MNKLvl100SLOpener : MNKOpenerBase
@@ -711,37 +715,33 @@ internal partial class MNK
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => ForbiddenMeditation, // 1
-            () => FormShift, // 2
-            () => DragonKick, // 3
-            () => PerfectBalance, // 4
-            () => TwinSnakes, // 5
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
-            () => Demolish, // 7
-            () => Brotherhood, // 8
-            () => RiddleOfFire, // 9
-            () => LeapingOpo, // 10
-            () => TheForbiddenChakra, // 11
-            () => RiddleOfWind, // 12
-            () => RisingPhoenix, // 13
-            () => DragonKick, // 14
-            () => WindsReply, // 15
-            () => FiresReply, // 16
-            () => LeapingOpo, // 17
-            () => PerfectBalance, // 18
-            () => DragonKick, // 19
-            () => LeapingOpo, // 20
-            () => DragonKick, // 21
-            () => ElixirBurst, // 22
-            () => LeapingOpo // 23
+            () => All.Cease, // 1
+            () => ForbiddenMeditation, // 2
+            () => FormShift, // 3
+            () => DragonKick, // 4
+            () => PerfectBalance, // 5
+            () => TwinSnakes, // 6
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 7
+            () => Demolish, // 8
+            () => Brotherhood, // 9
+            () => RiddleOfFire, // 10
+            () => LeapingOpo, // 11
+            () => TheForbiddenChakra, // 12
+            () => RiddleOfWind, // 13
+            () => RisingPhoenix, // 14
+            () => DragonKick, // 15
+            () => WindsReply, // 16
+            () => FiresReply, // 17
+            () => LeapingOpo, // 18
+            () => PerfectBalance, // 19
+            () => DragonKick, // 20
+            () => LeapingOpo, // 21
+            () => DragonKick, // 22
+            () => ElixirBurst, // 23
+            () => LeapingOpo // 24
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([1], () => Chakra >= 5),
-            ([2], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift)),
-            ([11], () => Chakra < 5)
-        ];
+        public MNKLvl100SLOpener() => SkipSteps.Add(([12], () => Chakra < 5));
     }
 
     internal class MNKLvl100DMUOpener : MNKOpenerBase
@@ -751,43 +751,36 @@ internal partial class MNK
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => ForbiddenMeditation, // 1
-            () => FormShift, // 2
-            () => RiddleOfWind, // 3
-            () => DragonKick, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 5
-            () => Brotherhood, // 6
-            () => RiddleOfFire, // 7
-            () => FiresReply, // 8
-            () => PerfectBalance, // 9
-            () => TheForbiddenChakra, // 10
-            () => WindsReply, // 11
-            () => LeapingOpo, // 12
-            () => DragonKick, // 13
-            () => LeapingOpo, // 14
-            () => ElixirBurst, // 15
-            () => DragonKick, // 16
-            () => PerfectBalance, // 17
-            () => LeapingOpo, // 18
-            () => DragonKick, // 19
-            () => LeapingOpo, // 20
-            () => ElixirBurst, // 21
-            () => DragonKick // 22
+            () => All.Cease, // 1
+            () => ForbiddenMeditation, // 2
+            () => FormShift, // 3
+            () => RiddleOfWind, // 4
+            () => DragonKick, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 6
+            () => Brotherhood, // 7
+            () => RiddleOfFire, // 8
+            () => FiresReply, // 9
+            () => PerfectBalance, // 10
+            () => TheForbiddenChakra, // 11
+            () => WindsReply, // 12
+            () => LeapingOpo, // 13
+            () => DragonKick, // 14
+            () => LeapingOpo, // 15
+            () => ElixirBurst, // 16
+            () => DragonKick, // 17
+            () => PerfectBalance, // 18
+            () => LeapingOpo, // 19
+            () => DragonKick, // 20
+            () => LeapingOpo, // 21
+            () => ElixirBurst, // 22
+            () => DragonKick // 23
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([1], () => Chakra >= 5),
-            ([2], () => HasStatusEffect(Buffs.FormlessFist) || JustUsed(FormShift)),
-            ([10], () => Chakra < 5)
-        ];
-
-        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([1], () => CountdownRemaining - 8),
-            ([2], () => CountdownRemaining - 5),
-            ([3], () => CountdownRemaining - 2)
-        ];
+        public MNKLvl100DMUOpener()
+        {
+            base.SkipSteps.Add(([11], () => Chakra < 5));
+            base.PrepullDelays.Add(([4], () => !MNK_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2)));
+        }
     }
 
     #endregion

@@ -66,7 +66,7 @@ internal partial class GNB : Tank
             //2.4x - just use it after Burst Strike
             if (JustUsed(BurstStrike, 5f) &&
                 ActionLearned(Hypervelocity) &&
-                HasStatusEffect(Buffs.ReadyToBlast) &&
+                LocalPlayer.HasStatus(Buffs.ReadyToBlast) &&
                 (!Slow || NMcd > 1.3f))
                 return Hypervelocity;
 
@@ -179,7 +179,7 @@ internal partial class GNB : Tank
             if (IsEnabled(Preset.GNB_ST_Continuation) &&
                 JustUsed(BurstStrike, 5f) &&
                 ActionLearned(Hypervelocity) &&
-                HasStatusEffect(Buffs.ReadyToBlast) &&
+                LocalPlayer.HasStatus(Buffs.ReadyToBlast) &&
                 (!Slow || (IsEnabled(Preset.GNB_ST_NoMercy) && NMcd > 1.3f)))
                 return Hypervelocity;
 
@@ -291,7 +291,7 @@ internal partial class GNB : Tank
                 if (ShouldUseDoubleDown(Preset.GNB_AoE_Simple))
                     return DoubleDown;
 
-                if (ShouldUseSonicBreak(Preset.GNB_AoE_Simple) && !HasStatusEffect(Buffs.ReadyToRaze))
+                if (ShouldUseSonicBreak(Preset.GNB_AoE_Simple) && !LocalPlayer.HasStatus(Buffs.ReadyToRaze))
                     return SonicBreak;
 
                 if (GunStep is 3 or 4)
@@ -368,8 +368,8 @@ internal partial class GNB : Tank
 
                 if (IsEnabled(Preset.GNB_AoE_SonicBreak) && CanSB &&
                     ((GNB_AoE_SonicBreak_EarlyOrLate == 0) ||
-                    (GNB_AoE_SonicBreak_EarlyOrLate == 1 && GetStatusEffectRemainingTime(Buffs.ReadyToBreak) <= (GCDLength + 10.000f))) &&
-                    !HasStatusEffect(Buffs.ReadyToRaze))
+                    (GNB_AoE_SonicBreak_EarlyOrLate == 1 && LocalPlayer.Status(Buffs.ReadyToBreak).RemainingTimeOrZero() <= (GCDLength + 10.000f))) &&
+                    !LocalPlayer.HasStatus(Buffs.ReadyToRaze))
                     return SonicBreak;
 
                 if (IsEnabled(Preset.GNB_AoE_Reign) &&
@@ -424,7 +424,7 @@ internal partial class GNB : Tank
             if (IsEnabled(Preset.GNB_GF_Continuation) &&
                 JustUsed(BurstStrike, 5f) &&
                 ActionLearned(Hypervelocity) &&
-                HasStatusEffect(Buffs.ReadyToBlast) &&
+                LocalPlayer.HasStatus(Buffs.ReadyToBlast) &&
                 (!Slow || (IsEnabled(Preset.GNB_GF_NoMercy) && NMcd > 1.3f)))
                 return Hypervelocity;
 
@@ -653,11 +653,11 @@ internal partial class GNB : Tank
                 SimpleTarget.HardTarget.IfFriendly() ??
                 (IsEnabled(Preset.GNB_Aurora_Features_RetargetTT) && !PlayerHasAggro && InCombat() ? SimpleTarget.TargetsTarget.IfFriendly() : null);
 
-            return target != null && CanApplyStatus(target, Buffs.Aurora)
-                ? !HasStatusEffect(Buffs.Aurora, target, true)
+            return target != null && target.CanApplyStatus(Buffs.Aurora)
+                ? !target.HasStatus(Buffs.Aurora, true)
                     ? actionID.Retarget(target)
                     : All.Cease
-                : !HasStatusEffect(Buffs.Aurora, SimpleTarget.Self, true)
+                : !SimpleTarget.Self.HasStatus(Buffs.Aurora, true)
                 ? actionID
                 : All.Cease;
         }
@@ -680,7 +680,7 @@ internal partial class GNB : Tank
                     ? SimpleTarget.TargetsTarget.IfNotThePlayer().IfInParty()
                     : null);
 
-            return target is not null && CanApplyStatus(target, Buffs.HeartOfStone)
+            return target is not null && target.CanApplyStatus(Buffs.HeartOfStone)
                 ? OriginalHook(actionID).Retarget([HeartOfStone, HeartOfCorundum], target)
                 : actionID;
         }

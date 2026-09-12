@@ -37,10 +37,10 @@ internal partial class WHM
         var hpThreshold = IsNotEnabled(Preset.WHM_ST_Simple_DPS) ? ComputeHpThreshold(CurrentTarget) : 0;
         AeroList.TryGetValue(dotAction, out var dotDebuffID);
         var dotRefresh = IsNotEnabled(Preset.WHM_ST_Simple_DPS) ? WHM_ST_DPS_AeroUptime_Threshold : 2.5;
-        var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
+        var dotRemaining = CurrentTarget.Status(dotDebuffID).RemainingTimeOrZero();
 
         return ActionReady(dotAction) &&
-               CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               CurrentTarget.CanApplyStatus(dotDebuffID) &&
                !JustUsedOn(dotAction, CurrentTarget, 5f) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
@@ -70,8 +70,8 @@ internal partial class WHM
                            WHM_STHeals_IncludeShields);
         float refreshTime = WHM_STHeals_RegenTimer;
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
-        IStatus? regenHoT = GetStatusEffect(Buffs.Regen, healTarget);
-        IStatus? BenisonShield = GetStatusEffect(Buffs.DivineBenison, healTarget);
+        IStatus? regenHoT = healTarget.Status(Buffs.Regen);
+        IStatus? BenisonShield = healTarget.Status(Buffs.DivineBenison);
 
         switch (i)
         {
@@ -137,7 +137,7 @@ internal partial class WHM
                 action = LiturgyOfTheBell;
                 enabled =
                     IsEnabled(Preset.WHM_STHeals_LiturgyOfTheBell) &&
-                    !HasStatusEffect(Buffs.LiturgyOfTheBell) &&
+                    !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell) &&
                     TimeStoodStill >= TS.FromSeconds(3) &&
                     (!WHM_STHeals_LiturgyOfTheBellOptions[1] ||
                      !InBossEncounter()) &&
@@ -157,11 +157,11 @@ internal partial class WHM
     public static int GetMatchingConfigAoE(int i, IGameObject? OptionalTarget,
         out uint action, out bool enabled)
     {
-        var medica3Check = !HasStatusEffect(Buffs.Medica3) ||
-                           GetStatusEffectRemainingTime(Buffs.Medica3) <=
+        var medica3Check = !LocalPlayer.HasStatus(Buffs.Medica3) ||
+                           LocalPlayer.Status(Buffs.Medica3).RemainingTimeOrZero() <=
                            WHM_AoEHeals_MedicaTime;
-        var medica2Check = !HasStatusEffect(Buffs.Medica2) ||
-                           GetStatusEffectRemainingTime(Buffs.Medica2) <=
+        var medica2Check = !LocalPlayer.HasStatus(Buffs.Medica2) ||
+                           LocalPlayer.Status(Buffs.Medica2).RemainingTimeOrZero() <=
                            WHM_AoEHeals_MedicaTime;
 
         switch (i)
@@ -180,7 +180,7 @@ internal partial class WHM
                           !IsMoving() &&
                           NumberOfAlliesInRange(Cure3, OptionalTarget) >= WHM_AoEHeals_Cure3Allies &&
                           (LocalPlayer.CurrentMp >= WHM_AoEHeals_Cure3MP ||
-                           HasStatusEffect(Buffs.ThinAir));
+                           LocalPlayer.HasStatus(Buffs.ThinAir));
                 return WHM_AoEHeals_Cure3HP;
 
             case 2:
@@ -193,7 +193,7 @@ internal partial class WHM
                 action = Temperance;
                 enabled = IsEnabled(Preset.WHM_AoEHeals_Temperance) &&
                           (CanWeave() || !WHM_AoEHeals_TemperanceWeave) &&
-                          !HasStatusEffect(Buffs.DivineGrace) &&
+                          !LocalPlayer.HasStatus(Buffs.DivineGrace) &&
                           ContentCheck.IsInConfiguredContent(
                               WHM_AoEHeals_TemperanceDifficulty,
                               WHM_AoEHeals_TemperanceDifficultyListSet);
@@ -213,7 +213,7 @@ internal partial class WHM
                 action = LiturgyOfTheBell;
                 enabled =
                     IsEnabled(Preset.WHM_AoEHeals_LiturgyOfTheBell) &&
-                    !HasStatusEffect(Buffs.LiturgyOfTheBell) &&
+                    !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell) &&
                     (CanWeave() || !WHM_AoEHeals_LiturgyWeave) &&
                     ContentCheck.IsInConfiguredContent(
                         WHM_AoEHeals_LiturgyDifficulty,
@@ -266,7 +266,7 @@ internal partial class WHM
     {
         return IsEnabled(Preset.WHM_Raidwide_LiturgyOfTheBell) &&
                ActionReady(LiturgyOfTheBell) &&
-               !HasStatusEffect(Buffs.LiturgyOfTheBell) &&
+               !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell) &&
                GroupDamageIncoming() && CanWeave();
     }
     internal static bool RaidwidePlenaryIndulgence()
@@ -314,37 +314,24 @@ internal partial class WHM
         return WrathOpener.Dummy;
     }
 
-    internal class WHMOpenerMaxLevel1 : WrathOpener
+    internal abstract class WHMOpenerBase : WrathOpener
     {
         public override int MinOpenerLevel => 92;
-
         public override int MaxOpenerLevel => 109;
-
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Glare3, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
-            () => Dia, // 3
-            () => Glare3, // 4
-            () => Glare3, // 5
-            () => PresenceOfMind, // 6
-            () => Glare4, // 7
-            () => AfflatusMisery, // 8
-            () => Assize, // 9
-            () => Glare4, // 10
-            () => Glare4, // 11
-            () => Glare3, // 12
-            () => Glare3, // 13
-            () => Glare3, // 14
-            () => Glare3, // 15
-            () => Glare3, // 16
-            () => Dia // 17
-        ];
-
+        public override Preset Preset => Preset.WHM_ST_MainCombo_Opener;
         internal override UserData ContentCheckConfig => WHM_Balance_Content;
         internal override bool IncludePot => WHM_Opener_Potion;
-        public override Preset Preset => Preset.WHM_ST_MainCombo_Opener;
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([8], () => !BloodLilyReady)];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !WHM_Opener_PrepullBlock),
+            ([9], () => !BloodLilyReady)
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !WHM_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2.3f))
+        ];
 
         public override bool HasCooldowns()
         {
@@ -356,6 +343,31 @@ internal partial class WHM
 
             return true;
         }
+    }
+
+    internal class WHMOpenerMaxLevel1 : WHMOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Glare3, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 3
+            () => Dia, // 4
+            () => Glare3, // 5
+            () => Glare3, // 6
+            () => PresenceOfMind, // 7
+            () => Glare4, // 8
+            () => AfflatusMisery, // 9
+            () => Assize, // 10
+            () => Glare4, // 11
+            () => Glare4, // 12
+            () => Glare3, // 13
+            () => Glare3, // 14
+            () => Glare3, // 15
+            () => Glare3, // 16
+            () => Glare3, // 17
+            () => Dia // 18
+        ];
     }
 
     #endregion

@@ -4,6 +4,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.SGEPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -80,7 +81,7 @@ internal static class SGEPvP
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not Dosis) return actionID;
-            if (IsEnabled(Preset.SGEPvP_BurstMode_KardiaReminder) && !HasStatusEffect(Buffs.Kardia, anyOwner: true))
+            if (IsEnabled(Preset.SGEPvP_BurstMode_KardiaReminder) && !LocalPlayer.HasStatus(Buffs.Kardia, true))
                 return Kardia;
 
             if (!PvPCommon.TargetImmuneToDamage())
@@ -96,19 +97,19 @@ internal static class SGEPvP
                 if (IsEnabled(Preset.SGEPvP_BurstMode_Pneuma) && !GetCooldown(Pneuma).IsCooldown)
                     return Pneuma;
 
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Phlegma) && InMeleeRange() && !HasStatusEffect(Buffs.Eukrasia) && GetCooldown(Phlegma).RemainingCharges > 0)
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Phlegma) && InMeleeRange() && !LocalPlayer.HasStatus(Buffs.Eukrasia) && GetCooldown(Phlegma).RemainingCharges > 0)
                     return Phlegma;
 
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Toxikon2) && HasStatusEffect(Buffs.Addersting) && !HasStatusEffect(Buffs.Eukrasia))
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Toxikon2) && LocalPlayer.HasStatus(Buffs.Addersting) && !LocalPlayer.HasStatus(Buffs.Eukrasia))
                     return Toxicon2;
 
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Eukrasia) && !HasStatusEffect(Debuffs.EukrasianDosis, CurrentTarget, true) && GetCooldown(Eukrasia).RemainingCharges > 0 && !HasStatusEffect(Buffs.Eukrasia))
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Eukrasia) && !CurrentTarget.HasStatus(Debuffs.EukrasianDosis, true) && GetCooldown(Eukrasia).RemainingCharges > 0 && !LocalPlayer.HasStatus(Buffs.Eukrasia))
                     return Eukrasia;
 
-                if (HasStatusEffect(Buffs.Eukrasia))
+                if (LocalPlayer.HasStatus(Buffs.Eukrasia))
                     return OriginalHook(Dosis);
 
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Toxikon) && !HasStatusEffect(Debuffs.Toxicon, CurrentTarget) && GetCooldown(Toxikon).RemainingCharges > 0)
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Toxikon) && !CurrentTarget.HasStatus(Debuffs.Toxicon) && GetCooldown(Toxikon).RemainingCharges > 0)
                     return OriginalHook(Toxikon);
             }
             if (IsEnabled(Preset.SGEPvP_BurstMode_KardiaReminder))

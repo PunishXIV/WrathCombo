@@ -194,16 +194,18 @@ internal partial class DNC
                         "Requires a 30s cooldown\nand that you start Standard Step at 30s.\nNot generally recommended.\nWill align buffs worse than Standard 15s.\nNot recommended if Standard Step would pull.",
                         (int)Openers.ThirtySecondTech, descriptionAsTooltip: true);
                     DrawRadioButton(DNC_ST_OpenerSelection,
-                        "Technical: 7+s Countdown",
-                        "Requires at least a 7s cooldown\nand that you complete Standard Step beforehand.\nDoes not include Peloton.\nWill NOT Standard Step for you.\nNot generally recommended.\nWill align buffs worse than Standard 7s.",
+                        "Technical: 7s Countdown",
+                        "Requires at least a 7s cooldown.\nDoes NOT contain Standard Step.\nNot generally recommended.",
                         (int)Openers.SevenPlusSecondTech, descriptionAsTooltip: true);
                     DrawRadioButton(DNC_ST_OpenerSelection,
-                        "Technical: 7s Countdown",
-                        "Requires at least a 7s cooldown\nand that you start Technical Step at 7s.\nNOT recommended.",
+                        "Technical: 7s Countdown (Alternative)",
+                        "Requires at least a 7s cooldown.\nDoes NOT contain Standard Step.\nNot generally recommended.",
                         (int)Openers.SevenSecondTech, descriptionAsTooltip: true);
 
                     DrawAdditionalBoolChoice(DNC_ST_OpenerOption_Peloton,
                         $"Include {Peloton.ActionName()}", "");
+
+                    DrawOpenerPrepullBlockChoice(DNC_Opener_PrepullBlock);
 
                     break;
 
@@ -532,6 +534,8 @@ internal partial class DNC
         public static readonly UserBool DNC_Opener_Potion =
             new("DNC_Opener_Potion");
 
+        public static readonly UserBool DNC_Opener_PrepullBlock = 
+            new("DNC_Opener_PrepullBlock", true);
         public static readonly UserBool DNC_ST_OpenerOption_Peloton =
             new("DNC_ST_OpenerOption_Peloton", true);
 

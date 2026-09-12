@@ -3,6 +3,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.DNCPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -79,17 +80,17 @@ internal static class DNCPvP
 
             #region Variables
             bool starfallDanceReady = !GetCooldown(StarfallDance).IsCooldown;
-            bool starfallDance = HasStatusEffect(Buffs.StarfallDance);
+            bool starfallDance = LocalPlayer.HasStatus(Buffs.StarfallDance);
             bool curingWaltzReady = !GetCooldown(CuringWaltz).IsCooldown;
             bool honingDanceReady = !GetCooldown(HoningDance).IsCooldown;
-            var acclaimStacks = GetStatusEffectStacks(Buffs.Acclaim);
+            var acclaimStacks = LocalPlayer.Status(Buffs.Acclaim).Stacks;
             bool canWeave = CanWeave();
             var HP = PlayerHealthPercentageHp();
-            bool enemyGuarded = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
+            bool enemyGuarded = CurrentTarget.HasStatus(PvPCommon.Buffs.Guard, true);
             #endregion
 
             // Honing Dance Option
-            if (IsEnabled(Preset.DNCPvP_BurstMode_Partner) && ActionReady(ClosedPosition) && !HasStatusEffect(Buffs.ClosedPosition) & GetPartyMembers().Count > 1)
+            if (IsEnabled(Preset.DNCPvP_BurstMode_Partner) && ActionReady(ClosedPosition) && !LocalPlayer.HasStatus(Buffs.ClosedPosition) & GetPartyMembers().Count > 1)
                 return ClosedPosition;
 
             if (IsEnabled(Preset.DNCPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= DNCPvP_EagleThreshold))
@@ -97,7 +98,7 @@ internal static class DNCPvP
 
             if (IsEnabled(Preset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && GetTargetDistance() <= 5 && !enemyGuarded)
             {
-                if (HasStatusEffect(Buffs.Acclaim) && acclaimStacks < 4)
+                if (LocalPlayer.HasStatus(Buffs.Acclaim) && acclaimStacks < 4)
                     return All.Cease;
 
                 return HoningDance;
@@ -113,7 +114,7 @@ internal static class DNCPvP
                 if (IsOffCooldown(FanDance) && InActionRange(FanDance) && !enemyGuarded) // 2y below max to avoid waste
                     return OriginalHook(FanDance);
 
-                if (IsEnabled(Preset.DNCPvP_BurstMode_Dash) && !HasStatusEffect(Buffs.EnAvant) && GetRemainingCharges(EnAvant) > DNCPvP_EnAvantCharges)
+                if (IsEnabled(Preset.DNCPvP_BurstMode_Dash) && !LocalPlayer.HasStatus(Buffs.EnAvant) && GetRemainingCharges(EnAvant) > DNCPvP_EnAvantCharges)
                     return EnAvant;
             }
 

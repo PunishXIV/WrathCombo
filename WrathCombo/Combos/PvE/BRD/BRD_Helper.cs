@@ -112,12 +112,12 @@ internal partial class BRD
     internal static bool SongMage => gauge.Song == Song.MagesBallad;
     internal static bool SongArmy => gauge.Song == Song.ArmysPaeon;
     //Dot Management
-    internal static IStatus? Purple => GetStatusEffect(Debuffs.CausticBite, CurrentTarget) ?? GetStatusEffect(Debuffs.VenomousBite, CurrentTarget);
-    internal static IStatus? Blue => GetStatusEffect(Debuffs.Stormbite, CurrentTarget) ?? GetStatusEffect(Debuffs.Windbite, CurrentTarget);
+    internal static IStatus? Purple => CurrentTarget.Status(Debuffs.CausticBite) ?? CurrentTarget.Status(Debuffs.VenomousBite);
+    internal static IStatus? Blue => CurrentTarget.Status(Debuffs.Stormbite) ?? CurrentTarget.Status(Debuffs.Windbite);
     internal static float PurpleRemaining => Purple?.RemainingTime ?? 0;
     internal static float BlueRemaining => Blue?.RemainingTime ?? 0;
-    internal static bool DebuffCapCanPurple => CanApplyStatus(CurrentTarget, Debuffs.CausticBite) || CanApplyStatus(CurrentTarget, Debuffs.VenomousBite);
-    internal static bool DebuffCapCanBlue => CanApplyStatus(CurrentTarget, Debuffs.Stormbite) || CanApplyStatus(CurrentTarget, Debuffs.Windbite);
+    internal static bool DebuffCapCanPurple => CurrentTarget.CanApplyStatus(Debuffs.CausticBite) || CurrentTarget.CanApplyStatus(Debuffs.VenomousBite);
+    internal static bool DebuffCapCanBlue => CurrentTarget.CanApplyStatus(Debuffs.Stormbite) || CurrentTarget.CanApplyStatus(Debuffs.Windbite);
 
     //Useful Bools
     internal static bool BardHasTarget => HasBattleTarget();
@@ -125,15 +125,15 @@ internal partial class BRD
     internal static bool CanBardWeave => CanWeave();
     internal static bool CanWeaveDelayed => CanDelayedWeave();
     internal static bool CanIronJaws => ActionLearned(IronJaws);
-    internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) &&
-                                       (HasStatusEffect(Buffs.BattleVoice) || !ActionLearned(BattleVoice)) &&
-                                       (HasStatusEffect(Buffs.RadiantFinale) || !ActionLearned(RadiantFinale));
+    internal static bool BuffWindow => LocalPlayer.HasStatus(Buffs.RagingStrikes) &&
+                                       (LocalPlayer.HasStatus(Buffs.BattleVoice) || !ActionLearned(BattleVoice)) &&
+                                       (LocalPlayer.HasStatus(Buffs.RadiantFinale) || !ActionLearned(RadiantFinale));
 
     //Buff Tracking
     internal static float RagingCD => GetCooldownRemainingTime(RagingStrikes);
     internal static float BattleVoiceCD => GetCooldownRemainingTime(BattleVoice);
     internal static float EmpyrealCD => GetCooldownRemainingTime(EmpyrealArrow);
-    internal static float RagingStrikesDuration => GetStatusEffectRemainingTime(Buffs.RagingStrikes);
+    internal static float RagingStrikesDuration => LocalPlayer.Status(Buffs.RagingStrikes).RemainingTimeOrZero();
 
     // Charge Tracking
     internal static uint BloodletterCharges => GetRemainingCharges(OriginalHook(Bloodletter));
@@ -390,22 +390,22 @@ internal partial class BRD
         {
             if (allBuffsEnabled && !SongNone && ActionLearned(MagesBallad))
             {
-                if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !HasStatusEffect(Buffs.RadiantEncoreReady))
+                if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !LocalPlayer.HasStatus(Buffs.RadiantEncoreReady))
                 {
                     actionID = RadiantFinale;
                     return true;
                 }
-                if (ActionReady(BattleVoice) && (HasStatusEffect(Buffs.RadiantFinale) || !ActionLearned(RadiantFinale)))
+                if (ActionReady(BattleVoice) && (LocalPlayer.HasStatus(Buffs.RadiantFinale) || !ActionLearned(RadiantFinale)))
                 {
                     actionID = BattleVoice;
                     return true;
                 }
-                if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !ActionLearned(BattleVoice) || HasStatusEffect(Buffs.BattleVoice)))
+                if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !ActionLearned(BattleVoice) || LocalPlayer.HasStatus(Buffs.BattleVoice)))
                 {
                     actionID = RagingStrikes;
                     return true;
                 }
-                if (ActionReady(Barrage) && HasStatusEffect(Buffs.RagingStrikes) && !HasStatusEffect(Buffs.ResonantArrowReady))
+                if (ActionReady(Barrage) && LocalPlayer.HasStatus(Buffs.RagingStrikes) && !LocalPlayer.HasStatus(Buffs.ResonantArrowReady))
                 {
                     actionID = Barrage;
                     return true;
@@ -496,7 +496,7 @@ internal partial class BRD
 
         if (flags.HasFlag(Combo.ST) && troubadourEnabled && ActionReady(Troubadour) && GroupDamageIncoming() && CanWeave() &&
             NumberOfAlliesInRange(Troubadour) >= GetPartyMembers().Count * .75 &&
-            !JustUsed(NaturesMinne) && !HasStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne, DNC.Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
+            !JustUsed(NaturesMinne) && !LocalPlayer.HasStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne, DNC.Buffs.ShieldSamba, MCH.Buffs.Tactician], true))
         {
             actionID = Troubadour;
             return true;
@@ -504,7 +504,7 @@ internal partial class BRD
 
         if (flags.HasFlag(Combo.ST) && naturesMinneEnabled && ActionReady(NaturesMinne) && GroupDamageIncoming() && CanWeave() &&
             NumberOfAlliesInRange(NaturesMinne) >= GetPartyMembers().Count * .75 &&
-            !JustUsed(Troubadour) && !HasStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne], anyOwner: true))
+            !JustUsed(Troubadour) && !LocalPlayer.HasStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne], true))
         {
             actionID = NaturesMinne;
             return true;
@@ -518,7 +518,7 @@ internal partial class BRD
 
         if (wardensEnabled && ActionReady(TheWardensPaeon) && CanWeave())
         {
-            if (HasCleansableDebuff(LocalPlayer))
+            if (LocalPlayer.HasCleansableDebuff)
             {
                 actionID = TheWardensPaeon;
                 return true;
@@ -641,7 +641,7 @@ internal partial class BRD
         //Raging jaws option dot refresh for snapshot
         bool RagingJawsRefresh()
         {
-            return ActionReady(IronJaws) && HasStatusEffect(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35;
+            return ActionReady(IronJaws) && LocalPlayer.HasStatus(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35;
         }
         int ComputeHpThreshold(IGameObject? x)
         {
@@ -700,25 +700,25 @@ internal partial class BRD
 
         var widevolleyEnemyCount = NumberOfEnemiesInRange(OriginalHook(WideVolley));
 
-        if (flags.HasFlag(Combo.AoE) && HasStatusEffect(Buffs.Barrage) && widevolleyEnemyCount >= 3)
+        if (flags.HasFlag(Combo.AoE) && LocalPlayer.HasStatus(Buffs.Barrage) && widevolleyEnemyCount >= 3)
         {
             actionID = OriginalHook(WideVolley); //Uses on 3 or more. 
             return true;
         }
-        if (HasStatusEffect(Buffs.Barrage))
+        if (LocalPlayer.HasStatus(Buffs.Barrage))
         {
             actionID = OriginalHook(StraightShot); // Use on two or less
             return true;
         }
-        if (radiantEncoreEnabled && HasStatusEffect(Buffs.RadiantEncoreReady) && GetStatusEffectRemainingTime(Buffs.RadiantFinale) < 16 &&
-            (HasStatusEffect(Buffs.RagingStrikes) || !ragingEnabled))
+        if (radiantEncoreEnabled && LocalPlayer.HasStatus(Buffs.RadiantEncoreReady) && LocalPlayer.Status(Buffs.RadiantFinale).RemainingTimeOrZero() < 16 &&
+            (LocalPlayer.HasStatus(Buffs.RagingStrikes) || !ragingEnabled))
         {
             actionID = OriginalHook(RadiantEncore);
             return true;
         }
         if (apexComboEnabled)
         {
-            if (HasStatusEffect(Buffs.BlastArrowReady))
+            if (LocalPlayer.HasStatus(Buffs.BlastArrowReady))
             {
                 actionID = BlastArrow;
                 return true;
@@ -731,18 +731,18 @@ internal partial class BRD
             }
         }
 
-        if (resonantArrowEnabled && HasStatusEffect(Buffs.ResonantArrowReady))
+        if (resonantArrowEnabled && LocalPlayer.HasStatus(Buffs.ResonantArrowReady))
         {
             actionID = ResonantArrow;
             return true;
         }
 
-        if (flags.HasFlag(Combo.AoE) && HasStatusEffect(Buffs.HawksEye) && widevolleyEnemyCount >= 2)
+        if (flags.HasFlag(Combo.AoE) && LocalPlayer.HasStatus(Buffs.HawksEye) && widevolleyEnemyCount >= 2)
         {
             actionID = OriginalHook(WideVolley); //Uses on 2 or more. 
             return true;
         }
-        if (HasStatusEffect(Buffs.HawksEye))
+        if (LocalPlayer.HasStatus(Buffs.HawksEye))
         {
             actionID = OriginalHook(StraightShot);
             return true;
@@ -822,137 +822,137 @@ internal partial class BRD
             IsOffCooldown(RagingStrikes) &&
             IsOffCooldown(Barrage) &&
             IsOffCooldown(Sidewinder);
+
+        internal static uint RefulgentArrowOr(uint fallback) =>
+            HasStatusEffect(Buffs.HawksEye) ? RefulgentArrow : fallback;
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !BRD_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !BRD_Opener_PrepullBlock),
+        ];
     }
 
     internal class BRDStandard : BRDOpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Stormbite, // 1
-            () => WanderersMinuet, // 2
-            () => EmpyrealArrow, // 3
-            () => CausticBite, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => BattleVoice, // 6
-            () => BurstShot, // 7
-            () => RadiantFinale, // 8
-            () => RagingStrikes, // 9
-            () => BurstShot, // 10
-            () => RadiantEncore, // 11
-            () => Barrage, // 12
-            () => RefulgentArrow, // 13
-            () => Sidewinder, // 14
-            () => ResonantArrow, // 15
-            () => EmpyrealArrow, // 16
-            () => BurstShot, // 17
-            () => BurstShot, // 18
-            () => IronJaws, // 19
-            () => BurstShot // 20
-        ];
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([7, 9, 16, 17, 19], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
-        ];
-        public override List<int> DelayedWeaveSteps { get; set; } =
-        [
-            6
-        ];
-    }
-    internal class BRDAdjusted : BRDOpenerBase
-    {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => HeartbreakShot, // 1
+            () => All.Cease, // 1
             () => Stormbite, // 2
             () => WanderersMinuet, // 3
             () => EmpyrealArrow, // 4
             () => CausticBite, // 5
             () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
             () => BattleVoice, // 7
-            () => BurstShot, // 8
+            () => RefulgentArrowOr(BurstShot), // 8
             () => RadiantFinale, // 9
-            () => RagingStrikes, // 10
+            () => RefulgentArrowOr(RagingStrikes), // 10
             () => BurstShot, // 11
-            () => Barrage, // 12
-            () => RefulgentArrow, // 13
-            () => Sidewinder, // 14
-            () => RadiantEncore, // 15
+            () => RadiantEncore, // 12
+            () => Barrage, // 13
+            () => RefulgentArrow, // 14
+            () => Sidewinder, // 15
             () => ResonantArrow, // 16
-            () => EmpyrealArrow, // 17
-            () => BurstShot, // 18
+            () => RefulgentArrowOr(EmpyrealArrow), // 17
+            () => RefulgentArrowOr(BurstShot), // 18
             () => BurstShot, // 19
-            () => IronJaws, // 20
+            () => RefulgentArrowOr(IronJaws), // 20
             () => BurstShot // 21
-        ];
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([8, 11, 18, 19, 21], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
             7
         ];
     }
+    internal class BRDAdjusted : BRDOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => HeartbreakShot, // 2
+            () => Stormbite, // 3
+            () => WanderersMinuet, // 4
+            () => EmpyrealArrow, // 5
+            () => CausticBite, // 6
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 7
+            () => BattleVoice, // 8
+            () => RefulgentArrowOr(BurstShot), // 9
+            () => RadiantFinale, // 10
+            () => RagingStrikes, // 11
+            () => RefulgentArrowOr(BurstShot), // 12
+            () => Barrage, // 13
+            () => RefulgentArrow, // 14
+            () => Sidewinder, // 15
+            () => RadiantEncore, // 16
+            () => ResonantArrow, // 17
+            () => EmpyrealArrow, // 18
+            () => RefulgentArrowOr(BurstShot), // 19
+            () => RefulgentArrowOr(BurstShot), // 20
+            () => IronJaws, // 21
+            () => RefulgentArrowOr(BurstShot) // 22
+        ];
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            8
+        ];
+    }
     internal class BRDComfy : BRDOpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Stormbite, // 1
-            () => HeartbreakShot, // 2
-            () => WanderersMinuet, // 3
-            () => CausticBite, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => EmpyrealArrow, // 6
-            () => RadiantFinale, // 7
-            () => BurstShot, // 8
-            () => BattleVoice, // 9
-            () => RagingStrikes, // 10
-            () => BurstShot, // 11
-            () => Barrage, // 12
-            () => RefulgentArrow, // 13
-            () => Sidewinder, // 14
-            () => RadiantEncore, // 15
-            () => ResonantArrow, // 16
-            () => BurstShot, // 17
-            () => EmpyrealArrow, // 18
-            () => BurstShot, // 19
-            () => IronJaws, // 20
-            () => BurstShot // 21
-        ];
-
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([8, 11, 17, 19, 21], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
+            () => All.Cease, // 1
+            () => Stormbite, // 2
+            () => HeartbreakShot, // 3
+            () => WanderersMinuet, // 4
+            () => CausticBite, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            () => EmpyrealArrow, // 7
+            () => RadiantFinale, // 8
+            () => RefulgentArrowOr(BurstShot), // 9
+            () => BattleVoice, // 10
+            () => RagingStrikes, // 11
+            () => RefulgentArrowOr(BurstShot), // 12
+            () => Barrage, // 13
+            () => RefulgentArrow, // 14
+            () => Sidewinder, // 15
+            () => RadiantEncore, // 16
+            () => ResonantArrow, // 17
+            () => RefulgentArrowOr(BurstShot), // 18
+            () => EmpyrealArrow, // 19
+            () => RefulgentArrowOr(BurstShot), // 20
+            () => IronJaws, // 21
+            () => RefulgentArrowOr(BurstShot) // 22
         ];
     }
     internal class BRDEarly : BRDOpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Stormbite, // 1
-            () => WanderersMinuet, // 2
-            () => BattleVoice, // 3
-            () => CausticBite, // 4
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 5
-            () => RagingStrikes, // 6
-            () => RadiantFinale, // 7
-            () => BurstShot, // 8
-            () => EmpyrealArrow, // 9
-            () => BurstShot, // 10
-            () => Barrage, // 11
-            () => RefulgentArrow, // 12
-            () => Sidewinder, // 13
-            () => RadiantEncore, // 14
-            () => ResonantArrow, // 15
-            () => BurstShot, // 16
-            () => IronJaws, // 17
-            () => EmpyrealArrow, // 18
-            () => BurstShot, // 19
-            () => BurstShot, // 20
-        ];
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
-        [
-            ([8, 10, 16, 19, 20], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
+            () => All.Cease, // 1
+            () => Stormbite, // 2
+            () => WanderersMinuet, // 3
+            () => BattleVoice, // 4
+            () => CausticBite, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 6
+            () => RagingStrikes, // 7
+            () => RadiantFinale, // 8
+            () => RefulgentArrowOr(BurstShot), // 9
+            () => EmpyrealArrow, // 10
+            () => RefulgentArrowOr(BurstShot), // 11
+            () => Barrage, // 12
+            () => RefulgentArrow, // 13
+            () => Sidewinder, // 14
+            () => RadiantEncore, // 15
+            () => ResonantArrow, // 16
+            () => RefulgentArrowOr(BurstShot), // 17
+            () => IronJaws, // 18
+            () => EmpyrealArrow, // 19
+            () => RefulgentArrowOr(BurstShot), // 20
+            () => RefulgentArrowOr(BurstShot), // 21
         ];
     }
     #endregion

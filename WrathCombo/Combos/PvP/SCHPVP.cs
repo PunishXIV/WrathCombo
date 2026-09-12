@@ -4,6 +4,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.SCHPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -81,7 +82,7 @@ internal static class SCHPvP
             // Uses Biolysis on cooldown or with Recitation when Expedient is enabled with safety for too long of an expedient cooldown. 
             if (IsEnabled(Preset.SCHPvP_Biolysis) && IsOffCooldown(Biolysis))
             {
-                if (IsNotEnabled(Preset.SCHPvP_Expedient) ||(HasStatusEffect(Buffs.Recitation) || GetCooldownRemainingTime(Expedient) > 5))
+                if (IsNotEnabled(Preset.SCHPvP_Expedient) ||(LocalPlayer.HasStatus(Buffs.Recitation) || GetCooldownRemainingTime(Expedient) > 5))
                     return Biolysis;
             }
             //Uses Diabrosis when below set health
@@ -90,7 +91,7 @@ internal static class SCHPvP
                 return PvPHealer.Diabrosis;
 
             // Uses Deployment Tactics when available
-            if (IsEnabled(Preset.SCHPvP_DeploymentTactics) && GetRemainingCharges(DeploymentTactics) > 1 && HasStatusEffect(Debuffs.Biolysis, CurrentTarget))
+            if (IsEnabled(Preset.SCHPvP_DeploymentTactics) && GetRemainingCharges(DeploymentTactics) > 1 && CurrentTarget.HasStatus(Debuffs.Biolysis))
                 return DeploymentTactics;
 
             // Adds Adloquium when at or below threshold, will not Overwrite the 10% damage reduction buff to prevent waste
@@ -98,7 +99,7 @@ internal static class SCHPvP
             {
                 IGameObject? healTarget = SCHPvP_Adlo_Retarget ? SimpleTarget.Stack.AllyToHealPVP : SimpleTarget.Stack.Allies;
                 
-                if (!HasStatusEffect(Buffs.Catalyze, healTarget) && GetTargetHPPercent(healTarget) <= SCHPvP_AdloThreshold && ActionReady(Adloquilum))
+                if (!healTarget.HasStatus(Buffs.Catalyze) && GetTargetHPPercent(healTarget) <= SCHPvP_AdloThreshold && ActionReady(Adloquilum))
                     return SCHPvP_Adlo_Retarget
                         ? Adloquilum.Retarget(Broil, healTarget)
                         : Adloquilum;

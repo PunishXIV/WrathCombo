@@ -4,6 +4,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.BRD.Config;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class BRD : PhysicalRanged
@@ -100,10 +101,10 @@ internal partial class BRD : PhysicalRanged
             {
                 if (ActionWatching.GetAttackType(Opener().CurrentOpenerAction) != ActionWatching.ActionAttackType.Ability && CanBardWeave)
                 {
-                    if (HasStatusEffect(Buffs.RagingStrikes) && (gauge.Repertoire == 3 || gauge.Repertoire == 2 && EmpyrealCD < 2))
+                    if (LocalPlayer.HasStatus(Buffs.RagingStrikes) && (gauge.Repertoire == 3 || gauge.Repertoire == 2 && EmpyrealCD < 2))
                         return OriginalHook(PitchPerfect);
 
-                    if (ActionReady(HeartbreakShot) && HasStatusEffect(Buffs.RagingStrikes))
+                    if (ActionReady(HeartbreakShot) && LocalPlayer.HasStatus(Buffs.RagingStrikes))
                         return HeartbreakShot;
                 }
 
@@ -171,7 +172,7 @@ internal partial class BRD : PhysicalRanged
                     return OriginalHook(VenomousBite);
             }
 
-            return HasStatusEffect(Buffs.HawksEye) || HasStatusEffect(Buffs.Barrage)
+            return LocalPlayer.HasStatus(Buffs.HawksEye) || LocalPlayer.HasStatus(Buffs.Barrage)
                 ? actionID
                 : OriginalHook(HeavyShot);
         }
@@ -200,7 +201,7 @@ internal partial class BRD : PhysicalRanged
             // Apex Option
             if (BRD_IronJaws_Apex)
             {
-                if (ActionLearned(BlastArrow) && HasStatusEffect(Buffs.BlastArrowReady))
+                if (ActionLearned(BlastArrow) && LocalPlayer.HasStatus(Buffs.BlastArrowReady))
                     return BlastArrow;
 
                 if (gauge.SoulVoice == 100)
@@ -235,8 +236,8 @@ internal partial class BRD : PhysicalRanged
 
             if (!retargeted)
             {
-                var purpleDotRemaining = GetStatusEffectRemainingTime(purpleDotDebuffID, CurrentTarget);
-                var blueDotRemaining = GetStatusEffectRemainingTime(blueDotDebuffID, CurrentTarget);
+                var purpleDotRemaining = CurrentTarget.Status(purpleDotDebuffID).RemainingTimeOrZero();
+                var blueDotRemaining = CurrentTarget.Status(blueDotDebuffID).RemainingTimeOrZero();
 
                 if (ironJaws && purpleDotRemaining > 0 && blueDotRemaining > 0 && ActionReady(IronJaws))
                     return IronJaws;
@@ -251,8 +252,8 @@ internal partial class BRD : PhysicalRanged
             {
                 var lowestPurple = SimpleTarget.TargetWithDoTLowestRemainingTimer(purpleDotAction, purpleDotDebuffID);
                 var lowestBlue = SimpleTarget.TargetWithDoTLowestRemainingTimer(blueDotAction, blueDotDebuffID);
-                var lowestPurpleRemaining = GetStatusEffectRemainingTime(purpleDotDebuffID, lowestPurple);
-                var lowestBlueRemaining = GetStatusEffectRemainingTime(blueDotDebuffID, lowestBlue);
+                var lowestPurpleRemaining = lowestPurple.Status(purpleDotDebuffID).RemainingTimeOrZero();
+                var lowestBlueRemaining = lowestBlue.Status(blueDotDebuffID).RemainingTimeOrZero();
 
                 var purpleDotTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, maxNumberOfEnemiesInRange: 99);
                 var blueDotTarget = SimpleTarget.DottableEnemy(blueDotAction, blueDotDebuffID, maxNumberOfEnemiesInRange: 99);
@@ -398,11 +399,11 @@ internal partial class BRD : PhysicalRanged
                 if (gauge.SoulVoice == 100)
                     return ApexArrow;
 
-                if (HasStatusEffect(Buffs.BlastArrowReady))
+                if (LocalPlayer.HasStatus(Buffs.BlastArrowReady))
                     return BlastArrow;
             }
 
-            return ActionLearned(WideVolley) && (HasStatusEffect(Buffs.HawksEye) || HasStatusEffect(Buffs.Barrage))
+            return ActionLearned(WideVolley) && (LocalPlayer.HasStatus(Buffs.HawksEye) || LocalPlayer.HasStatus(Buffs.Barrage))
                 ? actionID
                 : OriginalHook(QuickNock);
 

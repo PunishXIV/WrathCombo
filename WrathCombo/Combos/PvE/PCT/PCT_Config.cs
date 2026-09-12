@@ -40,7 +40,8 @@ internal partial class PCT
             CombinedMotifsMadeen = new("CombinedMotifsMadeen"),
             CombinedMotifsWeapon = new("CombinedMotifsWeapon"),
             CombinedMotifsLandscape = new("CombinedMotifsLandscape"),
-            PCT_Opener_Potion = new("PCT_Opener_Potion");
+            PCT_Opener_Potion = new("PCT_Opener_Potion"),
+            PCT_Opener_PrepullBlock = new("PCT_Opener_PrepullBlock", true);
 
         public static UserFloat
             PCT_ST_AdvancedMode_HammerStampCombo_Timing = new("PCT_ST_AdvancedMode_HammerStampCombo_Timing", 30),
@@ -60,6 +61,7 @@ internal partial class PCT
                 case Preset.PCT_ST_Advanced_Openers:
                     DrawBossOnlyChoice(PCT_Balance_Content);
                     DrawOpenerPotionChoice(PCT_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(PCT_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(PCT_Opener_Choice, $"2nd GCD {StarryMuse.ActionName()}",

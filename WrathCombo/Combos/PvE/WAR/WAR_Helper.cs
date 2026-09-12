@@ -9,6 +9,7 @@ using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.WAR.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
+using WrathCombo.Extensions;
 #endregion
 
 namespace WrathCombo.Combos.PvE;
@@ -18,13 +19,13 @@ internal partial class WAR : Tank
     #region Variables
     internal static WARGauge Gauge = GetJobGauge<WARGauge>(); //WAR gauge
     internal static int BeastGauge => Gauge.BeastGauge;
-    internal static (float Cooldown, float Status, int Stacks) IR => (GetCooldownRemainingTime(OriginalHook(Berserk)), GetStatusEffectRemainingTime(Buffs.InnerReleaseBuff), GetStatusEffectStacks(Buffs.InnerReleaseStacks));
-    internal static (float Status, int Stacks) BF => (GetStatusEffectRemainingTime(Buffs.BurgeoningFury), GetStatusEffectStacks(Buffs.BurgeoningFury));
-    internal static (bool Status, bool Stacks) HasIR => (IR.Status > 0, IR.Stacks > 0 || HasStatusEffect(Buffs.InnerReleaseStacks));
-    internal static (bool Status, bool Stacks) HasBF => (BF.Status > 0 || HasStatusEffect(Buffs.BurgeoningFury), (BF.Stacks > 0 || HasStatusEffect(Buffs.BurgeoningFury)));
-    internal static bool HasSurgingTempest => !ActionLearned(StormsEye) || HasStatusEffect(Buffs.SurgingTempest);
-    internal static bool HasNascentChaos => HasStatusEffect(Buffs.NascentChaos);
-    internal static bool HasWrathful => HasStatusEffect(Buffs.Wrathful);
+    internal static (float Cooldown, float Status, int Stacks) IR => (GetCooldownRemainingTime(OriginalHook(Berserk)), LocalPlayer.Status(Buffs.InnerReleaseBuff).RemainingTimeOrZero(), LocalPlayer.Status(Buffs.InnerReleaseStacks).Stacks);
+    internal static (float Status, int Stacks) BF => (LocalPlayer.Status(Buffs.BurgeoningFury).RemainingTimeOrZero(), LocalPlayer.Status(Buffs.BurgeoningFury).Stacks);
+    internal static (bool Status, bool Stacks) HasIR => (IR.Status > 0, IR.Stacks > 0 || LocalPlayer.HasStatus(Buffs.InnerReleaseStacks));
+    internal static (bool Status, bool Stacks) HasBF => (BF.Status > 0 || LocalPlayer.HasStatus(Buffs.BurgeoningFury), (BF.Stacks > 0 || LocalPlayer.HasStatus(Buffs.BurgeoningFury)));
+    internal static bool HasSurgingTempest => !ActionLearned(StormsEye) || LocalPlayer.HasStatus(Buffs.SurgingTempest);
+    internal static bool HasNascentChaos => LocalPlayer.HasStatus(Buffs.NascentChaos);
+    internal static bool HasWrathful => LocalPlayer.HasStatus(Buffs.Wrathful);
     #endregion
 
     #region Openers
@@ -38,48 +39,65 @@ internal partial class WAR : Tank
         return WrathOpener.Dummy;
     }
 
-    internal class WAROpenerMaxLevel1 : WrathOpener
+    internal abstract class WAROpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Tomahawk, // 1
-            () => Infuriate, // 2
-            () => HeavySwing, // 3
-            () => Maim, // 4
-            () => StormsEye, // 5
-            () => InnerRelease, // 6
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 7
-            () => InnerChaos, // 8
-            () => Upheaval, // 9
-            () => Onslaught, // 10
-            () => FellCleave, // 11
-            () => Onslaught, // 12
-            () => FellCleave, // 13
-            () => Onslaught, // 14
-            () => FellCleave, // 15
-            () => PrimalWrath, // 16
-            () => Infuriate, // 17
-            () => PrimalRend, // 18
-            () => PrimalRuination, // 19
-            () => InnerChaos, // 20
-            () => HeavySwing, // 21
-            () => Maim, // 22
-            () => StormsPath, // 23
-            () => FellCleave, // 24
-            () => Infuriate, // 25
-            () => InnerChaos // 26
-        ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([10, 12, 14], () => !HasCharges(Onslaught) || WAR_ST_BalanceOpener_GapcloserChoice == 0)
-        ];
         public override Preset Preset => Preset.WAR_ST_BalanceOpener;
         internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
         internal override bool IncludePot => WAR_Opener_Potion;
-        public override bool HasCooldowns() => IsOffCooldown(InnerRelease) && IsOffCooldown(Upheaval) && GetRemainingCharges(Infuriate) >= 2 && GetRemainingCharges(Onslaught) >= 3;
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !WAR_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (InMeleeRange() ? 0 : 0.7f)))
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !WAR_Opener_PrepullBlock),
+            ([2], () => InMeleeRange()),
+            ([11, 13, 15], () => !HasCharges(Onslaught) || WAR_ST_BalanceOpener_GapcloserChoice == 0)
+        ];
+
+        public override bool HasCooldowns() =>
+            IsOffCooldown(InnerRelease) &&
+            IsOffCooldown(Upheaval) &&
+            GetRemainingCharges(Infuriate) >= 2 &&
+            GetRemainingCharges(Onslaught) >= 3;
+    }
+
+    internal class WAROpenerMaxLevel1 : WAROpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Tomahawk, // 2
+            () => Infuriate, // 3
+            () => HeavySwing, // 4
+            () => Maim, // 5
+            () => StormsEye, // 6
+            () => InnerRelease, // 7
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 8
+            () => InnerChaos, // 9
+            () => Upheaval, // 10
+            () => Onslaught, // 11
+            () => FellCleave, // 12
+            () => Onslaught, // 13
+            () => FellCleave, // 14
+            () => Onslaught, // 15
+            () => FellCleave, // 16
+            () => PrimalWrath, // 17
+            () => Infuriate, // 18
+            () => PrimalRend, // 19
+            () => PrimalRuination, // 20
+            () => InnerChaos, // 21
+            () => HeavySwing, // 22
+            () => Maim, // 23
+            () => StormsPath, // 24
+            () => FellCleave, // 25
+            () => Infuriate, // 26
+            () => InnerChaos // 27
+        ];
     }
 
     #endregion
@@ -336,12 +354,12 @@ internal partial class WAR : Tank
         if (HasBattleTarget())
         {
             #region Primal Rend
-            if (primalRendEnabled && HasSurgingTempest && HasStatusEffect(Buffs.PrimalRendReady) &&
+            if (primalRendEnabled && HasSurgingTempest && LocalPlayer.HasStatus(Buffs.PrimalRendReady) &&
                 GetTargetDistance() <= primalRendDistanceThreshold && //Distance Slider Check
                 (primalRendMovement == 1 || //Any Movement
                  primalRendMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(primalRendTimeStoodStill)) && //Time Stood Still Slider Check
                 (primalRendTiming == 0 || //Use Asap
-                 GetStatusEffectRemainingTime(Buffs.PrimalRendReady) <= 15 || //Use if buff gets below 15
+                 LocalPlayer.Status(Buffs.PrimalRendReady).RemainingTimeOrZero() <= 15 || //Use if buff gets below 15
                  !HasIR.Stacks && !HasBF.Stacks && !HasWrathful)) //Use when all your other stuff is spent
             {
                 actionID = PrimalRend;
@@ -350,7 +368,7 @@ internal partial class WAR : Tank
             #endregion
 
             #region Primal Ruination
-            if (primalRuinationEnabled && HasSurgingTempest && HasStatusEffect(Buffs.PrimalRuinationReady))
+            if (primalRuinationEnabled && HasSurgingTempest && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady))
             {
                 actionID = PrimalRuination;
                 return true;
@@ -359,7 +377,7 @@ internal partial class WAR : Tank
 
             #region Inner Beast/Fell Cleave/ Decimate
             if (fellCleaveEnabled && HasSurgingTempest && ActionLearned(OriginalHook(InnerBeast)) &&
-                (HasStatusEffect(Buffs.InnerReleaseStacks) || //Use if you have IR stacks
+                (LocalPlayer.HasStatus(Buffs.InnerReleaseStacks) || //Use if you have IR stacks
                  BeastGauge >= spenderGaugeThreshold)) //Use if you have Nascent Buff
             {
                 int enemyCount = NumberOfEnemiesInRange(Role.Reprisal);
@@ -399,8 +417,8 @@ internal partial class WAR : Tank
             ? ActionLearned(Maim) && ComboAction == HeavySwing // Logic for Combo 2
                 ? Maim
                 : ActionLearned(StormsPath) && ComboAction == Maim //Logic for Combos 3.1 and 3.2
-                    ? ActionLearned(StormsEye) && ((IsEnabled(Preset.WAR_ST_Simple) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= 29) ||
-                                                  (IsEnabled(Preset.WAR_ST_Advanced) && IsEnabled(Preset.WAR_ST_StormsEye) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_SurgingRefreshRange))
+                    ? ActionLearned(StormsEye) && ((IsEnabled(Preset.WAR_ST_Simple) && LocalPlayer.Status(Buffs.SurgingTempest).RemainingTimeOrZero() <= 29) ||
+                                                  (IsEnabled(Preset.WAR_ST_Advanced) && IsEnabled(Preset.WAR_ST_StormsEye) && LocalPlayer.Status(Buffs.SurgingTempest).RemainingTimeOrZero() <= WAR_SurgingRefreshRange))
                         ? StormsEye //return if ST is needed
                         : StormsPath //return if ST is not needed
                     : HeavySwing  //return if cant Storms Path
@@ -437,7 +455,7 @@ internal partial class WAR : Tank
     [
         //Bloodwhetting
         (OriginalHook(RawIntuition), Preset.WAR_Mit_Bloodwhetting,
-            () => !HasStatusEffect(Buffs.RawIntuition) && !HasStatusEffect(Buffs.BloodwhettingDefenseLong) && PlayerHealthPercentageHp() <= WAR_Mit_Bloodwhetting_Health),
+            () => !LocalPlayer.HasStatus(Buffs.RawIntuition) && !LocalPlayer.HasStatus(Buffs.BloodwhettingDefenseLong) && PlayerHealthPercentageHp() <= WAR_Mit_Bloodwhetting_Health),
         //Equilibrium
         (Equilibrium, Preset.WAR_Mit_Equilibrium,
             () => PlayerHealthPercentageHp() <= WAR_Mit_Equilibrium_Health),
@@ -452,7 +470,7 @@ internal partial class WAR : Tank
             () => Role.CanRampart()),
         //Shake it Off
         (ShakeItOff, Preset.WAR_Mit_ShakeItOff,
-            () => !HasStatusEffect(Buffs.ShakeItOff) && (WAR_Mit_ShakeItOff_PartyRequirement == (int)PartyRequirement.No || IsInParty())),
+            () => !LocalPlayer.HasStatus(Buffs.ShakeItOff) && (WAR_Mit_ShakeItOff_PartyRequirement == (int)PartyRequirement.No || IsInParty())),
         //Arm's Length
         (Role.ArmsLength, Preset.WAR_Mit_ArmsLength,
             () => Role.CanArmsLength(WAR_Mit_ArmsLength_EnemyCount, WAR_Mit_ArmsLength_Boss)),
@@ -501,13 +519,13 @@ internal partial class WAR : Tank
         var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
         var pre56Mitigation = !ActionLearned(RawIntuition) && numberOfEnemies >= 3;
 
-        var mitigationRunning = HasStatusEffect(Role.Buffs.ArmsLength) ||
-                                HasStatusEffect(Role.Buffs.Rampart) ||
-                                HasStatusEffect(Buffs.Holmgang) ||
-                                HasStatusEffect(Buffs.ThrillOfBattle) ||
-                                HasStatusEffect(Buffs.Vengeance) ||
-                                HasStatusEffect(Buffs.Damnation) ||
-                                HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
+        var mitigationRunning = LocalPlayer.HasStatus(Role.Buffs.ArmsLength) ||
+                                LocalPlayer.HasStatus(Role.Buffs.Rampart) ||
+                                LocalPlayer.HasStatus(Buffs.Holmgang) ||
+                                LocalPlayer.HasStatus(Buffs.ThrillOfBattle) ||
+                                LocalPlayer.HasStatus(Buffs.Vengeance) ||
+                                LocalPlayer.HasStatus(Buffs.Damnation) ||
+                                CurrentTarget.HasStatus(Role.Debuffs.Reprisal);
 
         var justMitted = JustUsed(OriginalHook(ThrillOfBattle)) ||
                           JustUsed(OriginalHook(Vengeance)) ||
@@ -568,7 +586,7 @@ internal partial class WAR : Tank
 
         #region Shake It Off
         var shakeItOffThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 80 : WAR_Mitigation_NonBoss_ShakeItOff_Health;
-        var safeToShakeItOff = !HasStatusEffects([Buffs.ThrillOfBattle, Buffs.Damnation, Buffs.Vengeance, Buffs.BloodwhettingDefenseLong]);
+        var safeToShakeItOff = !LocalPlayer.HasStatusEffects([Buffs.ThrillOfBattle, Buffs.Damnation, Buffs.Vengeance, Buffs.BloodwhettingDefenseLong]);
 
         if (IsEnabled(Preset.WAR_Mitigation_NonBoss_ShakeItOff) &&
             ActionReady(ShakeItOff) && safeToShakeItOff &&

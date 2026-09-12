@@ -104,7 +104,7 @@ internal partial class All
 
         protected override uint Invoke(uint actionID) =>
             actionID is RoleActions.Tank.Reprisal &&
-            GetStatusEffectRemainingTime(RoleActions.Tank.Debuffs.Reprisal, CurrentTarget, true) > Config.AllTankReprisalThreshold
+            CurrentTarget.Status(RoleActions.Tank.Debuffs.Reprisal, true).RemainingTimeOrZero() > Config.AllTankReprisalThreshold
                 ? Cease
                 : actionID;
     }
@@ -151,7 +151,7 @@ internal partial class All
             if (actionID is WHM.Raise &&
                 IsEnabled(Preset.WHM_ThinAirRaise) &&
                 ActionReady(WHM.ThinAir) &&
-                !HasStatusEffect(WHM.Buffs.ThinAir))
+                !LocalPlayer.HasStatus(WHM.Buffs.ThinAir))
                 return WHM.ThinAir;
 
             if (IsEnabled(Preset.ALL_Healer_Raise_Retarget))
@@ -219,7 +219,7 @@ internal partial class All
 
         protected override uint Invoke(uint actionID) =>
             actionID is RoleActions.Caster.Addle &&
-            GetStatusEffectRemainingTime(RoleActions.Caster.Debuffs.Addle, CurrentTarget, true) > Config.AllCasterAddleThreshold
+            CurrentTarget.Status(RoleActions.Caster.Debuffs.Addle, true).RemainingTimeOrZero() > Config.AllCasterAddleThreshold
                 ? Cease
                 : actionID;
     }
@@ -236,8 +236,8 @@ internal partial class All
                 actionID is SMN.Resurrection && Player.Job is not Job.SMN)
                 return actionID;
 
-            if (HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) ||
-                HasStatusEffect(RDM.Buffs.Dualcast))
+            if (LocalPlayer.HasStatus(RoleActions.Magic.Buffs.Swiftcast) ||
+                LocalPlayer.HasStatus(RDM.Buffs.Dualcast))
 
                 if (IsEnabled(Preset.ALL_Caster_Raise_Retarget))
                     return actionID.Retarget(replacedActions.ToArray(),
@@ -267,7 +267,7 @@ internal partial class All
 
         protected override uint Invoke(uint actionID) =>
             actionID is RoleActions.Melee.Feint &&
-            GetStatusEffectRemainingTime(RoleActions.Melee.Debuffs.Feint, CurrentTarget, true) > Config.AllMeleeFeintThreshold
+            CurrentTarget.Status(RoleActions.Melee.Debuffs.Feint, true).RemainingTimeOrZero() > Config.AllMeleeFeintThreshold
                 ? Cease
                 : actionID;
     }
@@ -277,7 +277,7 @@ internal partial class All
         protected internal override Preset Preset => Preset.ALL_Melee_TrueNorth;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is RoleActions.Melee.TrueNorth && HasStatusEffect(RoleActions.Melee.Buffs.TrueNorth)
+            actionID is RoleActions.Melee.TrueNorth && LocalPlayer.HasStatus(RoleActions.Melee.Buffs.TrueNorth)
                 ? Cease
                 : actionID;
     }
@@ -289,9 +289,9 @@ internal partial class All
 
         protected override uint Invoke(uint actionID) =>
             actionID is BRD.Troubadour or MCH.Tactician or DNC.ShieldSamba &&
-            (GetStatusEffectRemainingTime(BRD.Buffs.Troubadour, anyOwner: true) > Config.AllRangedMitigationThreshold ||
-             GetStatusEffectRemainingTime(MCH.Buffs.Tactician, anyOwner: true) > Config.AllRangedMitigationThreshold ||
-             GetStatusEffectRemainingTime(DNC.Buffs.ShieldSamba, anyOwner: true) > Config.AllRangedMitigationThreshold) &&
+            (LocalPlayer.Status(BRD.Buffs.Troubadour, true).RemainingTimeOrZero() > Config.AllRangedMitigationThreshold ||
+             LocalPlayer.Status(MCH.Buffs.Tactician, true).RemainingTimeOrZero() > Config.AllRangedMitigationThreshold ||
+             LocalPlayer.Status(DNC.Buffs.ShieldSamba, true).RemainingTimeOrZero() > Config.AllRangedMitigationThreshold) &&
             IsOffCooldown(actionID)
                 ? Cease
                 : actionID;

@@ -109,6 +109,7 @@ internal partial class WAR
                 case Preset.WAR_ST_BalanceOpener:
                     DrawBossOnlyChoice(WAR_BalanceOpener_Content);
                     DrawOpenerPotionChoice(WAR_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(WAR_Opener_PrepullBlock);
 
                     ImGuiEx.TextUnderlined($"{Onslaught.ActionName()} Settings");
                     ImGui.Spacing();
@@ -554,6 +555,7 @@ internal partial class WAR
 
         public static UserBool
             WAR_Opener_Potion = new("WAR_Opener_Potion"),
+            WAR_Opener_PrepullBlock = new("WAR_Opener_PrepullBlock", true),
             WAR_Mitigation_Boss_ThrillOfBattle_Align = new("WAR_Mitigation_Boss_ThrillOfBattle_Align", true),
             WAR_Mitigation_Boss_Vengeance_First = new("WAR_Mitigation_Boss_Vengeance_First", true),
 

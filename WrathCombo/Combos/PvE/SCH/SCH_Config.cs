@@ -22,6 +22,7 @@ internal partial class SCH
                 case Preset.SCH_ST_ADV_DPS_Balance_Opener:
                     DrawBossOnlyChoice(SCH_ST_DPS_OpenerContent);
                     DrawOpenerPotionChoice(SCH_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(SCH_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(SCH_ST_DPS_OpenerOption, "Dissipation First", "Uses Dissipation first, then Aetherflow", 0, descriptionAsTooltip: true);
@@ -380,6 +381,7 @@ internal partial class SCH
 
         internal static UserBool
             SCH_Opener_Potion = new("SCH_Opener_Potion"),
+            SCH_Opener_PrepullBlock = new("SCH_Opener_PrepullBlock", true),
             SCH_ST_ADV_DPS_Bio_TwoTarget = new("SCH_ST_ADV_DPS_Bio_TwoTarget"),
             SCH_ST_DPS_EnergyDrain_Burst = new("SCH_ST_DPS_EnergyDrain_Burst"),
             SCH_AoE_DPS_EnergyDrain_Burst = new("SCH_AoE_DPS_EnergyDrain_Burst"),

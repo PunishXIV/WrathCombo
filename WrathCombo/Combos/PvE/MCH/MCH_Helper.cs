@@ -8,6 +8,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.MCH.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class MCH
@@ -34,7 +35,7 @@ internal partial class MCH
             return true;
 
         if (Battery > 80 &&
-            (HasStatusEffect(Buffs.ExcavatorReady) ||
+            (LocalPlayer.HasStatus(Buffs.ExcavatorReady) ||
              ActionReady(Chainsaw) ||
              ActionReady(OriginalHook(AirAnchor))))
             return true;
@@ -61,7 +62,7 @@ internal partial class MCH
                   GetTargetHPPercent() > hpThreshold;
         }
 
-        if (!HasStatusEffect(Buffs.Wildfire) &&
+        if (!LocalPlayer.HasStatus(Buffs.Wildfire) &&
             ActionReady(OriginalHook(RookAutoturret)) &&
             !IsRobotActive &&
             GetTargetHPPercent() > hpThreshold)
@@ -104,7 +105,7 @@ internal partial class MCH
                 wildfireBossOnlyOption);
 
     private static bool IsHyperchargeReady() =>
-        (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) && !IsOverheated;
+        (ActionReady(Hypercharge) || LocalPlayer.HasStatus(Buffs.Hypercharged)) && !IsOverheated;
 
     private static bool AreHyperchargeToolsReady(
         float toolCutoff,
@@ -112,7 +113,7 @@ internal partial class MCH
         bool skipExcavatorHold) =>
         IsDrillCD(toolCutoff) && IsAirAnchorCD(toolCutoff) &&
         (IsChainSawCD(toolCutoff) || skipHyperchargeHold) &&
-        (!HasStatusEffect(Buffs.ExcavatorReady) || skipExcavatorHold);
+        (!LocalPlayer.HasStatus(Buffs.ExcavatorReady) || skipExcavatorHold);
 
     private static bool ShouldUseHyperchargeST(int wildfireBossOnlyOption) =>
         ActionReady(Wildfire) ||
@@ -135,14 +136,14 @@ internal partial class MCH
         return IsHyperchargeReady() &&
                (!IsComboExpiring(6) || skipHyperchargeHold) &&
                AreHyperchargeToolsReady(wildfireHyperchargeCutoff, skipHyperchargeHold, skipExcavatorHold) &&
-               !HasStatusEffect(Buffs.FullMetalMachinist) &&
+               !LocalPlayer.HasStatus(Buffs.FullMetalMachinist) &&
                ShouldUseHyperchargeST(wildfireBossOnlyOption);
     }
 
     private static bool UsedBioBlaster(float time = 9f) =>
         !ActionLearned(BioBlaster) ||
         IsBioBlasterCD(time) ||
-        HasStatusEffect(Debuffs.Bioblaster, CurrentTarget, true);
+        CurrentTarget.HasStatus(Debuffs.Bioblaster, true);
 
     private static bool UsedDrill(float time = 9f) =>
         !ActionLearned(Drill) || IsDrillCD(time);
@@ -163,7 +164,7 @@ internal partial class MCH
         else if (!UsedDrill(toolHoldThreshold))
             return false;
 
-        if (!IsChainSawCD(toolHoldThreshold) || HasStatusEffect(Buffs.ExcavatorReady))
+        if (!IsChainSawCD(toolHoldThreshold) || LocalPlayer.HasStatus(Buffs.ExcavatorReady))
             return false;
 
         return !useAirAnchor || IsAirAnchorCD(toolHoldThreshold);
@@ -171,7 +172,7 @@ internal partial class MCH
 
     private static bool IsWildfireAboutToBeUsed(int wildfireHpThreshold, int wildfireBossOnlyOption) =>
         (wildfireBossOnlyOption == 0 && GetTargetHPPercent() > wildfireHpThreshold || TargetIsBoss()) &&
-        CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
+        CurrentTarget.CanApplyStatus(Debuffs.Wildfire) &&
         ActionReady(Wildfire);
 
     #endregion
@@ -179,12 +180,12 @@ internal partial class MCH
     #region Misc
 
     private static bool UseFullMetalField() =>
-        HasStatusEffect(Buffs.FullMetalMachinist) &&
+        LocalPlayer.HasStatus(Buffs.FullMetalMachinist) &&
         !IsOverheated &&
         (ActionReady(Wildfire) ||
          GetCooldownRemainingTime(Wildfire) > 90 ||
          GetCooldownRemainingTime(Wildfire) <= GCD ||
-         GetStatusEffectRemainingTime(Buffs.FullMetalMachinist) <= 6);
+         LocalPlayer.Status(Buffs.FullMetalMachinist).RemainingTimeOrZero() <= 6);
 
     private static bool JustUsedOverheatGCD(float window, bool onAoE) =>
         onAoE
@@ -212,7 +213,7 @@ internal partial class MCH
         int hpThreshold = 0,
         int bossOnlyOption = 1,
         bool requireBoss = false) =>
-        ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist) &&
+        ActionReady(BarrelStabilizer) && !LocalPlayer.HasStatus(Buffs.FullMetalMachinist) &&
         (onAoE
             ? GetTargetHPPercent() > hpThreshold
             : (requireBoss
@@ -226,10 +227,10 @@ internal partial class MCH
         int bossOnlyOption = 1,
         bool requireBoss = false,
         float? hyperchargeWindow = null) =>
-        CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
+        CurrentTarget.CanApplyStatus(Debuffs.Wildfire) &&
         ActionReady(Wildfire) &&
         JustUsed(Hypercharge, hyperchargeWindow ?? GCD + 0.9f) &&
-        !HasStatusEffect(Buffs.Wildfire) &&
+        !LocalPlayer.HasStatus(Buffs.Wildfire) &&
         (requireBoss
             ? TargetIsBoss()
             : bossOnlyOption == 0 &&
@@ -259,7 +260,7 @@ internal partial class MCH
             if (ActionLearned(Excavator))
                 ready++;
         }
-        else if (HasStatusEffect(Buffs.ExcavatorReady))
+        else if (LocalPlayer.HasStatus(Buffs.ExcavatorReady))
             ready++;
 
         if (ActionReady(AirAnchor))
@@ -276,7 +277,7 @@ internal partial class MCH
 
     private static bool UseReassembleCharges(int chargePool, int hpThreshold)
     {
-        if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) ||
+        if (!ActionReady(Reassemble) || LocalPlayer.HasStatus(Buffs.Reassembled) ||
             !HasBattleTarget() || GetTargetHPPercent() <= hpThreshold ||
             !InReassembleRange() || JustUsed(Reassemble, 2f))
             return false;
@@ -287,10 +288,10 @@ internal partial class MCH
 
     private static bool HasReassembleToolTarget(bool onAoE)
     {
-        if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Excavator) && LocalPlayer.HasStatus(Buffs.ExcavatorReady))
             return true;
 
-        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Chainsaw) && !LocalPlayer.HasStatus(Buffs.ExcavatorReady))
             return true;
 
         if (ActionReady(AirAnchor) && HigherToolOnCooldown(Chainsaw))
@@ -507,7 +508,7 @@ internal partial class MCH
         int chargePool = 0,
         int hpThreshold = 25)
     {
-        if (!reassembleEnabled || HasStatusEffect(Buffs.Reassembled))
+        if (!reassembleEnabled || LocalPlayer.HasStatus(Buffs.Reassembled))
             return false;
 
         if (onAoE)
@@ -529,14 +530,14 @@ internal partial class MCH
         if (ShouldHoldToolsForReassemble(onAoE, reassembleEnabled, reassembleChoice, chargePool, hpThreshold))
             return false;
 
-        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Chainsaw) && !LocalPlayer.HasStatus(Buffs.ExcavatorReady))
         {
             actionID = Chainsaw;
             return true;
         }
 
-        if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
-            (onAoE || !holdExcavatorForWildfire || GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= GCD * 3))
+        if (ActionReady(Excavator) && LocalPlayer.HasStatus(Buffs.ExcavatorReady) &&
+            (onAoE || !holdExcavatorForWildfire || LocalPlayer.Status(Buffs.ExcavatorReady).RemainingTimeOrZero() <= GCD * 3))
         {
             actionID = Excavator;
             return true;
@@ -549,8 +550,8 @@ internal partial class MCH
         }
 
         if (onAoE && ActionReady(BioBlaster) &&
-            !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
-            CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
+            !CurrentTarget.HasStatus(Debuffs.Bioblaster) &&
+            CurrentTarget.CanApplyStatus(Debuffs.Bioblaster))
         {
             actionID = BioBlaster;
             return true;
@@ -562,14 +563,14 @@ internal partial class MCH
             return true;
         }
 
-        if (onAoE && HasStatusEffect(Buffs.Reassembled) && ActionReady(OriginalHook(SpreadShot)))
+        if (onAoE && LocalPlayer.HasStatus(Buffs.Reassembled) && ActionReady(OriginalHook(SpreadShot)))
         {
             actionID = OriginalHook(SpreadShot);
             return true;
         }
 
         if (!onAoE && !ActionLearned(AirAnchor) && ActionReady(HotShot) &&
-            (!ActionLearned(CleanShot) || !HasStatusEffect(Buffs.Reassembled)))
+            (!ActionLearned(CleanShot) || !LocalPlayer.HasStatus(Buffs.Reassembled)))
         {
             actionID = HotShot;
             return true;
@@ -659,13 +660,17 @@ internal partial class MCH
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], () => CountdownRemaining - 5),
-            ([2], () => CountdownRemaining - 2),
-            ([3], () => CountdownRemaining)
+            ([2], () => !MCH_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5)),
+            ([3], () => !MCH_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2)),
+            ([4], () => !MCH_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining))
         ];
 
-        protected static bool SharedOpenerCooldowns() =>
-            (!IsEnabled(Preset.MCH_ST_Opener_BlockEarly) || CountdownActive) &&
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !MCH_Opener_PrepullBlock)
+        ];
+
+        public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
             GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
@@ -680,7 +685,7 @@ internal partial class MCH
         public override int MaxOpenerLevel => 100;
 
         public override bool HasCooldowns() =>
-            SharedOpenerCooldowns() &&
+            base.HasCooldowns() &&
             IsOffCooldown(Excavator) &&
             IsOffCooldown(FullMetalField);
     }
@@ -689,64 +694,23 @@ internal partial class MCH
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Reassemble, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
-            () => AirAnchor, // 3
-            () => CheckMate, // 4
-            () => DoubleCheck, // 5
-            () => Drill, // 6
-            () => BarrelStabilizer, // 7
-            () => Chainsaw, // 8
-            () => Excavator, // 9
-            () => AutomatonQueen, // 10
-            () => Reassemble, // 11
-            () => Drill, // 12
-            () => CheckMate, // 13
-            () => Wildfire, // 14
-            () => FullMetalField, // 15
-            () => Hypercharge, // 16
-            () => DoubleCheck, // 17
-            () => BlazingShot, // 18
-            () => CheckMate, // 19
-            () => BlazingShot, // 20
-            () => DoubleCheck, // 21
-            () => BlazingShot, // 22
-            () => CheckMate, // 23
-            () => BlazingShot, // 24
-            () => DoubleCheck, // 25
-            () => BlazingShot, // 26
-            () => CheckMate, // 27
-            () => Drill, // 28
-            () => DoubleCheck, // 29
-            () => CheckMate, // 30
-            () => HeatedSplitShot, // 31
-            () => DoubleCheck, // 32
-            () => HeatedSlugShot, // 33
-            () => HeatedCleanShot // 34
-        ];
-    }
-
-    internal class MCHLvl100EarlyWFOpener : MCHLvl100OpenerBase
-    {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Reassemble, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
-            () => AirAnchor, // 3
-            () => CheckMate, // 4
-            () => DoubleCheck, // 5
-            () => Drill, // 6
-            () => BarrelStabilizer, // 7
-            () => Reassemble, // 8
+            () => All.Cease, // 1
+            () => Reassemble, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 3
+            () => AirAnchor, // 4
+            () => CheckMate, // 5
+            () => DoubleCheck, // 6
+            () => Drill, // 7
+            () => BarrelStabilizer, // 8
             () => Chainsaw, // 9
-            () => DoubleCheck, // 10
-            () => Wildfire, // 11
-            () => Excavator, // 12
-            () => Hypercharge, // 13
-            () => AutomatonQueen, // 14
-            () => BlazingShot, // 15
-            () => CheckMate, // 16
-            () => BlazingShot, // 17
+            () => Excavator, // 10
+            () => AutomatonQueen, // 11
+            () => Reassemble, // 12
+            () => Drill, // 13
+            () => CheckMate, // 14
+            () => Wildfire, // 15
+            () => FullMetalField, // 16
+            () => Hypercharge, // 17
             () => DoubleCheck, // 18
             () => BlazingShot, // 19
             () => CheckMate, // 20
@@ -754,16 +718,59 @@ internal partial class MCH
             () => DoubleCheck, // 22
             () => BlazingShot, // 23
             () => CheckMate, // 24
-            () => Drill, // 25
+            () => BlazingShot, // 25
             () => DoubleCheck, // 26
-            () => CheckMate, // 27
-            () => FullMetalField, // 28
-            () => DoubleCheck, // 29
-            () => CheckMate, // 30
-            () => Drill, // 31
+            () => BlazingShot, // 27
+            () => CheckMate, // 28
+            () => Drill, // 29
+            () => DoubleCheck, // 30
+            () => CheckMate, // 31
             () => HeatedSplitShot, // 32
-            () => HeatedSlugShot, // 33
-            () => HeatedCleanShot // 34
+            () => DoubleCheck, // 33
+            () => HeatedSlugShot, // 34
+            () => HeatedCleanShot // 35
+        ];
+    }
+
+    internal class MCHLvl100EarlyWFOpener : MCHLvl100OpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Reassemble, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 3
+            () => AirAnchor, // 4
+            () => CheckMate, // 5
+            () => DoubleCheck, // 6
+            () => Drill, // 7
+            () => BarrelStabilizer, // 8
+            () => Reassemble, // 9
+            () => Chainsaw, // 10
+            () => DoubleCheck, // 11
+            () => Wildfire, // 12
+            () => Excavator, // 13
+            () => Hypercharge, // 14
+            () => AutomatonQueen, // 15
+            () => BlazingShot, // 16
+            () => CheckMate, // 17
+            () => BlazingShot, // 18
+            () => DoubleCheck, // 19
+            () => BlazingShot, // 20
+            () => CheckMate, // 21
+            () => BlazingShot, // 22
+            () => DoubleCheck, // 23
+            () => BlazingShot, // 24
+            () => CheckMate, // 25
+            () => Drill, // 26
+            () => DoubleCheck, // 27
+            () => CheckMate, // 28
+            () => FullMetalField, // 29
+            () => DoubleCheck, // 30
+            () => CheckMate, // 31
+            () => Drill, // 32
+            () => HeatedSplitShot, // 33
+            () => HeatedSlugShot, // 34
+            () => HeatedCleanShot // 35
         ];
     }
 
@@ -774,46 +781,45 @@ internal partial class MCH
 
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Reassemble, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 2
-            () => AirAnchor, // 3
-            () => GaussRound, // 4
-            () => Ricochet, // 5
-            () => Drill, // 6
-            () => BarrelStabilizer, // 7
-            () => Chainsaw, // 8
-            () => GaussRound, // 9
-            () => Ricochet, // 10
-            () => HeatedSplitShot, // 11
-            () => GaussRound, // 12
-            () => Ricochet, // 13
-            () => HeatedSlugShot, // 14
-            () => Wildfire, // 15
-            () => HeatedCleanShot, // 16
-            () => AutomatonQueen, // 17
-            () => Hypercharge, // 18
-            () => BlazingShot, // 19
-            () => Ricochet, // 20
-            () => BlazingShot, // 21
-            () => GaussRound, // 22
-            () => BlazingShot, // 23
-            () => Ricochet, // 24
-            () => BlazingShot, // 25
-            () => GaussRound, // 26
-            () => BlazingShot, // 27
-            () => Reassemble, // 28
-            () => Drill // 29
+            () => All.Cease, // 1
+            () => Reassemble, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 3
+            () => AirAnchor, // 4
+            () => GaussRound, // 5
+            () => Ricochet, // 6
+            () => Drill, // 7
+            () => BarrelStabilizer, // 8
+            () => Chainsaw, // 9
+            () => GaussRound, // 10
+            () => Ricochet, // 11
+            () => HeatedSplitShot, // 12
+            () => GaussRound, // 13
+            () => Ricochet, // 14
+            () => HeatedSlugShot, // 15
+            () => Wildfire, // 16
+            () => HeatedCleanShot, // 17
+            () => AutomatonQueen, // 18
+            () => Hypercharge, // 19
+            () => BlazingShot, // 20
+            () => Ricochet, // 21
+            () => BlazingShot, // 22
+            () => GaussRound, // 23
+            () => BlazingShot, // 24
+            () => Ricochet, // 25
+            () => BlazingShot, // 26
+            () => GaussRound, // 27
+            () => BlazingShot, // 28
+            () => Reassemble, // 29
+            () => Drill // 30
         ];
 
         public override List<int> AllowUpgradeSteps { get; set; } =
-            [4, 5, 9, 10, 12, 13, 20, 22, 24, 26];
+            [5, 6, 10, 11, 13, 14, 21, 23, 25, 27];
 
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
-            15
+            16
         ];
-
-        public override bool HasCooldowns() => SharedOpenerCooldowns();
     }
 
     #endregion

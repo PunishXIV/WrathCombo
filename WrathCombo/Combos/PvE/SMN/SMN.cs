@@ -231,10 +231,10 @@ internal partial class SMN : Caster
             if (actionID != SearingLight)
                 return actionID;
 
-            if (HasStatusEffect(Buffs.RubysGlimmer))
+            if (LocalPlayer.HasStatus(Buffs.RubysGlimmer))
                 return SearingFlash;
 
-            return HasStatusEffect(Buffs.SearingLight, anyOwner: true) ? 11 : actionID;
+            return LocalPlayer.HasStatus(Buffs.SearingLight, true) ? 11 : actionID;
         }
     }
     internal class SMN_Rekindle : CustomCombo
@@ -264,7 +264,7 @@ internal partial class SMN : Caster
         {
             if (actionID != Ruin4)
                 return actionID;
-            bool furtherRuin = HasStatusEffect(Buffs.FurtherRuin);
+            bool furtherRuin = LocalPlayer.HasStatus(Buffs.FurtherRuin);
 
             return !furtherRuin ? Ruin3 : actionID;
         }
@@ -279,7 +279,7 @@ internal partial class SMN : Caster
                 return actionID;
 
             SMNGauge gauge = GetJobGauge<SMNGauge>();
-            if (HasStatusEffect(Buffs.FurtherRuin) && IsOnCooldown(EnergyDrain) && !gauge.HasAetherflowStacks && IsEnabled(Preset.SMN_EDFester_Ruin4))
+            if (LocalPlayer.HasStatus(Buffs.FurtherRuin) && IsOnCooldown(EnergyDrain) && !gauge.HasAetherflowStacks && IsEnabled(Preset.SMN_EDFester_Ruin4))
                 return Ruin4;
 
             if (ActionLearned(EnergyDrain) && !gauge.HasAetherflowStacks)
@@ -301,7 +301,7 @@ internal partial class SMN : Caster
             if (!ActionLearned(Painflare) || gauge.HasAetherflowStacks)
                 return actionID;
 
-            if (HasStatusEffect(Buffs.FurtherRuin) && IsOnCooldown(EnergySiphon) && IsEnabled(Preset.SMN_ESPainflare_Ruin4))
+            if (LocalPlayer.HasStatus(Buffs.FurtherRuin) && IsOnCooldown(EnergySiphon) && IsEnabled(Preset.SMN_ESPainflare_Ruin4))
                 return Ruin4;
 
             if (ActionLearned(EnergySiphon))
@@ -331,9 +331,9 @@ internal partial class SMN : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if ((actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonEmerald or SummonGaruda or SummonGaruda2 or SummonRuby or SummonIfrit or SummonIfrit2 && HasStatusEffect(Buffs.TitansFavor)) ||
-                (actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonEmerald or SummonGaruda or SummonGaruda2 && HasStatusEffect(Buffs.GarudasFavor)) ||
-                (actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonRuby or SummonIfrit or SummonIfrit2 && (HasStatusEffect(Buffs.IfritsFavor) || (ComboAction == CrimsonCyclone && InMeleeRange()))))
+            if ((actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonEmerald or SummonGaruda or SummonGaruda2 or SummonRuby or SummonIfrit or SummonIfrit2 && LocalPlayer.HasStatus(Buffs.TitansFavor)) ||
+                (actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonEmerald or SummonGaruda or SummonGaruda2 && LocalPlayer.HasStatus(Buffs.GarudasFavor)) ||
+                (actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonRuby or SummonIfrit or SummonIfrit2 && (LocalPlayer.HasStatus(Buffs.IfritsFavor) || (ComboAction == CrimsonCyclone && InMeleeRange()))))
                 return OriginalHook(AstralFlow);
 
             return actionID;

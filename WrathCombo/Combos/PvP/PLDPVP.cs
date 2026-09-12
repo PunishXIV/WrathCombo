@@ -97,19 +97,19 @@ internal static class PLDPvP
 
             if (IsEnabled(Preset.PLDPvP_PhalanxCombo))
             {
-                if (HasStatusEffect(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
+                if (LocalPlayer.HasStatus(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
                     return OriginalHook(Phalanx);
             }
 
             // Check if the custom combo preset is enabled and ConfiteorReady is active
-            if (IsEnabled(Preset.PLDPvP_Confiteor) && HasStatusEffect(Buffs.ConfiteorReady))
+            if (IsEnabled(Preset.PLDPvP_Confiteor) && LocalPlayer.HasStatus(Buffs.ConfiteorReady))
                 return OriginalHook(Imperator);
 
             var missinghealth = LocalPlayer.MaxHp - LocalPlayer.CurrentHp;
 
             if (IsEnabled(Preset.PLDPvP_HolySpirit) && ActionReady(HolySpirit) && missinghealth >= PLDPvP_HolySpirit_Threshold)
             {
-                if (!InMeleeRange() || !HasStatusEffect(Buffs.AttonementReady) && !HasStatusEffect(Buffs.SupplicationReady) && !HasStatusEffect(Buffs.SepulchreReady))
+                if (!InMeleeRange() || !LocalPlayer.HasStatus(Buffs.AttonementReady) && !LocalPlayer.HasStatus(Buffs.SupplicationReady) && !LocalPlayer.HasStatus(Buffs.SepulchreReady))
                     return HolySpirit;
             }
             return actionID;

@@ -2,6 +2,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.BRDPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -73,23 +74,23 @@ internal static class BRDPvP
             if (!PvPCommon.TargetImmuneToDamage())
             {
                 if (IsEnabled(Preset.BRDPvP_Wardens) && InPvP() &&  //Autowardens set up only for soft ccs, it cant be used while cced like purify
-                    (HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.Heavy, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.HalfAsleep, anyOwner: true)))
+                    (LocalPlayer.HasStatus(PvPCommon.Debuffs.Bind, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.Heavy, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.HalfAsleep, true)))
                     return OriginalHook(WardensPaean);
 
                 if (canWeave)
                 {
                     // Silence shot that gives PP, set up to not happen right after apex to tighten burst and silence after the bigger damage. Apex > Harmonic> Silent > Burst > PP or Apex > Burst > Silent >  PP
-                    if (IsEnabled(Preset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown && !WasLastAction(ApexArrow) && !HasStatusEffect(Buffs.Repertoire)) 
+                    if (IsEnabled(Preset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown && !WasLastAction(ApexArrow) && !LocalPlayer.HasStatus(Buffs.Repertoire)) 
                         return OriginalHook(SilentNocturne);
 
-                    if (IsEnabled(Preset.BRDPvP_EncoreOfLight) && HasStatusEffect(Buffs.EncoreofLightReady)) // LB finisher shot
+                    if (IsEnabled(Preset.BRDPvP_EncoreOfLight) && LocalPlayer.HasStatus(Buffs.EncoreofLightReady)) // LB finisher shot
                         return OriginalHook(FinalFantasia);
                 }
 
-                if (IsEnabled(Preset.BRDPvP_ApexArrow) && ActionReady(ApexArrow) && !HasStatusEffect(Buffs.BlastArrowReady)) // Use on cd to keep up buff
+                if (IsEnabled(Preset.BRDPvP_ApexArrow) && ActionReady(ApexArrow) && !LocalPlayer.HasStatus(Buffs.BlastArrowReady)) // Use on cd to keep up buff
                     return OriginalHook(ApexArrow);
 
-                if (HasStatusEffect(Buffs.FrontlineMarch))
+                if (LocalPlayer.HasStatus(Buffs.FrontlineMarch))
                 {
                     if (IsEnabled(Preset.BRDPvP_HarmonicArrow) &&    //Harmonic Logic. Slider plus execute ranges
                         (harmonicCharges >= BRDPvP_HarmonicArrowCharges ||
@@ -98,7 +99,7 @@ internal static class BRDPvP
                          harmonicCharges == 3 && GetTargetCurrentHP() <= 15000))
                         return OriginalHook(HarmonicArrow);
 
-                    if (IsEnabled(Preset.BRDPvP_BlastArrow) && HasStatusEffect(Buffs.BlastArrowReady)) // Blast arrow when ready
+                    if (IsEnabled(Preset.BRDPvP_BlastArrow) && LocalPlayer.HasStatus(Buffs.BlastArrowReady)) // Blast arrow when ready
                         return OriginalHook(BlastArrow);
                 }
                 return OriginalHook(PowerfulShot); // Main shot but also Pitch Perfect

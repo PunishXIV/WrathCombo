@@ -66,7 +66,7 @@ internal partial class BLM
         ActionLearned(FlareStar) && AstralSoulStacks is 6;
 
     private static float TimeSinceFirestarterBuff =>
-        HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
+        LocalPlayer.HasStatus(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
 
     private static uint FireSpam =>
         ActionReady(Fire4)
@@ -74,12 +74,12 @@ internal partial class BLM
             : Fire;
 
     private static bool CanFire3 =>
-        ActionLearned(Fire3) && HasStatusEffect(Buffs.Firestarter) &&
+        ActionLearned(Fire3) && LocalPlayer.HasStatus(Buffs.Firestarter) &&
         (AstralFireStacks < 3 || !ActionLearned(Fire4) && TimeSinceFirestarterBuff >= GCD * 3);
 
     private static bool CanFireParadox =>
         IsParadoxActive && MP.Cur >= MP.FireParadox &&
-        (!HasStatusEffect(Buffs.Firestarter) && AstralFireStacks < 3 ||
+        (!LocalPlayer.HasStatus(Buffs.Firestarter) && AstralFireStacks < 3 ||
          JustUsed(FlareStar, GCD * 4) ||
          !ActionLearned(FlareStar) && ActionReady(Despair));
 
@@ -109,19 +109,19 @@ internal partial class BLM
     #region Thunder
 
     private static IStatus? ThunderDebuffST =>
-        GetStatusEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget);
+        CurrentTarget.Status(ThunderList[OriginalHook(Thunder)]);
 
     private static IStatus? ThunderDebuffAoE =>
-        GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
+        CurrentTarget.Status(ThunderList[OriginalHook(Thunder2)]);
 
     private static bool UseThunder(int hpThreshold = 0, float dotRefresh = 5f)
     {
         uint dotAction = OriginalHook(Thunder);
         ThunderList.TryGetValue(dotAction, out ushort dotDebuffID);
-        float dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
+        float dotRemaining = CurrentTarget.Status(dotDebuffID).RemainingTimeOrZero();
 
         return ActionReady(dotAction) &&
-               CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               CurrentTarget.CanApplyStatus(dotDebuffID) &&
                !JustUsedOn(dotAction, CurrentTarget, 5f) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
@@ -137,8 +137,8 @@ internal partial class BLM
     }
 
     private static bool UseAoEThunder(int hpThreshold = 0, float dotRefresh = 3f) =>
-        ActionLearned(OriginalHook(Thunder2)) && HasStatusEffect(Buffs.Thunderhead) &&
-        CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
+        ActionLearned(OriginalHook(Thunder2)) && LocalPlayer.HasStatus(Buffs.Thunderhead) &&
+        CurrentTarget.CanApplyStatus(ThunderList[OriginalHook(Thunder2)]) &&
         GetTargetHPPercent() > hpThreshold &&
         (!IsInIcePhase || JustUsedFreezeOrBlizzard || IsEndOfIcePhaseAoE || !ActionReady(Freeze)) &&
         (ThunderDebuffAoE is null && ThunderDebuffST is null ||
@@ -249,8 +249,8 @@ internal partial class BLM
         }
 
         if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
-            (HasStatusEffect(Role.Buffs.Swiftcast) ||
-             HasStatusEffect(Buffs.Triplecast) ||
+            (LocalPlayer.HasStatus(Role.Buffs.Swiftcast) ||
+             LocalPlayer.HasStatus(Buffs.Triplecast) ||
              JustUsed(Freeze, 10f)))
         {
             actionID = Blizzard3;
@@ -296,7 +296,7 @@ internal partial class BLM
         bool allowMoving = true,
         double timeStillSeconds = 2.5,
         int hpThreshold = 0) =>
-        ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
+        ActionReady(LeyLines) && !LocalPlayer.HasStatus(Buffs.LeyLines) &&
         !JustUsed(LeyLines) &&
         GetRemainingCharges(LeyLines) > minCharges &&
         (allowMoving || !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(timeStillSeconds)) &&
@@ -325,7 +325,7 @@ internal partial class BLM
         if (useSwiftcast &&
             ActionReady(Role.Swiftcast) && JustUsed(Despair) &&
             GetCooldownRemainingTime(Manafont) > GCD &&
-            !HasStatusEffect(Buffs.Triplecast) &&
+            !LocalPlayer.HasStatus(Buffs.Triplecast) &&
             InActionRange(Fire) && HasBattleTarget())
         {
             actionID = Role.Swiftcast;
@@ -334,9 +334,9 @@ internal partial class BLM
 
         if (useTriplecast &&
             ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
-            !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
+            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast) && !LocalPlayer.HasStatus(Buffs.Triplecast) &&
             InActionRange(Fire) && HasBattleTarget() &&
-            (triplecastIgnoreLeyLines || !HasStatusEffect(Buffs.LeyLines)) &&
+            (triplecastIgnoreLeyLines || !LocalPlayer.HasStatus(Buffs.LeyLines)) &&
             (!triplecastRequireChargeReserve || HasTriplecastChargesForMovement()) &&
             JustUsed(Despair) && !JustUsed(Triplecast) && !JustUsed(Manafont))
         {
@@ -346,8 +346,8 @@ internal partial class BLM
 
         if (useTranspose &&
             ActionReady(Transpose) &&
-            (HasStatusEffect(Role.Buffs.Swiftcast) ||
-             HasStatusEffect(Buffs.Triplecast) ||
+            (LocalPlayer.HasStatus(Role.Buffs.Swiftcast) ||
+             LocalPlayer.HasStatus(Buffs.Triplecast) ||
              transposeIncludeLowMp && !ActionLearned(Fire3) && MP.Cur < MP.FireI))
         {
             actionID = Transpose;
@@ -383,7 +383,7 @@ internal partial class BLM
         if (ActionReady(Blizzard3) && UmbralIceStacks < 3)
         {
             if (useSwiftcast &&
-                ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
+                ActionReady(Role.Swiftcast) && !LocalPlayer.HasStatus(Buffs.Triplecast) &&
                 HasBattleTarget() && InActionRange(Blizzard))
             {
                 actionID = Role.Swiftcast;
@@ -393,8 +393,8 @@ internal partial class BLM
             if (useTriplecast &&
                 ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
                 HasBattleTarget() && InActionRange(Blizzard) && !JustUsed(Triplecast) &&
-                !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
-                (triplecastIgnoreLeyLines || !HasStatusEffect(Buffs.LeyLines)) &&
+                !LocalPlayer.HasStatus(Role.Buffs.Swiftcast) && !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+                (triplecastIgnoreLeyLines || !LocalPlayer.HasStatus(Buffs.LeyLines)) &&
                 (!triplecastRequireChargeReserve || HasTriplecastChargesForMovement()) &&
                 JustUsed(Despair) && !JustUsed(Manafont))
             {
@@ -455,9 +455,9 @@ internal partial class BLM
         }
 
         if (ActionReady(Triplecast) &&
-            !HasStatusEffect(Buffs.Triplecast) &&
-            !HasStatusEffect(Role.Buffs.Swiftcast) &&
-            !HasStatusEffect(Buffs.LeyLines) &&
+            !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast) &&
+            !LocalPlayer.HasStatus(Buffs.LeyLines) &&
             !JustUsed(Triplecast))
         {
             actionID = Triplecast;
@@ -467,24 +467,24 @@ internal partial class BLM
         if (ActionLearned(Paradox) &&
             IsInFirePhase && IsParadoxActive &&
             MP.Cur >= MP.FireParadox &&
-            !HasStatusEffect(Buffs.Firestarter) &&
-            !HasStatusEffect(Buffs.Triplecast) &&
-            !HasStatusEffect(Role.Buffs.Swiftcast))
+            !LocalPlayer.HasStatus(Buffs.Firestarter) &&
+            !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
         {
             actionID = OriginalHook(Fire);
             return true;
         }
 
         if (ActionReady(Role.Swiftcast) &&
-            !HasStatusEffect(Buffs.Triplecast))
+            !LocalPlayer.HasStatus(Buffs.Triplecast))
         {
             actionID = Role.Swiftcast;
             return true;
         }
 
         if (HasPolyglot &&
-            !HasStatusEffect(Buffs.Triplecast) &&
-            !HasStatusEffect(Role.Buffs.Swiftcast))
+            !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
         {
             actionID = PolyglotSpell;
             return true;
@@ -501,7 +501,7 @@ internal partial class BLM
         IsMoving() && InCombat() &&
         InActionRange(Fire2) && HasBattleTarget() &&
         ActionReady(Triplecast) &&
-        !HasStatusEffect(Buffs.Triplecast) &&
+        !LocalPlayer.HasStatus(Buffs.Triplecast) &&
         !JustUsed(Triplecast);
 
     private static bool UseAoEManafont() =>
@@ -544,7 +544,7 @@ internal partial class BLM
         }
 
         if (useTriplecast &&
-            !HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
+            !LocalPlayer.HasStatus(Buffs.Triplecast) && ActionReady(Triplecast) &&
             HasBattleTarget() && InActionRange(Fire2) && !JustUsed(Triplecast) &&
             GetRemainingCharges(Triplecast) > triplecastHoldCharges &&
             IsUmbralHeartCapped && GetCooldownRemainingTime(Manafont) > GCD * 3)
@@ -647,15 +647,15 @@ internal partial class BLM
                   ActionReady(Despair) &&
                   TraitLevelChecked(Traits.EnhancedAstralFire) &&
                   IsInFirePhase && MP.Cur is >= 800 and < 1500 &&
-                  !HasStatusEffect(Buffs.Triplecast) &&
-                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast)),
 
         (Triplecast, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementTriplecast] &&
                   ActionReady(Triplecast) &&
-                  !HasStatusEffect(Buffs.Triplecast) &&
-                  !HasStatusEffect(Role.Buffs.Swiftcast) &&
-                  !HasStatusEffect(Buffs.LeyLines) &&
+                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast) &&
+                  !LocalPlayer.HasStatus(Buffs.LeyLines) &&
                   !JustUsed(Triplecast)),
 
         (OriginalHook(Fire), Preset.BLM_ST_Movement,
@@ -663,35 +663,35 @@ internal partial class BLM
                   ActionReady(OriginalHook(Paradox)) &&
                   IsInFirePhase && IsParadoxActive &&
                   MP.Cur >= MP.FireParadox &&
-                  !HasStatusEffect(Buffs.Firestarter) &&
-                  !HasStatusEffect(Buffs.Triplecast) &&
-                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+                  !LocalPlayer.HasStatus(Buffs.Firestarter) &&
+                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast)),
 
         (Role.Swiftcast, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementSwiftcast] &&
                   ActionReady(Role.Swiftcast) &&
-                  !HasStatusEffect(Buffs.Triplecast)),
+                  !LocalPlayer.HasStatus(Buffs.Triplecast)),
 
         (Xenoglossy, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementXenoglossy] &&
                   ActionReady(Xenoglossy) &&
                   HasPolyglot &&
-                  !HasStatusEffect(Buffs.Triplecast) &&
-                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast)),
 
         (Fire3, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementFire3] &&
                   ActionReady(Fire3) &&
                   IsInFirePhase &&
-                  HasStatusEffect(Buffs.Firestarter) &&
-                  !HasStatusEffect(Buffs.Triplecast) &&
-                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+                  LocalPlayer.HasStatus(Buffs.Firestarter) &&
+                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast)),
 
         (Scathe, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementScathe] &&
                   ActionReady(Scathe) &&
-                  !HasStatusEffect(Buffs.Triplecast) &&
-                  !HasStatusEffect(Role.Buffs.Swiftcast))
+                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
     ];
 
     private static bool TryMovementAction(int index, ref uint actionID)
@@ -736,10 +736,16 @@ internal partial class BLM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([7], () => HasStatusEffect(Buffs.LeyLines))
+            ([1], () => CountdownActive || InCombat() || !BLM_Opener_PrepullBlock),
+            ([8], () => HasStatusEffect(Buffs.LeyLines))
         ];
 
-        public override List<int> DelayedWeaveSteps { get; set; } = [7];
+        public override List<int> DelayedWeaveSteps { get; set; } = [8];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !BLM_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 4))
+        ];
 
         public override bool HasCooldowns() =>
             MP.Full &&
@@ -754,38 +760,39 @@ internal partial class BLM
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Fire3, // 1
-            () => HighThunder, // 2
-            () => Role.Swiftcast, // 3
-            () => Amplifier, // 4
-            () => Fire4, // 5
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 6
-            () => LeyLines, // 7
-            () => Fire4, // 8
+            () => All.Cease, // 1
+            () => Fire3, // 2
+            () => HighThunder, // 3
+            () => Role.Swiftcast, // 4
+            () => Amplifier, // 5
+            () => Fire4, // 6
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 7
+            () => LeyLines, // 8
             () => Fire4, // 9
             () => Fire4, // 10
             () => Fire4, // 11
-            () => Xenoglossy, // 12
-            () => Manafont, // 13
-            () => Fire4, // 14
-            () => FlareStar, // 15
-            () => Fire4, // 16
+            () => Fire4, // 12
+            () => Xenoglossy, // 13
+            () => Manafont, // 14
+            () => Fire4, // 15
+            () => FlareStar, // 16
             () => Fire4, // 17
-            () => HighThunder, // 18
-            () => Fire4, // 19
+            () => Fire4, // 18
+            () => HighThunder, // 19
             () => Fire4, // 20
             () => Fire4, // 21
             () => Fire4, // 22
-            () => FlareStar, // 23
-            () => Despair, // 24
-            () => Transpose, // 25
-            () => Triplecast, // 26
-            () => Blizzard3, // 27
-            () => Blizzard4, // 28
-            () => Paradox, // 29
-            () => Transpose, // 30
-            () => Paradox, // 31
-            () => Fire3 // 32
+            () => Fire4, // 23
+            () => FlareStar, // 24
+            () => Despair, // 25
+            () => Transpose, // 26
+            () => Triplecast, // 27
+            () => Blizzard3, // 28
+            () => Blizzard4, // 29
+            () => Paradox, // 30
+            () => Transpose, // 31
+            () => Paradox, // 32
+            () => Fire3 // 33
         ];
     }
 
@@ -793,37 +800,38 @@ internal partial class BLM
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Fire3, // 1
-            () => HighThunder, // 2
-            () => Role.Swiftcast, // 3
-            () => Amplifier, // 4
-            () => Fire4, // 5
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 6
-            () => LeyLines, // 7
-            () => Fire4, // 8
-            () => Xenoglossy, // 9
-            () => Fire4, // 10
+            () => All.Cease, // 1
+            () => Fire3, // 2
+            () => HighThunder, // 3
+            () => Role.Swiftcast, // 4
+            () => Amplifier, // 5
+            () => Fire4, // 6
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 7
+            () => LeyLines, // 8
+            () => Fire4, // 9
+            () => Xenoglossy, // 10
             () => Fire4, // 11
-            () => Despair, // 12
-            () => Manafont, // 13
-            () => Fire4, // 14
+            () => Fire4, // 12
+            () => Despair, // 13
+            () => Manafont, // 14
             () => Fire4, // 15
-            () => FlareStar, // 16
-            () => Fire4, // 17
-            () => HighThunder, // 18
-            () => Fire4, // 19
+            () => Fire4, // 16
+            () => FlareStar, // 17
+            () => Fire4, // 18
+            () => HighThunder, // 19
             () => Fire4, // 20
             () => Fire4, // 21
-            () => Paradox, // 22
-            () => Triplecast, // 23
-            () => Flare, // 24
-            () => FlareStar, // 25
-            () => Transpose, // 26
-            () => Blizzard3, // 27
-            () => Blizzard4, // 28
-            () => Paradox, // 29
-            () => Transpose, // 30
-            () => Fire3 // 31
+            () => Fire4, // 22
+            () => Paradox, // 23
+            () => Triplecast, // 24
+            () => Flare, // 25
+            () => FlareStar, // 26
+            () => Transpose, // 27
+            () => Blizzard3, // 28
+            () => Blizzard4, // 29
+            () => Paradox, // 30
+            () => Transpose, // 31
+            () => Fire3 // 32
         ];
     }
 

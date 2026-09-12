@@ -14,6 +14,7 @@ using System.Linq;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Data;
 using GameMain = FFXIVClientStructs.FFXIV.Client.Game.GameMain;
+using WrathCombo.Extensions;
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
@@ -64,11 +65,11 @@ internal abstract partial class CustomComboFunctions
     {
         return Player.Job switch
         {
-            Job.GLA or Job.PLD => HasStatusEffect(PLD.Buffs.IronWill),
-            Job.MRD or Job.WAR => HasStatusEffect(WAR.Buffs.Defiance),
-            Job.DRK => HasStatusEffect(DRK.Buffs.Grit),
-            Job.GNB => HasStatusEffect(GNB.Buffs.RoyalGuard),
-            Job.BLU => HasStatusEffect(BLU.Buffs.TankMimicry),
+            Job.GLA or Job.PLD => LocalPlayer.HasStatus(PLD.Buffs.IronWill),
+            Job.MRD or Job.WAR => LocalPlayer.HasStatus(WAR.Buffs.Defiance),
+            Job.DRK => LocalPlayer.HasStatus(DRK.Buffs.Grit),
+            Job.GNB => LocalPlayer.HasStatus(GNB.Buffs.RoyalGuard),
+            Job.BLU => LocalPlayer.HasStatus(BLU.Buffs.TankMimicry),
             _ => false
         };
     }

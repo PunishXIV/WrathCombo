@@ -392,7 +392,7 @@ internal partial class SMN
         {
            #region Searing Light
 
-            if (searingLightEnabled && ActionReady(SearingLight) && !HasStatusEffect(Buffs.SearingLight, anyOwner: true))
+            if (searingLightEnabled && ActionReady(SearingLight) && !LocalPlayer.HasStatus(Buffs.SearingLight, true))
             {
                 if (!SearingLightBurstEnabled || !TraitLevelChecked(Traits.EnhancedDreadwyrmTrance))
                 {
@@ -415,7 +415,7 @@ internal partial class SMN
                 //Too low level for searing
                 //Searing cd is over 30 seconds (used for the 1 min)
                 //Searing light is active
-                if (!ogcdPoolingEnabled || !ActionLearned(SearingLight) || SearingCD > 30 || HasStatusEffect(Buffs.SearingLight, anyOwner: true))
+                if (!ogcdPoolingEnabled || !ActionLearned(SearingLight) || SearingCD > 30 || LocalPlayer.HasStatus(Buffs.SearingLight, true))
                 {
                     if (flags.HasFlag(Combo.ST) || flags.HasFlag(Combo.AoE) && !ActionLearned(EnergySiphon))
                     {
@@ -434,7 +434,7 @@ internal partial class SMN
             #region Demi Summon Attacks
             
             if (demiSummonsAttacksEnabled && DemiExists && !JustUsed(SearingLight, 1.5f) &&
-                (HasStatusEffect(Buffs.SearingLight, anyOwner: true) || //Searing is active
+                (LocalPlayer.HasStatus(Buffs.SearingLight, true) || //Searing is active
                  SearingCD > Gauge.SummonTimerRemaining / 1000f + GCDTotal || //There is not enough time left in demi phase for searing to happen
                  !ActionLearned(SearingLight)))  // Full send if searing light isnt of level
             {
@@ -470,12 +470,12 @@ internal partial class SMN
             #endregion
             
             #region Fester and Painflare
-            if (energyDrainEnabled && ActionReady(OriginalHook(Fester)) && !HasStatusEffect(Buffs.TitansFavor))
+            if (energyDrainEnabled && ActionReady(OriginalHook(Fester)) && !LocalPlayer.HasStatus(Buffs.TitansFavor))
             {
                 //Fire asap without pooling
                 //Too low level for Searing Light
                 //You have Searing Light
-                if (!ogcdPoolingEnabled || !ActionLearned(SearingLight) || HasStatusEffect(Buffs.SearingLight, anyOwner: true))
+                if (!ogcdPoolingEnabled || !ActionLearned(SearingLight) || LocalPlayer.HasStatus(Buffs.SearingLight, true))
                 {
                     if (flags.HasFlag(Combo.ST) || flags.HasFlag(Combo.AoE) && !ActionLearned(Painflare))
                     {
@@ -492,7 +492,7 @@ internal partial class SMN
             #endregion
             
             #region Searing Flash
-            if (searingFlashEnabled && HasStatusEffect(Buffs.RubysGlimmer))
+            if (searingFlashEnabled && LocalPlayer.HasStatus(Buffs.RubysGlimmer))
             {
                 actionID = SearingFlash;
                 return true;
@@ -536,7 +536,7 @@ internal partial class SMN
             
             if (luxSolarisEnabled && ActionReady(LuxSolaris) &&
                 (PlayerHealthPercentageHp() < 100 || //uses early if you drop below max health indicating raid damage
-                 GetStatusEffectRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)) // use before it runs out, hopefully tanks could get some at least
+                 LocalPlayer.Status(Buffs.RefulgentLux).RemainingTimeOrZero() is < 3 and > 0)) // use before it runs out, hopefully tanks could get some at least
             {
                 actionID = OriginalHook(LuxSolaris);
                 return true;
@@ -545,7 +545,7 @@ internal partial class SMN
             
             #region Radiant Aegis Overcap
             if (radiantAegisEnabled && 
-                !HasStatusEffect(Buffs.SearingLight) && !HasStatusEffect(Buffs.TitansFavor) && // Dont use in window or when titan needs to do the mountainbuster
+                !LocalPlayer.HasStatus(Buffs.SearingLight) && !LocalPlayer.HasStatus(Buffs.TitansFavor) && // Dont use in window or when titan needs to do the mountainbuster
                 GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis)) // The shield is super long so no waiting on raidwide
             {
                 actionID = RadiantAegis;
@@ -675,14 +675,14 @@ internal partial class SMN
         #region Garuda Phase
         if (IsGarudaAttuned || OriginalHook(AstralFlow) is Slipstream)
         {
-            if (egiAstralFlowEnabled && slipstreamEnabled && HasStatusEffect(Buffs.GarudasFavor))
+            if (egiAstralFlowEnabled && slipstreamEnabled && LocalPlayer.HasStatus(Buffs.GarudasFavor))
             {
                 if (swiftcastEgiEnabled && swiftcastPhase is 1 or 3 && Role.CanSwiftcast()) // Forced Swiftcast option
                 {
                     actionID = Role.Swiftcast;
                     return true;
                 }
-                if (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast))
+                if (!IsMoving() || LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
                 {
                     actionID = OriginalHook(AstralFlow);
                     return true;
@@ -711,7 +711,7 @@ internal partial class SMN
                     return true;
                 }
             }
-            if (ruin4Enabled && HasStatusEffect(Buffs.FurtherRuin) && IsMoving())
+            if (ruin4Enabled && LocalPlayer.HasStatus(Buffs.FurtherRuin) && IsMoving())
             {
                 actionID = Ruin4;
                 return true;
@@ -728,7 +728,7 @@ internal partial class SMN
                 return true;
             }
 
-            if (egiSummonAttacksEnabled && GemshineReady && (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
+            if (egiSummonAttacksEnabled && GemshineReady && (!IsMoving() || LocalPlayer.HasStatus(Role.Buffs.Swiftcast)))
             {
                 if (flags.HasFlag(Combo.ST))
                 {
@@ -742,15 +742,15 @@ internal partial class SMN
                 }
             }
 
-            if (IfritAstralFlowCyclone && HasStatusEffect(Buffs.IfritsFavor) &&
+            if (IfritAstralFlowCyclone && LocalPlayer.HasStatus(Buffs.IfritsFavor) &&
                 GetTargetDistance() <= crimsonCycloneMeleeDistance  //Melee Check
-                || IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange()) //After Strike
+                || IfritAstralFlowStrike && LocalPlayer.HasStatus(Buffs.CrimsonStrike) && InMeleeRange()) //After Strike
             {
                 actionID = OriginalHook(AstralFlow);
                 return true;
             }
 
-            if (ruin4Enabled && HasStatusEffect(Buffs.FurtherRuin) && !HasStatusEffect(Role.Buffs.Swiftcast))
+            if (ruin4Enabled && LocalPlayer.HasStatus(Buffs.FurtherRuin) && !LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
             {
                 actionID = Ruin4;
                 return true;
@@ -760,7 +760,7 @@ internal partial class SMN
         
         #region Ruin 4 Dump
         //Dump for ruin 4 if all your summons are done and you arent ready to demi yet. 
-        if (ruin4Enabled && !IsAttunedAny && DemiNone && HasStatusEffect(Buffs.FurtherRuin) && !CanSummonEgi)
+        if (ruin4Enabled && !IsAttunedAny && DemiNone && LocalPlayer.HasStatus(Buffs.FurtherRuin) && !CanSummonEgi)
         {
             actionID = Ruin4;
             return true;
@@ -780,52 +780,30 @@ internal partial class SMN
         return Opener1.LevelChecked ? Opener1 : WrathOpener.Dummy;
     }
 
-    internal class SMNOpenerMaxLevel1 : WrathOpener
+    internal abstract class SMNOpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Ruin3, // 1
-            () => SummonSolarBahamut, // 2
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 3
-            () => UmbralImpulse, // 4
-            () => SearingLight, // 5
-            () => UmbralImpulse, // 6
-            () => UmbralImpulse, // 7
-            () => EnergyDrain, // 8
-            () => UmbralImpulse, // 9
-            () => EnkindleSolarBahamut, // 10
-            () => Necrotize, // 11
-            () => UmbralImpulse, // 12
-            () => Sunflare, // 13
-            () => Necrotize, // 14
-            () => UmbralImpulse, // 15
-            () => SearingFlash, // 16
-            () => SummonTitan2, // 17
-            () => TopazRite, // 18
-            () => MountainBuster, // 19
-            () => TopazRite, // 20
-            () => MountainBuster, // 21
-            () => TopazRite, // 22
-            () => MountainBuster, // 23
-            () => TopazRite, // 24
-            () => MountainBuster, // 25
-            () => SummonGaruda2, // 26
-            () => Role.Swiftcast, // 27
-            () => Slipstream, // 28
-
-        ];
-
-        public override List<int> DelayedWeaveSteps { get; set; } =
-        [
-            4,
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([26], () => SMN_Opener_SkipSwiftcast == 2)];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData? ContentCheckConfig => SMN_Balance_Content;
         internal override bool IncludePot => SMN_Opener_Potion;
         public override Preset Preset => Preset.SMN_ST_Advanced_Combo_Balance_Opener;
+
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            5,
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !SMN_Opener_PrepullBlock),
+            ([28], () => SMN_Opener_SkipSwiftcast == 2)
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !SMN_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1.5f))
+        ];
+
         public override bool HasCooldowns()
         {
             if (!HasPetPresent())
@@ -840,6 +818,42 @@ internal partial class SMN
 
             return true;
         }
+    }
+
+    internal class SMNOpenerMaxLevel1 : SMNOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Ruin3, // 2
+            () => SummonSolarBahamut, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 4
+            () => UmbralImpulse, // 5
+            () => SearingLight, // 6
+            () => UmbralImpulse, // 7
+            () => UmbralImpulse, // 8
+            () => EnergyDrain, // 9
+            () => UmbralImpulse, // 10
+            () => EnkindleSolarBahamut, // 11
+            () => Necrotize, // 12
+            () => UmbralImpulse, // 13
+            () => Sunflare, // 14
+            () => Necrotize, // 15
+            () => UmbralImpulse, // 16
+            () => SearingFlash, // 17
+            () => SummonTitan2, // 18
+            () => TopazRite, // 19
+            () => MountainBuster, // 20
+            () => TopazRite, // 21
+            () => MountainBuster, // 22
+            () => TopazRite, // 23
+            () => MountainBuster, // 24
+            () => TopazRite, // 25
+            () => MountainBuster, // 26
+            () => SummonGaruda2, // 27
+            () => Role.Swiftcast, // 28
+            () => Slipstream, // 29
+        ];
     }
     #endregion
 }

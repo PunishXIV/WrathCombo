@@ -3,6 +3,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.RPRPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -86,12 +87,12 @@ internal static class RPRPvP
 
             #region Variables
             bool canWeave = CanWeave();                    
-            bool canBind = !HasStatusEffect(PvPCommon.Debuffs.Bind, CurrentTarget);
+            bool canBind = !CurrentTarget.HasStatus(PvPCommon.Debuffs.Bind);
             bool deathWarrantReady = IsOffCooldown(DeathWarrant);
             bool plentifulReady = IsOffCooldown(PlentifulHarvest);
-            bool enshrouded = HasStatusEffect(Buffs.Enshrouded);
-            float enshroudStacks = GetStatusEffectStacks(Buffs.Enshrouded);
-            float immortalStacks = GetStatusEffectStacks(Buffs.ImmortalSacrifice);
+            bool enshrouded = LocalPlayer.HasStatus(Buffs.Enshrouded);
+            float enshroudStacks = LocalPlayer.Status(Buffs.Enshrouded).Stacks;
+            float immortalStacks = LocalPlayer.Status(Buffs.ImmortalSacrifice).Stacks;
             int immortalThreshold = RPRPvP_ImmortalStackThreshold;
             #endregion
 
@@ -118,7 +119,7 @@ internal static class RPRPvP
                     {
                         // Enshrouded Death Warrant Option
                         if (IsEnabled(Preset.RPRPvP_Burst_Enshrouded_DeathWarrant) &&
-                            deathWarrantReady && enshroudStacks >= 3 && InActionRange(DeathWarrant) || HasStatusEffect(Buffs.DeathWarrant) && GetStatusEffectRemainingTime(Buffs.DeathWarrant) <= 3)
+                            deathWarrantReady && enshroudStacks >= 3 && InActionRange(DeathWarrant) || LocalPlayer.HasStatus(Buffs.DeathWarrant) && LocalPlayer.Status(Buffs.DeathWarrant).RemainingTimeOrZero() <= 3)
                             return OriginalHook(DeathWarrant);
 
                         // Lemure's Slice
@@ -132,7 +133,7 @@ internal static class RPRPvP
                     {
                         // Holds Communio when moving & Enshrouded Time Remaining > 2s
                         // Returns a Void/Cross Reaping if under 2s to avoid charge waste
-                        if (IsMoving() && GetStatusEffectRemainingTime(Buffs.Enshrouded) > 2)
+                        if (IsMoving() && LocalPlayer.Status(Buffs.Enshrouded).RemainingTimeOrZero() > 2)
                             return All.Cease;
 
                         // Returns Communio if stationary
@@ -144,7 +145,7 @@ internal static class RPRPvP
                 // Outside of Enshroud
                 if (!enshrouded)
                 {
-                    if (HasStatusEffect(Buffs.PerfectioParata))
+                    if (LocalPlayer.HasStatus(Buffs.PerfectioParata))
                         return OriginalHook(TenebraeLemurum);
 
                     // Pooling Plentiful with Death warrant
@@ -157,7 +158,7 @@ internal static class RPRPvP
                             return OriginalHook(DeathWarrant);
 
                         if (plentifulReady && immortalStacks >= immortalThreshold &&
-                            HasStatusEffect(Debuffs.DeathWarrant, CurrentTarget) && InActionRange(PlentifulHarvest))
+                            CurrentTarget.HasStatus(Debuffs.DeathWarrant) && InActionRange(PlentifulHarvest))
                             return PlentifulHarvest;
                     }
 

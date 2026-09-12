@@ -4,6 +4,7 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
 using ContentHelper = ECommons.GameHelpers;
 using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -56,7 +57,7 @@ internal static partial class Bozja
                                 return true;
                             }
 
-                        if (IsEnabledAndUsable(Preset.Bozja_Tank_BannerOfHonedAcuity, BannerOfHonedAcuity) && !HasStatusEffect(Buffs.BannerOfTranscendentFinesse))
+                        if (IsEnabledAndUsable(Preset.Bozja_Tank_BannerOfHonedAcuity, BannerOfHonedAcuity) && !LocalPlayer.HasStatus(Buffs.BannerOfTranscendentFinesse))
                         {
                             actionID = BannerOfHonedAcuity;
                             return true;
@@ -67,12 +68,12 @@ internal static partial class Bozja
                     {
                         (Preset.Bozja_Tank_LostDeath, LostDeath, true),
                         (Preset.Bozja_Tank_LostCure, LostCure, PlayerHealthPercentageHp() <= Config.Bozja_Tank_LostCure_Health),
-                        (Preset.Bozja_Tank_LostArise, LostArise, GetTargetHPPercent() == 0 && !HasStatusEffect(RoleActions.Magic.Buffs.Raise)),
+                        (Preset.Bozja_Tank_LostArise, LostArise, GetTargetHPPercent() == 0 && !LocalPlayer.HasStatus(RoleActions.Magic.Buffs.Raise)),
                         (Preset.Bozja_Tank_LostReraise, LostReraise, PlayerHealthPercentageHp() <= Config.Bozja_Tank_LostReraise_Health),
-                        (Preset.Bozja_Tank_LostProtect, LostProtect, !HasStatusEffect(Buffs.LostProtect)),
-                        (Preset.Bozja_Tank_LostShell, LostShell, !HasStatusEffect(Buffs.LostShell)),
-                        (Preset.Bozja_Tank_LostBravery, LostBravery, !HasStatusEffect(Buffs.LostBravery)),
-                        (Preset.Bozja_Tank_LostBubble, LostBubble, !HasStatusEffect(Buffs.LostBubble)),
+                        (Preset.Bozja_Tank_LostProtect, LostProtect, !LocalPlayer.HasStatus(Buffs.LostProtect)),
+                        (Preset.Bozja_Tank_LostShell, LostShell, !LocalPlayer.HasStatus(Buffs.LostShell)),
+                        (Preset.Bozja_Tank_LostBravery, LostBravery, !LocalPlayer.HasStatus(Buffs.LostBravery)),
+                        (Preset.Bozja_Tank_LostBubble, LostBubble, !LocalPlayer.HasStatus(Buffs.LostBubble)),
                         (Preset.Bozja_Tank_LostParalyze3, LostParalyze3, !JustUsed(LostParalyze3, 60f))
                     })
                         if (IsEnabledAndUsable(preset, action) && condition)
@@ -81,13 +82,13 @@ internal static partial class Bozja
                             return true;
                         }
 
-                    if (IsEnabled(Preset.Bozja_Tank_LostSpellforge) && CanUse(LostSpellforge) && (!HasStatusEffect(Buffs.LostSpellforge) || !HasStatusEffect(Buffs.LostSteelsting)))
+                    if (IsEnabled(Preset.Bozja_Tank_LostSpellforge) && CanUse(LostSpellforge) && (!LocalPlayer.HasStatus(Buffs.LostSpellforge) || !LocalPlayer.HasStatus(Buffs.LostSteelsting)))
                     {
                         actionID = LostSpellforge;
                         return true;
                     }
 
-                    if (IsEnabled(Preset.Bozja_Tank_LostSteelsting) && CanUse(LostSteelsting) && (!HasStatusEffect(Buffs.LostSpellforge) || !HasStatusEffect(Buffs.LostSteelsting)))
+                    if (IsEnabled(Preset.Bozja_Tank_LostSteelsting) && CanUse(LostSteelsting) && (!LocalPlayer.HasStatus(Buffs.LostSpellforge) || !LocalPlayer.HasStatus(Buffs.LostSteelsting)))
                     {
                         actionID = LostSteelsting;
                         return true;

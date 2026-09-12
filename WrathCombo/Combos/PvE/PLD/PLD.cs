@@ -24,7 +24,7 @@ internal partial class PLD : Tank
             const Combo comboFlags = Combo.ST | Combo.Simple;
 
             if (IsEnabled(Preset.PLD_BlockForWings) &&
-                (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
+                (LocalPlayer.HasStatus(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
                 return All.Cease;
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
@@ -57,7 +57,7 @@ internal partial class PLD : Tank
             const Combo comboFlags = Combo.AoE | Combo.Simple;
 
             if (IsEnabled(Preset.PLD_BlockForWings) &&
-                (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
+                (LocalPlayer.HasStatus(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
                 return All.Cease;
 
 
@@ -93,7 +93,7 @@ internal partial class PLD : Tank
 
             const Combo comboFlags = Combo.ST | Combo.Adv;
 
-            if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
+            if (IsEnabled(Preset.PLD_BlockForWings) && (LocalPlayer.HasStatus(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
                 return All.Cease;
 
             //Opener
@@ -130,7 +130,7 @@ internal partial class PLD : Tank
 
             const Combo comboFlags = Combo.AoE | Combo.Adv;
 
-            if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
+            if (IsEnabled(Preset.PLD_BlockForWings) && (LocalPlayer.HasStatus(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
                 return All.Cease;
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
@@ -215,17 +215,17 @@ internal partial class PLD : Tank
                 if (ActionReady(FightOrFlight) && ActionReady(OriginalHook(Requiescat)))
                     return FightOrFlight;
 
-                if (PLD_Requiescat_SubOption_GoringBlade && HasStatusEffect(Buffs.GoringBladeReady) && InMeleeRange() &&
-                    !HasStatusEffect(Buffs.Requiescat) && !ActionReady(OriginalHook(Requiescat)))
+                if (PLD_Requiescat_SubOption_GoringBlade && LocalPlayer.HasStatus(Buffs.GoringBladeReady) && InMeleeRange() &&
+                    !LocalPlayer.HasStatus(Buffs.Requiescat) && !ActionReady(OriginalHook(Requiescat)))
                     return GoringBlade;
             }
 
             // Confiteor & Blades
-            if (HasStatusEffect(Buffs.ConfiteorReady) || ActionLearned(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)
+            if (LocalPlayer.HasStatus(Buffs.ConfiteorReady) || ActionLearned(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)
                 return NextConfiteorBlade();
 
             // Pre-Blades
-            return HasStatusEffect(Buffs.Requiescat)
+            return LocalPlayer.HasStatus(Buffs.Requiescat)
                 // AoE
                 ? ActionLearned(HolyCircle) && NumberOfEnemiesInRange(HolyCircle) > 2
                     ? HolyCircle
@@ -282,7 +282,7 @@ internal partial class PLD : Tank
                     : null);
             
             if (PLD_ShieldLob_Feature_HolySpirit && ActionLearned(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && 
-                (TimeMoving.Ticks == 0 || HasStatusEffect(Buffs.DivineMight)))
+                (TimeMoving.Ticks == 0 || LocalPlayer.HasStatus(Buffs.DivineMight)))
                 return target != null 
                     ? HolySpirit.Retarget(ShieldLob, target)
                     : HolySpirit;
@@ -352,7 +352,7 @@ internal partial class PLD : Tank
             // Intervention if trying to Buff an ally
             if (ActionReady(Intervention) &&
                 target != null &&
-                CanApplyStatus(target, Buffs.Intervention))
+                target.CanApplyStatus(Buffs.Intervention))
                 return Intervention.Retarget([Sheltron, HolySheltron], target);
 
             return action;
@@ -407,7 +407,7 @@ internal partial class PLD : Tank
 
             if (ActionReady(PassageOfArms) &&
                 IsEnabled(Preset.PLD_Mit_Party_Wings) &&
-                !HasStatusEffect(Buffs.PassageOfArms, anyOwner: true))
+                !LocalPlayer.HasStatus(Buffs.PassageOfArms, true))
                 return PassageOfArms;
 
             return action;

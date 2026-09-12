@@ -52,8 +52,8 @@ internal partial class SCH
     internal static bool ShieldCheck => GetPartyBuffPercent(Buffs.Galvanize) <= SCH_AoE_Heal_SuccorShieldOption &&
                                         GetPartyBuffPercent(SGE.Buffs.EukrasianPrognosis) <= SCH_AoE_Heal_SuccorShieldOption;
     internal static bool CanChainStrategem => ActionReady(ChainStratagem) &&
-                                              CanApplyStatus(CurrentTarget, Debuffs.ChainStratagem) &&
-                                              !HasStatusEffect(Debuffs.ChainStratagem, CurrentTarget, true);
+                                              CurrentTarget.CanApplyStatus(Debuffs.ChainStratagem) &&
+                                              !CurrentTarget.HasStatus(Debuffs.ChainStratagem, true);
 
     internal static float AetherflowCD => GetCooldownRemainingTime(Aetherflow);
     
@@ -101,10 +101,10 @@ internal partial class SCH
         var hpThreshold = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? ComputeHpThreshold(CurrentTarget) : 0;
         BioList.TryGetValue(dotAction, out var dotDebuffID);
         var dotRefresh = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? SCH_ST_DPS_BioUptime_Threshold : 2.5;
-        var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
+        var dotRemaining = CurrentTarget.Status(dotDebuffID).RemainingTimeOrZero();
 
         return ActionReady(dotAction) &&
-               CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               CurrentTarget.CanApplyStatus(dotDebuffID) &&
                !JustUsedOn(dotAction, CurrentTarget, 5f) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
@@ -130,12 +130,12 @@ internal partial class SCH
         IGameObject? healTarget = target ?? SimpleTarget.Stack.AllyToHeal;
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
         bool ShieldCheck = !SCH_ST_Heal_AldoquimOpts[0] || 
-                           !HasStatusEffect(Buffs.Galvanize, healTarget, true) || 
-                           HasStatusEffect(Buffs.EmergencyTactics);
+                           !healTarget.HasStatus(Buffs.Galvanize, true) || 
+                           LocalPlayer.HasStatus(Buffs.EmergencyTactics);
         bool SageShieldCheck = !SCH_ST_Heal_AldoquimOpts[1] ||
-                               !HasStatusEffect(SGE.Buffs.EukrasianDiagnosis, healTarget, true) || 
-                               !HasStatusEffect(SGE.Buffs.EukrasianPrognosis, healTarget, true) ||
-                               HasStatusEffect(Buffs.EmergencyTactics);
+                               !healTarget.HasStatus(SGE.Buffs.EukrasianDiagnosis, true) || 
+                               !healTarget.HasStatus(SGE.Buffs.EukrasianPrognosis, true) ||
+                               LocalPlayer.HasStatus(Buffs.EmergencyTactics);
         bool EmergencyAdlo = SCH_ST_Heal_AldoquimOpts[2] && ActionReady(EmergencyTactics) &&
                              GetTargetHPPercent(healTarget, SCH_ST_Heal_IncludeShields) <=
                              SCH_ST_Heal_AdloquiumOption_Emergency;
@@ -149,7 +149,7 @@ internal partial class SCH
             case 1:
                 action = Excogitation;
                 enabled = IsEnabled(Preset.SCH_ST_Heal_Excogitation) && 
-                          (HasAetherflow || HasStatusEffect(Buffs.Recitation)) &&
+                          (HasAetherflow || LocalPlayer.HasStatus(Buffs.Recitation)) &&
                           (tankCheck || !IsInParty() || !SCH_ST_Heal_ExcogitationTankOption) &&
                           (!SCH_ST_Heal_ExcogitationBossOption || !InBossEncounter());;
                 return SCH_ST_Heal_ExcogitationOption;
@@ -270,51 +270,30 @@ internal partial class SCH
         return WrathOpener.Dummy;
     }
 
-    internal class SCHOpenerMaxLevel1 : WrathOpener
+    internal abstract class SCHOpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Broil4, // 1
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 2
-            () => Biolysis, // 3
-            () => Dissipation, // 4
-            () => Broil4, // 5
-            () => ChainStratagem, // 6
-            () => Broil4, // 7
-            () => EnergyDrain, // 8
-            () => Broil4, // 9
-            () => EnergyDrain, // 10
-            () => Broil4, // 11
-            () => EnergyDrain, // 12
-            () => Broil4, // 13
-            () => Aetherflow, // 14
-            () => Broil4, // 15
-            () => BanefulImpaction, // 16
-            () => Broil4, // 17
-            () => EnergyDrain, // 18
-            () => Broil4, // 19
-            () => EnergyDrain, // 20
-            () => Broil4, // 21
-            () => EnergyDrain, // 22
-            () => Biolysis // 23
-        ];
-
-        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
-        [
-            ([3], Aetherflow, () => SCH_ST_DPS_OpenerOption == 1),
-            ([13], Dissipation, () => SCH_ST_DPS_OpenerOption == 1)
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([7,9,11,17,19,21], () => Gauge.Aetherflow == 0)
-        ];
-
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         public override Preset Preset => Preset.SCH_ST_ADV_DPS_Balance_Opener;
         internal override UserData ContentCheckConfig => SCH_ST_DPS_OpenerContent;
         internal override bool IncludePot => SCH_Opener_Potion;
+
+        internal static uint BiolysisOrAetherflow =>
+            SCH_ST_DPS_OpenerOption == 1 ? Aetherflow : Biolysis;
+
+        internal static uint Broil4OrDissipation =>
+            SCH_ST_DPS_OpenerOption == 1 ? Dissipation : Broil4;
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => CountdownActive || InCombat() || !SCH_Opener_PrepullBlock),
+            ([8, 10, 12, 18, 20, 22], () => Gauge.Aetherflow == 0)
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !SCH_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 1.5f))
+        ];
 
         public override bool HasCooldowns()
         {
@@ -328,6 +307,37 @@ internal partial class SCH
 
             return true;
         }
+    }
+
+    internal class SCHOpenerMaxLevel1 : SCHOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Broil4, // 2
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 3
+            () => BiolysisOrAetherflow, // 4
+            () => Dissipation, // 5
+            () => Broil4, // 6
+            () => ChainStratagem, // 7
+            () => Broil4, // 8
+            () => EnergyDrain, // 9
+            () => Broil4, // 10
+            () => EnergyDrain, // 11
+            () => Broil4, // 12
+            () => EnergyDrain, // 13
+            () => Broil4OrDissipation, // 14
+            () => Aetherflow, // 15
+            () => Broil4, // 16
+            () => BanefulImpaction, // 17
+            () => Broil4, // 18
+            () => EnergyDrain, // 19
+            () => Broil4, // 20
+            () => EnergyDrain, // 21
+            () => Broil4, // 22
+            () => EnergyDrain, // 23
+            () => Biolysis // 24
+        ];
     }
     
     #endregion

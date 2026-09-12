@@ -64,7 +64,9 @@ public abstract class WrathOpener
         get => currentState switch
         {
             OpenerState.OpenerReady when openerStep > 1 &&
-                                         openerStep <= OpenerActions.Count =>
+                                         openerStep <= OpenerActions.Count &&
+                                         !Enumerable.Range(0, openerStep - 1)
+                                             .All(i => OpenerActions[i].Invoke() == All.Cease) =>
                 OpenerState.InOpener,
             _ => currentState,
         };
@@ -128,17 +130,15 @@ public abstract class WrathOpener
     public virtual List<int> DelayedWeaveSteps { get; set; } = new List<int>();
     public virtual List<int> VeryDelayedWeaveSteps { get; set; } = new List<int>(); //for very late-weaving
 
-    public virtual List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } = new();
-
     public virtual List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } = new();
 
     public virtual List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = new();
 
     public virtual List<int> AllowUpgradeSteps { get; set; } = new();
 
-    private int DelayedStep = 0;
-    private DateTime DelayedAt;
-    private float DelayedSecs = 0;
+    public int DelayedStep = 0;
+    public DateTime DelayedAt;
+    public float DelayedSecs = 0;
 
     public uint CurrentOpenerAction
     {
@@ -203,6 +203,23 @@ public abstract class WrathOpener
                 return false;
             }
 
+            foreach (var (Steps, HoldDelay) in PrepullDelays.Where(x => x.Steps.Any(y => y == OpenerStep)))
+            {
+                if (DelayedStep != OpenerStep)
+                {
+                    DelayedAt = DateTime.Now;
+                    DelayedStep = OpenerStep;
+                    DelayedSecs = HoldDelay();
+                }
+
+                if (DelayedStep == OpenerStep && (DateTime.Now - DelayedAt).TotalSeconds < DelayedSecs && !PartyInCombat())
+                {
+                    ActionWatching.TimeLastActionUsed = DateTime.Now; //Hacky workaround for TN jobs
+                    actionID = All.Cease;
+                    return true;
+                }
+            }
+
             if (OpenerStep > 1)
             {
                 bool prevStepSkipping = SkipSteps.FindFirst(x => x.Steps.FindFirst(y => y == OpenerStep - 1, out var t), out var p);
@@ -212,6 +229,7 @@ public abstract class WrathOpener
                 if (!prevStepSkipping)
                 {
                     bool delay = PrepullDelays.FindFirst(x => x.Steps.Any(y => y == DelayedStep && y == OpenerStep), out var hold);
+                    Svc.Log.Debug($"Delay: {delay} - {OpenerStep}");
                     if ((!delay && ActionWatching.TimeSinceLastAction.TotalSeconds >= Service.Configuration.OpenerTimeout) || (delay && (DateTime.Now - DelayedAt).TotalSeconds > DelayedSecs + Service.Configuration.OpenerTimeout))
                     {
                         CurrentState = OpenerState.FailedOpener;
@@ -236,7 +254,7 @@ public abstract class WrathOpener
                     {
                         Svc.Log.Debug($"Skipping from Opener Step {OpenerStep} to {OpenerStep + 1}");
                         OpenerStep++;
-                        skipped = true;
+                        return false;
                     }
 
                     if (OpenerStep > OpenerActions.Count)
@@ -261,33 +279,6 @@ public abstract class WrathOpener
                     return true;
                 }
 
-                foreach (var (Steps, NewAction, Condition) in SubstitutionSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
-                {
-                    if (Condition())
-                    {
-                        CurrentOpenerAction = actionID = NewAction;
-                        break;
-                    }
-                    else
-                        CurrentOpenerAction = OpenerActions[OpenerStep - 1].Invoke();
-                }
-
-                foreach (var (Steps, HoldDelay) in PrepullDelays.Where(x => x.Steps.Any(y => y == OpenerStep)))
-                {
-                    if (DelayedStep != OpenerStep)
-                    {
-                        DelayedAt = DateTime.Now;
-                        DelayedStep = OpenerStep;
-                        DelayedSecs = HoldDelay();
-                    }
-
-                    if ((DateTime.Now - DelayedAt).TotalSeconds < DelayedSecs && !PartyInCombat())
-                    {
-                        ActionWatching.TimeLastActionUsed = DateTime.Now; //Hacky workaround for TN jobs
-                        actionID = All.Cease;
-                        return true;
-                    }
-                }
 
                 if (CurrentOpenerAction == RoleActions.Melee.TrueNorth && !TargetNeedsPositionals())
                 {
@@ -318,13 +309,15 @@ public abstract class WrathOpener
         return false;
     }
 
-    public void ResetOpener()
+    public void ResetOpener(bool stayReady = false)
     {
         Svc.Log.Debug($"Opener Reset");
         DelayedStep = 0;
-        OpenerStep = 0;
-        CurrentOpenerAction = 0;
-        CurrentState = OpenerState.OpenerNotReady;
+        DelayedAt = DateTime.MinValue;
+        DelayedSecs = 0;
+        OpenerStep = stayReady ? 1 : 0;
+        CurrentOpenerAction = stayReady ? OpenerActions[0].Invoke() : 0;
+        CurrentState = stayReady ? CurrentState : OpenerState.OpenerNotReady;
     }
 
     internal static void SelectOpener()

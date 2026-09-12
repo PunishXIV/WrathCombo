@@ -20,6 +20,7 @@ internal partial class RPR
                 case Preset.RPR_ST_Opener:
                     DrawBossOnlyChoice(RPR_Balance_Content);
                     DrawOpenerPotionChoice(RPR_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(RPR_Opener_PrepullBlock);
                     break;
 
                 case Preset.RPR_ST_ArcaneCircle:
@@ -170,6 +171,7 @@ internal partial class RPR
 
         public static UserBool
             RPR_Opener_Potion = new("RPR_Opener_Potion"),
+            RPR_Opener_PrepullBlock = new("RPR_Opener_PrepullBlock", true),
             RPR_ST_TrueNorthDynamicHoldCharge = new("RPR_ST_TrueNorthDynamicHoldCharge"),
             RPR_ST_EnhancedHarpe = new("RPR_ST_EnhancedHarpe");
 

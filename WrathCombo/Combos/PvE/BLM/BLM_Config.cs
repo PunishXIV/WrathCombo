@@ -19,6 +19,7 @@ internal partial class BLM
                 case Preset.BLM_ST_Opener:
                     DrawBossOnlyChoice(BLM_Balance_Content);
                     DrawOpenerPotionChoice(BLM_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(BLM_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(BLM_SelectedOpener,
@@ -332,6 +333,7 @@ internal partial class BLM
 
         public static UserBool
             BLM_Opener_Potion = new("BLM_Opener_Potion"),
+            BLM_Opener_PrepullBlock = new("BLM_Opener_PrepullBlock", true),
             BLM_AM_FieldMouseover = new("BLM_AM_FieldMouseover"),
             BLM_AmplifierXenoCD = new("BLM_AmplifierXenoCD"),
             BLM_Fire4_FlareStar = new("BLM_Fire4_FlareStar"),

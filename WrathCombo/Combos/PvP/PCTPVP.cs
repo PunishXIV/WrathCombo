@@ -2,6 +2,7 @@
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.PCTPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -84,12 +85,12 @@ internal static class PCTPvP
             #region Variables
             bool isMoving = IsMoving();
             bool hasTarget = HasTarget();
-            bool hasStarPrism = HasStatusEffect(Buffs.Starstruck);
-            bool hasSubtractivePalette = HasStatusEffect(Buffs.SubtractivePalette);
-            bool hasPortrait = HasStatusEffect(Buffs.MooglePortrait) || HasStatusEffect(Buffs.MadeenPortrait);
-            bool isStarPrismExpiring = HasStatusEffect(Buffs.Starstruck) && GetStatusEffectRemainingTime(Buffs.Starstruck) <= 3;
-            bool isTemperaCoatExpiring = HasStatusEffect(Buffs.TemperaCoat) && GetStatusEffectRemainingTime(Buffs.TemperaCoat) <= 3;
-            bool hasMotifDrawn = HasStatusEffect(Buffs.PomMotif) || HasStatusEffect(Buffs.WingMotif) || HasStatusEffect(Buffs.ClawMotif) || HasStatusEffect(Buffs.MawMotif);
+            bool hasStarPrism = LocalPlayer.HasStatus(Buffs.Starstruck);
+            bool hasSubtractivePalette = LocalPlayer.HasStatus(Buffs.SubtractivePalette);
+            bool hasPortrait = LocalPlayer.HasStatus(Buffs.MooglePortrait) || LocalPlayer.HasStatus(Buffs.MadeenPortrait);
+            bool isStarPrismExpiring = LocalPlayer.HasStatus(Buffs.Starstruck) && LocalPlayer.Status(Buffs.Starstruck).RemainingTimeOrZero() <= 3;
+            bool isTemperaCoatExpiring = LocalPlayer.HasStatus(Buffs.TemperaCoat) && LocalPlayer.Status(Buffs.TemperaCoat).RemainingTimeOrZero() <= 3;
+            bool hasMotifDrawn = LocalPlayer.HasStatus(Buffs.PomMotif) || LocalPlayer.HasStatus(Buffs.WingMotif) || LocalPlayer.HasStatus(Buffs.ClawMotif) || LocalPlayer.HasStatus(Buffs.MawMotif);
             bool isBurstControlled = IsNotEnabled(Preset.PCTPvP_BurstControl) || (IsEnabled(Preset.PCTPvP_BurstControl) && GetTargetHPPercent() < PCTPvP_BurstHP);
             #endregion
             
@@ -125,7 +126,7 @@ internal static class PCTPvP
             }
             // Creature Motif
             if (IsEnabled(Preset.PCTPvP_CreatureMotif) && !hasMotifDrawn && 
-                (HasStatusEffect(Buffs.QuickSketch) || !isMoving || !PCTPvP_CreatureMotifEnforceNotMoving))
+                (LocalPlayer.HasStatus(Buffs.QuickSketch) || !isMoving || !PCTPvP_CreatureMotifEnforceNotMoving))
                 return OriginalHook(CreatureMotif);
 
             // Subtractive Palette
@@ -146,10 +147,10 @@ internal static class PCTPvP
                 #region Variables
                 
                 bool hasTarget = HasTarget();
-                bool hasStarPrism = HasStatusEffect(Buffs.Starstruck);
-                bool hasPortrait = HasStatusEffect(Buffs.MooglePortrait) || HasStatusEffect(Buffs.MadeenPortrait);
-                bool isStarPrismExpiring = HasStatusEffect(Buffs.Starstruck) && GetStatusEffectRemainingTime(Buffs.Starstruck) <= 3;
-                bool hasMotifDrawn = HasStatusEffect(Buffs.PomMotif) || HasStatusEffect(Buffs.WingMotif) || HasStatusEffect(Buffs.ClawMotif) || HasStatusEffect(Buffs.MawMotif);
+                bool hasStarPrism = LocalPlayer.HasStatus(Buffs.Starstruck);
+                bool hasPortrait = LocalPlayer.HasStatus(Buffs.MooglePortrait) || LocalPlayer.HasStatus(Buffs.MadeenPortrait);
+                bool isStarPrismExpiring = LocalPlayer.HasStatus(Buffs.Starstruck) && LocalPlayer.Status(Buffs.Starstruck).RemainingTimeOrZero() <= 3;
+                bool hasMotifDrawn = LocalPlayer.HasStatus(Buffs.PomMotif) || LocalPlayer.HasStatus(Buffs.WingMotif) || LocalPlayer.HasStatus(Buffs.ClawMotif) || LocalPlayer.HasStatus(Buffs.MawMotif);
                 
                 #endregion
                 

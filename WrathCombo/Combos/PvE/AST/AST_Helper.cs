@@ -47,7 +47,7 @@ internal partial class AST
     internal static bool HasEwer => Gauge.DrawnCards[2] == CardType.Ewer;
     internal static bool HasArrow => Gauge.DrawnCards[1] == CardType.Arrow;
     internal static bool HasBole => Gauge.DrawnCards[1] == CardType.Bole;
-    internal static bool HasDivination => HasStatusEffect(Buffs.Divination, anyOwner: true) || JustUsed(Divination);
+    internal static bool HasDivination => LocalPlayer.HasStatus(Buffs.Divination, true) || JustUsed(Divination);
     internal static bool StandStill => TimeStoodStill >= TimeSpan.FromSeconds(3);
     internal static bool WaitGCDs => ActionWatching.NumberOfGcdsUsed >= 10;
     internal static float DivinationCD => GetCooldownRemainingTime(Divination);
@@ -61,10 +61,10 @@ internal partial class AST
         var hpThreshold = IsNotEnabled(Preset.AST_ST_Simple_DPS) ? ComputeHpThreshold(CurrentTarget) : 0;
         CombustList.TryGetValue(dotAction, out var dotDebuffID);
         var dotRefresh = IsNotEnabled(Preset.AST_ST_Simple_DPS) ? AST_ST_DPS_CombustUptime_Threshold : 2.5;
-        var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
+        var dotRemaining = CurrentTarget.Status(dotDebuffID).RemainingTimeOrZero();
 
         return ActionReady(dotAction) &&
-               CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               CurrentTarget.CanApplyStatus(dotDebuffID) &&
                !JustUsedOn(dotAction, CurrentTarget, 5f) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
@@ -95,8 +95,8 @@ internal partial class AST
     }
     internal static bool RaidwideAspectedHelios()
     {
-        return IsEnabled(Preset.AST_Raidwide_AspectedHelios) && HasStatusEffect(Buffs.NeutralSect) && GroupDamageIncoming() && 
-               !HasStatusEffect(Buffs.NeutralSectShield);
+        return IsEnabled(Preset.AST_Raidwide_AspectedHelios) && LocalPlayer.HasStatus(Buffs.NeutralSect) && GroupDamageIncoming() && 
+               !LocalPlayer.HasStatus(Buffs.NeutralSectShield);
     }
     
     #endregion
@@ -108,15 +108,15 @@ internal partial class AST
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
         bool stopHot = AST_ST_SimpleHeals_AspectedBeneficLow <= GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields);
         int refreshTime = AST_ST_SimpleHeals_AspectedBeneficRefresh;
-        Status? aspectedBeneficHoT = GetStatusEffect(Buffs.AspectedBenefic, healTarget);
-        Status? neutralSectShield = GetStatusEffect(Buffs.NeutralSectShield, healTarget);
+        Status? aspectedBeneficHoT = healTarget.Status(Buffs.AspectedBenefic);
+        Status? neutralSectShield = healTarget.Status(Buffs.NeutralSectShield);
         
         switch (i)
         {
             case 0:
                 action = CelestialIntersection;
                 enabled = IsEnabled(Preset.AST_ST_Heals_CelestialIntersection) &&
-                          ActionReady(CelestialIntersection) && !HasStatusEffect(Buffs.Intersection, healTarget) &&
+                          ActionReady(CelestialIntersection) && !healTarget.HasStatus(Buffs.Intersection) &&
                           GetRemainingCharges(CelestialIntersection) > AST_ST_SimpleHeals_CelestialIntersectionCharges &&
                           (CanWeave() || !AST_ST_SimpleHeals_WeaveIntersection);
                 return AST_ST_SimpleHeals_CelestialIntersection;
@@ -167,7 +167,7 @@ internal partial class AST
                           ActionReady(AspectedBenefic) && stopHot &&
                           (aspectedBeneficHoT is null || 
                            aspectedBeneficHoT.RemainingTime <= refreshTime || 
-                           neutralSectShield is null && HasStatusEffect(Buffs.NeutralSect));
+                           neutralSectShield is null && LocalPlayer.HasStatus(Buffs.NeutralSect));
                 return AST_ST_SimpleHeals_AspectedBeneficHigh;
             case 8:
                 action = CelestialOpposition;
@@ -230,13 +230,13 @@ internal partial class AST
             case 2:
                 action = Horoscope;
                 enabled = IsEnabled(Preset.AST_AoE_Heals_Horoscope) && ActionReady(Horoscope) &&
-                          !HasStatusEffect(Buffs.Horoscope) && !HasStatusEffect(Buffs.HoroscopeHelios) &&
+                          !LocalPlayer.HasStatus(Buffs.Horoscope) && !LocalPlayer.HasStatus(Buffs.HoroscopeHelios) &&
                           (CanWeave() || !AST_AoE_SimpleHeals_WeaveHoroscope);
                 return AST_AoE_SimpleHeals_Horoscope;
             case 3:
                 action = HoroscopeHeal;
                 enabled = IsEnabled(Preset.AST_AoE_Heals_HoroscopeHeal) &&
-                          HasStatusEffect(Buffs.HoroscopeHelios) &&
+                          LocalPlayer.HasStatus(Buffs.HoroscopeHelios) &&
                           (CanWeave() || !AST_AoE_SimpleHeals_WeaveHoroscopeHeal);
                 return AST_AoE_SimpleHeals_HoroscopeHeal;
             case 4:
@@ -248,15 +248,15 @@ internal partial class AST
             case 5:
                 action = StellarDetonation;
                 enabled = IsEnabled(Preset.AST_AoE_Heals_StellarDetonation) && 
-                          HasStatusEffect(Buffs.GiantDominance) && 
+                          LocalPlayer.HasStatus(Buffs.GiantDominance) && 
                           (CanWeave() || !AST_AoE_SimpleHeals_WeaveStellarDetonation);
                 return AST_AoE_SimpleHeals_StellarDetonation;
             case 6:
                 action = OriginalHook(AspectedHelios);
                 enabled = IsEnabled(Preset.AST_AoE_Heals_Aspected) && ActionReady(AspectedHelios) &&
-                          (ActionLearned(HeliosConjuction) && !HasStatusEffect(Buffs.HeliosConjunction) || 
-                           !ActionLearned(HeliosConjuction) && !HasStatusEffect(Buffs.AspectedHelios) ||
-                           HasStatusEffect(Buffs.NeutralSect) && !HasStatusEffect(Buffs.NeutralSectShield));
+                          (ActionLearned(HeliosConjuction) && !LocalPlayer.HasStatus(Buffs.HeliosConjunction) || 
+                           !ActionLearned(HeliosConjuction) && !LocalPlayer.HasStatus(Buffs.AspectedHelios) ||
+                           LocalPlayer.HasStatus(Buffs.NeutralSect) && !LocalPlayer.HasStatus(Buffs.NeutralSectShield));
                 return AST_AoE_SimpleHeals_Aspected;
             
             case 7:
@@ -358,8 +358,8 @@ internal partial class AST
                 thisTarget != null && InActionRange(Balance, thisTarget);
 
             bool ExistingCardBuffFree(IGameObject? thisTarget) =>
-                !HasStatusEffect(Buffs.BalanceBuff, thisTarget, true) &&
-                !HasStatusEffect(Buffs.SpearBuff, thisTarget, true);
+                !thisTarget.HasStatus(Buffs.BalanceBuff, true) &&
+                !thisTarget.HasStatus(Buffs.SpearBuff, true);
 
             bool IsMeleeOrTank (ClassJob job) =>
                 JobRoles.Melee.Contains(job.RowId) ||
@@ -370,13 +370,13 @@ internal partial class AST
                 JobRoles.Healer.Contains(job.RowId);
 
             bool DamageDownFree(IGameObject? thisTarget) =>
-                !TargetHasDamageDown(thisTarget);
+                !thisTarget.HasDamageDown;
 
             bool SicknessFree(IGameObject? thisTarget) =>
-                !TargetHasRezWeakness(thisTarget);
+                !thisTarget.HasRezWeakness();
 
             bool BrinkFree(IGameObject? thisTarget) =>
-                !TargetHasRezWeakness(thisTarget, false);
+                !thisTarget.HasRezWeakness(false);
 
             #endregion
 
@@ -492,34 +492,9 @@ internal partial class AST
     }
     
     public static ASTOpenerMaxLevel1 Opener1 = new();
-    
-    internal class ASTOpenerMaxLevel1 : WrathOpener
+
+    internal abstract class ASTOpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => EarthlyStar, // 1
-            () => FallMalefic, // 2
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 3
-            () => Combust3, // 4
-            () => Lightspeed, // 5
-            () => FallMalefic, // 6
-            () => FallMalefic, // 7
-            () => Divination, // 8
-            () => Balance, // 9
-            () => FallMalefic, // 10
-            () => LordOfCrowns, // 11
-            () => UmbralDraw, // 12
-            () => FallMalefic, // 13
-            () => Spear, // 14
-            () => Oracle, // 15
-            () => FallMalefic, // 16
-            () => FallMalefic, // 17
-            () => FallMalefic, // 18
-            () => FallMalefic, // 19
-            () => FallMalefic, // 20
-            () => Combust3, // 21
-            () => FallMalefic // 22
-        ];
         public override int MinOpenerLevel => 92;
         public override int MaxOpenerLevel => 109;
 
@@ -527,10 +502,17 @@ internal partial class AST
 
         internal override UserData? ContentCheckConfig => AST_ST_DPS_Balance_Content;
         internal override bool IncludePot => AST_Opener_Potion;
-        
+
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([1], () => AST_ST_DPS_Opener_SkipStar == 1)
+            ([1], () => CountdownActive || InCombat() || !AST_Opener_PrepullBlock),
+            ([2], () => AST_ST_DPS_Opener_SkipStar == 1)
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !AST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - (AST_ST_DPS_Opener_SkipStar == 1 ? 2.1f : 4))),
+            ([3], () => !AST_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 2.1f))
         ];
 
         public override bool HasCooldowns()
@@ -555,6 +537,36 @@ internal partial class AST
 
             return true;
         }
+    }
+
+    internal class ASTOpenerMaxLevel1 : ASTOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => EarthlyStar, // 2
+            () => FallMalefic, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Mind)), // 4
+            () => Combust3, // 5
+            () => Lightspeed, // 6
+            () => FallMalefic, // 7
+            () => FallMalefic, // 8
+            () => Divination, // 9
+            () => Balance, // 10
+            () => FallMalefic, // 11
+            () => LordOfCrowns, // 12
+            () => UmbralDraw, // 13
+            () => FallMalefic, // 14
+            () => Spear, // 15
+            () => Oracle, // 16
+            () => FallMalefic, // 17
+            () => FallMalefic, // 18
+            () => FallMalefic, // 19
+            () => FallMalefic, // 20
+            () => FallMalefic, // 21
+            () => Combust3, // 22
+            () => FallMalefic // 23
+        ];
     }
     #endregion
 

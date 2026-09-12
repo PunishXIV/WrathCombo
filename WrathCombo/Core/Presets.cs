@@ -688,7 +688,8 @@ internal class PresetDictionaries
             JobRole.MeleeDPS => 2,
             JobRole.RangedDPS => 3,
             JobRole.MagicalDPS => 4,
-            _ => 5
+            JobRole.Limited => 5,
+            _ => 99
         };
 
         return AllPresetsData

@@ -83,14 +83,14 @@ internal static class WARPvP
                 }
 
                 // Primal Wrath if in melee range and Wrathfull effect is active
-                if (IsEnabled(Preset.WARPvP_BurstMode_PrimalScream) && InMeleeRange() && canWeave && HasStatusEffect(Buffs.Wrathfull))
+                if (IsEnabled(Preset.WARPvP_BurstMode_PrimalScream) && InMeleeRange() && canWeave && LocalPlayer.HasStatus(Buffs.Wrathfull))
                     return OriginalHook(PrimalScream);
 
                 // Blota and PrimalRend conditions based on range and cooldowns
                 if (!InMeleeRange())
                 {
                     // Blota with specific conditions and burst mode enabled
-                    if (IsOffCooldown(Blota) && !HasStatusEffect(PvPCommon.Debuffs.Stun, CurrentTarget, true) && IsEnabled(Preset.WARPvP_BurstMode_Blota))
+                    if (IsOffCooldown(Blota) && !CurrentTarget.HasStatus(PvPCommon.Debuffs.Stun, true) && IsEnabled(Preset.WARPvP_BurstMode_Blota))
                     {
                         if (WARPVP_BlotaTiming == 0 && IsOffCooldown(PrimalRend))
                             return OriginalHook(Blota);
@@ -101,7 +101,7 @@ internal static class WARPvP
                     // PrimalRend if ready or BurstMode enabled
                     if (IsEnabled(Preset.WARPvP_BurstMode_PrimalRend))
                     {
-                        if ((IsOffCooldown(PrimalRend) || HasStatusEffect(Buffs.PrimalRuinationReady)))
+                        if ((IsOffCooldown(PrimalRend) || LocalPlayer.HasStatus(Buffs.PrimalRuinationReady)))
                             return OriginalHook(PrimalRend);
                     }
 
@@ -111,7 +111,7 @@ internal static class WARPvP
                 if (InMeleeRange())
                 {
                     // Inner Chaos effect logic
-                    if (IsEnabled(Preset.WARPvP_BurstMode_InnerChaos) && HasStatusEffect(Buffs.InnerChaosReady))
+                    if (IsEnabled(Preset.WARPvP_BurstMode_InnerChaos) && LocalPlayer.HasStatus(Buffs.InnerChaosReady))
                         return OriginalHook(Blota);
 
                     // Onslaught and Orogeny conditions for melee
@@ -119,7 +119,7 @@ internal static class WARPvP
                         return OriginalHook(Onslaught);
 
                     // Nascent Chaos and Orogeny conditions
-                    if (IsEnabled(Preset.WARPvP_BurstMode_Bloodwhetting) && HasStatusEffect(Buffs.NascentChaos))
+                    if (IsEnabled(Preset.WARPvP_BurstMode_Bloodwhetting) && LocalPlayer.HasStatus(Buffs.NascentChaos))
                         return OriginalHook(Bloodwhetting);
 
                     if (IsEnabled(Preset.WARPvP_BurstMode_Orogeny) && !GetCooldown(Orogeny).IsCooldown && canWeave)
@@ -128,12 +128,12 @@ internal static class WARPvP
                     // PrimalRend if ready or BurstMode enabled
                     if (IsEnabled(Preset.WARPvP_BurstMode_PrimalRend))
                     {
-                        if (IsOffCooldown(PrimalRend) || HasStatusEffect(Buffs.PrimalRuinationReady))
+                        if (IsOffCooldown(PrimalRend) || LocalPlayer.HasStatus(Buffs.PrimalRuinationReady))
                             return OriginalHook(PrimalRend);
                     }
 
                     // Blota with specific conditions and burst mode enabled in meleerange
-                    if (IsOffCooldown(Blota) && !HasStatusEffect(PvPCommon.Debuffs.Stun, CurrentTarget, true) && IsEnabled(Preset.WARPvP_BurstMode_Blota))
+                    if (IsOffCooldown(Blota) && !CurrentTarget.HasStatus(PvPCommon.Debuffs.Stun, true) && IsEnabled(Preset.WARPvP_BurstMode_Blota))
                     {
                         if (WARPVP_BlotaTiming == 0 && IsOffCooldown(PrimalRend) || WARPVP_BlotaTiming == 1 && IsOnCooldown(PrimalRend))
                             return OriginalHook(Blota);

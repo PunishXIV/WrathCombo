@@ -2,6 +2,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.MCHPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -90,7 +91,7 @@ internal static class MCHPvP
             var canWeave = CanWeave();
             var analysisStacks = GetRemainingCharges(Analysis);
             var bigDamageStacks = GetRemainingCharges(OriginalHook(Drill));
-            var overheated = HasStatusEffect(Buffs.Overheated);
+            var overheated = LocalPlayer.HasStatus(Buffs.Overheated);
             #endregion
 
             if (IsEnabled(Preset.MCHPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= MCHPvP_EagleThreshold))
@@ -120,13 +121,13 @@ internal static class MCHPvP
                     }
                 }
                 // Check if primed buffs and analysis conditions are met
-                bool hasPrimedBuffs = HasStatusEffect(Buffs.DrillPrimed) ||
-                                      (HasStatusEffect(Buffs.ChainSawPrimed) && !IsEnabled(Preset.MCHPvP_BurstMode_AltAnalysis)) ||
-                                      (HasStatusEffect(Buffs.AirAnchorPrimed) && IsEnabled(Preset.MCHPvP_BurstMode_AltAnalysis));
+                bool hasPrimedBuffs = LocalPlayer.HasStatus(Buffs.DrillPrimed) ||
+                                      (LocalPlayer.HasStatus(Buffs.ChainSawPrimed) && !IsEnabled(Preset.MCHPvP_BurstMode_AltAnalysis)) ||
+                                      (LocalPlayer.HasStatus(Buffs.AirAnchorPrimed) && IsEnabled(Preset.MCHPvP_BurstMode_AltAnalysis));
 
                 if (IsEnabled(Preset.MCHPvP_BurstMode_Analysis))
                 {
-                    if (hasPrimedBuffs && !HasStatusEffect(Buffs.Analysis) && !JustUsed(Analysis, 2f) && analysisStacks > 0 &&
+                    if (hasPrimedBuffs && !LocalPlayer.HasStatus(Buffs.Analysis) && !JustUsed(Analysis, 2f) && analysisStacks > 0 &&
                         (!IsEnabled(Preset.MCHPvP_BurstMode_AltDrill) || IsOnCooldown(Wildfire)) &&
                         !canWeave && !overheated && bigDamageStacks > 0)
                     {
@@ -136,16 +137,16 @@ internal static class MCHPvP
                 // BigDamageStacks logic with checks for primed buffs
                 if (bigDamageStacks > 0)
                 {
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_Drill) && HasStatusEffect(Buffs.DrillPrimed))
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_Drill) && LocalPlayer.HasStatus(Buffs.DrillPrimed))
                         return OriginalHook(Drill);
 
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_BioBlaster) && HasStatusEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && InActionRange(BioBlaster))
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_BioBlaster) && LocalPlayer.HasStatus(Buffs.BioblasterPrimed) && HasBattleTarget() && InActionRange(BioBlaster))
                         return OriginalHook(BioBlaster);
 
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_AirAnchor) && HasStatusEffect(Buffs.AirAnchorPrimed))
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_AirAnchor) && LocalPlayer.HasStatus(Buffs.AirAnchorPrimed))
                         return OriginalHook(AirAnchor);
 
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_ChainSaw) && HasStatusEffect(Buffs.ChainSawPrimed))
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_ChainSaw) && LocalPlayer.HasStatus(Buffs.ChainSawPrimed))
                         return OriginalHook(ChainSaw);
                 }
             }

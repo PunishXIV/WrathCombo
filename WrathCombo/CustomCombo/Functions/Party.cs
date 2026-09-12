@@ -169,7 +169,7 @@ internal abstract partial class CustomComboFunctions
         {
             if (SimpleTarget.GetPartyMemberInSlotSlot(i) is IBattleChara member && !member.IsDead)
             {
-                if (HasStatusEffect(buff, member, true)) buffCount++;
+                if (member.HasStatus(buff, true)) buffCount++;
                 partyCount++;
             }
         }

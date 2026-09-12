@@ -10,6 +10,7 @@ namespace WrathCombo.Combos.PvE;
 internal partial class NIN : Melee
 {
     #region Simple
+
     internal class NIN_ST_SimpleMode : CustomCombo
     {
         protected internal MudraCasting MudraState = new();
@@ -18,6 +19,8 @@ internal partial class NIN : Melee
         {
             MudraState.AssociatedPreset = Preset;
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SpinningEdge)) return actionID;
+
+            ReportNINPositionalHints();
 
             if (JutsuFromFlags is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return JutsuFromFlags;
@@ -32,8 +35,10 @@ internal partial class NIN : Melee
                 return actionID;
 
             #region Special Content
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction) && !MudraPhase)
                 return contentAction;
+
             #endregion
 
             #region OGCDS
@@ -71,14 +76,17 @@ internal partial class NIN : Melee
             #endregion
 
             #region Ninjutsu
-            if ((CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID)) ||
-                (CanUseSuiton && TrickCD <= 18 && MudraState.CastSuiton(ref actionID)) ||
-                (CanUseRaiton && MudraState.CastRaiton(ref actionID)) ||
-                (CanUseFumaShuriken && !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID)))
+
+            if (CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID) ||
+                CanUseSuiton && TrickCD <= 18 && MudraState.CastSuiton(ref actionID) ||
+                CanUseRaiton && MudraState.CastRaiton(ref actionID) ||
+                CanUseFumaShuriken && !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID))
                 return actionID;
+
             #endregion
 
             #region Selfcare
+
             if ((!MudraPhase || HasKassatsu && TrickCD > 5) && CanWeave())
             {
                 if (Role.CanSecondWind(40))
@@ -90,9 +98,11 @@ internal partial class NIN : Melee
                 if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
             }
+
             #endregion
 
             #region GCDS
+
             if (CanThrowingDaggers)
                 return OriginalHook(ThrowingDaggers);
 
@@ -124,6 +134,7 @@ internal partial class NIN : Melee
                 }
             }
             return OriginalHook(SpinningEdge);
+
             #endregion
         }
     }
@@ -150,11 +161,14 @@ internal partial class NIN : Melee
                 return actionID;
 
             #region Special Content
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction) && !MudraPhase)
                 return contentAction;
+
             #endregion
 
             #region OGCDS
+
             if (InCombat() && HasBattleTarget())
             {
                 if (CanKassatsuAoE)
@@ -184,18 +198,22 @@ internal partial class NIN : Melee
                 if (CanTrickAoE && CombatEngageDuration().TotalSeconds > 5)
                     return OriginalHook(TrickAttack);
             }
+
             #endregion
 
             #region Ninjutsu
-            if ((CanUseGokaMekkyaku && MudraState.CastGokaMekkyaku(ref actionID)) ||
-                (CanUseHuton && TrickCD <= 18 && MudraState.CastHuton(ref actionID)) ||
-                (CanUseDoton && GetTargetHPPercent() >= 30 && MudraState.CastDoton(ref actionID)) ||
-                (CanUseKaton && MudraState.CastKaton(ref actionID)) ||
-                (CanUseFumaShuriken && !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID)))
+
+            if (CanUseGokaMekkyaku && MudraState.CastGokaMekkyaku(ref actionID) ||
+                CanUseHuton && TrickCD <= 18 && MudraState.CastHuton(ref actionID) ||
+                CanUseDoton && GetTargetHPPercent() >= 30 && MudraState.CastDoton(ref actionID) ||
+                CanUseKaton && MudraState.CastKaton(ref actionID) ||
+                CanUseFumaShuriken && !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID))
                 return actionID;
+
             #endregion
 
             #region Selfcare
+
             if ((!MudraPhase || HasKassatsu && TrickCD > 5) && CanWeave())
             {
                 if (Role.CanSecondWind(40))
@@ -207,9 +225,11 @@ internal partial class NIN : Melee
                 if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
             }
+
             #endregion
 
             #region GCDS
+
             if (CanThrowingDaggersAoE)
                 return OriginalHook(ThrowingDaggers);
 
@@ -234,6 +254,7 @@ internal partial class NIN : Melee
             return ActionLearned(DeathBlossom)
                 ? DeathBlossom
                 : SpinningEdge;
+
             #endregion
         }
     }
@@ -241,6 +262,7 @@ internal partial class NIN : Melee
     #endregion
 
     #region Advanced
+
     internal class NIN_ST_AdvancedMode : CustomCombo
     {
         protected internal MudraCasting MudraState = new();
@@ -249,6 +271,8 @@ internal partial class NIN : Melee
         {
             MudraState.AssociatedPreset = Preset;
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SpinningEdge)) return actionID;
+
+            ReportNINPositionalHints();
 
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -269,11 +293,14 @@ internal partial class NIN : Melee
                 return actionID;
 
             #region Special Content
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction) && !MudraPhase)
                 return contentAction;
+
             #endregion
 
             #region OGCDS
+
             if (InCombat() && HasBattleTarget())
             {
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Kassatsu) && CanKassatsu)
@@ -315,9 +342,11 @@ internal partial class NIN : Melee
                     RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
+
             #endregion
 
             #region Ninjutsu
+
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus))
             {
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Hyosho) &&
@@ -330,9 +359,11 @@ internal partial class NIN : Melee
                     CanUseFumaShuriken && !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
+
             #endregion
 
             #region Selfcare
+
             if ((!MudraPhase || HasKassatsu && TrickCD > 5) && CanWeave())
             {
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Feint) &&
@@ -353,6 +384,7 @@ internal partial class NIN : Melee
                     Role.CanBloodBath(NIN_ST_AdvancedMode_BloodbathThreshold))
                     return Role.Bloodbath;
             }
+
             #endregion
 
             #region GCDS
@@ -391,6 +423,7 @@ internal partial class NIN : Melee
                 }
             }
             return OriginalHook(SpinningEdge);
+
             #endregion
         }
     }
@@ -418,11 +451,14 @@ internal partial class NIN : Melee
                 return actionID;
 
             #region Special Content
+
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction) && !MudraPhase)
                 return contentAction;
+
             #endregion
 
             #region OGCDS
+
             if (InCombat() && HasBattleTarget())
             {
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Kassatsu) && CanKassatsuAoE)
@@ -465,9 +501,11 @@ internal partial class NIN : Melee
                     RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
+
             #endregion
 
             #region Ninjutsu
+
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus))
             {
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Goka) &&
@@ -482,9 +520,11 @@ internal partial class NIN : Melee
                     CanUseFumaShuriken && !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
+
             #endregion
 
             #region Selfcare
+
             if ((!MudraPhase || HasKassatsu && TrickCD > 5) && CanWeave())
             {
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_SecondWind) &&
@@ -500,9 +540,11 @@ internal partial class NIN : Melee
                     Role.CanBloodBath(NIN_AoE_AdvancedMode_BloodbathThreshold))
                     return Role.Bloodbath;
             }
+
             #endregion
 
             #region GCDS
+
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_ThrowingDaggers) && CanThrowingDaggersAoE && !MudraPhase)
                 return OriginalHook(ThrowingDaggers);
 
@@ -522,9 +564,11 @@ internal partial class NIN : Melee
                 }
             }
             return ActionLearned(DeathBlossom) ? DeathBlossom : SpinningEdge;
+
             #endregion
         }
     }
+
     #endregion
 
     #region Standalone
@@ -544,7 +588,7 @@ internal partial class NIN : Melee
 
                 case Shukuchi when NIN_MudraProtection_Options[1] && MudraPhase:
 
-                case RoleActions.Melee.Feint when NIN_MudraProtection_Options[2] && (MudraPhase || HasStatusEffect(RoleActions.Melee.Debuffs.Feint, CurrentTarget, true)):
+                case RoleActions.Melee.Feint when NIN_MudraProtection_Options[2] && (MudraPhase || CurrentTarget.HasStatus(RoleActions.Melee.Debuffs.Feint, true)):
 
                 case RoleActions.Melee.Bloodbath when NIN_MudraProtection_Options[3] && MudraPhase:
 
@@ -610,13 +654,13 @@ internal partial class NIN : Melee
                 return actionID;
 
 
-            if (NIN_HideMug_Toggle && HasStatusEffect(Buffs.Hidden) &&
+            if (NIN_HideMug_Toggle && LocalPlayer.HasStatus(Buffs.Hidden) &&
                 (ActionLearned(Suiton) || !NIN_HideMug_ToggleLevelCheck)) //Check level to get ShadowWalker buff.
                 StatusManager.ExecuteStatusOff(Buffs.Hidden);
 
             if (NIN_HideMug_Trick &&
                 (!NIN_HideMug_Mug || !NIN_HideMug_TrickAfterMug || IsOnCooldown(OriginalHook(Mug)) || !InCombat()) && //Check mug if you want mug to have priority
-                (HasStatusEffect(Buffs.Hidden) || HasStatusEffect(Buffs.ShadowWalker))) //Check for ability to use trick
+                (LocalPlayer.HasStatus(Buffs.Hidden) || LocalPlayer.HasStatus(Buffs.ShadowWalker))) //Check for ability to use trick
                 return OriginalHook(TrickAttack);
 
             if (InCombat() && NIN_HideMug_Mug)
@@ -635,7 +679,7 @@ internal partial class NIN : Melee
             if (actionID is not Chi)
                 return actionID;
 
-            return TraitLevelChecked(250) && HasStatusEffect(Buffs.Kassatsu)
+            return TraitLevelChecked(250) && LocalPlayer.HasStatus(Buffs.Kassatsu)
                 ? Jin
                 : actionID;
         }
@@ -650,7 +694,7 @@ internal partial class NIN : Melee
             if (actionID is not Kassatsu)
                 return actionID;
 
-            return HasStatusEffect(Buffs.ShadowWalker) || HasStatusEffect(Buffs.Hidden)
+            return LocalPlayer.HasStatus(Buffs.ShadowWalker) || LocalPlayer.HasStatus(Buffs.Hidden)
                 ? OriginalHook(TrickAttack)
                 : actionID;
         }
@@ -668,7 +712,7 @@ internal partial class NIN : Melee
             if (IsEnabled(Preset.NIN_TCJ) && STTenChiJin(ref actionID))
                 return actionID;
 
-            return HasStatusEffect(Buffs.ShadowWalker)
+            return LocalPlayer.HasStatus(Buffs.ShadowWalker)
                 ? Meisui
                 : actionID;
         }
@@ -680,10 +724,10 @@ internal partial class NIN : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Ten or Chi or Jin) || !HasStatusEffect(Buffs.Mudra))
+            if (actionID is not (Ten or Chi or Jin) || !LocalPlayer.HasStatus(Buffs.Mudra))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.TenChiJin))
+            if (LocalPlayer.HasStatus(Buffs.TenChiJin))
                 return actionID;
 
             int mudrapath = NIN_SimpleMudra_Choice;
@@ -704,7 +748,7 @@ internal partial class NIN : Melee
 
                     if (JutsuFromFlags == FumaShuriken)
                     {
-                        if (HasStatusEffect(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
+                        if (LocalPlayer.HasStatus(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
                             return JinCombo;
 
                         if (Chi.LevelChecked())
@@ -790,7 +834,7 @@ internal partial class NIN : Melee
 
                     if (JutsuFromFlags == FumaShuriken)
                     {
-                        if (HasStatusEffect(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
+                        if (LocalPlayer.HasStatus(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
                             return OriginalHook(Ten);
                         return OriginalHook(Chi);
                     }
@@ -812,7 +856,7 @@ internal partial class NIN : Melee
             if (!MudraSigns.Any(x => x == actionID))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.TenChiJin))
+            if (LocalPlayer.HasStatus(Buffs.TenChiJin))
                 return actionID;
 
             if (JutsuFromFlags == Rabbit)
@@ -822,7 +866,7 @@ internal partial class NIN : Melee
             {
                 case Ten when ActionLearned(HyoshoRanryu) && HasKassatsu:
                     return UseHyoshoRanryu(ref actionID);
-                case Ten when ActionLearned(Suiton) && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
+                case Ten when ActionLearned(Suiton) && !LocalPlayer.HasStatus(Buffs.ShadowWalker) && TrickCD <= 20:
                     return UseSuiton(ref actionID);
                 case Ten:
                     return ActionLearned(Raiton)
@@ -830,7 +874,7 @@ internal partial class NIN : Melee
                         : UseFumaShuriken(ref actionID);
                 case Chi when ActionLearned(GokaMekkyaku) && HasKassatsu:
                     return UseGokaMekkyaku(ref actionID);
-                case Chi when ActionLearned(Huton) && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
+                case Chi when ActionLearned(Huton) && !LocalPlayer.HasStatus(Buffs.ShadowWalker) && TrickCD <= 20:
                     return UseHuton(ref actionID);
                 case Chi:
                     return ActionLearned(Katon)

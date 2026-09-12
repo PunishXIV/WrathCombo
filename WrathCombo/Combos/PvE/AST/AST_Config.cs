@@ -99,7 +99,8 @@ internal partial class AST
             AST_ST_DPS_OverwriteHealCards = new("AST_ST_DPS_OverwriteHealCards"),
             AST_AOE_DPS_OverwriteHealCards = new("AST_AOE_DPS_OverwriteHealCards"),
             AST_QuickTarget_Manuals = new("AST_QuickTarget_Manuals", true),
-            AST_Opener_Potion = new("AST_Opener_Potion");
+            AST_Opener_Potion = new("AST_Opener_Potion"),
+            AST_Opener_PrepullBlock = new("AST_Opener_PrepullBlock", true);
         public static UserFloat
             AST_AOE_DPS_DoT_Reapply = new("AST_AOE_DPS_DoT_Reapply", 2),
             AST_ST_DPS_CombustUptime_Threshold = new("AST_ST_DPS_CombustUptime_Threshold");
@@ -124,6 +125,7 @@ internal partial class AST
                 case Preset.AST_ST_DPS_Opener:
                     DrawBossOnlyChoice(AST_ST_DPS_Balance_Content);
                     DrawOpenerPotionChoice(AST_Opener_Potion);
+                    DrawOpenerPrepullBlockChoice(AST_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined($"{EarthlyStar.ActionName()} Settings");
                     ImGui.Spacing();
                     DrawRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(Generics.Use0, EarthlyStar.ActionName()), Text.FormatAndCache(AST_Config.PlacesEarthlyStarInTheOpener, EarthlyStar.ActionName()), 0, descriptionAsTooltip: true);

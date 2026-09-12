@@ -9,6 +9,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.RDM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 #endregion
 
 namespace WrathCombo.Combos.PvE;
@@ -131,22 +132,22 @@ internal partial class RDM
 
     //Floats
     internal static float EmboldenCD => GetCooldownRemainingTime(Embolden);
-    internal static float VerFireRemaining => GetStatusEffectRemainingTime(Buffs.VerfireReady);
-    internal static float VerStoneRemaining => GetStatusEffectRemainingTime(Buffs.VerstoneReady);
+    internal static float VerFireRemaining => LocalPlayer.Status(Buffs.VerfireReady).RemainingTimeOrZero();
+    internal static float VerStoneRemaining => LocalPlayer.Status(Buffs.VerstoneReady).RemainingTimeOrZero();
 
     //Bools
-    internal static bool CanVerStone => HasStatusEffect(Buffs.VerstoneReady);
-    internal static bool CanVerFire => HasStatusEffect(Buffs.VerfireReady);
-    internal static bool CanVerFireAndStone => HasStatusEffect(Buffs.VerstoneReady) && HasStatusEffect(Buffs.VerfireReady);
-    internal static bool CanGrandImpact => HasStatusEffect(Buffs.GrandImpactReady);
-    internal static bool CanMagickedSwordplay => HasStatusEffect(Buffs.MagickedSwordPlay);
-    internal static bool CanPrefulgence => HasStatusEffect(Buffs.PrefulgenceReady);
-    internal static bool CanViceOfThorns => HasStatusEffect(Buffs.ThornedFlourish) && !JustUsed(Embolden, 6f);
-    internal static bool HasDualcast => HasStatusEffect(Buffs.Dualcast);
-    internal static bool HasAccelerate => HasStatusEffect(Buffs.Acceleration);
-    internal static bool HasSwiftcast => HasStatusEffect(Buffs.Swiftcast);
-    internal static bool HasEmbolden => HasStatusEffect(Buffs.Embolden);
-    internal static bool HasManafication => HasStatusEffect(Buffs.Manafication);
+    internal static bool CanVerStone => LocalPlayer.HasStatus(Buffs.VerstoneReady);
+    internal static bool CanVerFire => LocalPlayer.HasStatus(Buffs.VerfireReady);
+    internal static bool CanVerFireAndStone => LocalPlayer.HasStatus(Buffs.VerstoneReady) && LocalPlayer.HasStatus(Buffs.VerfireReady);
+    internal static bool CanGrandImpact => LocalPlayer.HasStatus(Buffs.GrandImpactReady);
+    internal static bool CanMagickedSwordplay => LocalPlayer.HasStatus(Buffs.MagickedSwordPlay);
+    internal static bool CanPrefulgence => LocalPlayer.HasStatus(Buffs.PrefulgenceReady);
+    internal static bool CanViceOfThorns => LocalPlayer.HasStatus(Buffs.ThornedFlourish) && !JustUsed(Embolden, 6f);
+    internal static bool HasDualcast => LocalPlayer.HasStatus(Buffs.Dualcast);
+    internal static bool HasAccelerate => LocalPlayer.HasStatus(Buffs.Acceleration);
+    internal static bool HasSwiftcast => LocalPlayer.HasStatus(Buffs.Swiftcast);
+    internal static bool HasEmbolden => LocalPlayer.HasStatus(Buffs.Embolden);
+    internal static bool HasManafication => LocalPlayer.HasStatus(Buffs.Manafication);
     internal static bool CanAcceleration => ActionLearned(Acceleration) && !CanVerFireAndStone && HasCharges(Acceleration) && CanInstantCD &&
                                             (EmboldenCD > 15 || ActionLearned(Embolden));
     internal static bool CanAccelerationMovement => ActionLearned(Acceleration) && IsMoving() && HasCharges(Acceleration) && CanInstantCD;
@@ -158,7 +159,7 @@ internal partial class RDM
     internal static bool SaveEngagement => GetRemainingCharges(Engagement) >= 2;
     internal static bool CanCorps => ActionLearned(Corpsacorps) && GetRemainingCharges(Corpsacorps) >= 1 && GetCooldownChargeRemainingTime(Corpsacorps) < 1;
     internal static bool CanInstantCast => HasDualcast || HasAccelerate || HasSwiftcast;
-    internal static bool CanNotMagickBarrier => !ActionReady(MagickBarrier) || HasStatusEffect(Buffs.MagickBarrier, anyOwner: true);
+    internal static bool CanNotMagickBarrier => !ActionReady(MagickBarrier) || LocalPlayer.HasStatus(Buffs.MagickBarrier, true);
     #endregion
 
     #region Functions
@@ -261,74 +262,39 @@ internal partial class RDM
     internal static Standard Opener1 = new();
     internal static GapClosing Opener2 = new();
     internal static FirstGCD Opener3 = new();
-    
+
     internal static WrathOpener Opener()
     {
         if (RDM_Opener_Selection == 0 && Opener1.LevelChecked) return Opener1;
         if (RDM_Opener_Selection == 1 && Opener2.LevelChecked) return Opener2;
         if (RDM_Opener_Selection == 2 && Opener2.LevelChecked) return Opener3;
-        
+
         return (Opener1.LevelChecked) ? Opener1 : WrathOpener.Dummy;
     }
-    internal class Standard : WrathOpener
+
+    internal abstract class RDMOpenerBase : WrathOpener
     {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Veraero3, // 1
-            () => Verthunder3, // 2
-            () => Role.Swiftcast, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 4
-            () => Verthunder3, // 5
-            () => Fleche, // 6
-            () => Acceleration, // 7
-            () => Verthunder3, // 8
-            () => Embolden, // 9
-            () => Manafication, // 10
-            () => EnchantedRiposteManafication, // 11
-            () => ContreSixte, // 12
-            () => EnchantedZwerchhauManafication, // 13
-            () => Engagement, // 14
-            () => EnchantedRedoublementManafication, // 15
-            () => Corpsacorps, // 16
-            () => Verholy, // 17
-            () => ViceOfThorns, // 18
-            () => Scorch, // 19
-            () => Engagement, // 20
-            () => Corpsacorps, // 21
-            () => Resolution, // 22
-            () => Prefulgence, // 23
-            () => GrandImpact, // 24
-            () => Acceleration, // 25
-            () => Verfire, // 26
-            () => GrandImpact, // 27
-            () => Verthunder3, // 28
-            () => Fleche, // 29
-            () => Veraero3, // 30
-            () => Verfire, // 31
-            () => Verthunder3, // 32
-            () => Verstone, // 33
-            () => Veraero3, // 34
-            () => Role.Swiftcast, // 35
-            () => Veraero3, // 36
-            () => ContreSixte // 37
-        ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
 
-        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
+        public override Preset Preset => Preset.RDM_Balance_Opener;
+
+        internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
+        internal override bool IncludePot => RDM_Opener_Potion;
+
+        internal static uint Veraero3OrJolt3 =>
+            PartyInCombat() && !Player.Object.IsCasting ? Jolt3 : Veraero3;
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([1], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
+            ([2], () => !RDM_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5))
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([14, 16, 20, 21], () => !InMeleeRange()),
-            ([6],() => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
+            ([1], () => CountdownActive || InCombat() || !RDM_Opener_PrepullBlock)
         ];
 
-        internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
-        internal override bool IncludePot => RDM_Opener_Potion;
-        public override Preset Preset => Preset.RDM_Balance_Opener;
         public override bool HasCooldowns()
         {
             if (!ActionsReady([Role.Swiftcast, Fleche, Embolden, ContreSixte]) || GetRemainingCharges(Acceleration) < 2 ||
@@ -340,157 +306,158 @@ internal partial class RDM
             return true;
         }
     }
-    internal class GapClosing : WrathOpener
+
+    internal class Standard : RDMOpenerBase
     {
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
-            () => Veraero3, // 1
-            () => Verthunder3, // 2
-            () => Role.Swiftcast, // 3
-            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 4
-            () => Verthunder3, // 5
-            () => Fleche, // 6
-            () => Acceleration, // 7
-            () => Verthunder3, // 8
-            () => Embolden, // 9
-            () => Manafication, // 10
-            () => EnchantedRiposteManafication, // 11
-            () => ContreSixte, // 12
-            () => EnchantedZwerchhauManafication, // 13
-            () => Corpsacorps, // 14
-            () => EnchantedRedoublementManafication, // 15
-            () => Engagement, // 16
-            () => Verholy, // 17
-            () => ViceOfThorns, // 18
-            () => Scorch, // 19
-            () => Corpsacorps, // 20
-            () => Engagement, // 21
-            () => Resolution, // 22
-            () => Prefulgence, // 23
-            () => GrandImpact, // 24
-            () => Acceleration, // 25
-            () => Verfire, // 26
-            () => GrandImpact, // 27
-            () => Verthunder3, // 28
-            () => Fleche, // 29
-            () => Veraero3, // 30
-            () => Verfire, // 31
-            () => Verthunder3, // 32
-            () => Verstone, // 33
-            () => Veraero3, // 34
-            () => Role.Swiftcast, // 35
-            () => Veraero3, // 36
-            () => ContreSixte // 37
-        ];
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
-        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
-        [
-            ([1], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = 
-        [
-            ([16, 21], () => !InMeleeRange()),
-            ([35], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
-        ];
-
-        internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
-        internal override bool IncludePot => RDM_Opener_Potion;
-        public override Preset Preset => Preset.RDM_Balance_Opener;
-        public override bool HasCooldowns()
-        {
-            if (!ActionsReady([Role.Swiftcast, Fleche, Embolden, ContreSixte]) || GetRemainingCharges(Acceleration) < 2 ||
-                !IsOffCooldown(Manafication) ||
-                GetRemainingCharges(Engagement) < 2 ||
-                GetRemainingCharges(Corpsacorps) < 2)
-                return false;
-
-            return true;
-        }
-    }
-     internal class FirstGCD : WrathOpener
-    {
-        public override List<Func<uint>> OpenerActions { get; set; } =
-        [
-            () => Acceleration, // 1
-            () => Veraero3, // 2
-            () => Veraero3, // 3
-            () => Embolden, // 4
+            () => All.Cease, // 1
+            () => Veraero3OrJolt3, // 2
+            () => Verthunder3, // 3
+            () => Role.Swiftcast, // 4
             () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 5
-            () => GrandImpact, // 6
+            () => Verthunder3, // 6
             () => Fleche, // 7
-            () => Manafication, // 8
-            () => EnchantedRiposteManafication, // 9
-            () => Corpsacorps, // 10
-            () => EnchantedZwerchhauManafication, // 11
-            () => Engagement, // 12
-            () => EnchantedRedoublementManafication, // 13
-            () => ContreSixte, // 14
-            () => Verflare, // 15
-            () => Engagement, // 16
+            () => Acceleration, // 8
+            () => Verthunder3, // 9
+            () => Embolden, // 10
+            () => Manafication, // 11
+            () => EnchantedRiposteManafication, // 12
+            () => ContreSixte, // 13
+            () => EnchantedZwerchhauManafication, // 14
+            () => Engagement, // 15
+            () => EnchantedRedoublementManafication, // 16
             () => Corpsacorps, // 17
-            () => Scorch, // 18
-            () => Acceleration, // 19
-            () => Role.Swiftcast, // 20
-            () => Resolution, // 21
-            () => Veraero3, // 22
-            () => ViceOfThorns, // 23
+            () => Verholy, // 18
+            () => ViceOfThorns, // 19
+            () => Scorch, // 20
+            () => Engagement, // 21
+            () => Corpsacorps, // 22
+            () => Resolution, // 23
             () => Prefulgence, // 24
             () => GrandImpact, // 25
-            () => Verthunder3, // 26
+            () => Acceleration, // 26
             () => Verfire, // 27
-            () => Verthunder3, // 28
-            () => Fleche // 29
+            () => GrandImpact, // 28
+            () => Verthunder3, // 29
+            () => Fleche, // 30
+            () => Veraero3, // 31
+            () => Verfire, // 32
+            () => Verthunder3, // 33
+            () => Verstone, // 34
+            () => Veraero3, // 35
+            () => Role.Swiftcast, // 36
+            () => Veraero3, // 37
+            () => ContreSixte // 38
         ];
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
 
-        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
-        [
-            ([2], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
-        ];
-        
-        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays
+        public Standard()
         {
-            get;
-            set;
-        } =
-        [
-            ([2], () => RDMFirstGCDOpenerAccelerationTime - 6)
-        ];
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
-        [
-            ([11, 15], () => !InMeleeRange())
-        ];
-
-        internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
-        internal override bool IncludePot => RDM_Opener_Potion;
-        public override Preset Preset => Preset.RDM_Balance_Opener;
-        public override bool HasCooldowns()
-        {
-            if (!ActionsReady([Role.Swiftcast, Fleche, Embolden, ContreSixte]))
-                return false;
-
-            if (!IsOffCooldown(Manafication))
-                return false;
-
-            if (GetRemainingCharges(Corpsacorps) < 2 || GetRemainingCharges(Engagement) < 2)
-                return false;
-            
-            if (GetRemainingCharges(Acceleration) < 2)
-                return false;
-
-            if (InCombat())
-                return false;
-
-            if (CountdownRemaining > 25)
-                return false;
-            
-            return true;
+            SkipSteps.Add(([15, 17, 21, 22], () => !InMeleeRange()));
+            SkipSteps.Add(([7], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast)));
         }
+    }
+
+    internal class GapClosing : RDMOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Veraero3OrJolt3, // 2
+            () => Verthunder3, // 3
+            () => Role.Swiftcast, // 4
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 5
+            () => Verthunder3, // 6
+            () => Fleche, // 7
+            () => Acceleration, // 8
+            () => Verthunder3, // 9
+            () => Embolden, // 10
+            () => Manafication, // 11
+            () => EnchantedRiposteManafication, // 12
+            () => ContreSixte, // 13
+            () => EnchantedZwerchhauManafication, // 14
+            () => Corpsacorps, // 15
+            () => EnchantedRedoublementManafication, // 16
+            () => Engagement, // 17
+            () => Verholy, // 18
+            () => ViceOfThorns, // 19
+            () => Scorch, // 20
+            () => Corpsacorps, // 21
+            () => Engagement, // 22
+            () => Resolution, // 23
+            () => Prefulgence, // 24
+            () => GrandImpact, // 25
+            () => Acceleration, // 26
+            () => Verfire, // 27
+            () => GrandImpact, // 28
+            () => Verthunder3, // 29
+            () => Fleche, // 30
+            () => Veraero3, // 31
+            () => Verfire, // 32
+            () => Verthunder3, // 33
+            () => Verstone, // 34
+            () => Veraero3, // 35
+            () => Role.Swiftcast, // 36
+            () => Veraero3, // 37
+            () => ContreSixte // 38
+        ];
+
+        public GapClosing()
+        {
+            SkipSteps.Add(([17, 22], () => !InMeleeRange()));
+            SkipSteps.Add(([36], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast)));
+        }
+    }
+
+    internal class FirstGCD : RDMOpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Acceleration, // 2
+            () => Veraero3OrJolt3, // 3
+            () => Veraero3, // 4
+            () => Embolden, // 5
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Int)), // 6
+            () => GrandImpact, // 7
+            () => Fleche, // 8
+            () => Manafication, // 9
+            () => EnchantedRiposteManafication, // 10
+            () => Corpsacorps, // 11
+            () => EnchantedZwerchhauManafication, // 12
+            () => Engagement, // 13
+            () => EnchantedRedoublementManafication, // 14
+            () => ContreSixte, // 15
+            () => Verflare, // 16
+            () => Engagement, // 17
+            () => Corpsacorps, // 18
+            () => Scorch, // 19
+            () => Acceleration, // 20
+            () => Role.Swiftcast, // 21
+            () => Resolution, // 22
+            () => Veraero3, // 23
+            () => ViceOfThorns, // 24
+            () => Prefulgence, // 25
+            () => GrandImpact, // 26
+            () => Verthunder3, // 27
+            () => Verfire, // 28
+            () => Verthunder3, // 29
+            () => Fleche // 30
+        ];
+
+        public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => !RDM_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 10)),
+            ([3], () => !RDM_Opener_PrepullBlock ? 0 : Math.Max(0, CountdownRemaining - 5))
+        ];
+
+        public FirstGCD() =>
+            SkipSteps.Add(([12, 16], () => !InMeleeRange()));
+
+        public override bool HasCooldowns() =>
+            base.HasCooldowns() &&
+            !InCombat() &&
+            CountdownRemaining <= 25;
     }
     #endregion
 }

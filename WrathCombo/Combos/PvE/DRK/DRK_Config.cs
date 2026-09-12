@@ -191,6 +191,10 @@ internal partial class DRK
                 #region Adv Single Target
 
                 case Preset.DRK_ST_BalanceOpener:
+                    DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
+                    DrawOpenerPotionChoice(DRK_Opener_Potion);
+                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
                     DrawRadioButton(DRK_SelectedOpener,
                         "Standard opener",
                         "Uses the Standard opener.",
@@ -201,9 +205,8 @@ internal partial class DRK
                         "Front-loads burst to align with an early (1st GCD) party buff window.",
                         outputValue: 1,
                         descriptionAsTooltip: true);
-                    DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
-                    DrawOpenerPotionChoice(DRK_Opener_Potion);
-                    ImGuiEx.TextUnderlined("Select Opener");
+                    ImGui.Spacing();
+                    ImGuiEx.TextUnderlined("Select Pull Action");
                     ImGui.Spacing();
                     DrawRadioButton(DRK_ST_OpenerAction,
                         "Unmend (Standard)",
@@ -215,17 +218,17 @@ internal partial class DRK
                     DrawRadioButton(DRK_ST_OpenerAction,
                         "Shadowstride",
                         "Will use Shadowstride to pull, if selected.\n" +
-                        "Will use an extra Hard Slash before Disesteem.\n" +
                         "Should start at -0.7 seconds.",
                         outputValue: (int)PullAction.Shadowstride,
                         descriptionAsTooltip: true);
                     DrawRadioButton(DRK_ST_OpenerAction,
-                        "Hard Slash (Face or Manual Pulling)",
-                        "Will use nothing to pull, if selected, just going straight to Hard Slash.\n" +
-                        "Will use an extra Hard Slash before Disesteem.\n" +
+                        "Hard Slash",
+                        "Will use Hard Slash to pull, if selected.\n" +
                         "Should start at 0.0 seconds.",
                         outputValue: (int)PullAction.HardSlash,
                         descriptionAsTooltip: true);
+
+                    DrawOpenerPrepullBlockChoice(DRK_Opener_PrepullBlock);
                     break;
 
                 case Preset.DRK_ST_CDs:
@@ -1241,7 +1244,8 @@ internal partial class DRK
             DRK_Opener_Potion = new("DRK_Opener_Potion"),
             DRK_Retarget_Unmend_FieldMO = new("DRK_Retarget_Unmend_FieldMO"),
             DRK_Retarget_Unmend_RangeBasedTargeting = new("DRK_Retarget_Unmend_RangeBasedTargeting"),
-            DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer  = new("DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer");
+            DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer  = new("DRK_Retarget_Unmend_SmartTargeting_NotTargetingPlayer"),
+            DRK_Opener_PrepullBlock = new("DRK_Opener_PrepullBlock", true);
 
         #endregion
 

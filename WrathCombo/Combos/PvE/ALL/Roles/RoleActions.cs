@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class RoleActions
@@ -40,8 +41,8 @@ internal static partial class RoleActions
             Sleep = 25880;
 
         public static bool CanAddle() =>
-            ActionReady(Addle) && !HasStatusEffect(Debuffs.Addle, CurrentTarget, true) &&
-            CanApplyStatus(CurrentTarget, Debuffs.Addle);
+            ActionReady(Addle) && !CurrentTarget.HasStatus(Debuffs.Addle, true) &&
+            CurrentTarget.CanApplyStatus(Debuffs.Addle);
 
         public static bool CanSleep() =>
             ActionReady(Sleep);
@@ -142,11 +143,11 @@ internal static partial class RoleActions
             ActionReady(Bloodbath) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanFeint() =>
-            ActionReady(Feint) && !HasStatusEffect(Debuffs.Feint, CurrentTarget, true) &&
-            CanApplyStatus(CurrentTarget, Debuffs.Feint);
+            ActionReady(Feint) && !CurrentTarget.HasStatus(Debuffs.Feint, true) &&
+            CurrentTarget.CanApplyStatus(Debuffs.Feint);
 
         public static bool CanTrueNorth() =>
-            ActionReady(TrueNorth) && TargetNeedsPositionals() && !HasStatusEffect(Buffs.TrueNorth) && CanDelayedWeave();
+            ActionReady(TrueNorth) && TargetNeedsPositionals() && !LocalPlayer.HasStatus(Buffs.TrueNorth) && CanDelayedWeave();
 
         public static class Buffs
         {
@@ -187,9 +188,9 @@ internal static partial class RoleActions
             ActionReady(Interject) && CanInterruptEnemy();
 
         public static bool CanReprisal(int healthPercent = 100, int? enemyCount = null, bool checkTargetForDebuff = true, IGameObject? target = null) =>
-            (!checkTargetForDebuff || !HasStatusEffect(Debuffs.Reprisal, target ?? CurrentTarget, true)) &&
+            (!checkTargetForDebuff || !(target ?? CurrentTarget).HasStatus(Debuffs.Reprisal, true)) &&
             (enemyCount is null ? InActionRange(Reprisal) : NumberOfEnemiesInRange(Reprisal) >= enemyCount) &&
-            ActionReady(Reprisal) && PlayerHealthPercentageHp() <= healthPercent && CanApplyStatus(target ?? CurrentTarget, Debuffs.Reprisal);
+            ActionReady(Reprisal) && PlayerHealthPercentageHp() <= healthPercent && (target ?? CurrentTarget).CanApplyStatus(Debuffs.Reprisal);
 
         public static bool CanShirk() =>
             ActionReady(Shirk);

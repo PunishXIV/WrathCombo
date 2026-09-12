@@ -6,6 +6,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.DNC.Config;
+using WrathCombo.Extensions;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -29,10 +30,10 @@ internal partial class DNC : PhysicalRanged
 
             #region Variables
 
-            var flow = HasStatusEffect(Buffs.SilkenFlow) ||
-                       HasStatusEffect(Buffs.FlourishingFlow);
-            var symmetry = HasStatusEffect(Buffs.SilkenSymmetry) ||
-                           HasStatusEffect(Buffs.FlourishingSymmetry);
+            var flow = LocalPlayer.HasStatus(Buffs.SilkenFlow) ||
+                       LocalPlayer.HasStatus(Buffs.FlourishingFlow);
+            var symmetry = LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                           LocalPlayer.HasStatus(Buffs.FlourishingSymmetry);
             var targetHpThresholdFeather = DNC_ST_Adv_FeatherBurstPercent;
             var targetHpThresholdStandard = DNC_ST_Adv_SSBurstPercent;
             var targetHpThresholdTechnical = DNC_ST_Adv_TSBurstPercent;
@@ -58,7 +59,7 @@ internal partial class DNC : PhysicalRanged
                 DNC_ST_ADV_TS_IncludeTS == (int)IncludeStep.Yes &&
                 GetCooldownRemainingTime(TechnicalStep) <
                 longAlignment && // Up or about to be (some anti-drift)
-                !HasStatusEffect(Buffs.StandardStep) && // After Standard
+                !LocalPlayer.HasStatus(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
                 ActionLearned(TechnicalStep);
@@ -77,14 +78,14 @@ internal partial class DNC : PhysicalRanged
 
             var needToFinish =
                 IsEnabled(Preset.DNC_ST_Adv_FM) &&
-                HasStatusEffect(Buffs.FinishingMoveReady) &&
-                !HasStatusEffect(Buffs.LastDanceReady) &&
+                LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
+                !LocalPlayer.HasStatus(Buffs.LastDanceReady) &&
                 (
                     // Aggressive anti-drift
                     (GetCooldownRemainingTime(StandardStep) < longAlignment &&
-                     HasStatusEffect(Buffs.TechnicalFinish)) ||
+                     LocalPlayer.HasStatus(Buffs.TechnicalFinish)) ||
                     // Anti-Drift outside of Tech
-                    (!HasStatusEffect(Buffs.TechnicalFinish) &&
+                    (!LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                      GetCooldownRemainingTime(StandardStep) < shortAlignment)
                 );
 
@@ -93,8 +94,8 @@ internal partial class DNC : PhysicalRanged
                 DNC_ST_ADV_SS_IncludeSS == (int)IncludeStep.Yes &&
                 GetCooldownRemainingTime(StandardStep) <
                 longAlignment && // Up or about to be (some anti-drift)
-                !HasStatusEffect(Buffs.FinishingMoveReady) &&
-                !HasStatusEffect(Buffs.TechnicalFinish);
+                !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
+                !LocalPlayer.HasStatus(Buffs.TechnicalFinish);
 
             #endregion
 
@@ -123,12 +124,6 @@ internal partial class DNC : PhysicalRanged
 
             #region Pre-pull
 
-            if (!InCombat() && ContentCheck.IsInConfiguredContent(
-                    DNC_ST_OpenerDifficulty, ContentCheck.ListSet.BossOnly) &&
-                IsEnabled(Preset.DNC_ST_BalanceOpener) &&
-                IsEnabled(Preset.DNC_ST_Opener_BlockEarly))
-                return All.Cease;
-
             if (!InCombat() && HasBattleTarget())
             {
                 // ST Standard Step (Pre-pull)
@@ -136,8 +131,8 @@ internal partial class DNC : PhysicalRanged
                     IsEnabled(Preset.DNC_ST_Adv_SS_Prepull) &&
                     DNC_ST_ADV_SS_IncludeSS == (int)IncludeStep.Yes &&
                     ActionReady(StandardStep) &&
-                    !HasStatusEffect(Buffs.FinishingMoveReady) &&
-                    !HasStatusEffect(Buffs.TechnicalFinish) &&
+                    !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
+                    !LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                     IsOffCooldown(TechnicalStep) &&
                     IsOffCooldown(StandardStep))
                     return StandardStep;
@@ -145,14 +140,14 @@ internal partial class DNC : PhysicalRanged
                 // ST Standard Steps (Pre-pull)
                 if ((IsEnabled(Preset.DNC_ST_Adv_SS) &&
                      IsEnabled(Preset.DNC_ST_Adv_SS_Prepull)) &&
-                    HasStatusEffect(Buffs.StandardStep) &&
+                    LocalPlayer.HasStatus(Buffs.StandardStep) &&
                     Gauge.CompletedSteps < 2)
                     return Gauge.NextStep;
 
                 // ST Peloton
                 if (IsEnabled(Preset.DNC_ST_Adv_Peloton) &&
-                    !HasStatusEffect(Buffs.Peloton, anyOwner: true) &&
-                    GetStatusEffectRemainingTime(Buffs.StandardStep) > 5)
+                    !LocalPlayer.HasStatus(Buffs.Peloton, true) &&
+                    LocalPlayer.Status(Buffs.StandardStep).RemainingTimeOrZero() > 5)
                     return Peloton;
             }
 
@@ -162,14 +157,14 @@ internal partial class DNC : PhysicalRanged
 
             // ST Standard (Dance) Steps & Fill
             if (IsEnabled(Preset.DNC_ST_Adv_SS) &&
-                HasStatusEffect(Buffs.StandardStep))
+                LocalPlayer.HasStatus(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
                     : FinishOrHold(StandardFinish2);
 
             // ST Technical (Dance) Steps & Fill
             if ((IsEnabled(Preset.DNC_ST_Adv_TS)) &&
-                HasStatusEffect(Buffs.TechnicalStep))
+                LocalPlayer.HasStatus(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
                     : FinishOrHold(TechnicalFinish4);
@@ -186,7 +181,7 @@ internal partial class DNC : PhysicalRanged
                 CanWeave() &&
                 ActionLearned(Devilment) &&
                 GetCooldownRemainingTime(Devilment) < GCD / 2 &&
-                (HasStatusEffect(Buffs.TechnicalFinish) ||
+                (LocalPlayer.HasStatus(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
                  !ActionLearned(TechnicalStep)))
                 return Devilment;
@@ -198,30 +193,30 @@ internal partial class DNC : PhysicalRanged
                 !WasLastWeaponskill(TechnicalFinish4) &&
                 IsOnCooldown(Devilment) &&
                 (GetCooldownRemainingTime(Devilment) > 50 ||
-                 (HasStatusEffect(Buffs.Devilment) &&
-                  GetStatusEffectRemainingTime(Buffs.Devilment) < 19)) &&
-                !HasStatusEffect(Buffs.ThreeFoldFanDance) &&
-                !HasStatusEffect(Buffs.FourFoldFanDance) &&
-                !HasStatusEffect(Buffs.FlourishingSymmetry) &&
-                !HasStatusEffect(Buffs.FlourishingFlow) &&
-                !HasStatusEffect(Buffs.FinishingMoveReady) &&
+                 (LocalPlayer.HasStatus(Buffs.Devilment) &&
+                  LocalPlayer.Status(Buffs.Devilment).RemainingTimeOrZero() < 19)) &&
+                !LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) &&
+                !LocalPlayer.HasStatus(Buffs.FourFoldFanDance) &&
+                !LocalPlayer.HasStatus(Buffs.FlourishingSymmetry) &&
+                !LocalPlayer.HasStatus(Buffs.FlourishingFlow) &&
+                !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
                 ((CombatEngageDuration().TotalSeconds < 20 &&
-                  HasStatusEffect(Buffs.TechnicalFinish)) ||
+                  LocalPlayer.HasStatus(Buffs.TechnicalFinish)) ||
                  CombatEngageDuration().TotalSeconds > 20))
                 return Flourish;
 
             if ((DNC_ST_ADV_AntiDrift == (int)AntiDrift.TripleWeave ||
                  DNC_ST_ADV_AntiDrift == (int)AntiDrift.Both) &&
-                (HasStatusEffect(Buffs.ThreeFoldFanDance) ||
-                 HasStatusEffect(Buffs.FourFoldFanDance)) &&
+                (LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) ||
+                 LocalPlayer.HasStatus(Buffs.FourFoldFanDance)) &&
                 CombatEngageDuration().TotalSeconds > 20 &&
-                HasStatusEffect(Buffs.TechnicalFinish) &&
+                LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                 GetCooldownRemainingTime(Flourish) > 58)
             {
-                if (HasStatusEffect(Buffs.ThreeFoldFanDance) &&
+                if (LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) &&
                     CanDelayedWeave())
                     return FanDance3;
-                if (HasStatusEffect(Buffs.FourFoldFanDance))
+                if (LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                     return FanDance4;
             }
 
@@ -231,13 +226,13 @@ internal partial class DNC : PhysicalRanged
                 IsOffCooldown(ClosedPosition) &&
                 CanWeave() &&
                 CurrentPartnerNonOptimal)
-                return HasStatusEffect(Buffs.ClosedPosition)
+                return LocalPlayer.HasStatus(Buffs.ClosedPosition)
                     ? Ending
                     : ClosedPosition.Retarget(actionID, DancePartnerResolver);
 
             // ST Interrupt
             if (Role.CanHeadGraze(Preset.DNC_ST_Adv_Interrupt, WeaveTypes.Weave) &&
-                !HasStatusEffect(Buffs.TechnicalFinish))
+                !LocalPlayer.HasStatus(Buffs.TechnicalFinish))
                 return Role.HeadGraze;
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
@@ -246,11 +241,11 @@ internal partial class DNC : PhysicalRanged
                 if (IsEnabled(Preset.DNC_ST_Adv_FanProccs))
                 {
                     if (IsEnabled(Preset.DNC_ST_Adv_FanProcc3) &&
-                        HasStatusEffect(Buffs.ThreeFoldFanDance))
+                        LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance))
                         return FanDance3;
 
                     if (IsEnabled(Preset.DNC_ST_Adv_FanProcc4) &&
-                        HasStatusEffect(Buffs.FourFoldFanDance))
+                        LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                         return FanDance4;
                 }
 
@@ -266,14 +261,14 @@ internal partial class DNC : PhysicalRanged
                     if (ActionLearned(TechnicalStep))
                     {
                         // Burst FD1
-                        if (HasStatusEffect(Buffs.TechnicalFinish) &&
+                        if (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                             Gauge.Feathers > 0)
                             return FanDance1;
 
                         // FD1 Pooling
                         if (Gauge.Feathers > 3 &&
-                            (HasStatusEffect(Buffs.SilkenSymmetry) ||
-                             HasStatusEffect(Buffs.SilkenFlow))
+                            (LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                             LocalPlayer.HasStatus(Buffs.SilkenFlow))
                            )
 
                             return FanDance1;
@@ -287,7 +282,7 @@ internal partial class DNC : PhysicalRanged
                 if (ActionReady(ShieldSamba) &&
                     IsEnabled(Preset.DNC_ST_Adv_ShieldSamba) && GroupDamageIncoming() && 
                     NumberOfAlliesInRange(ShieldSamba) >= GetPartyMembers().Count * .75 &&
-                    !HasStatusEffects([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
+                    !LocalPlayer.HasStatusEffects([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], true))
                     return ShieldSamba;
 
                 // ST Panic Heals
@@ -305,7 +300,7 @@ internal partial class DNC : PhysicalRanged
                 // ST Improvisation
                 if (IsEnabled(Preset.DNC_ST_Adv_Improvisation) &&
                     ActionReady(Improvisation) &&
-                    !HasStatusEffect(Buffs.TechnicalFinish) &&
+                    !LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                     InCombat() &&
                     AlliesIn8Yalms)
                     return Improvisation;
@@ -316,23 +311,23 @@ internal partial class DNC : PhysicalRanged
             #region GCD
 
             // ST Technical Step
-            if (needToTech && !HasStatusEffect(Buffs.FlourishingFinish))
+            if (needToTech && !LocalPlayer.HasStatus(Buffs.FlourishingFinish))
                 return TechnicalStep;
 
             // ST Last Dance
             if (IsEnabled(Preset.DNC_ST_Adv_LD) &&
-                HasStatusEffect(Buffs.LastDanceReady) &&
+                LocalPlayer.HasStatus(Buffs.LastDanceReady) &&
                 (
                     // Has Tech and not-capped Esprit
-                    (HasStatusEffect(Buffs.TechnicalFinish) &&
+                    (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                      Gauge.Esprit < 95) ||
                     // Can't hold it for Tech
                     !(IsOnCooldown(TechnicalStep) &&
                       GetCooldownRemainingTime(TechnicalStep) < 20 &&
-                      GetStatusEffectRemainingTime(Buffs.LastDanceReady) >
+                      LocalPlayer.Status(Buffs.LastDanceReady).RemainingTimeOrZero() >
                       GetCooldownRemainingTime(TechnicalStep) + 4) ||
                     // Last second
-                    GetStatusEffectRemainingTime(Buffs.LastDanceReady) < 4
+                    LocalPlayer.Status(Buffs.LastDanceReady).RemainingTimeOrZero() < 4
                 ))
                 return LastDance;
 
@@ -345,12 +340,12 @@ internal partial class DNC : PhysicalRanged
                 return StandardStep;
 
             // Emergency Starfall usage
-            if (HasStatusEffect(Buffs.FlourishingStarfall) &&
-                GetStatusEffectRemainingTime(Buffs.FlourishingStarfall) < 4)
+            if (LocalPlayer.HasStatus(Buffs.FlourishingStarfall) &&
+                LocalPlayer.Status(Buffs.FlourishingStarfall).RemainingTimeOrZero() < 4)
                 return StarfallDance;
 
             // ST Tillana (Emergency Use)
-            if (GetPossessedStatusRemainingTime(Buffs.FlourishingFinish) < GCD * 2.5 &&
+            if (LocalPlayer.Status(Buffs.FlourishingFinish).RemainingTimeOrNaN() < GCD * 2.5 &&
                 tillanaDropProtectionActive &&
                 ActionLearned(Tillana) &&
                 EnemyIn15Yalms)
@@ -358,7 +353,7 @@ internal partial class DNC : PhysicalRanged
 
             // ST Dance of the Dawn
             if (IsEnabled(Preset.DNC_ST_Adv_DawnDance) &&
-                HasStatusEffect(Buffs.DanceOfTheDawnReady) &&
+                LocalPlayer.HasStatus(Buffs.DanceOfTheDawnReady) &&
                 ActionReady(DanceOfTheDawn) &&
                 // Tech is up
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
@@ -367,10 +362,10 @@ internal partial class DNC : PhysicalRanged
                     // >Esprit threshold use
                     Gauge.Esprit >= DNC_ST_Adv_SaberThreshold ||
                     // Will overcap with Tillana if not used
-                    (HasStatusEffect(Buffs.TechnicalFinish) &&
+                    (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                      !tillanaDriftProtectionActive && Gauge.Esprit >= 50) ||
                     // Emergency use
-                    (GetStatusEffectRemainingTime(Buffs.DanceOfTheDawnReady) < 5 &&
+                    (LocalPlayer.Status(Buffs.DanceOfTheDawnReady).RemainingTimeOrZero() < 5 &&
                      Gauge.Esprit >= 50)
                 ))
                 return OriginalHook(DanceOfTheDawn);
@@ -379,18 +374,18 @@ internal partial class DNC : PhysicalRanged
             if (IsEnabled(Preset.DNC_ST_Adv_SaberDance) &&
                 ActionReady(SaberDance) &&
                 (Gauge.Esprit >= DNC_ST_Adv_SaberThreshold || // above esprit threshold use
-                 (HasStatusEffect(Buffs.TechnicalFinish) && // will overcap with Tillana if not used
+                 (LocalPlayer.HasStatus(Buffs.TechnicalFinish) && // will overcap with Tillana if not used
                   !tillanaDriftProtectionActive && Gauge.Esprit >= 50)))
                 return ActionLearned(DanceOfTheDawn) &&
-                       HasStatusEffect(Buffs.DanceOfTheDawnReady)
+                       LocalPlayer.HasStatus(Buffs.DanceOfTheDawnReady)
                     ? OriginalHook(DanceOfTheDawn)
                     : SaberDance;
 
-            if (HasStatusEffect(Buffs.FlourishingStarfall))
+            if (LocalPlayer.HasStatus(Buffs.FlourishingStarfall))
                 return StarfallDance;
 
             // ST Tillana
-            if (HasStatusEffect(Buffs.FlourishingFinish) &&
+            if (LocalPlayer.HasStatus(Buffs.FlourishingFinish) &&
                 IsEnabled(Preset.DNC_ST_Adv_Tillana) &&
                 ActionLearned(Tillana) &&
                 EnemyIn15Yalms)
@@ -401,7 +396,7 @@ internal partial class DNC : PhysicalRanged
                ActionReady(SaberDance) &&
                Gauge.Esprit >= 50 &&
                (Gauge.Esprit >= DNC_ST_Adv_SaberThreshold ||
-                HasStatusEffect(Buffs.TechnicalFinish) ||
+                LocalPlayer.HasStatus(Buffs.TechnicalFinish) ||
                 JustUsed(TechnicalFinish4)))
                 return SaberDance;
 
@@ -436,10 +431,10 @@ internal partial class DNC : PhysicalRanged
 
             #region Variables
 
-            var flow = HasStatusEffect(Buffs.SilkenFlow) ||
-                       HasStatusEffect(Buffs.FlourishingFlow);
-            var symmetry = HasStatusEffect(Buffs.SilkenSymmetry) ||
-                           HasStatusEffect(Buffs.FlourishingSymmetry);
+            var flow = LocalPlayer.HasStatus(Buffs.SilkenFlow) ||
+                       LocalPlayer.HasStatus(Buffs.FlourishingFlow);
+            var symmetry = LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                           LocalPlayer.HasStatus(Buffs.FlourishingSymmetry);
             var targetHpThresholdFeather = 10;
             var targetHpThresholdStandard = 1;
             var targetHpThresholdTechnical = 1;
@@ -451,7 +446,7 @@ internal partial class DNC : PhysicalRanged
             var needToTech =
                 GetCooldownRemainingTime(TechnicalStep) <
                 longAlignmentThreshold && // Up or about to be (some anti-drift)
-                !HasStatusEffect(Buffs.StandardStep) && // After Standard
+                !LocalPlayer.HasStatus(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
                 ActionLearned(TechnicalStep);
@@ -461,21 +456,21 @@ internal partial class DNC : PhysicalRanged
                 ActionLearned(StandardStep);
 
             var needToFinish =
-                HasStatusEffect(Buffs.FinishingMoveReady) &&
-                !HasStatusEffect(Buffs.LastDanceReady) &&
+                LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
+                !LocalPlayer.HasStatus(Buffs.LastDanceReady) &&
                 ((GetCooldownRemainingTime(StandardStep) < longAlignmentThreshold &&
-                  HasStatusEffect(Buffs.TechnicalFinish)) || // Aggressive anti-drift
-                 (!HasStatusEffect(Buffs.TechnicalFinish) && // Anti-Drift outside of Tech
+                  LocalPlayer.HasStatus(Buffs.TechnicalFinish)) || // Aggressive anti-drift
+                 (!LocalPlayer.HasStatus(Buffs.TechnicalFinish) && // Anti-Drift outside of Tech
                   GetCooldownRemainingTime(StandardStep) <
                   shortAlignmentThreshold));
 
             var needToStandard =
                 GetCooldownRemainingTime(StandardStep) <
                 longAlignmentThreshold && // Up or about to be (some anti-drift)
-                !HasStatusEffect(Buffs.FinishingMoveReady) &&
+                !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
                 (IsOffCooldown(Flourish) ||
                  GetCooldownRemainingTime(Flourish) > 5) &&
-                !HasStatusEffect(Buffs.TechnicalFinish);
+                !LocalPlayer.HasStatus(Buffs.TechnicalFinish);
 
             #endregion
 
@@ -492,14 +487,14 @@ internal partial class DNC : PhysicalRanged
                 {
                     // ST Standard Step (Pre-pull)
                     if (ActionReady(StandardStep) &&
-                        !HasStatusEffect(Buffs.FinishingMoveReady) &&
-                        !HasStatusEffect(Buffs.TechnicalFinish) &&
+                        !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
+                        !LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                         IsOffCooldown(TechnicalStep) &&
                         IsOffCooldown(StandardStep))
                         return StandardStep;
 
                     // ST Standard Steps (Pre-pull)
-                    if (HasStatusEffect(Buffs.StandardStep) &&
+                    if (LocalPlayer.HasStatus(Buffs.StandardStep) &&
                         Gauge.CompletedSteps < 2)
                         return Gauge.NextStep;
                 }
@@ -510,13 +505,13 @@ internal partial class DNC : PhysicalRanged
             #region Dance Fills
 
             // ST Standard (Dance) Steps & Fill
-            if (HasStatusEffect(Buffs.StandardStep))
+            if (LocalPlayer.HasStatus(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
                     : StandardFinish2;
 
             // ST Technical (Dance) Steps & Fill
-            if (HasStatusEffect(Buffs.TechnicalStep))
+            if (LocalPlayer.HasStatus(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
                     : TechnicalFinish4;
@@ -532,7 +527,7 @@ internal partial class DNC : PhysicalRanged
             if (CanWeave() &&
                 ActionLearned(Devilment) &&
                 GetCooldownRemainingTime(Devilment) < 0.05 &&
-                (HasStatusEffect(Buffs.TechnicalFinish) ||
+                (LocalPlayer.HasStatus(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
                  !ActionLearned(TechnicalStep)))
                 return Devilment;
@@ -543,28 +538,28 @@ internal partial class DNC : PhysicalRanged
                 !WasLastWeaponskill(TechnicalFinish4) &&
                 IsOnCooldown(Devilment) &&
                 (GetCooldownRemainingTime(Devilment) > 50 ||
-                 (HasStatusEffect(Buffs.Devilment) &&
-                  GetStatusEffectRemainingTime(Buffs.Devilment) < 19)) &&
-                !HasStatusEffect(Buffs.ThreeFoldFanDance) &&
-                !HasStatusEffect(Buffs.FourFoldFanDance) &&
-                !HasStatusEffect(Buffs.FlourishingSymmetry) &&
-                !HasStatusEffect(Buffs.FlourishingFlow) &&
-                !HasStatusEffect(Buffs.FinishingMoveReady) &&
+                 (LocalPlayer.HasStatus(Buffs.Devilment) &&
+                  LocalPlayer.Status(Buffs.Devilment).RemainingTimeOrZero() < 19)) &&
+                !LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) &&
+                !LocalPlayer.HasStatus(Buffs.FourFoldFanDance) &&
+                !LocalPlayer.HasStatus(Buffs.FlourishingSymmetry) &&
+                !LocalPlayer.HasStatus(Buffs.FlourishingFlow) &&
+                !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
                 ((CombatEngageDuration().TotalSeconds < 20 &&
-                  HasStatusEffect(Buffs.TechnicalFinish)) ||
+                  LocalPlayer.HasStatus(Buffs.TechnicalFinish)) ||
                  CombatEngageDuration().TotalSeconds > 20))
                 return Flourish;
 
-            if ((HasStatusEffect(Buffs.ThreeFoldFanDance) ||
-                 HasStatusEffect(Buffs.FourFoldFanDance)) &&
+            if ((LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) ||
+                 LocalPlayer.HasStatus(Buffs.FourFoldFanDance)) &&
                 CombatEngageDuration().TotalSeconds > 20 &&
-                HasStatusEffect(Buffs.TechnicalFinish) &&
+                LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                 GetCooldownRemainingTime(Flourish) > 58)
             {
-                if (HasStatusEffect(Buffs.ThreeFoldFanDance) &&
+                if (LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) &&
                     CanDelayedWeave())
                     return FanDance3;
-                if (HasStatusEffect(Buffs.FourFoldFanDance))
+                if (LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                     return FanDance4;
             }
 
@@ -572,21 +567,21 @@ internal partial class DNC : PhysicalRanged
             if (CanWeave() && ActionLearned(ClosedPosition) &&
                 IsOffCooldown(ClosedPosition) &&
                 CurrentPartnerNonOptimal)
-                return HasStatusEffect(Buffs.ClosedPosition)
+                return LocalPlayer.HasStatus(Buffs.ClosedPosition)
                     ? Ending
                     : ClosedPosition.Retarget(actionID, DancePartnerResolver);
 
             // ST Interrupt
             if (Role.CanHeadGraze(Preset.DNC_ST_SimpleMode, WeaveTypes.Weave) &&
-                !HasStatusEffect(Buffs.TechnicalFinish))
+                !LocalPlayer.HasStatus(Buffs.TechnicalFinish))
                 return Role.HeadGraze;
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
             {
-                if (HasStatusEffect(Buffs.ThreeFoldFanDance))
+                if (LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance))
                     return FanDance3;
 
-                if (HasStatusEffect(Buffs.FourFoldFanDance))
+                if (LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                     return FanDance4;
 
                 // ST Feathers & Fans
@@ -600,14 +595,14 @@ internal partial class DNC : PhysicalRanged
                     if (ActionLearned(TechnicalStep))
                     {
                         // Burst FD1
-                        if (HasStatusEffect(Buffs.TechnicalFinish) &&
+                        if (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                             Gauge.Feathers > 0)
                             return FanDance1;
 
                         // FD1 Pooling
                         if (Gauge.Feathers > 3 &&
-                            (HasStatusEffect(Buffs.SilkenSymmetry) ||
-                             HasStatusEffect(Buffs.SilkenFlow)))
+                            (LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                             LocalPlayer.HasStatus(Buffs.SilkenFlow)))
                             return FanDance1;
                     }
 
@@ -617,7 +612,7 @@ internal partial class DNC : PhysicalRanged
                 }
                 if (ActionReady(ShieldSamba) && GroupDamageIncoming() && 
                     NumberOfAlliesInRange(ShieldSamba) >= GetPartyMembers().Count * .75 &&
-                    !HasStatusEffects([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
+                    !LocalPlayer.HasStatusEffects([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], true))
                     return ShieldSamba;
 
                 // ST Panic Heals
@@ -633,22 +628,22 @@ internal partial class DNC : PhysicalRanged
             #region GCD
 
             // ST Technical Step
-            if (needToTech && !HasStatusEffect(Buffs.FlourishingFinish))
+            if (needToTech && !LocalPlayer.HasStatus(Buffs.FlourishingFinish))
                 return TechnicalStep;
 
             // ST Last Dance
-            if (HasStatusEffect(Buffs.LastDanceReady) &&
+            if (LocalPlayer.HasStatus(Buffs.LastDanceReady) &&
                 (
                     // Has Tech and not-capped Esprit
-                    (HasStatusEffect(Buffs.TechnicalFinish) &&
+                    (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                      Gauge.Esprit < 95) ||
                     // Can't hold it for Tech
                     !(IsOnCooldown(TechnicalStep) &&
                       GetCooldownRemainingTime(TechnicalStep) < 20 &&
-                      GetStatusEffectRemainingTime(Buffs.LastDanceReady) >
+                      LocalPlayer.Status(Buffs.LastDanceReady).RemainingTimeOrZero() >
                       GetCooldownRemainingTime(TechnicalStep) + 4) ||
                     // Last second
-                    GetStatusEffectRemainingTime(Buffs.LastDanceReady) < 4
+                    LocalPlayer.Status(Buffs.LastDanceReady).RemainingTimeOrZero() < 4
                 ))
                 return LastDance;
 
@@ -661,19 +656,19 @@ internal partial class DNC : PhysicalRanged
                 return StandardStep;
 
             // Emergency Starfall usage
-            if (HasStatusEffect(Buffs.FlourishingStarfall) &&
-                GetStatusEffectRemainingTime(Buffs.FlourishingStarfall) < 4)
+            if (LocalPlayer.HasStatus(Buffs.FlourishingStarfall) &&
+                LocalPlayer.Status(Buffs.FlourishingStarfall).RemainingTimeOrZero() < 4)
                 return StarfallDance;
 
             // ST Tillana (Emergency Use)
-            if (GetPossessedStatusRemainingTime(Buffs.FlourishingFinish) < GCD * 1.5 &&
+            if (LocalPlayer.Status(Buffs.FlourishingFinish).RemainingTimeOrNaN() < GCD * 1.5 &&
                 Gauge.Esprit < 100 &&
                 ActionLearned(Tillana) &&
                 EnemyIn15Yalms)
                 return Tillana;
 
             // ST Dance of the Dawn
-            if (HasStatusEffect(Buffs.DanceOfTheDawnReady) &&
+            if (LocalPlayer.HasStatus(Buffs.DanceOfTheDawnReady) &&
                 ActionReady(DanceOfTheDawn) &&
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                  IsOffCooldown(TechnicalStep)) && // Tech is up
@@ -681,10 +676,10 @@ internal partial class DNC : PhysicalRanged
                     // >Esprit threshold use
                     Gauge.Esprit >= 50 ||
                     // Will overcap with Tillana if not used
-                    (HasStatusEffect(Buffs.TechnicalFinish) &&
+                    (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                      Gauge.Esprit >= 50) ||
                     // Emergency use
-                    (GetStatusEffectRemainingTime(Buffs.DanceOfTheDawnReady) < 5 &&
+                    (LocalPlayer.Status(Buffs.DanceOfTheDawnReady).RemainingTimeOrZero() < 5 &&
                      Gauge.Esprit >= 50)
                 ))
                 return OriginalHook(DanceOfTheDawn);
@@ -693,15 +688,15 @@ internal partial class DNC : PhysicalRanged
             if (ActionReady(SaberDance) &&
                 Gauge.Esprit >= 50)
                 return ActionLearned(DanceOfTheDawn) &&
-                       HasStatusEffect(Buffs.DanceOfTheDawnReady)
+                       LocalPlayer.HasStatus(Buffs.DanceOfTheDawnReady)
                     ? OriginalHook(DanceOfTheDawn)
                     : SaberDance;
 
-            if (HasStatusEffect(Buffs.FlourishingStarfall))
+            if (LocalPlayer.HasStatus(Buffs.FlourishingStarfall))
                 return StarfallDance;
 
             // ST Tillana
-            if (HasStatusEffect(Buffs.FlourishingFinish) &&
+            if (LocalPlayer.HasStatus(Buffs.FlourishingFinish) &&
                 ActionLearned(Tillana) &&
                 EnemyIn15Yalms)
                 return Tillana;
@@ -737,10 +732,10 @@ internal partial class DNC : PhysicalRanged
 
             #region Variables
 
-            bool flow = HasStatusEffect(Buffs.SilkenFlow) ||
-                        HasStatusEffect(Buffs.FlourishingFlow);
-            bool symmetry = HasStatusEffect(Buffs.SilkenSymmetry) ||
-                            HasStatusEffect(Buffs.FlourishingSymmetry);
+            bool flow = LocalPlayer.HasStatus(Buffs.SilkenFlow) ||
+                        LocalPlayer.HasStatus(Buffs.FlourishingFlow);
+            bool symmetry = LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                            LocalPlayer.HasStatus(Buffs.FlourishingSymmetry);
             var targetHpThresholdStandard = DNC_AoE_Adv_SSBurstPercent;
             var targetHpThresholdTechnical = DNC_AoE_Adv_TSBurstPercent;
 
@@ -748,7 +743,7 @@ internal partial class DNC : PhysicalRanged
                 IsEnabled(Preset.DNC_AoE_Adv_TS) &&
                 DNC_AoE_Adv_TS_IncludeTS == (int)IncludeStep.Yes &&
                 ActionReady(TechnicalStep) && // Up
-                !HasStatusEffect(Buffs.StandardStep) && // After Standard
+                !LocalPlayer.HasStatus(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
                 ActionLearned(TechnicalStep);
@@ -760,14 +755,14 @@ internal partial class DNC : PhysicalRanged
 
             var needToFinish =
                 IsEnabled(Preset.DNC_AoE_Adv_FM) && // Enabled
-                HasStatusEffect(Buffs.FinishingMoveReady) &&
-                !HasStatusEffect(Buffs.LastDanceReady);
+                LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
+                !LocalPlayer.HasStatus(Buffs.LastDanceReady);
 
             var needToStandard =
                 IsEnabled(Preset.DNC_AoE_Adv_SS) && // Enabled
                 DNC_AoE_Adv_SS_IncludeSS == (int)IncludeStep.Yes &&
-                !HasStatusEffect(Buffs.FinishingMoveReady) &&
-                !HasStatusEffect(Buffs.TechnicalFinish);
+                !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
+                !LocalPlayer.HasStatus(Buffs.TechnicalFinish);
 
             #endregion
 
@@ -790,14 +785,14 @@ internal partial class DNC : PhysicalRanged
 
             // AoE Standard (Dance) Steps & Fill
             if (IsEnabled(Preset.DNC_AoE_Adv_SS) &&
-                HasStatusEffect(Buffs.StandardStep))
+                LocalPlayer.HasStatus(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
                     : FinishOrHold(StandardFinish2);
 
             // AoE Technical (Dance) Steps & Fill
             if (IsEnabled(Preset.DNC_AoE_Adv_TS) &&
-                HasStatusEffect(Buffs.TechnicalStep))
+                LocalPlayer.HasStatus(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
                     : FinishOrHold(TechnicalFinish4);
@@ -814,7 +809,7 @@ internal partial class DNC : PhysicalRanged
                 CanWeave() &&
                 ActionLearned(Devilment) &&
                 GetCooldownRemainingTime(Devilment) < 0.05 &&
-                (HasStatusEffect(Buffs.TechnicalFinish) ||
+                (LocalPlayer.HasStatus(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
                  !ActionLearned(TechnicalStep)))
                 return Devilment;
@@ -826,18 +821,18 @@ internal partial class DNC : PhysicalRanged
                 !WasLastWeaponskill(TechnicalFinish4) &&
                 IsOnCooldown(Devilment) &&
                 (GetCooldownRemainingTime(Devilment) > 50 ||
-                 (HasStatusEffect(Buffs.Devilment) &&
-                  GetStatusEffectRemainingTime(Buffs.Devilment) < 19)) &&
-                !HasStatusEffect(Buffs.ThreeFoldFanDance) &&
-                !HasStatusEffect(Buffs.FourFoldFanDance) &&
-                !HasStatusEffect(Buffs.FlourishingSymmetry) &&
-                !HasStatusEffect(Buffs.FlourishingFlow) &&
-                !HasStatusEffect(Buffs.FinishingMoveReady))
+                 (LocalPlayer.HasStatus(Buffs.Devilment) &&
+                  LocalPlayer.Status(Buffs.Devilment).RemainingTimeOrZero() < 19)) &&
+                !LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) &&
+                !LocalPlayer.HasStatus(Buffs.FourFoldFanDance) &&
+                !LocalPlayer.HasStatus(Buffs.FlourishingSymmetry) &&
+                !LocalPlayer.HasStatus(Buffs.FlourishingFlow) &&
+                !LocalPlayer.HasStatus(Buffs.FinishingMoveReady))
                 return Flourish;
 
             // AoE Interrupt
             if (Role.CanHeadGraze(Preset.DNC_AoE_Adv_Interrupt, WeaveTypes.Weave) &&
-                !HasStatusEffect(Buffs.TechnicalFinish))
+                !LocalPlayer.HasStatus(Buffs.TechnicalFinish))
                 return Role.HeadGraze;
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
@@ -845,7 +840,7 @@ internal partial class DNC : PhysicalRanged
                 // AoE Fan 3
                 if (IsEnabled(Preset.DNC_AoE_Adv_FanProccs) &&
                     IsEnabled(Preset.DNC_AoE_Adv_FanProcc3) &&
-                    HasStatusEffect(Buffs.ThreeFoldFanDance))
+                    LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance))
                     return FanDance3;
 
                 // AoE Feathers
@@ -857,14 +852,14 @@ internal partial class DNC : PhysicalRanged
                         if (ActionLearned(TechnicalStep))
                         {
                             // Burst FD2
-                            if (HasStatusEffect(Buffs.TechnicalFinish) &&
+                            if (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                                 Gauge.Feathers > 0)
                                 return FanDance2;
 
                             // FD2 Pooling
                             if (Gauge.Feathers > 3 &&
-                                (HasStatusEffect(Buffs.SilkenSymmetry) ||
-                                 HasStatusEffect(Buffs.SilkenFlow)))
+                                (LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                                 LocalPlayer.HasStatus(Buffs.SilkenFlow)))
                                 return FanDance2;
                         }
 
@@ -883,7 +878,7 @@ internal partial class DNC : PhysicalRanged
                 // AoE Fan 4
                 if (IsEnabled(Preset.DNC_AoE_Adv_FanProccs) &&
                     IsEnabled(Preset.DNC_AoE_Adv_FanProcc4) &&
-                    HasStatusEffect(Buffs.FourFoldFanDance))
+                    LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                     return FanDance4;
 
                 // AoE Panic Heals
@@ -901,7 +896,7 @@ internal partial class DNC : PhysicalRanged
                 // AoE Improvisation
                 if (IsEnabled(Preset.DNC_AoE_Adv_Improvisation) &&
                     ActionReady(Improvisation) &&
-                    !HasStatusEffect(Buffs.TechnicalStep) &&
+                    !LocalPlayer.HasStatus(Buffs.TechnicalStep) &&
                     InCombat())
                     return Improvisation;
             }
@@ -911,18 +906,18 @@ internal partial class DNC : PhysicalRanged
             #region GCD
 
             // AoE Technical Step
-            if (needToTech && !HasStatusEffect(Buffs.FlourishingFinish))
+            if (needToTech && !LocalPlayer.HasStatus(Buffs.FlourishingFinish))
                 return TechnicalStep;
 
             // AoE Last Dance
             if (IsEnabled(Preset.DNC_AoE_Adv_LD) && // Enabled
-                HasStatusEffect(Buffs.LastDanceReady) && // Ready
-                (HasStatusEffect(Buffs.TechnicalFinish) || // Has Tech
+                LocalPlayer.HasStatus(Buffs.LastDanceReady) && // Ready
+                (LocalPlayer.HasStatus(Buffs.TechnicalFinish) || // Has Tech
                  !(IsOnCooldown(TechnicalStep) && // Or can't hold it for tech
                    GetCooldownRemainingTime(TechnicalStep) < 20 &&
-                   GetStatusEffectRemainingTime(Buffs.LastDanceReady) >
+                   LocalPlayer.Status(Buffs.LastDanceReady).RemainingTimeOrZero() >
                    GetCooldownRemainingTime(TechnicalStep) + 4) ||
-                 GetStatusEffectRemainingTime(Buffs.LastDanceReady) <
+                 LocalPlayer.Status(Buffs.LastDanceReady).RemainingTimeOrZero() <
                  4)) // Or last second
                 return LastDance;
 
@@ -935,21 +930,21 @@ internal partial class DNC : PhysicalRanged
                 return StandardStep;
 
             // Emergency Starfall usage
-            if (HasStatusEffect(Buffs.FlourishingStarfall) &&
-                GetStatusEffectRemainingTime(Buffs.FlourishingStarfall) < 4)
+            if (LocalPlayer.HasStatus(Buffs.FlourishingStarfall) &&
+                LocalPlayer.Status(Buffs.FlourishingStarfall).RemainingTimeOrZero() < 4)
                 return StarfallDance;
 
             // AoE Dance of the Dawn
             if (IsEnabled(Preset.DNC_AoE_Adv_DawnDance) &&
-                HasStatusEffect(Buffs.DanceOfTheDawnReady) &&
+                LocalPlayer.HasStatus(Buffs.DanceOfTheDawnReady) &&
                 ActionReady(DanceOfTheDawn) &&
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                  IsOffCooldown(TechnicalStep)) && // Tech is up
                 (Gauge.Esprit >=
                  DNC_AoE_Adv_SaberThreshold || // above esprit threshold use
-                 (HasStatusEffect(Buffs.TechnicalFinish) &&
+                 (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                   Gauge.Esprit >= 50) || // will overcap with Tillana if not used
-                 (GetStatusEffectRemainingTime(Buffs.DanceOfTheDawnReady) < 5 &&
+                 (LocalPlayer.Status(Buffs.DanceOfTheDawnReady).RemainingTimeOrZero() < 5 &&
                   Gauge.Esprit >= 50))) // emergency use
                 return OriginalHook(DanceOfTheDawn);
 
@@ -958,17 +953,17 @@ internal partial class DNC : PhysicalRanged
                 ActionReady(SaberDance) &&
                 (Gauge.Esprit >=
                  DNC_AoE_Adv_SaberThreshold || // above esprit threshold use
-                 (HasStatusEffect(Buffs.TechnicalFinish) &&
+                 (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                   Gauge.Esprit >=
                   50)) && // will overcap with Tillana if not used
                 ActionReady(SaberDance))
                 return SaberDance;
 
-            if (HasStatusEffect(Buffs.FlourishingStarfall))
+            if (LocalPlayer.HasStatus(Buffs.FlourishingStarfall))
                 return StarfallDance;
 
             // AoE Tillana
-            if (HasStatusEffect(Buffs.FlourishingFinish) &&
+            if (LocalPlayer.HasStatus(Buffs.FlourishingFinish) &&
                 IsEnabled(Preset.DNC_AoE_Adv_Tillana) &&
                 ActionLearned(Tillana))
                 return Tillana;
@@ -978,7 +973,7 @@ internal partial class DNC : PhysicalRanged
                 ActionReady(SaberDance) &&
                 Gauge.Esprit >=
                 DNC_ST_Adv_SaberThreshold || // Above esprit threshold use
-                (HasStatusEffect(Buffs.TechnicalFinish) &&
+                (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                  Gauge.Esprit >= 50) && // Burst
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                  IsOffCooldown(TechnicalStep))) // Tech is up
@@ -1015,16 +1010,16 @@ internal partial class DNC : PhysicalRanged
 
             #region Variables
 
-            bool flow = HasStatusEffect(Buffs.SilkenFlow) ||
-                        HasStatusEffect(Buffs.FlourishingFlow);
-            bool symmetry = HasStatusEffect(Buffs.SilkenSymmetry) ||
-                            HasStatusEffect(Buffs.FlourishingSymmetry);
+            bool flow = LocalPlayer.HasStatus(Buffs.SilkenFlow) ||
+                        LocalPlayer.HasStatus(Buffs.FlourishingFlow);
+            bool symmetry = LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                            LocalPlayer.HasStatus(Buffs.FlourishingSymmetry);
             var targetHpThresholdStandard = 25;
             var targetHpThresholdTechnical = 25;
 
             var needToTech =
                 ActionReady(TechnicalStep) && // Up
-                !HasStatusEffect(Buffs.StandardStep) && // After Standard
+                !LocalPlayer.HasStatus(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
                 ActionLearned(TechnicalStep);
@@ -1038,14 +1033,14 @@ internal partial class DNC : PhysicalRanged
                 ActionLearned(StandardStep);
 
             var needToFinish =
-                HasStatusEffect(Buffs.FinishingMoveReady) &&
-                !HasStatusEffect(Buffs.LastDanceReady);
+                LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
+                !LocalPlayer.HasStatus(Buffs.LastDanceReady);
 
             var needToStandard =
-                !HasStatusEffect(Buffs.FinishingMoveReady) &&
+                !LocalPlayer.HasStatus(Buffs.FinishingMoveReady) &&
                 (IsOffCooldown(Flourish) ||
                  GetCooldownRemainingTime(Flourish) > 5) &&
-                !HasStatusEffect(Buffs.TechnicalFinish);
+                !LocalPlayer.HasStatus(Buffs.TechnicalFinish);
 
             #endregion
 
@@ -1066,13 +1061,13 @@ internal partial class DNC : PhysicalRanged
             #region Dance Fills
 
             // AoE Standard (Dance) Steps & Fill
-            if (HasStatusEffect(Buffs.StandardStep))
+            if (LocalPlayer.HasStatus(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
                     : StandardFinish2;
 
             // AoE Technical (Dance) Steps & Fill
-            if (HasStatusEffect(Buffs.TechnicalStep))
+            if (LocalPlayer.HasStatus(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
                     : TechnicalFinish4;
@@ -1088,7 +1083,7 @@ internal partial class DNC : PhysicalRanged
             if (CanWeave() &&
                 ActionLearned(Devilment) &&
                 GetCooldownRemainingTime(Devilment) < 0.05 &&
-                (HasStatusEffect(Buffs.TechnicalFinish) ||
+                (LocalPlayer.HasStatus(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
                  !ActionLearned(TechnicalStep)))
                 return Devilment;
@@ -1099,18 +1094,18 @@ internal partial class DNC : PhysicalRanged
                 !WasLastWeaponskill(TechnicalFinish4) &&
                 IsOnCooldown(Devilment) &&
                 (GetCooldownRemainingTime(Devilment) > 50 ||
-                 (HasStatusEffect(Buffs.Devilment) &&
-                  GetStatusEffectRemainingTime(Buffs.Devilment) < 19)) &&
-                !HasStatusEffect(Buffs.ThreeFoldFanDance) &&
-                !HasStatusEffect(Buffs.FourFoldFanDance) &&
-                !HasStatusEffect(Buffs.FlourishingSymmetry) &&
-                !HasStatusEffect(Buffs.FlourishingFlow) &&
-                !HasStatusEffect(Buffs.FinishingMoveReady))
+                 (LocalPlayer.HasStatus(Buffs.Devilment) &&
+                  LocalPlayer.Status(Buffs.Devilment).RemainingTimeOrZero() < 19)) &&
+                !LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) &&
+                !LocalPlayer.HasStatus(Buffs.FourFoldFanDance) &&
+                !LocalPlayer.HasStatus(Buffs.FlourishingSymmetry) &&
+                !LocalPlayer.HasStatus(Buffs.FlourishingFlow) &&
+                !LocalPlayer.HasStatus(Buffs.FinishingMoveReady))
                 return Flourish;
 
             // AoE Interrupt
             if (Role.CanHeadGraze(Preset.DNC_AoE_SimpleMode, WeaveTypes.Weave) &&
-                !HasStatusEffect(Buffs.TechnicalFinish))
+                !LocalPlayer.HasStatus(Buffs.TechnicalFinish))
                 return Role.HeadGraze;
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
@@ -1119,7 +1114,7 @@ internal partial class DNC : PhysicalRanged
                 if (ActionLearned(FanDance1))
                 {
                     // FD3
-                    if (HasStatusEffect(Buffs.ThreeFoldFanDance))
+                    if (LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance))
                         return FanDance3;
 
                     if (ActionLearned(FanDance2))
@@ -1127,14 +1122,14 @@ internal partial class DNC : PhysicalRanged
                         if (ActionLearned(TechnicalStep))
                         {
                             // Burst FD2
-                            if (HasStatusEffect(Buffs.TechnicalFinish) &&
+                            if (LocalPlayer.HasStatus(Buffs.TechnicalFinish) &&
                                 Gauge.Feathers > 0)
                                 return FanDance2;
 
                             // FD2 Pooling
                             if (Gauge.Feathers > 3 &&
-                                (HasStatusEffect(Buffs.SilkenSymmetry) ||
-                                 HasStatusEffect(Buffs.SilkenFlow)))
+                                (LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                                 LocalPlayer.HasStatus(Buffs.SilkenFlow)))
                                 return FanDance2;
                         }
 
@@ -1150,7 +1145,7 @@ internal partial class DNC : PhysicalRanged
                         return FanDance1;
                 }
 
-                if (HasStatusEffect(Buffs.FourFoldFanDance))
+                if (LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                     return FanDance4;
 
                 // AoE Panic Heals
@@ -1163,17 +1158,17 @@ internal partial class DNC : PhysicalRanged
             #region GCD
 
             // AoE Technical Step
-            if (needToTech && !HasStatusEffect(Buffs.FlourishingFinish))
+            if (needToTech && !LocalPlayer.HasStatus(Buffs.FlourishingFinish))
                 return TechnicalStep;
 
             // AoE Last Dance
-            if (HasStatusEffect(Buffs.LastDanceReady) && // Ready
-                (HasStatusEffect(Buffs.TechnicalFinish) || // Has Tech
+            if (LocalPlayer.HasStatus(Buffs.LastDanceReady) && // Ready
+                (LocalPlayer.HasStatus(Buffs.TechnicalFinish) || // Has Tech
                  !(IsOnCooldown(TechnicalStep) && // Or can't hold it for tech
                    GetCooldownRemainingTime(TechnicalStep) < 20 &&
-                   GetStatusEffectRemainingTime(Buffs.LastDanceReady) >
+                   LocalPlayer.Status(Buffs.LastDanceReady).RemainingTimeOrZero() >
                    GetCooldownRemainingTime(TechnicalStep) + 4) ||
-                 GetStatusEffectRemainingTime(Buffs.LastDanceReady) <
+                 LocalPlayer.Status(Buffs.LastDanceReady).RemainingTimeOrZero() <
                  4)) // Or last second
                 return LastDance;
 
@@ -1186,12 +1181,12 @@ internal partial class DNC : PhysicalRanged
                 return StandardStep;
 
             // Emergency Starfall usage
-            if (HasStatusEffect(Buffs.FlourishingStarfall) &&
-                GetStatusEffectRemainingTime(Buffs.FlourishingStarfall) < 4)
+            if (LocalPlayer.HasStatus(Buffs.FlourishingStarfall) &&
+                LocalPlayer.Status(Buffs.FlourishingStarfall).RemainingTimeOrZero() < 4)
                 return StarfallDance;
 
             // AoE Dance of the Dawn
-            if (HasStatusEffect(Buffs.DanceOfTheDawnReady) &&
+            if (LocalPlayer.HasStatus(Buffs.DanceOfTheDawnReady) &&
                 ActionReady(DanceOfTheDawn) &&
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                  IsOffCooldown(TechnicalStep)) && // Tech is up
@@ -1203,11 +1198,11 @@ internal partial class DNC : PhysicalRanged
                 Gauge.Esprit >= 50)
                 return SaberDance;
 
-            if (HasStatusEffect(Buffs.FlourishingStarfall))
+            if (LocalPlayer.HasStatus(Buffs.FlourishingStarfall))
                 return StarfallDance;
 
             // AoE Tillana
-            if (HasStatusEffect(Buffs.FlourishingFinish) &&
+            if (LocalPlayer.HasStatus(Buffs.FlourishingFinish) &&
                 ActionLearned(Tillana))
                 return Tillana;
 
@@ -1262,17 +1257,17 @@ internal partial class DNC : PhysicalRanged
 
             #region Types
 
-            bool flow = HasStatusEffect(Buffs.SilkenFlow) ||
-                        HasStatusEffect(Buffs.FlourishingFlow);
-            bool symmetry = HasStatusEffect(Buffs.SilkenSymmetry) ||
-                            HasStatusEffect(Buffs.FlourishingSymmetry);
+            bool flow = LocalPlayer.HasStatus(Buffs.SilkenFlow) ||
+                        LocalPlayer.HasStatus(Buffs.FlourishingFlow);
+            bool symmetry = LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                            LocalPlayer.HasStatus(Buffs.FlourishingSymmetry);
 
             #endregion
 
             // ST Esprit overcap protection
             if (IsEnabled(Preset.DNC_ST_EspritOvercap) &&
                 ActionReady(DanceOfTheDawn) &&
-                HasStatusEffect(Buffs.DanceOfTheDawnReady) &&
+                LocalPlayer.HasStatus(Buffs.DanceOfTheDawnReady) &&
                 Gauge.Esprit >= DNCEspritThreshold_ST)
                 return OriginalHook(DanceOfTheDawn);
             if (IsEnabled(Preset.DNC_ST_EspritOvercap) &&
@@ -1285,16 +1280,16 @@ internal partial class DNC : PhysicalRanged
                 // ST Fan Dance overcap protection
                 if (IsEnabled(Preset.DNC_ST_FanDanceOvercap) &&
                     ActionLearned(FanDance1) && Gauge.Feathers is 4 &&
-                    (HasStatusEffect(Buffs.SilkenSymmetry) ||
-                     HasStatusEffect(Buffs.SilkenFlow)))
+                    (LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                     LocalPlayer.HasStatus(Buffs.SilkenFlow)))
                     return FanDance1;
 
                 // ST Fan Dance 3/4 on combo
                 if (IsEnabled(Preset.DNC_ST_FanDance34))
                 {
-                    if (HasStatusEffect(Buffs.ThreeFoldFanDance))
+                    if (LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance))
                         return FanDance3;
-                    if (HasStatusEffect(Buffs.FourFoldFanDance))
+                    if (LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                         return FanDance4;
                 }
             }
@@ -1322,17 +1317,17 @@ internal partial class DNC : PhysicalRanged
 
             #region Types
 
-            bool flow = HasStatusEffect(Buffs.SilkenFlow) ||
-                        HasStatusEffect(Buffs.FlourishingFlow);
-            bool symmetry = HasStatusEffect(Buffs.SilkenSymmetry) ||
-                            HasStatusEffect(Buffs.FlourishingSymmetry);
+            bool flow = LocalPlayer.HasStatus(Buffs.SilkenFlow) ||
+                        LocalPlayer.HasStatus(Buffs.FlourishingFlow);
+            bool symmetry = LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                            LocalPlayer.HasStatus(Buffs.FlourishingSymmetry);
 
             #endregion
 
             // AoE Esprit overcap protection
             if (IsEnabled(Preset.DNC_AoE_EspritOvercap) &&
                 ActionReady(DanceOfTheDawn) &&
-                HasStatusEffect(Buffs.DanceOfTheDawnReady) &&
+                LocalPlayer.HasStatus(Buffs.DanceOfTheDawnReady) &&
                 Gauge.Esprit >= DNCEspritThreshold_ST)
                 return OriginalHook(DanceOfTheDawn);
             if (IsEnabled(Preset.DNC_AoE_EspritOvercap) &&
@@ -1345,16 +1340,16 @@ internal partial class DNC : PhysicalRanged
                 // AoE Fan Dance overcap protection
                 if (IsEnabled(Preset.DNC_AoE_FanDanceOvercap) &&
                     ActionLearned(FanDance2) && Gauge.Feathers is 4 &&
-                    (HasStatusEffect(Buffs.SilkenSymmetry) ||
-                     HasStatusEffect(Buffs.SilkenFlow)))
+                    (LocalPlayer.HasStatus(Buffs.SilkenSymmetry) ||
+                     LocalPlayer.HasStatus(Buffs.SilkenFlow)))
                     return FanDance2;
 
                 // AoE Fan Dance 3/4 on combo
                 if (IsEnabled(Preset.DNC_AoE_FanDance34))
                 {
-                    if (HasStatusEffect(Buffs.ThreeFoldFanDance))
+                    if (LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance))
                         return FanDance3;
-                    if (HasStatusEffect(Buffs.FourFoldFanDance))
+                    if (LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                         return FanDance4;
                 }
             }
@@ -1386,7 +1381,7 @@ internal partial class DNC : PhysicalRanged
 
             if (CurrentPartnerNonOptimal)
             {
-                if (HasStatusEffect(Buffs.ClosedPosition))
+                if (LocalPlayer.HasStatus(Buffs.ClosedPosition))
                     return Ending;
                 // I could automatically end partner,
                 // instead of having the user press ending first ...
@@ -1422,7 +1417,7 @@ internal partial class DNC : PhysicalRanged
             if (IsEnabled(Preset.DNC_StandardStepCombo) &&
                 actionID is StandardStep &&
                 Gauge.IsDancing &&
-                HasStatusEffect(Buffs.StandardStep))
+                LocalPlayer.HasStatus(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
                     : FinishOrHold(StandardFinish2);
@@ -1434,7 +1429,7 @@ internal partial class DNC : PhysicalRanged
 
             // StandardStep(or Finishing Move) --> Last Dance
             if (IsEnabled(Preset.DNC_StandardStep_LastDance) &&
-                HasStatusEffect(Buffs.LastDanceReady))
+                LocalPlayer.HasStatus(Buffs.LastDanceReady))
                 return LastDance;
 
             return actionID;
@@ -1453,7 +1448,7 @@ internal partial class DNC : PhysicalRanged
             // Technical Finish
             if (IsEnabled(Preset.DNC_TechnicalStepCombo) &&
                 Gauge.IsDancing &&
-                HasStatusEffect(Buffs.TechnicalStep))
+                LocalPlayer.HasStatus(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
                     : FinishOrHold(TechnicalFinish4);
@@ -1466,7 +1461,7 @@ internal partial class DNC : PhysicalRanged
             // Technical Step --> Devilment
             if (IsEnabled(Preset.DNC_TechnicalStep_Devilment) &&
                 WasLastWeaponskill(TechnicalFinish4) &&
-                HasStatusEffect(Buffs.TechnicalFinish))
+                LocalPlayer.HasStatus(Buffs.TechnicalFinish))
                 return Devilment;
 
             return actionID;
@@ -1511,10 +1506,10 @@ internal partial class DNC : PhysicalRanged
                     return danceStep;
 
             if (IsEnabled(Preset.DNC_Flourishing_FD3) &&
-                HasStatusEffect(Buffs.ThreeFoldFanDance))
+                LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance))
                 return FanDance3;
 
-            if (HasStatusEffect(Buffs.FourFoldFanDance))
+            if (LocalPlayer.HasStatus(Buffs.FourFoldFanDance))
                 return FanDance4;
 
             return actionID;
@@ -1539,17 +1534,17 @@ internal partial class DNC : PhysicalRanged
                 // FD 1 --> 3, FD 1 --> 4
                 FanDance1 when
                     IsEnabled(Preset.DNC_FanDance_1to3_Combo) &&
-                    HasStatusEffect(Buffs.ThreeFoldFanDance) => FanDance3,
+                    LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) => FanDance3,
                 FanDance1 when
                     IsEnabled(Preset.DNC_FanDance_1to4_Combo) &&
-                    HasStatusEffect(Buffs.FourFoldFanDance) => FanDance4,
+                    LocalPlayer.HasStatus(Buffs.FourFoldFanDance) => FanDance4,
                 // FD 2 --> 3, FD 2 --> 4
                 FanDance2 when
                     IsEnabled(Preset.DNC_FanDance_2to3_Combo) &&
-                    HasStatusEffect(Buffs.ThreeFoldFanDance) => FanDance3,
+                    LocalPlayer.HasStatus(Buffs.ThreeFoldFanDance) => FanDance3,
                 FanDance2 when
                     IsEnabled(Preset.DNC_FanDance_2to4_Combo) &&
-                    HasStatusEffect(Buffs.FourFoldFanDance) => FanDance4,
+                    LocalPlayer.HasStatus(Buffs.FourFoldFanDance) => FanDance4,
                 _ => actionID
             };
         }
@@ -1570,8 +1565,8 @@ internal partial class DNC : PhysicalRanged
                 if (GetCustomDanceStep(actionID, out var danceStep))
                     return danceStep;
 
-            if (HasStatusEffect(Buffs.FlourishingFlow) ||
-                HasStatusEffect(Buffs.SilkenFlow))
+            if (LocalPlayer.HasStatus(Buffs.FlourishingFlow) ||
+                LocalPlayer.HasStatus(Buffs.SilkenFlow))
                 return Bloodshower;
 
             return actionID;
@@ -1591,8 +1586,8 @@ internal partial class DNC : PhysicalRanged
                 if (GetCustomDanceStep(actionID, out var danceStep))
                     return danceStep;
 
-            if ((HasStatusEffect(Buffs.FlourishingSymmetry) ||
-                 HasStatusEffect(Buffs.SilkenSymmetry)) &&
+            if ((LocalPlayer.HasStatus(Buffs.FlourishingSymmetry) ||
+                 LocalPlayer.HasStatus(Buffs.SilkenSymmetry)) &&
                 ActionReady(RisingWindmill))
                 return RisingWindmill;
 

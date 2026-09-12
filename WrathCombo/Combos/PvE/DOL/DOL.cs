@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class DOL
@@ -62,9 +63,9 @@ internal partial class DOL
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is SolidReason && HasStatusEffect(Buffs.EurekaMoment))
+            if (actionID is SolidReason && LocalPlayer.HasStatus(Buffs.EurekaMoment))
                 return MinWiseToTheWorld;
-            if (actionID is AgelessWords && HasStatusEffect(Buffs.EurekaMoment))
+            if (actionID is AgelessWords && LocalPlayer.HasStatus(Buffs.EurekaMoment))
                 return BtnWiseToTheWorld;
             return actionID;
         }
@@ -77,14 +78,14 @@ internal partial class DOL
         protected override uint Invoke(uint actionID)
         {
             //MIN
-            if (actionID is DOL.LayOfTheLand && !HasStatusEffect(Buffs.Prospect))
+            if (actionID is DOL.LayOfTheLand && !LocalPlayer.HasStatus(Buffs.Prospect))
                 return Prospect;
-            if (actionID is DOL.LayOfTheLand2 && ActionLearned(TruthOfMountains) && !HasStatusEffect(Buffs.TruthOfMountains))
+            if (actionID is DOL.LayOfTheLand2 && ActionLearned(TruthOfMountains) && !LocalPlayer.HasStatus(Buffs.TruthOfMountains))
                 return TruthOfMountains;
             //BTN
-            if (actionID is DOL.ArborCall && !HasStatusEffect(Buffs.Triangulate))
+            if (actionID is DOL.ArborCall && !LocalPlayer.HasStatus(Buffs.Triangulate))
                 return Triangulate;
-            if (actionID is DOL.ArborCall2 && ActionLearned(TruthOfForests) && !HasStatusEffect(Buffs.TruthOfForests))
+            if (actionID is DOL.ArborCall2 && ActionLearned(TruthOfForests) && !LocalPlayer.HasStatus(Buffs.TruthOfForests))
                 return TruthOfForests;
             return actionID;
         }

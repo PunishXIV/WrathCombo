@@ -359,7 +359,7 @@ public class ActionWatching
                 }
             }
 
-            if (casterEntityId == Player.Object.EntityId && (actionType == ActionType.Action && _actionSheet.TryGetRow(actionId, out var actionSheet) && actionSheet.TargetArea) || actionType == ActionType.Item)
+            if (casterEntityId == Player.Object.EntityId && ((actionType == ActionType.Action && _actionSheet.TryGetRow(actionId, out var actionSheet) && actionSheet.TargetArea) || actionType == ActionType.Item))
             {
                 UpdateLastUsedAction(actionId, actionType, 0, 0);
             }

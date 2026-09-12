@@ -3,6 +3,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.BLMPvP.Config;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -163,21 +164,21 @@ internal static class BLMPvP
             bool inCombat = InCombat();
             bool hasTarget = HasTarget();
             bool isTargetNPC = CurrentTarget is IBattleNpc && CurrentTarget.BaseId != 8016;
-            bool hasParadox = HasStatusEffect(Buffs.Paradox);
-            bool hasResonance = HasStatusEffect(Buffs.SoulResonance);
-            bool hasWreathOfFire = HasStatusEffect(Buffs.WreathOfFire);
+            bool hasParadox = LocalPlayer.HasStatus(Buffs.Paradox);
+            bool hasResonance = LocalPlayer.HasStatus(Buffs.SoulResonance);
+            bool hasWreathOfFire = LocalPlayer.HasStatus(Buffs.WreathOfFire);
             bool hasFlareStar = OriginalHook(SoulResonance) is FlareStar;
             bool hasFrostStar = OriginalHook(SoulResonance) is FrostStar;
-            bool targetHasGuard = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
-            bool targetHasHeavy = HasStatusEffect(PvPCommon.Debuffs.Heavy, CurrentTarget, true);
+            bool targetHasGuard = CurrentTarget.HasStatus(PvPCommon.Buffs.Guard, true);
+            bool targetHasHeavy = CurrentTarget.HasStatus(PvPCommon.Debuffs.Heavy, true);
             bool isPlayerTargeted = CurrentTarget?.TargetObjectId == LocalPlayer.GameObjectId;
-            bool isParadoxPrimed = HasStatusEffect(Buffs.UmbralIce1) || HasStatusEffect(Buffs.AstralFire1);
+            bool isParadoxPrimed = LocalPlayer.HasStatus(Buffs.UmbralIce1) || LocalPlayer.HasStatus(Buffs.AstralFire1);
             bool isMovingAdjusted = TimeMoving.TotalMilliseconds / 1000f >= BLMPvP_Movement_Threshold;
-            bool isResonanceExpiring = HasStatusEffect(Buffs.SoulResonance) && GetStatusEffectRemainingTime(Buffs.SoulResonance) <= 10;
-            bool hasUmbralIce = HasStatusEffect(Buffs.UmbralIce1) || HasStatusEffect(Buffs.UmbralIce2) || HasStatusEffect(Buffs.UmbralIce3);
-            bool isElementalStarDelayed = HasStatusEffect(Buffs.ElementalStar) && GetStatusEffectRemainingTime(Buffs.ElementalStar) <= 20;
-            bool hasAstralFire = HasStatusEffect(Buffs.AstralFire1) || HasStatusEffect(Buffs.AstralFire2) || HasStatusEffect(Buffs.AstralFire3);
-            bool targetHasImmunity = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
+            bool isResonanceExpiring = LocalPlayer.HasStatus(Buffs.SoulResonance) && LocalPlayer.Status(Buffs.SoulResonance).RemainingTimeOrZero() <= 10;
+            bool hasUmbralIce = LocalPlayer.HasStatus(Buffs.UmbralIce1) || LocalPlayer.HasStatus(Buffs.UmbralIce2) || LocalPlayer.HasStatus(Buffs.UmbralIce3);
+            bool isElementalStarDelayed = LocalPlayer.HasStatus(Buffs.ElementalStar) && LocalPlayer.Status(Buffs.ElementalStar).RemainingTimeOrZero() <= 20;
+            bool hasAstralFire = LocalPlayer.HasStatus(Buffs.AstralFire1) || LocalPlayer.HasStatus(Buffs.AstralFire2) || LocalPlayer.HasStatus(Buffs.AstralFire3);
+            bool targetHasImmunity = CurrentTarget.HasStatus(PLDPvP.Buffs.HallowedGround, true) || CurrentTarget.HasStatus(DRKPvP.Buffs.UndeadRedemption, true);
             #endregion
 
             if (inCombat)
@@ -256,8 +257,8 @@ internal static class BLMPvP
             if (actionID is not AetherialManipulation) 
                 return actionID;
             
-            bool hasCrowdControl = HasStatusEffect(PvPCommon.Debuffs.Stun, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.DeepFreeze, anyOwner: true) ||
-                                   HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.Silence, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.MiracleOfNature, anyOwner: true);
+            bool hasCrowdControl = LocalPlayer.HasStatus(PvPCommon.Debuffs.Stun, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.DeepFreeze, true) ||
+                                   LocalPlayer.HasStatus(PvPCommon.Debuffs.Bind, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.Silence, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.MiracleOfNature, true);
 
             if (IsOffCooldown(AetherialManipulation) && IsOffCooldown(PvPCommon.Purify) && hasCrowdControl && LocalPlayer.CurrentMp >= BLMPvP_Manipulation_Feature_PurifyMPThreshold)
                 return OriginalHook(PvPCommon.Purify);
