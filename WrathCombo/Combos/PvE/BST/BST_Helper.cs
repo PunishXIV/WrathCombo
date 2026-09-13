@@ -493,7 +493,7 @@ internal partial class BST
         return petId;
     }
 
-    public static bool BasicCombo(ref uint actionId)
+    public static bool BasicCombo(out uint actionId)
     {
         if (ComboAction is SmashAxe && ActionReady(AxebladeBite))
         {
@@ -507,8 +507,14 @@ internal partial class BST
             return true;
         }
 
-        actionId = SmashAxe;
-        return true;
+        if (ActionReady(SmashAxe))
+        {
+            actionId = SmashAxe;
+            return true;
+        }
+
+        actionId = 0;
+        return false;
     }
 
 }

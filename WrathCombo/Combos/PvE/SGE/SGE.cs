@@ -34,7 +34,7 @@ internal partial class SGE : Healer
             if (CanWeave() && !LocalPlayer.HasStatus(Buffs.Eukrasia))
             {
                 if (UseAddersgallProtect(3))
-                    return Druochole.RetargetIfEnabled([actionID]);
+                    return AddersgallProtectDruochole(DosisActions);
 
                 if (UsePsyche(PhlegmaBurstPair(true, true, true)))
                     return Psyche;
@@ -148,7 +148,7 @@ internal partial class SGE : Healer
             {
                 if (IsEnabled(Preset.SGE_ST_Adv_DPS_AddersgallProtect) &&
                     UseAddersgallProtect(SGE_ST_Adv_DPS_AddersgallProtect))
-                    return Druochole.RetargetIfEnabled(dosisActions);
+                    return AddersgallProtectDruochole(dosisActions);
 
                 bool psycheEnabled = IsEnabled(Preset.SGE_ST_Adv_DPS_Psyche);
                 bool phlegmaEnabled = IsEnabled(Preset.SGE_ST_Adv_DPS_Phlegma);

@@ -249,21 +249,20 @@ internal partial class VPR
         return false;
     }
 
-    private const DreadCombo ReawakenFirstGeneration = (DreadCombo)7;
-    private const DreadCombo ReawakenSecondGeneration = (DreadCombo)8;
-    private const DreadCombo ReawakenThirdGeneration = (DreadCombo)9;
-    private const DreadCombo ReawakenFourthGeneration = (DreadCombo)10;
+    private static uint ReawakenCombo(uint actionId)
+    {
+        bool ouroboros = ActionLearned(Ouroboros);
 
-    private static uint ReawakenCombo(uint actionId) =>
-        DreadCombo switch
+        return AnguineTribute switch
         {
-            ReawakenFirstGeneration => FirstGeneration,
-            ReawakenSecondGeneration => SecondGeneration,
-            ReawakenThirdGeneration => ThirdGeneration,
-            ReawakenFourthGeneration => FourthGeneration,
-            0 => Ouroboros,
-            _ => actionId
+            5 => FirstGeneration,
+            4 => ouroboros ? SecondGeneration : FirstGeneration,
+            3 => ouroboros ? ThirdGeneration : SecondGeneration,
+            2 => ouroboros ? FourthGeneration : ThirdGeneration,
+            1 => ouroboros ? Ouroboros : FourthGeneration,
+            _ => ouroboros ? Ouroboros : actionId
         };
+    }
 
     private static int ReawakenHPThreshold()
     {
@@ -579,6 +578,10 @@ internal partial class VPR
 
     internal static WrathOpener Opener()
     {
+        if (FRUOpener.LevelChecked &&
+            ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.FRU)
+            return FRUOpener;
+
         if (DMUOpener.LevelChecked &&
             ClientState.TerritoryType == ContentCheck.UltimateTerritoryIDs.DMU)
             return DMUOpener;
@@ -591,6 +594,7 @@ internal partial class VPR
 
     internal static VPRStandardOpener StandardOpener = new();
     internal static VPRDMUOpener DMUOpener = new();
+    internal static VPRFRUOpener FRUOpener = new();
 
     internal abstract class VPROpenerBase : WrathOpener
     {
@@ -747,6 +751,53 @@ internal partial class VPR
         }
     }
 
+    internal class VPRFRUOpener : VPROpenerBase
+    {
+        public override List<Func<uint>> OpenerActions { get; set; } =
+        [
+            () => All.Cease, // 1
+            () => Vicewinder, // 2
+            () => SerpentsIre, // 3
+            () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Dex)), // 4
+            () => SwiftskinsCoil, // 5
+            () => TwinbloodBite, // 6
+            () => TwinfangBite, // 7
+            () => HuntersCoil, // 8
+            () => TwinfangBite, // 9
+            () => TwinbloodBite, // 10
+            () => Reawaken, // 11
+            () => FirstGeneration, // 12
+            () => FirstLegacy, // 13
+            () => SecondGeneration, // 14
+            () => SecondLegacy, // 15
+            () => ThirdGeneration, // 16
+            () => ThirdLegacy, // 17
+            () => FourthGeneration, // 18
+            () => FourthLegacy, // 19
+            () => Ouroboros, // 20
+            () => UncoiledFury, // 21
+            () => UncoiledTwinfang, // 22
+            () => UncoiledTwinblood, // 23
+            () => UncoiledFury, // 24
+            () => UncoiledTwinfang, // 25
+            () => UncoiledTwinblood, // 26
+            () => Vicewinder, // 27
+            () => HuntersCoil, // 28
+            () => TwinfangBite, // 29
+            () => TwinbloodBite, // 30
+            () => SwiftskinsCoil, // 31
+            () => TwinbloodBite, // 32
+            () => TwinfangBite, // 33
+        ];
+        
+        public VPRFRUOpener()
+        {
+            SkipSteps.Add(([21, 22, 23, 24, 25, 26], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)));
+            SkipSteps.Add(([6, 7, 9, 10, 29, 30, 32, 33], OpenerTwinBiteMissed));
+            SkipSteps.Add(([11], OpenerReawakenAlreadyUsed));
+        }
+    }
+
     #endregion
 
     #region Gauge
@@ -756,6 +807,8 @@ internal partial class VPR
     private static byte RattlingCoilStacks => Gauge.RattlingCoilStacks;
 
     private static byte SerpentOffering => Gauge.SerpentOffering;
+
+    private static byte AnguineTribute => Gauge.AnguineTribute;
 
     private static DreadCombo DreadCombo => Gauge.DreadCombo;
 

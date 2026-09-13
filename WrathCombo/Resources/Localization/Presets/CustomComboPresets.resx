@@ -6150,7 +6150,7 @@ This is the ideal option for newcomers to the job.</value>
     <value>Blue Mage Job Actions</value>
   </data>
   <data name="Phantom_BlueMage_OccultAero_Desc" xml:space="preserve">
-    <value>Adds Occult Aero into the rotation.</value>
+    <value>Adds the highest available Occult Aero into the rotation. Only one Aero can be active at a time.</value>
   </data>
   <data name="Phantom_BlueMage_OccultAero_Name" xml:space="preserve">
     <value>Occult Aero</value>
@@ -6685,6 +6685,12 @@ Requires Occult Potions in inventory.</value>
   </data>
   <data name="Phantom_RedMage_OccultLibra_Name" xml:space="preserve">
     <value>Occult Libra</value>
+  </data>
+  <data name="Phantom_RedMage_OccultLibra_Refresh_Desc" xml:space="preserve">
+    <value>Reapply Occult Libra before the weakness drops, instead of waiting until it is gone.</value>
+  </data>
+  <data name="Phantom_RedMage_OccultLibra_Refresh_Name" xml:space="preserve">
+    <value>Refresh Early</value>
   </data>
   <data name="Phantom_RedMage_OccultThunderII_Desc" xml:space="preserve">
     <value>Adds Occult Thunder II into the rotation (prefers Lightning Weakness).</value>

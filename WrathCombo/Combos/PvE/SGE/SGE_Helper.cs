@@ -154,6 +154,11 @@ internal partial class SGE
     private static bool UseAddersgallProtect(int threshold) =>
         ActionReady(Druochole) && Addersgall >= threshold;
 
+    private static uint AddersgallProtectDruochole(uint[] replaced) =>
+        Druochole.Retarget(replaced,
+            SimpleTarget.LowestHPPAlly.IfMissingHP() ??
+            SimpleTarget.Self);
+
     private static bool PhlegmaBurstPair(bool phlegmaEnabled, bool psycheEnabled, bool burst) =>
         ActionLearned(OriginalHook(Phlegma)) &&
         phlegmaEnabled &&

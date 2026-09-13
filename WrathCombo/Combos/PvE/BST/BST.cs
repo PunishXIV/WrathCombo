@@ -118,9 +118,8 @@ internal partial class BST : Melee
             if (CanWeave() && InMeleeRange() && ActionReady(ShieldCharge) && GetRemainingCharges(ShieldCharge) > 1) //Save one for manual use
                 return ShieldCharge;
 
-            if (BasicCombo(ref actionID))
-                return actionID;
-
+            if (BasicCombo(out var basic))
+                return basic;
 
             return OriginalHook(SmashAxe);
         }
@@ -135,7 +134,9 @@ internal partial class BST : Melee
             if (actionID is not AxebladeBite)
                 return actionID;
 
-            BasicCombo(ref actionID);
+            if (BasicCombo(out var basic))
+                return basic;
+
             return actionID;
         }
     }

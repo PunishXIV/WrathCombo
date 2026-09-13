@@ -320,6 +320,8 @@ public sealed partial class WrathCombo : IAsyncDalamudPlugin
         _ = Svc.Framework.RunOnTick(ActionRetargeting.ClearOldRetargets,
             TimeSpan.FromSeconds(60));
 
+        Svc.Data.GameData.Options.PanicOnSheetChecksumMismatch = false; //Remove this once schema is stable
+
 #if DEBUG
         VfxManager.Logging = true;
         _ = Svc.Framework.RunOnTick(() => HandleOpenCommand([""], forceOpen: true));
