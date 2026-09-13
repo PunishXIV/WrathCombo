@@ -1,5 +1,4 @@
 using System.Linq;
-using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameFunctions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
