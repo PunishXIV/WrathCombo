@@ -360,8 +360,12 @@ internal partial class AST : Healer
         protected internal override Preset Preset => Preset.AST_AOE_DPS;
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, GravityList.ToArray()))
+            var actions = GravityList.ToArray();
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, actions))
                 return actionID;
+
+            if (CustomActionHelper.CustomActionEnabled(CustomActionType.AoEDPS))
+                actions = [All.AoEDPS];
 
             #region Variables
             bool cardPooling = IsEnabled(Preset.AST_AOE_CardPool);
@@ -402,7 +406,7 @@ internal partial class AST : Healer
                 if (IsEnabled(Preset.AST_AOE_AutoPlay) && HasDPSCard && ActionLearned(Play1) &&
                     (HasDivination || !cardPooling || !ActionLearned(Divination)))
                     return IsEnabled(Preset.AST_Cards_QuickTargetCards)
-                        ? OriginalHook(Play1).Retarget(GravityList.ToArray(), CardResolver)
+                        ? OriginalHook(Play1).Retarget(actions, CardResolver)
                         : OriginalHook(Play1);
 
                 //Minor Arcana / Lord of Crowns
@@ -436,8 +440,8 @@ internal partial class AST : Healer
                     !LocalPlayer.HasStatus(Buffs.EarthlyDominance) &&
                     (WaitGCDs || StandStill))
                     return AST_AOE_DPS_EarthlyStarSubOption == 1
-                        ? EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.Self)
-                        : EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.Stack.Allies);
+                        ? EarthlyStar.Retarget(actions, SimpleTarget.Self)
+                        : EarthlyStar.Retarget(actions, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.Stack.Allies);
 
                 //Stellar Detonation
                 if (IsEnabled(Preset.AST_AOE_DPS_StellarDetonation) &&
@@ -470,7 +474,7 @@ internal partial class AST : Healer
 
             if (IsEnabled(Preset.AST_AOE_DPS_DoT) &&
                 ActionReady(dotAction) && target != null)
-                return OriginalHook(Combust).Retarget([Gravity, Gravity2], target);
+                return OriginalHook(Combust).Retarget(actions, target);
 
             return OriginalHook(Gravity);
             #endregion

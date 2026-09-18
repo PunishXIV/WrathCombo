@@ -192,6 +192,13 @@ public partial class Helper(ref Leasing leasing)
 
         #endregion
 
+        if (job is Job.BST)
+        {
+            return  simple is not null && simple[enabledStateToCheck] ?
+            ComboSimplicityLevelKeys.Simple :
+                null;
+        }
+
         // Get the Advanced Mode settings
         var (advancedComboPreset, advancedValue) =
             comboStates[mode][ComboSimplicityLevelKeys.Advanced].First();

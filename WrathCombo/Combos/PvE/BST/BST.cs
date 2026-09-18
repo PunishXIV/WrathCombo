@@ -1,4 +1,5 @@
-﻿using WrathCombo.CustomComboNS;
+﻿using ECommons.GameHelpers.LegacyPlayer;
+using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
 
@@ -14,7 +15,7 @@ internal partial class BST : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SmashAxe))
                 return actionID;
 
-            if (!CurrentPetIsBMPet && InCombat())
+            if (!CurrentPetIsBMPet && InCombat() && !JustUsed(FirstBattlehorn) && !JustUsed(SecondBattlehorn) && !JustUsed(ThirdBattlehorn) && !LocalPlayer.IsCasting)
             {
                 if (ActionReady(FirstBattlehorn))
                     return FirstBattlehorn;
