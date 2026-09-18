@@ -16,6 +16,7 @@ using WrathCombo.Resources.Localization.UI.Features;
 using WrathCombo.Resources.Localization.UI.Misc;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
+using static WrathCombo.Core.PresetStorage;
 
 namespace WrathCombo.Window.Tabs;
 
