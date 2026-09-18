@@ -584,9 +584,11 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText($"Pre-Checks:", $"Level: {WrathOpener.CurrentOpener?.LevelChecked}({Svc.PlayerState.EffectiveLevel}), CDs: {WrathOpener.CurrentOpener?.HasCooldowns()}");
                     CustomStyleText("Opener State:", WrathOpener.CurrentOpener.CurrentState);
                     CustomStyleText("Current Opener Action:", WrathOpener.CurrentOpener.CurrentOpenerAction.ActionName());
-                    CustomStyleText("Current Opener Step:", WrathOpener.CurrentOpener.OpenerStep);
+                    CustomStyleText("Current Opener Step:", $"{WrathOpener.CurrentOpener.OpenerStep} / {WrathOpener.CurrentOpener.OpenerActions.Count}");
                     CustomStyleText("Delayed Step:", WrathOpener.CurrentOpener.DelayedStep);
                     CustomStyleText("Delayed Seconds:", WrathOpener.CurrentOpener.DelayedSecs);
+                    CustomStyleText("Delay Ending In:", WrathOpener.CurrentOpener.DelayedAt > DateTime.MinValue ? (Math.Max(0, (WrathOpener.CurrentOpener.DelayedAt.AddSeconds(WrathOpener.CurrentOpener?.DelayedSecs ?? 0) - DateTime.Now).TotalSeconds)).ToString("F2") : "N/A");
+                    CustomStyleText("Skip Ending In:", WrathOpener.CurrentOpener.StopSkippingAt.HasValue ? (WrathOpener.CurrentOpener.StopSkippingAt.Value - DateTime.Now).TotalSeconds.ToString("F2") : "N/A");
 
                     if (WrathOpener.CurrentOpener.OpenerActions.Count > 0 &&
                         WrathOpener.CurrentOpener.OpenerStep <

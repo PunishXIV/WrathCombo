@@ -137,8 +137,7 @@ internal partial class SAM : Melee
                 IsEnabled(Preset.SAM_ST_Adv_Kasha));
 
             if (IsEnabled(Preset.SAM_ST_Adv_Opener) &&
-                Opener().FullOpener(ref actionID) &&
-                HasBattleTarget())
+                Opener().FullOpener(ref actionID))
                 return actionID;
 
             if (IsEnabled(Preset.SAM_ST_Adv_CDs) &&

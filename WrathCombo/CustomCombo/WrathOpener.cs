@@ -139,6 +139,8 @@ public abstract class WrathOpener
     public int DelayedStep = 0;
     public DateTime DelayedAt;
     public float DelayedSecs = 0;
+    public int SkippingStep = 0;
+    public DateTime? StopSkippingAt;
 
     public uint CurrentOpenerAction
     {
@@ -222,9 +224,32 @@ public abstract class WrathOpener
 
             if (OpenerStep > 1)
             {
-                bool prevStepSkipping = SkipSteps.FindFirst(x => x.Steps.FindFirst(y => y == OpenerStep - 1, out var t), out var p);
-                if (prevStepSkipping)
+                bool skipStepFound = SkipSteps.FindFirst(x => x.Steps.FindFirst(y => y == OpenerStep - 1, out var t), out var p);
+                bool prevStepSkipping = false;
+
+                if (skipStepFound)
+                {
                     prevStepSkipping = p.Condition();
+
+                    if (SkippingStep != OpenerStep && prevStepSkipping)
+                    {
+                        SkippingStep = OpenerStep;
+                        StopSkippingAt = DateTime.Now.AddSeconds(20);
+                    }
+                    else if (!prevStepSkipping)
+                    {
+                        SkippingStep = 0;
+                        StopSkippingAt = null;
+                    }
+                }
+
+                if (StopSkippingAt is not null && DateTime.Now > StopSkippingAt)
+                {
+                    Svc.Log.Debug($"Stopping skipping at step {OpenerStep} after 20 seconds");
+                    StopSkippingAt = null;
+                    CurrentState = OpenerState.FailedOpener;
+                    return false;
+                }
 
                 if (!prevStepSkipping)
                 {
@@ -315,6 +340,8 @@ public abstract class WrathOpener
         DelayedStep = 0;
         DelayedAt = DateTime.MinValue;
         DelayedSecs = 0;
+        SkippingStep = 0;
+        StopSkippingAt = null;
         OpenerStep = stayReady ? 1 : 0;
         CurrentOpenerAction = stayReady ? OpenerActions[0].Invoke() : 0;
         CurrentState = stayReady ? CurrentState : OpenerState.OpenerNotReady;

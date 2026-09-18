@@ -595,7 +595,15 @@ public static class ActionWatching
                     }
                 }
 
-                var disablingReplacingTemp = (mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding) && actionId < All.SingleTargetDPS;
+                if (replacedWith >= All.SingleTargetDPS)
+                {
+                    if (replacedWith != All.Cease)
+                        Svc.Toasts.ShowError("This is a custom action, it does nothing on its own.");
+                    return false;
+                }
+
+                var disablingReplacingTemp = (mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding) && actionId < All.SingleTargetDPS && replacedWith < All.SingleTargetDPS;
+                Svc.Log.Debug($"[EnabledDisable] Disabled for queue: {disablingReplacingTemp} {mode} {actionId.ActionName()} {replacedWith.ActionName()}");
                 if (disablingReplacingTemp) // This is so we can remove queue suppression
                     Service.ActionReplacer.DisableActionReplacingIfRequired(); // It gets re-enabled at the end of sending. 
 
@@ -605,13 +613,6 @@ public static class ActionWatching
 
                 var changed = CheckForChangedTarget(original, ref changedTargetId,
                     out var _); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
-
-                if (replacedWith >= All.SingleTargetDPS)
-                {
-                    if (replacedWith != All.Cease)
-                        Svc.Toasts.ShowError("This is a custom action, it does nothing on its own.");
-                    return false;
-                }
 
                 // If retargeting kicks in, update target ID
                 if (changed)

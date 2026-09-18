@@ -504,6 +504,17 @@ public partial class Provider : IDisposable
                 },
             };
         }
+        else if (Player.Job is Job.BST)
+        {
+            return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
+            {
+                {
+                    ComboTargetTypeKeys.SingleTargetDPS,
+                    Helper.CheckCurrentJobModeIsEnabled(
+                        ComboTargetTypeKeys.SingleTargetDPS, ComboStateKeys.Enabled)
+                },
+            };
+        }
         else
         {
             return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
@@ -567,21 +578,37 @@ public partial class Provider : IDisposable
         InternalIsCurrentJobAutoModeOn
         (Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?> previousMatches)
     {
-        return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
+        if (Player.Job is Job.BST)
         {
+            return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
             {
-                ComboTargetTypeKeys.SingleTargetDPS,
-                Helper.CheckCurrentJobModeIsEnabled(
-                    ComboTargetTypeKeys.SingleTargetDPS, ComboStateKeys.AutoMode,
-                    previousMatches[ComboTargetTypeKeys.SingleTargetDPS])
-            },
+                {
+                    ComboTargetTypeKeys.SingleTargetDPS,
+                    Helper.CheckCurrentJobModeIsEnabled(
+                        ComboTargetTypeKeys.SingleTargetDPS, ComboStateKeys.AutoMode,
+                        previousMatches[ComboTargetTypeKeys.SingleTargetDPS])
+                },
+
+            };
+        }
+        else
+        {
+            return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
             {
-                ComboTargetTypeKeys.AoEDPS,
-                Helper.CheckCurrentJobModeIsEnabled(
-                    ComboTargetTypeKeys.AoEDPS, ComboStateKeys.AutoMode,
-                    previousMatches[ComboTargetTypeKeys.AoEDPS])
-            },
-        };
+                {
+                    ComboTargetTypeKeys.SingleTargetDPS,
+                    Helper.CheckCurrentJobModeIsEnabled(
+                        ComboTargetTypeKeys.SingleTargetDPS, ComboStateKeys.AutoMode,
+                        previousMatches[ComboTargetTypeKeys.SingleTargetDPS])
+                },
+                {
+                    ComboTargetTypeKeys.AoEDPS,
+                    Helper.CheckCurrentJobModeIsEnabled(
+                        ComboTargetTypeKeys.AoEDPS, ComboStateKeys.AutoMode,
+                        previousMatches[ComboTargetTypeKeys.AoEDPS])
+                },
+            };
+        }
     }
 
     #endregion

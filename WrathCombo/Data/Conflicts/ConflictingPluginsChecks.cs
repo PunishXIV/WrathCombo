@@ -70,7 +70,7 @@ public static class ConflictingPluginsChecks
                 "[ConflictingPlugins] Periodic check failed (async plugin?)");
         }
 
-        Svc.Framework.RunOnTick(RunChecks!, TS.FromSeconds(4.11));
+        Svc.Framework.RunOnTick(RunChecks!, TS.FromSeconds(2));
     };
 
     internal static BossModCheck BossMod { get; } = new();
@@ -86,9 +86,9 @@ public static class ConflictingPluginsChecks
     public static void Begin()
     {
         // ReSharper disable once RedundantAssignment
-        var ts = TS.FromMinutes(1); // 1m initial delay after plugin launch
+        var ts = TS.FromSeconds(5); // 5s initial delay after plugin launch
 #if DEBUG
-        ts = TS.FromSeconds(10); // 10s for debug mode
+        ts = TS.FromSeconds(5); // 5s for debug mode
 #endif
 
         Svc.Framework.RunOnTick(RunChecks, ts);
@@ -234,6 +234,8 @@ public static class ConflictingPluginsChecks
         public uint[] ConflictingActions = [0, 0];
 
         public bool BunnyConflict;
+
+        public bool PluginEnabled => IPC.IsEnabled;
 
         private DateTime _lastBunnyReload = DateTime.Now;
 
