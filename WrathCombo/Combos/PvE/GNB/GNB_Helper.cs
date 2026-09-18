@@ -21,11 +21,12 @@ internal partial class GNB : Tank
     private static byte Ammo => GetJobGauge<GNBGauge>().Ammo; //cartridge count
     private static byte GunStep => GetJobGauge<GNBGauge>().AmmoComboStep; //GF & Reign combo steps
     private static float NMcd => GetCooldownRemainingTime(NoMercy); //No Mercy cooldown
+    private static float Status(uint status) => LocalPlayer.Status(status).RemainingTimeOrZero();
     private static bool HasNM => NMcd is > 39.5f and <= 60; //under No Mercy buff, using its cooldown instead of buff timer (for snappier reaction) with a small 0.4s leeway
+    private static float BFstatus => Status(Buffs.Bloodfest); //Bloodfest buff timer
     private static float GCDLength => ActionManager.GetAdjustedRecastTime(ActionType.Action, KeenEdge) / 1000f; //current GCD length in seconds
     private static bool Slow => GCDLength >= 2.5f; //base GCD ("slowGNB")
     private static bool Fast => GCDLength < 2.5f; //not base GCD ("fastGNB")
-    private static int HPThresholdNM => (GNB_ST_NM_BossOption == 1 || !TargetIsBoss()) ? GNB_ST_NM_HPOption : 0;
     private static int MaxCartridges
         => TraitLevelChecked(Traits.CartridgeChargeII) ? LocalPlayer.HasStatus(Buffs.Bloodfest) ? 6 : 3 : //enhanced - 3 max base, 6 max buffed
             TraitLevelChecked(Traits.CartridgeCharge) ? LocalPlayer.HasStatus(Buffs.Bloodfest) ? 4 : 2 : 0; //standard - 2 max base, 4 max buffed
@@ -51,7 +52,7 @@ internal partial class GNB : Tank
             ;
     private static bool CanContinue
         => ActionLearned(Continuation) && //unlocked
-            InActionRange(JugularRip) &&
+            InActionRange(JugularRip) && //in range
             (LocalPlayer.HasStatus(Buffs.ReadyToRip) || //after Gnashing Fang 
             LocalPlayer.HasStatus(Buffs.ReadyToTear) || //after Savage Claw
             LocalPlayer.HasStatus(Buffs.ReadyToGouge)) //after Fated Circle
@@ -66,7 +67,7 @@ internal partial class GNB : Tank
             InActionRange(FatedBrand) && //in range
             LocalPlayer.HasStatus(Buffs.ReadyToRaze) //has required buff
             ;
-    private static bool CanContinueAny => CanContinue || CanHV || CanFB
+    private static bool CanContinueAny => CanContinue || CanHV || CanFB //any of the 3 continuation actions are available
             ;
     private static bool CanReign
         => ActionLearned(ReignOfBeasts) && //unlocked
@@ -729,18 +730,18 @@ internal partial class GNB : Tank
             (JustUsed(NoMercy, 20f) || overcap) //under NM or we're close to overcapping/dropping
             ;
     private static bool ShouldUseReignOfBeasts(Preset preset)
-        => ShouldUseInBurst(
-            ReignOfBeasts,
-            preset,
-            CanReign,
-            LocalPlayer.Status(Buffs.ReadyToReign).RemainingTimeOrZero() is < 2.5f and not 0
+        => ShouldUseInBurst( //in burst
+            ReignOfBeasts, //action
+            preset, //preset
+            CanReign, //can use
+            Status(Buffs.ReadyToReign) is <= 2.5f and not 0 //send if about to drop
         );
     private static bool ShouldUseGnashingFangBurst(Preset preset)
-        => ShouldUseInBurst(
-            GnashingFang,
-            preset,
-            CanGF,
-            NMcd > 7 && GetCooldownRemainingTime(GnashingFang) < 0.5f
+        => ShouldUseInBurst( //in burst
+            GnashingFang, //action
+            preset, //preset
+            CanGF, //can use
+            NMcd > 7 && GetCooldownRemainingTime(GnashingFang) < 0.5f //don't use if we don't have enough time
         );
     private static bool ShouldUseGnashingFangFiller(Preset preset, int burst)
         => IsEnabled(preset) && //option enabled
@@ -759,20 +760,24 @@ internal partial class GNB : Tank
     private static bool ShouldUseSonicBreak(Preset preset)
         => IsEnabled(preset) && //option enabled
             CanSB && //can use
-            (Slow || (Fast && LocalPlayer.Status(Buffs.ReadyToBreak).RemainingTimeOrZero() <= (GCDLength + 10.000f))) //if fast SkS, use as last GCD in NM - determined by SB timer + 10s to prevent not sending at all if missed
+            (Slow || (Fast && Status(Buffs.ReadyToBreak) <= (GCDLength + 10.000f))) //if fast SkS, use as last GCD in NM - determined by SB timer + 10s to prevent not sending at all if missed
             ;
-    private static bool ShouldSpendCarts(Preset preset, int setup, bool aoe)
+    private static bool ShouldSpendCarts(Preset preset, int setup)
         => IsEnabled(preset) && //option enabled
             ActionLearned(BurstStrike) && //can spend
             Ammo > 0 && //at least 1 cartridge available
             ComboTimer is > 2.5f or 0.0f && //our combo can actually drop if we carelessly send over and over - we will use 2.5s as our threshold (if not in any combo, just use it)
-            ((setup == 0 && Slow && ActionLearned(DoubleDown) && NMcd < GCDLength) || //precede NM - if 2.5 & Lv90+, we precede NM with our cart action
-            (HasNM && (aoe || !CanGF) && !CanReign && !CanDD && !CanSB)) //in burst - use after everything under NM (if we can)
+            ((setup == 0 && Slow && ActionLearned(ReignOfBeasts) && NMcd < GCDLength) || //precede NM - if 2.5 & Lv100+, we precede NM with our cart action
+            (HasNM && GunStep == 0) || //in burst - use after everything under NM (if we can)
+            //Bloodfest failsafe - if we have 4-6 cartridges, we will send them asap if we are about to lose them due to BF expiration
+            (Ammo == 6 ? BFstatus <= GCDLength * 3 //6 - send if 3 GCDs left
+                : Ammo == 5 ? BFstatus <= GCDLength * 2 //5 - send if 2 GCDs left
+                    : Ammo == 4 && BFstatus <= GCDLength)) //4 - send if 1 GCD left
             ;
     private static bool ShouldUseBurstStrike(Preset preset, int setup)
-        => InActionRange(BurstStrike) && ShouldSpendCarts(preset, setup, false);
+        => InActionRange(BurstStrike) && ShouldSpendCarts(preset, setup);
     private static bool ShouldUseFatedCircle(Preset preset, int setup)
-        => (ActionLearned(FatedCircle) ? InActionRange(FatedCircle) : InActionRange(BurstStrike)) && ShouldSpendCarts(preset, setup, true);
+        => (ActionLearned(FatedCircle) ? InActionRange(FatedCircle) : InActionRange(BurstStrike)) && ShouldSpendCarts(preset, setup);
     private static bool ShouldUseLightningShot(Preset preset, int proc, int burst) =>
         IsEnabled(preset) && //option enabled
         ActionLearned(LightningShot) && //unlocked 
@@ -830,8 +835,6 @@ internal partial class GNB : Tank
 
     private static bool ShouldContinue(Preset preset, bool canContinue, bool canWeave)
         => IsEnabled(preset) && canContinue && canWeave;
-    private static uint ExecuteContinuationProcs(Preset preset, bool canContinue, bool canWeave)
-        => (IsEnabled(preset) && canContinue && canWeave) ? OriginalHook(Continuation) : 0;
 
     #endregion
 
