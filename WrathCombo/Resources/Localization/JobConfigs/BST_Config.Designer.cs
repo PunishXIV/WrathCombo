@@ -61,6 +61,24 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Infinitive Combo Option.
+        /// </summary>
+        internal static string AdvancedInfinitive {
+            get {
+                return ResourceManager.GetString("AdvancedInfinitive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Infinitive Combo actions..
+        /// </summary>
+        internal static string AdvancedInfinitiveDesc {
+            get {
+                return ResourceManager.GetString("AdvancedInfinitiveDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cycle Beasts.
         /// </summary>
         internal static string CycleBeasts {

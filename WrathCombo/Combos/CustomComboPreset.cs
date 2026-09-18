@@ -2410,6 +2410,47 @@ public enum Preset
     [ReplaceSkill(BST.Borrow)]
     [JobInfo(Job.BST)]
     BST_Borrow_Feature = 2506,
+
+    [AutoAction(false, false)]
+    [ReplaceSkill(BST.SmashAxe)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_ST = 2507,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_Battlehorns = 2508,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_Capture = 2509,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_TemperedRelease = 2510,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_PartingBlow = 2511,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_ShieldCharge = 2512,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_Instinctual = 2513,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_Intentional = 2514,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_Borrow = 2515,
+
+    [ParentCombo(BST_AdvancedMode_ST)]
+    [JobInfo(Job.BST)]
+    BST_AdvancedMode_BeastMode = 2516,
     #endregion
 
     #region BARD

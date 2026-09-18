@@ -12217,4 +12217,65 @@ This is the ideal option for newcomers to the job.</value>
   <data name="BST_Borrow_Feature_Desc" xml:space="preserve">
     <value>Replaces Borrow with your beast's borrowed ability. May make it trickier to swap borrows in a pinch, use cautiously.</value>
   </data>
+  <data name="BST_AdvancedMode_ST_Name" xml:space="preserve">
+    <value>Advanced Mode - Single Target</value>
+  </data>
+  <data name="BST_AdvancedMode_ST_Desc" xml:space="preserve">
+    <value>Replaces Smash Axe with a full one-button single target rotation.
+These features are ideal if you want to customize the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_Battlehorns_Name" xml:space="preserve">
+    <value>Battlehorns Option</value>
+  </data>
+  <data name="BST_AdvancedMode_Battlehorns_Desc" xml:space="preserve">
+    <value>Adds battlehorn summoning to the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_Capture_Name" xml:space="preserve">
+    <value>Capture Option</value>
+  </data>
+  <data name="BST_AdvancedMode_Capture_Desc" xml:space="preserve">
+    <value>Adds pet capture to the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_TemperedRelease_Name" xml:space="preserve">
+    <value>Tempered Release Option</value>
+  </data>
+  <data name="BST_AdvancedMode_TemperedRelease_Desc" xml:space="preserve">
+    <value>Adds Tempered Release to the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_PartingBlow_Name" xml:space="preserve">
+    <value>Parting Blow Option</value>
+  </data>
+  <data name="BST_AdvancedMode_PartingBlow_Desc" xml:space="preserve">
+    <value>Adds Parting Blow to the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_ShieldCharge_Name" xml:space="preserve">
+    <value>Shield Charge Option</value>
+  </data>
+  <data name="BST_AdvancedMode_ShieldCharge_Desc" xml:space="preserve">
+    <value>Adds Shield Charge to the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_Instinctual_Name" xml:space="preserve">
+    <value>Instinctual Combo Option</value>
+  </data>
+  <data name="BST_AdvancedMode_Instinctual_Desc" xml:space="preserve">
+    <value>Adds Instinctual combo actions to the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_Intentional_Name" xml:space="preserve">
+    <value>Intentional Combo Option</value>
+  </data>
+  <data name="BST_AdvancedMode_Intentional_Desc" xml:space="preserve">
+    <value>Adds intentional combo actions to the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_Borrow_Name" xml:space="preserve">
+    <value>Borrow Option</value>
+  </data>
+  <data name="BST_AdvancedMode_Borrow_Desc" xml:space="preserve">
+    <value>Adds Borrow to the rotation.</value>
+  </data>
+  <data name="BST_AdvancedMode_BeastMode_Name" xml:space="preserve">
+    <value>Beast Mode Option</value>
+  </data>
+  <data name="BST_AdvancedMode_BeastMode_Desc" xml:space="preserve">
+    <value>Adds Beast Mode to the rotation.</value>
+  </data>
 </root>

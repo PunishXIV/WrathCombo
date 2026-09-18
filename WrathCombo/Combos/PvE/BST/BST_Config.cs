@@ -7,12 +7,22 @@ namespace WrathCombo.Combos.PvE;
 internal partial class BST
 {
     public static UserInt
+        BST_Advanced_ShieldCharge = new("BST_Advanced_ShieldCharge", 3),
+        BST_Advanced_Instinctual_TP = new("BST_Advanced_Instinctual_TP", 100),
+        BST_Advanced_Intentional_TP = new("BST_Advanced_Intentional_TP", 100),
+        BST_Advanced_RallyStacks = new("BST_Advanced_RallyStacks", 2),
+        BST_Advanced_RallyingCheerStacks = new("BST_Advanced_RallyingCheerStacks", 1),
         BST_Instinctual_TpGauge = new("BST_Instinctual_TpGauge", 100),
         BST_Intentional_TpGauge = new("BST_Intentional_TpGauge", 100);
     public static UserBool
+        BST_Advanced_Infinitive = new("BST_Advanced_Infinitive", false),
         BST_Intentional_Infinitive = new("BST_Intentional_Infinitive", false),
         BST_SimpleMode_CycleBeasts = new("BST_SimpleMode_CycleBeasts", false),
         BST_Borrow_OnlyCurrentHorn = new("BST_Borrow_OnlyCurrentHorn", false);
+    public static UserIntArray
+        BST_Advanced_TemperedRelease = new("BST_Advanced_TemperedRelease", new int[50]), //Yes, 50 is a lot
+        BST_Advanced_BeastModes = new("BST_Advanced_BeastModes", new int[8]);
+
 
     internal static class Config
     {
@@ -23,6 +33,10 @@ internal partial class BST
                 case Preset.BST_SimpleMode:
                     DrawAdditionalBoolChoice(BST_SimpleMode_CycleBeasts, BST_Config.CycleBeasts, BST_Config.CycleBeastsDesc);
                     break;
+                case Preset.BST_AdvancedMode_Intentional:
+                    DrawAdditionalBoolChoice(BST_Advanced_Infinitive, BST_Config.AdvancedInfinitive, BST_Config.AdvancedInfinitiveDesc);
+                    break;
+
                 case Preset.BST_Instinctual_Combo:
                     DrawSliderInt(100, 250, BST_Instinctual_TpGauge, BST_Config.MinTPPlayerBeast, sliderIncrement: 10);
                     break;

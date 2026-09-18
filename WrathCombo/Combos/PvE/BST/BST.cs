@@ -126,6 +126,127 @@ internal partial class BST : Melee
         }
     }
 
+    internal class BST_AdvancedMode_ST : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BST_AdvancedMode_ST;
+        protected override uint Invoke(uint actionID)
+        {
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SmashAxe))
+                return actionID;
+
+            // Battlehorns - only use if no pet is active
+            if (IsEnabled(Preset.BST_AdvancedMode_Battlehorns) && !CurrentPetIsBMPet && InCombat() && !JustUsed(FirstBattlehorn) && !JustUsed(SecondBattlehorn) && !JustUsed(ThirdBattlehorn) && !LocalPlayer.IsCasting)
+            {
+                if (ActionReady(FirstBattlehorn))
+                    return FirstBattlehorn;
+
+                if (ActionReady(SecondBattlehorn))
+                    return SecondBattlehorn;
+
+                if (ActionReady(ThirdBattlehorn))
+                    return ThirdBattlehorn;
+            }
+
+            // Capture pets
+            if (IsEnabled(Preset.BST_AdvancedMode_Capture) && TargetIsBstPet(CurrentTarget) && !PetUnlocked(GetPetIdFromModel(CurrentTarget)) && !CurrentTarget!.HasStatus(Debuffs.InterestCaptured))
+            {
+                if (ActionReady(Capture))
+                    return Capture;
+            }
+
+            // Finisher actions
+            if (FinisherReady && FinisherActions.Count > 0)
+            {
+                if (FinisherActions[0] == CounterClockwiseInstinctualAction && !InInstinctualCombo)
+                    return All.Cease;
+
+                if (FinisherActions[0] == Rally && JobGauge.MasterInstinct != 3)
+                    return All.Cease;
+
+                return FinisherActions[0];
+            }
+
+            // Instinctual > Intentional combo
+            if (IsEnabled(Preset.BST_AdvancedMode_Intentional) && AbleToIntentional)
+            {
+                if (JobGauge.ActiveAffinity is Data.InstinctualAffinity.Moonstalker)
+                {
+                    if (ActionReady(RisenFall))
+                        return RisenFall;
+                }
+
+                if (JobGauge.ActiveAffinity is Data.InstinctualAffinity.Sunstrider)
+                {
+                    if (ActionReady(Calamity))
+                        return Calamity;
+                }
+
+                if (CanStartInstinctualCombo || InInstinctualCombo)
+                {
+                    bool cantOmniDirection = !ActionLearned(ClockwiseInstinctualAction) || !ActionLearned(CounterClockwiseInstinctualAction);
+                    if (RallyStackFocus is RallyingType.None or RallyingType.Rally || (cantOmniDirection && !ActionLearned(CounterClockwiseInstinctualAction)))
+                    {
+                        if (ActionReady(Trick))
+                            return Trick;
+
+                        if (ActionReady(ClockwiseInstinctualAction))
+                            return ClockwiseInstinctualAction;
+                    }
+                    else
+                    {
+                        if (ActionReady(CounterClockwiseInstinctualAction))
+                            return CounterClockwiseInstinctualAction;
+
+                        if (ActionReady(Trick))
+                            return Trick;
+                    }
+                }
+            }
+            else if (IsEnabled(Preset.BST_AdvancedMode_Instinctual) && ActionLearned(InstinctualComboAxe))
+            {
+                // Fallback to instinctual
+                if (RallyStackFocus is RallyingType.None or RallyingType.Rally)
+                {
+                    if (ActionReady(Trick))
+                        return Trick;
+
+                    if (ActionReady(InstinctualComboAxe))
+                        return InstinctualComboAxe;
+                }
+                else
+                {
+                    if (ActionReady(InstinctualComboAxe))
+                        return InstinctualComboAxe;
+
+                    if (ActionReady(Trick))
+                        return Trick;
+                }
+            }
+            else if (IsEnabled(Preset.BST_AdvancedMode_Instinctual) && InstinctualComboAxe == 0)
+            {
+                if (ActionReady(AvalancheAxe))
+                    return AvalancheAxe;
+            }
+
+            // Tempered Release
+            if (IsEnabled(Preset.BST_AdvancedMode_TemperedRelease) && ActionReady(TemperedRelease) && CanWeave() && CurrentPetReleaseAction != TemperedReleaseActions.Wespe_FinalSting)
+                return TemperedRelease;
+
+            // Parting Blow - cycle beasts option
+            if (IsEnabled(Preset.BST_AdvancedMode_PartingBlow) && BST_SimpleMode_CycleBeasts && TraitLevelChecked(Traits.WildHeartII) && !ActionReady(TemperedRelease) && ActionReady(PartingBlow) && !OnLastHorn && CanWeave())
+                return PartingBlow;
+
+            // Shield Charge
+            if (IsEnabled(Preset.BST_AdvancedMode_ShieldCharge) && CanWeave() && InMeleeRange() && ActionReady(ShieldCharge) && GetRemainingCharges(ShieldCharge) > 1)
+                return ShieldCharge;
+
+            if (BasicCombo(out var basic))
+                return basic;
+
+            return OriginalHook(SmashAxe);
+        }
+    }
+
     internal class BST_Basic_Combo : CustomCombo
     {
         protected internal override Preset Preset => Preset.BST_Basic_Combo;
