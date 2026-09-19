@@ -550,6 +550,43 @@ public static class UserConfig
         ImGui.Unindent();
     }
 
+    /// <summary> Draws multi choice checkboxes in a vertical configuration. </summary>
+    /// <param name="config"> The config ID. </param>
+    /// <param name="checkBoxName"> The name of the feature. </param>
+    /// <param name="checkboxDescription"> The description of the feature. </param>
+    /// <param name="totalChoices"> The total number of options for the feature </param>
+    /// /// <param name="choice"> If the user ticks this box, this is the value the config will be set to. </param>
+    /// <param name="descriptionColor"></param>
+    public static void DrawVerticalMultiChoice(string config, string checkBoxName, string checkboxDescription, int totalChoices, int choice, Vector4 descriptionColor = new Vector4())
+    {
+        ImGui.Indent();
+        if (descriptionColor == new Vector4()) descriptionColor = ImGuiColors.DalamudWhite;
+        bool[]? values = Configuration.GetCustomBoolArrayValue(config);
+
+        //If new saved options or amount of choices changed, resize and save
+        if (values.Length == 0 || values.Length != totalChoices)
+        {
+            Array.Resize(ref values, totalChoices);
+            Configuration.SetCustomBoolArrayValue(config, values);
+        }
+
+        using (ImRaii.PushColor(ImGuiCol.Text, descriptionColor))
+        {
+            if (ImGui.Checkbox($"{checkBoxName}###{config}{choice}", ref values[choice]))
+                Configuration.SetCustomBoolArrayValue(config, values);
+
+            if (!checkboxDescription.IsNullOrEmpty() && ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.TextUnformatted(checkboxDescription);
+                ImGui.EndTooltip();
+            }
+        }
+
+        DrawResetContextMenu(config, choice);
+        ImGui.Unindent();
+    }
+
     /// <seealso cref="PvPCommon.QuickPurify.Statuses">
     ///     PvP Purifiable Statuses List
     /// </seealso>

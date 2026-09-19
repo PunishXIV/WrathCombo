@@ -19,9 +19,9 @@ internal partial class BST
         BST_Intentional_Infinitive = new("BST_Intentional_Infinitive", false),
         BST_SimpleMode_CycleBeasts = new("BST_SimpleMode_CycleBeasts", false),
         BST_Borrow_OnlyCurrentHorn = new("BST_Borrow_OnlyCurrentHorn", false);
-    public static UserIntArray
-        BST_Advanced_TemperedRelease = new("BST_Advanced_TemperedRelease", new int[50]), //Yes, 50 is a lot
-        BST_Advanced_BeastModes = new("BST_Advanced_BeastModes", new int[8]);
+    public static UserBoolArray
+        BST_Advanced_TemperedRelease = new("BST_Advanced_TemperedRelease", new bool[50]), //Yes, 50 is a lot
+        BST_Advanced_BeastModes = new("BST_Advanced_BeastModes", new bool[8]);
 
 
     internal static class Config
@@ -36,7 +36,16 @@ internal partial class BST
                 case Preset.BST_AdvancedMode_Intentional:
                     DrawAdditionalBoolChoice(BST_Advanced_Infinitive, BST_Config.AdvancedInfinitive, BST_Config.AdvancedInfinitiveDesc);
                     break;
-
+                case Preset.BST_AdvancedMode_BeastMode:
+                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Beastskin", "", 8, 0);
+                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Vileskin", "", 8, 1);
+                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Cloud Skim", "", 8, 2);
+                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Seedsower", "", 8, 3);
+                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Quelling Wave", "", 8, 4);
+                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Scaleskin", "", 8, 5);
+                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Soul Crush", "", 8, 6);
+                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Scouring Ash", "", 8, 7);
+                    break;
                 case Preset.BST_Instinctual_Combo:
                     DrawSliderInt(100, 250, BST_Instinctual_TpGauge, BST_Config.MinTPPlayerBeast, sliderIncrement: 10);
                     break;

@@ -33,6 +33,8 @@ internal partial class BST : Melee
                     return Capture;
             }
 
+            if (CanInterruptEnemy() && ActionReady(SoulCrush))
+                return SoulCrush;
 
             if (FinisherReady && FinisherActions.Count > 0)
             {
