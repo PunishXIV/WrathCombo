@@ -1,3 +1,4 @@
+using ECommons.DalamudServices;
 using ECommons.GameHelpers.LegacyPlayer;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
@@ -130,11 +131,20 @@ internal partial class BST : Melee
 
     internal class BST_AdvancedMode_ST : CustomCombo
     {
-        protected internal override Preset Preset => Preset.BST_AdvancedMode_ST;
+        protected internal override Preset Preset => Preset.BST_AdvancedMode;
         protected override uint Invoke(uint actionID)
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SmashAxe))
                 return actionID;
+
+            var useBeastskin = IsEnabled(Preset.BST_AdvancedMode_BeastMode) && BST_Advanced_BeastModes[0];
+            var useVileskin = IsEnabled(Preset.BST_AdvancedMode_BeastMode) && BST_Advanced_BeastModes[1];
+            var useCloudSkim = IsEnabled(Preset.BST_AdvancedMode_BeastMode) && BST_Advanced_BeastModes[2];
+            var useSeedsower = IsEnabled(Preset.BST_AdvancedMode_BeastMode) && BST_Advanced_BeastModes[3];
+            var useQuellingWave = IsEnabled(Preset.BST_AdvancedMode_BeastMode) && BST_Advanced_BeastModes[4];
+            var useScaleskin = IsEnabled(Preset.BST_AdvancedMode_BeastMode) && BST_Advanced_BeastModes[5];
+            var useSoulCrush = IsEnabled(Preset.BST_AdvancedMode_BeastMode) && BST_Advanced_BeastModes[6];
+            var useScouringAsh = IsEnabled(Preset.BST_AdvancedMode_BeastMode) && BST_Advanced_BeastModes[7];
 
             // Battlehorns - only use if no pet is active
             if (IsEnabled(Preset.BST_AdvancedMode_Battlehorns) && !CurrentPetIsBMPet && InCombat() && !JustUsed(FirstBattlehorn) && !JustUsed(SecondBattlehorn) && !JustUsed(ThirdBattlehorn) && !LocalPlayer.IsCasting)
@@ -155,6 +165,9 @@ internal partial class BST : Melee
                 if (ActionReady(Capture))
                     return Capture;
             }
+
+            if (useSoulCrush && CanInterruptEnemy() && ActionReady(SoulCrush))
+                return SoulCrush;
 
             // Finisher actions
             if (FinisherReady && FinisherActions.Count > 0)
@@ -239,7 +252,7 @@ internal partial class BST : Melee
                 return PartingBlow;
 
             // Shield Charge
-            if (IsEnabled(Preset.BST_AdvancedMode_ShieldCharge) && CanWeave() && InMeleeRange() && ActionReady(ShieldCharge) && GetRemainingCharges(ShieldCharge) > 1)
+            if (IsEnabled(Preset.BST_AdvancedMode_ShieldCharge) && CanWeave() && InMeleeRange() && ActionReady(ShieldCharge) && GetRemainingCharges(ShieldCharge) > BST_Advanced_ShieldCharge)
                 return ShieldCharge;
 
             if (BasicCombo(out var basic))

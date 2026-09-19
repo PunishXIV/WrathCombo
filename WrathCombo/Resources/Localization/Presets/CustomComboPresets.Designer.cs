@@ -6315,6 +6315,187 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adds battlehorn summoning to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_Battlehorns_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Battlehorns_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Battlehorns Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_Battlehorns_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Battlehorns_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Beast Mode to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_BeastMode_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_BeastMode_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beast Mode Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_BeastMode_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_BeastMode_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Borrow to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_Borrow_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Borrow_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Borrow Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_Borrow_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Borrow_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds pet capture to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_Capture_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Capture_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capture Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_Capture_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Capture_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces Smash Axe with a full one-button single target rotation.
+        ///These features are ideal if you want to customize the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Instinctual combo actions to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_Instinctual_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Instinctual_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instinctual Combo Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_Instinctual_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Instinctual_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds intentional combo actions to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_Intentional_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Intentional_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Intentional Combo Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_Intentional_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Intentional_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advanced Mode - Single Target.
+        /// </summary>
+        internal static string BST_AdvancedMode_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Parting Blow to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_PartingBlow_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_PartingBlow_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parting Blow Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_PartingBlow_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_PartingBlow_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Shield Charge to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_ShieldCharge_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_ShieldCharge_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shield Charge Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_ShieldCharge_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_ShieldCharge_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds Tempered Release to the rotation..
+        /// </summary>
+        internal static string BST_AdvancedMode_TemperedRelease_Desc {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_TemperedRelease_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tempered Release Option.
+        /// </summary>
+        internal static string BST_AdvancedMode_TemperedRelease_Name {
+            get {
+                return ResourceManager.GetString("BST_AdvancedMode_TemperedRelease_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaces Axeblade Bite with the basic combo chain..
         /// </summary>
         internal static string BST_Basic_Combo_Desc {
@@ -17913,7 +18094,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Occult Aero into the rotation..
+        ///   Looks up a localized string similar to Adds the highest available Occult Aero into the rotation. Only one Aero can be active at a time..
         /// </summary>
         internal static string Phantom_BlueMage_OccultAero_Desc {
             get {
@@ -19532,6 +19713,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string Phantom_RedMage_OccultLibra_Name {
             get {
                 return ResourceManager.GetString("Phantom_RedMage_OccultLibra_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reapply Occult Libra before the weakness drops, instead of waiting until it is gone..
+        /// </summary>
+        internal static string Phantom_RedMage_OccultLibra_Refresh_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultLibra_Refresh_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh Early.
+        /// </summary>
+        internal static string Phantom_RedMage_OccultLibra_Refresh_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultLibra_Refresh_Name", resourceCulture);
             }
         }
         
@@ -35467,151 +35666,6 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string WHMPvP_Seraphstrike_Name {
             get {
                 return ResourceManager.GetString("WHMPvP_Seraphstrike_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Replaces Smash Axe with a full one-button single target rotation.
-        /// These features are ideal if you want to customize the rotation..
-        /// </summary>
-        internal static string BST_AdvancedMode_ST_Desc {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_ST_Desc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Advanced Mode - Single Target.
-        /// </summary>
-        internal static string BST_AdvancedMode_ST_Name {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_ST_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Adds battlehorn summoning to the rotation..
-        /// </summary>
-        internal static string BST_AdvancedMode_Battlehorns_Desc {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_Battlehorns_Desc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Battlehorns Option.
-        /// </summary>
-        internal static string BST_AdvancedMode_Battlehorns_Name {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_Battlehorns_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Adds pet capture to the rotation..
-        /// </summary>
-        internal static string BST_AdvancedMode_Capture_Desc {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_Capture_Desc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Capture Option.
-        /// </summary>
-        internal static string BST_AdvancedMode_Capture_Name {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_Capture_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Tempered Release to the rotation..
-        /// </summary>
-        internal static string BST_AdvancedMode_TemperedRelease_Desc {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_TemperedRelease_Desc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Tempered Release Option.
-        /// </summary>
-        internal static string BST_AdvancedMode_TemperedRelease_Name {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_TemperedRelease_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Parting Blow to the rotation..
-        /// </summary>
-        internal static string BST_AdvancedMode_PartingBlow_Desc {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_PartingBlow_Desc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Parting Blow Option.
-        /// </summary>
-        internal static string BST_AdvancedMode_PartingBlow_Name {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_PartingBlow_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Shield Charge to the rotation..
-        /// </summary>
-        internal static string BST_AdvancedMode_ShieldCharge_Desc {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_ShieldCharge_Desc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Shield Charge Option.
-        /// </summary>
-        internal static string BST_AdvancedMode_ShieldCharge_Name {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_ShieldCharge_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Adds Instinctual combo actions to the rotation..
-        /// </summary>
-        internal static string BST_AdvancedMode_Instinctual_Desc {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_Instinctual_Desc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Instinctual Combo Option.
-        /// </summary>
-        internal static string BST_AdvancedMode_Instinctual_Name {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_Instinctual_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Intentional Combo Option.
-        /// </summary>
-        internal static string BST_AdvancedMode_Intentional_Name {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_Intentional_Name", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Adds intentional combo actions to the rotation.
-        /// </summary>
-        internal static string BST_AdvancedMode_Intentional_Desc {
-            get {
-                return ResourceManager.GetString("BST_AdvancedMode_Intentional_Desc", resourceCulture);
             }
         }
     }

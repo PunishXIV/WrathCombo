@@ -483,6 +483,7 @@ internal class Presets : ConfigWindow
             foreach (var icon in icons)
             {
                 var img = customEnabled ? P.CustomActions.Manager.IconTextures[icon].GetWrapOrDefault() : Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
+                if (img is not null)
                 ImGui.Image(img.Handle, (new Vector2(30f)) * ImGui.GetIO().FontGlobalScale);
                 var indexOfIcon = icons.IndexOf(icon);
                 var skillName = actionNames[indexOfIcon];

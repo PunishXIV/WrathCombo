@@ -1,5 +1,13 @@
-﻿using WrathCombo.CustomComboNS.Functions;
+﻿using ECommons;
+using ECommons.DalamudServices;
+using Lumina.Excel.Sheets;
+using Lumina.Extensions;
+using System.Globalization;
+using System.Linq;
+using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
+using WrathCombo.Window;
 using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE;
@@ -7,7 +15,7 @@ namespace WrathCombo.Combos.PvE;
 internal partial class BST
 {
     public static UserInt
-        BST_Advanced_ShieldCharge = new("BST_Advanced_ShieldCharge", 3),
+        BST_Advanced_ShieldCharge = new("BST_Advanced_ShieldCharge", 2),
         BST_Advanced_Instinctual_TP = new("BST_Advanced_Instinctual_TP", 100),
         BST_Advanced_Intentional_TP = new("BST_Advanced_Intentional_TP", 100),
         BST_Advanced_RallyStacks = new("BST_Advanced_RallyStacks", 2),
@@ -36,15 +44,27 @@ internal partial class BST
                 case Preset.BST_AdvancedMode_Intentional:
                     DrawAdditionalBoolChoice(BST_Advanced_Infinitive, BST_Config.AdvancedInfinitive, BST_Config.AdvancedInfinitiveDesc);
                     break;
+                case Preset.BST_AdvancedMode_ShieldCharge:
+                    DrawSliderInt(0, 2, BST_Advanced_ShieldCharge, Generics.ChargePool);
+                    break;
+                case Preset.BST_AdvancedMode_TemperedRelease:
+                    foreach (var skill in typeof(BST.TemperedReleaseActions).GetFields().WithIndex())
+                    {
+                        var value = (uint)skill.Value.GetValue(null)!;
+                        var actionName = value.ActionName();
+                        var pet = Svc.Data.GetExcelSheet<Pet>(Text.LangFromCulture).FirstOrDefault(x => x.Abilities[1].RowId == value);
+                        DrawVerticalMultiChoice(BST_Advanced_TemperedRelease, $"#{pet.Unknown18} {CultureInfo.InvariantCulture.TextInfo.ToTitleCase(pet.Name.ToString())} - {actionName}", "", 50, skill.Index);
+                    }
+                    break;
                 case Preset.BST_AdvancedMode_BeastMode:
-                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Beastskin", "", 8, 0);
-                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Vileskin", "", 8, 1);
-                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Cloud Skim", "", 8, 2);
-                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Seedsower", "", 8, 3);
-                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Quelling Wave", "", 8, 4);
-                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Scaleskin", "", 8, 5);
-                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Soul Crush", "", 8, 6);
-                    DrawHorizontalMultiChoice(BST_Advanced_BeastModes, "Use Scouring Ash", "", 8, 7);
+                    DrawVerticalMultiChoice(BST_Advanced_BeastModes, "Use Beastskin", "", 8, 0);
+                    DrawVerticalMultiChoice(BST_Advanced_BeastModes, "Use Vileskin", "", 8, 1);
+                    DrawVerticalMultiChoice(BST_Advanced_BeastModes, "Use Cloud Skim", "", 8, 2);
+                    DrawVerticalMultiChoice(BST_Advanced_BeastModes, "Use Seedsower", "", 8, 3);
+                    DrawVerticalMultiChoice(BST_Advanced_BeastModes, "Use Quelling Wave", "", 8, 4);
+                    DrawVerticalMultiChoice(BST_Advanced_BeastModes, "Use Scaleskin", "", 8, 5);
+                    DrawVerticalMultiChoice(BST_Advanced_BeastModes, "Use Soul Crush", "", 8, 6);
+                    DrawVerticalMultiChoice(BST_Advanced_BeastModes, "Use Scouring Ash", "", 8, 7);
                     break;
                 case Preset.BST_Instinctual_Combo:
                     DrawSliderInt(100, 250, BST_Instinctual_TpGauge, BST_Config.MinTPPlayerBeast, sliderIncrement: 10);
