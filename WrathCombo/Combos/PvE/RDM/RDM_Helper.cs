@@ -136,18 +136,18 @@ internal partial class RDM
     internal static float VerStoneRemaining => LocalPlayer.Status(Buffs.VerstoneReady).RemainingTimeOrZero();
 
     //Bools
-    internal static bool CanVerStone => LocalPlayer.HasStatus(Buffs.VerstoneReady);
-    internal static bool CanVerFire => LocalPlayer.HasStatus(Buffs.VerfireReady);
-    internal static bool CanVerFireAndStone => LocalPlayer.HasStatus(Buffs.VerstoneReady) && LocalPlayer.HasStatus(Buffs.VerfireReady);
-    internal static bool CanGrandImpact => LocalPlayer.HasStatus(Buffs.GrandImpactReady);
-    internal static bool CanMagickedSwordplay => LocalPlayer.HasStatus(Buffs.MagickedSwordPlay);
-    internal static bool CanPrefulgence => LocalPlayer.HasStatus(Buffs.PrefulgenceReady);
-    internal static bool CanViceOfThorns => LocalPlayer.HasStatus(Buffs.ThornedFlourish) && !JustUsed(Embolden, 6f);
-    internal static bool HasDualcast => LocalPlayer.HasStatus(Buffs.Dualcast);
-    internal static bool HasAccelerate => LocalPlayer.HasStatus(Buffs.Acceleration);
-    internal static bool HasSwiftcast => LocalPlayer.HasStatus(Buffs.Swiftcast);
-    internal static bool HasEmbolden => LocalPlayer.HasStatus(Buffs.Embolden);
-    internal static bool HasManafication => LocalPlayer.HasStatus(Buffs.Manafication);
+    internal static bool CanVerStone => LocalPlayer.HasStatus(Buffs.VerstoneReady, out var _, false);
+    internal static bool CanVerFire => LocalPlayer.HasStatus(Buffs.VerfireReady, out var _, false);
+    internal static bool CanVerFireAndStone => LocalPlayer.HasStatus(Buffs.VerstoneReady, out var _, false) && LocalPlayer.HasStatus(Buffs.VerfireReady, out var _, false);
+    internal static bool CanGrandImpact => LocalPlayer.HasStatus(Buffs.GrandImpactReady, out var _, false);
+    internal static bool CanMagickedSwordplay => LocalPlayer.HasStatus(Buffs.MagickedSwordPlay, out var _, false);
+    internal static bool CanPrefulgence => LocalPlayer.HasStatus(Buffs.PrefulgenceReady, out var _, false);
+    internal static bool CanViceOfThorns => LocalPlayer.HasStatus(Buffs.ThornedFlourish, out var _, false) && !JustUsed(Embolden, 6f);
+    internal static bool HasDualcast => LocalPlayer.HasStatus(Buffs.Dualcast, out var _, false);
+    internal static bool HasAccelerate => LocalPlayer.HasStatus(Buffs.Acceleration, out var _, false);
+    internal static bool HasSwiftcast => LocalPlayer.HasStatus(Buffs.Swiftcast, out var _, false);
+    internal static bool HasEmbolden => LocalPlayer.HasStatus(Buffs.Embolden, out var _, false);
+    internal static bool HasManafication => LocalPlayer.HasStatus(Buffs.Manafication, out var _, false);
     internal static bool CanAcceleration => ActionLearned(Acceleration) && !CanVerFireAndStone && HasCharges(Acceleration) && CanInstantCD &&
                                             (EmboldenCD > 15 || ActionLearned(Embolden));
     internal static bool CanAccelerationMovement => ActionLearned(Acceleration) && IsMoving() && HasCharges(Acceleration) && CanInstantCD;
@@ -461,5 +461,6 @@ internal partial class RDM
     }
     #endregion
 }
+
 
 

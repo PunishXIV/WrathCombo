@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -97,19 +97,19 @@ internal static class SGEPvP
                 if (IsEnabled(Preset.SGEPvP_BurstMode_Pneuma) && !GetCooldown(Pneuma).IsCooldown)
                     return Pneuma;
 
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Phlegma) && InMeleeRange() && !LocalPlayer.HasStatus(Buffs.Eukrasia) && GetCooldown(Phlegma).RemainingCharges > 0)
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Phlegma) && InMeleeRange() && !LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false) && GetCooldown(Phlegma).RemainingCharges > 0)
                     return Phlegma;
 
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Toxikon2) && LocalPlayer.HasStatus(Buffs.Addersting) && !LocalPlayer.HasStatus(Buffs.Eukrasia))
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Toxikon2) && LocalPlayer.HasStatus(Buffs.Addersting, out var _, false) && !LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false))
                     return Toxicon2;
 
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Eukrasia) && !CurrentTarget.HasStatus(Debuffs.EukrasianDosis, true) && GetCooldown(Eukrasia).RemainingCharges > 0 && !LocalPlayer.HasStatus(Buffs.Eukrasia))
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Eukrasia) && !CurrentTarget.HasStatus(Debuffs.EukrasianDosis, true) && GetCooldown(Eukrasia).RemainingCharges > 0 && !LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false))
                     return Eukrasia;
 
-                if (LocalPlayer.HasStatus(Buffs.Eukrasia))
+                if (LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false))
                     return OriginalHook(Dosis);
 
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Toxikon) && !CurrentTarget.HasStatus(Debuffs.Toxicon) && GetCooldown(Toxikon).RemainingCharges > 0)
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Toxikon) && !CurrentTarget.HasStatus(Debuffs.Toxicon, out var _, false) && GetCooldown(Toxikon).RemainingCharges > 0)
                     return OriginalHook(Toxikon);
             }
             if (IsEnabled(Preset.SGEPvP_BurstMode_KardiaReminder))

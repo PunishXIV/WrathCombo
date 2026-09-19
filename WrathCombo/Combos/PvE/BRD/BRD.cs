@@ -101,10 +101,10 @@ internal partial class BRD : PhysicalRanged
             {
                 if (ActionWatching.GetAttackType(Opener().CurrentOpenerAction) != ActionWatching.ActionAttackType.Ability && CanBardWeave)
                 {
-                    if (LocalPlayer.HasStatus(Buffs.RagingStrikes) && (gauge.Repertoire == 3 || gauge.Repertoire == 2 && EmpyrealCD < 2))
+                    if (LocalPlayer.HasStatus(Buffs.RagingStrikes, out var _, false) && (gauge.Repertoire == 3 || gauge.Repertoire == 2 && EmpyrealCD < 2))
                         return OriginalHook(PitchPerfect);
 
-                    if (ActionReady(HeartbreakShot) && LocalPlayer.HasStatus(Buffs.RagingStrikes))
+                    if (ActionReady(HeartbreakShot) && LocalPlayer.HasStatus(Buffs.RagingStrikes, out var _, false))
                         return HeartbreakShot;
                 }
 
@@ -172,7 +172,7 @@ internal partial class BRD : PhysicalRanged
                     return OriginalHook(VenomousBite);
             }
 
-            return LocalPlayer.HasStatus(Buffs.HawksEye) || LocalPlayer.HasStatus(Buffs.Barrage)
+            return LocalPlayer.HasStatus(Buffs.HawksEye, out var _, false) || LocalPlayer.HasStatus(Buffs.Barrage, out var _, false)
                 ? actionID
                 : OriginalHook(HeavyShot);
         }
@@ -201,7 +201,7 @@ internal partial class BRD : PhysicalRanged
             // Apex Option
             if (BRD_IronJaws_Apex)
             {
-                if (ActionLearned(BlastArrow) && LocalPlayer.HasStatus(Buffs.BlastArrowReady))
+                if (ActionLearned(BlastArrow) && LocalPlayer.HasStatus(Buffs.BlastArrowReady, out var _, false))
                     return BlastArrow;
 
                 if (gauge.SoulVoice == 100)
@@ -399,11 +399,11 @@ internal partial class BRD : PhysicalRanged
                 if (gauge.SoulVoice == 100)
                     return ApexArrow;
 
-                if (LocalPlayer.HasStatus(Buffs.BlastArrowReady))
+                if (LocalPlayer.HasStatus(Buffs.BlastArrowReady, out var _, false))
                     return BlastArrow;
             }
 
-            return ActionLearned(WideVolley) && (LocalPlayer.HasStatus(Buffs.HawksEye) || LocalPlayer.HasStatus(Buffs.Barrage))
+            return ActionLearned(WideVolley) && (LocalPlayer.HasStatus(Buffs.HawksEye, out var _, false) || LocalPlayer.HasStatus(Buffs.Barrage, out var _, false))
                 ? actionID
                 : OriginalHook(QuickNock);
 
@@ -453,3 +453,4 @@ internal partial class BRD : PhysicalRanged
     }
     #endregion
 }
+

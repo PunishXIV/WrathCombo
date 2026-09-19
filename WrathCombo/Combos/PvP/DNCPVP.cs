@@ -80,7 +80,7 @@ internal static class DNCPvP
 
             #region Variables
             bool starfallDanceReady = !GetCooldown(StarfallDance).IsCooldown;
-            bool starfallDance = LocalPlayer.HasStatus(Buffs.StarfallDance);
+            bool starfallDance = LocalPlayer.HasStatus(Buffs.StarfallDance, out var _, false);
             bool curingWaltzReady = !GetCooldown(CuringWaltz).IsCooldown;
             bool honingDanceReady = !GetCooldown(HoningDance).IsCooldown;
             var acclaimStacks = LocalPlayer.Status(Buffs.Acclaim).Stacks;
@@ -90,7 +90,7 @@ internal static class DNCPvP
             #endregion
 
             // Honing Dance Option
-            if (IsEnabled(Preset.DNCPvP_BurstMode_Partner) && ActionReady(ClosedPosition) && !LocalPlayer.HasStatus(Buffs.ClosedPosition) & GetPartyMembers().Count > 1)
+            if (IsEnabled(Preset.DNCPvP_BurstMode_Partner) && ActionReady(ClosedPosition) && !LocalPlayer.HasStatus(Buffs.ClosedPosition, out var _, false) & GetPartyMembers().Count > 1)
                 return ClosedPosition;
 
             if (IsEnabled(Preset.DNCPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= DNCPvP_EagleThreshold))
@@ -98,7 +98,7 @@ internal static class DNCPvP
 
             if (IsEnabled(Preset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && GetTargetDistance() <= 5 && !enemyGuarded)
             {
-                if (LocalPlayer.HasStatus(Buffs.Acclaim) && acclaimStacks < 4)
+                if (LocalPlayer.HasStatus(Buffs.Acclaim, out var _, false) && acclaimStacks < 4)
                     return All.Cease;
 
                 return HoningDance;
@@ -114,7 +114,7 @@ internal static class DNCPvP
                 if (IsOffCooldown(FanDance) && InActionRange(FanDance) && !enemyGuarded) // 2y below max to avoid waste
                     return OriginalHook(FanDance);
 
-                if (IsEnabled(Preset.DNCPvP_BurstMode_Dash) && !LocalPlayer.HasStatus(Buffs.EnAvant) && GetRemainingCharges(EnAvant) > DNCPvP_EnAvantCharges)
+                if (IsEnabled(Preset.DNCPvP_BurstMode_Dash) && !LocalPlayer.HasStatus(Buffs.EnAvant, out var _, false) && GetRemainingCharges(EnAvant) > DNCPvP_EnAvantCharges)
                     return EnAvant;
             }
 

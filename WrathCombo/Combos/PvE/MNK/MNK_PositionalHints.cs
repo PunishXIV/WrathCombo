@@ -18,7 +18,7 @@ internal partial class MNK
         if (!CanReportPositionalHints())
             return;
 
-        if (!ActionLearned(TrueStrike) || LocalPlayer.HasStatus(Buffs.FormlessFist))
+        if (!ActionLearned(TrueStrike) || LocalPlayer.HasStatus(Buffs.FormlessFist, out var _, false))
         {
             ClearUpcomingPositional();
             return;
@@ -27,7 +27,7 @@ internal partial class MNK
         if (TryReportOpenerPositionalHint(Opener(), TryReportMNKActionPositional))
             return;
 
-        if (LocalPlayer.HasStatus(Buffs.PerfectBalance))
+        if (LocalPlayer.HasStatus(Buffs.PerfectBalance, out var _, false))
         {
             if (!SolarNadi && LunarNadi && Gauge.BeastChakra[0] is BeastChakra.None)
                 ReportCoeurlPositional(1);
@@ -39,11 +39,11 @@ internal partial class MNK
         bool justUsedCoeurlPositional =
             JustUsed(Demolish, GCD) || JustUsed(OriginalHook(SnapPunch), GCD);
 
-        int gcdsUntil = (LocalPlayer.HasStatus(Buffs.CoeurlForm) && !justUsedCoeurlPositional) switch
+        int gcdsUntil = (LocalPlayer.HasStatus(Buffs.CoeurlForm, out var _, false) && !justUsedCoeurlPositional) switch
         {
             true => 1,
-            _ when LocalPlayer.HasStatus(Buffs.RaptorForm) && ActionLearned(TrueStrike) => 2,
-            _ when LocalPlayer.HasStatus(Buffs.OpoOpoForm) || justUsedCoeurlPositional => 3,
+            _ when LocalPlayer.HasStatus(Buffs.RaptorForm, out var _, false) && ActionLearned(TrueStrike) => 2,
+            _ when LocalPlayer.HasStatus(Buffs.OpoOpoForm, out var _, false) || justUsedCoeurlPositional => 3,
             _ => 0,
         };
 
@@ -82,3 +82,4 @@ internal partial class MNK
         }
     }
 }
+

@@ -1,4 +1,4 @@
-﻿#region References
+#region References
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
@@ -134,7 +134,7 @@ namespace WrathCombo.Extensions
             public bool HasCleansableDebuff => chara.HasStatusInCacheList(DispellableStatuses);
             public bool HasCleansableDoom => chara.HasStatusInCacheList(CleansableDoomStatuses);
             public bool HasBeneficialStatus => chara.HasStatusInCacheList(BeneficialStatuses);
-            public bool HasPhantomDispelStatus => chara.HasDamageUp || chara.HasEvasionUp || chara.HasStatus(OCDarkDefensesStatusId) || chara.IsInvincible;
+            public bool HasPhantomDispelStatus => chara.HasDamageUp || chara.HasEvasionUp || chara.HasStatus(OCDarkDefensesStatusId, out var _, false) || chara.IsInvincible;
 
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -207,7 +207,7 @@ namespace WrathCombo.Extensions
                 if ((chara.IsHostile() && status.StatusCategory != 2) || (chara.IsFriendly() && status.StatusCategory != 1))
                     return false;
 
-                if (!chara.IsStatusCapped || chara.HasStatus(statusId))
+                if (!chara.IsStatusCapped || chara.HasStatus(statusId, out var _, false))
                     return true;
 
                 return false;
@@ -265,7 +265,7 @@ namespace WrathCombo.Extensions
 
         /// <summary>
         /// Forwards status helpers onto IGameObject by treating the object as IBattleChara.
-        /// No LocalPlayer fallback — a non-chara or null object has no statuses.
+        /// No LocalPlayer fallback � a non-chara or null object has no statuses.
         /// </summary>
         extension(IGameObject? obj)
         {
@@ -304,3 +304,4 @@ namespace WrathCombo.Extensions
         }
     }
 }
+

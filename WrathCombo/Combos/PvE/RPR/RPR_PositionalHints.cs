@@ -18,19 +18,19 @@ internal partial class RPR
         if (!CanReportPositionalHints())
             return;
 
-        if (LocalPlayer.HasStatus(Buffs.Enshrouded))
+        if (LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false))
         {
             ClearUpcomingPositional();
             return;
         }
 
-        if (!LocalPlayer.HasStatus(Buffs.SoulReaver) && !LocalPlayer.HasStatus(Buffs.Executioner))
+        if (!LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) && !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false))
             return;
 
         if (!ActionLearned(Gibbet))
             return;
 
-        switch (LocalPlayer.HasStatus(Buffs.EnhancedGibbet), LocalPlayer.HasStatus(Buffs.EnhancedGallows))
+        switch (LocalPlayer.HasStatus(Buffs.EnhancedGibbet, out var _, false), LocalPlayer.HasStatus(Buffs.EnhancedGallows, out var _, false))
         {
             case (true, _):
                 ReportUpcomingPositional(PositionalDirection.Flank, OriginalHook(Gibbet), 1);
@@ -51,3 +51,4 @@ internal partial class RPR
         }
     }
 }
+

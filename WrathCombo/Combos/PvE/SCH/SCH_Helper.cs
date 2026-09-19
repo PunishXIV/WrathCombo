@@ -131,11 +131,11 @@ internal partial class SCH
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
         bool ShieldCheck = !SCH_ST_Heal_AldoquimOpts[0] || 
                            !healTarget.HasStatus(Buffs.Galvanize, true) || 
-                           LocalPlayer.HasStatus(Buffs.EmergencyTactics);
+                           LocalPlayer.HasStatus(Buffs.EmergencyTactics, out var _, false);
         bool SageShieldCheck = !SCH_ST_Heal_AldoquimOpts[1] ||
                                !healTarget.HasStatus(SGE.Buffs.EukrasianDiagnosis, true) || 
                                !healTarget.HasStatus(SGE.Buffs.EukrasianPrognosis, true) ||
-                               LocalPlayer.HasStatus(Buffs.EmergencyTactics);
+                               LocalPlayer.HasStatus(Buffs.EmergencyTactics, out var _, false);
         bool EmergencyAdlo = SCH_ST_Heal_AldoquimOpts[2] && ActionReady(EmergencyTactics) &&
                              GetTargetHPPercent(healTarget, SCH_ST_Heal_IncludeShields) <=
                              SCH_ST_Heal_AdloquiumOption_Emergency;
@@ -149,7 +149,7 @@ internal partial class SCH
             case 1:
                 action = Excogitation;
                 enabled = IsEnabled(Preset.SCH_ST_Heal_Excogitation) && 
-                          (HasAetherflow || LocalPlayer.HasStatus(Buffs.Recitation)) &&
+                          (HasAetherflow || LocalPlayer.HasStatus(Buffs.Recitation, out var _, false)) &&
                           (tankCheck || !IsInParty() || !SCH_ST_Heal_ExcogitationTankOption) &&
                           (!SCH_ST_Heal_ExcogitationBossOption || !InBossEncounter());;
                 return SCH_ST_Heal_ExcogitationOption;
@@ -425,5 +425,6 @@ internal partial class SCH
 
     #endregion
 }
+
 
 

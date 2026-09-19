@@ -87,10 +87,10 @@ internal static class RPRPvP
 
             #region Variables
             bool canWeave = CanWeave();                    
-            bool canBind = !CurrentTarget.HasStatus(PvPCommon.Debuffs.Bind);
+            bool canBind = !CurrentTarget.HasStatus(PvPCommon.Debuffs.Bind, out var _, false);
             bool deathWarrantReady = IsOffCooldown(DeathWarrant);
             bool plentifulReady = IsOffCooldown(PlentifulHarvest);
-            bool enshrouded = LocalPlayer.HasStatus(Buffs.Enshrouded);
+            bool enshrouded = LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false);
             float enshroudStacks = LocalPlayer.Status(Buffs.Enshrouded).Stacks;
             float immortalStacks = LocalPlayer.Status(Buffs.ImmortalSacrifice).Stacks;
             int immortalThreshold = RPRPvP_ImmortalStackThreshold;
@@ -119,7 +119,7 @@ internal static class RPRPvP
                     {
                         // Enshrouded Death Warrant Option
                         if (IsEnabled(Preset.RPRPvP_Burst_Enshrouded_DeathWarrant) &&
-                            deathWarrantReady && enshroudStacks >= 3 && InActionRange(DeathWarrant) || LocalPlayer.HasStatus(Buffs.DeathWarrant) && LocalPlayer.Status(Buffs.DeathWarrant).RemainingTimeOrZero() <= 3)
+                            deathWarrantReady && enshroudStacks >= 3 && InActionRange(DeathWarrant) || LocalPlayer.HasStatus(Buffs.DeathWarrant, out var _, false) && LocalPlayer.Status(Buffs.DeathWarrant).RemainingTimeOrZero() <= 3)
                             return OriginalHook(DeathWarrant);
 
                         // Lemure's Slice
@@ -145,7 +145,7 @@ internal static class RPRPvP
                 // Outside of Enshroud
                 if (!enshrouded)
                 {
-                    if (LocalPlayer.HasStatus(Buffs.PerfectioParata))
+                    if (LocalPlayer.HasStatus(Buffs.PerfectioParata, out var _, false))
                         return OriginalHook(TenebraeLemurum);
 
                     // Pooling Plentiful with Death warrant
@@ -158,7 +158,7 @@ internal static class RPRPvP
                             return OriginalHook(DeathWarrant);
 
                         if (plentifulReady && immortalStacks >= immortalThreshold &&
-                            CurrentTarget.HasStatus(Debuffs.DeathWarrant) && InActionRange(PlentifulHarvest))
+                            CurrentTarget.HasStatus(Debuffs.DeathWarrant, out var _, false) && InActionRange(PlentifulHarvest))
                             return PlentifulHarvest;
                     }
 

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using System;
 using System.Collections.Generic;
@@ -157,7 +157,7 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Thief_Vigilance, Vigilance) &&
-            !LocalPlayer.HasStatus(Buffs.Vigilance) && !InCombat())
+            !LocalPlayer.HasStatus(Buffs.Vigilance, out var _, false) && !InCombat())
         {
             actionID = Vigilance; // damage buff out of combat
             return true;
@@ -266,8 +266,8 @@ internal partial class OccultCrescent
             InActionRange(DeadlyBlow) && !CanWeave() &&
             (CurrentJobLevel < 3 ||
              !IsEnabled(Preset.Phantom_Berserker_Rage) ||
-             LocalPlayer.Status(Buffs.PentupRage).RemainingTimeOrZero() <= 3f && LocalPlayer.HasStatus(Buffs.PentupRage) ||
-             !LocalPlayer.HasStatus(Buffs.PentupRage) && !ActionReady(Rage)))
+             LocalPlayer.Status(Buffs.PentupRage).RemainingTimeOrZero() <= 3f && LocalPlayer.HasStatus(Buffs.PentupRage, out var _, false) ||
+             !LocalPlayer.HasStatus(Buffs.PentupRage, out var _, false) && !ActionReady(Rage)))
         {
             actionID = DeadlyBlow; // better when buff timer is low / Rage on CD
             return true;
@@ -323,7 +323,7 @@ internal partial class OccultCrescent
         if (CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_TimeMage_OccultQuick, OccultQuick) &&
-            !LocalPlayer.HasStatus(Buffs.OccultQuick) && ActionWatching.NumberOfGcdsUsed > 3 &&
+            !LocalPlayer.HasStatus(Buffs.OccultQuick, out var _, false) && ActionWatching.NumberOfGcdsUsed > 3 &&
             !ShouldHoldOccultQuick())
         {
             actionID = OccultQuick; // damage buff
@@ -348,12 +348,12 @@ internal partial class OccultCrescent
             // Make the comet fast
             if (Phantom_TimeMage_Comet_RequireSpeed &&
                 Phantom_TimeMage_Comet_UseSpeed &&
-                !LocalPlayer.HasStatus(Buffs.OccultQuick) && !JustUsed(OccultQuick) &&
-                !LocalPlayer.HasStatus(RoleActions.Magic.Buffs.Swiftcast) && !JustUsed(RoleActions.Magic.Swiftcast) &&
-                !LocalPlayer.HasStatus(BLM.Buffs.Triplecast) && !JustUsed(BLM.Triplecast) &&
-                !LocalPlayer.HasStatus(PLD.Buffs.Requiescat) && !JustUsed(PLD.Imperator) &&
-                !LocalPlayer.HasStatus(RDM.Buffs.Dualcast) &&
-                !LocalPlayer.HasStatus(Buffs.Dualcast))
+                !LocalPlayer.HasStatus(Buffs.OccultQuick, out var _, false) && !JustUsed(OccultQuick) &&
+                !LocalPlayer.HasStatus(RoleActions.Magic.Buffs.Swiftcast, out var _, false) && !JustUsed(RoleActions.Magic.Swiftcast) &&
+                !LocalPlayer.HasStatus(BLM.Buffs.Triplecast, out var _, false) && !JustUsed(BLM.Triplecast) &&
+                !LocalPlayer.HasStatus(PLD.Buffs.Requiescat, out var _, false) && !JustUsed(PLD.Imperator) &&
+                !LocalPlayer.HasStatus(RDM.Buffs.Dualcast, out var _, false) &&
+                !LocalPlayer.HasStatus(Buffs.Dualcast, out var _, false))
             {
                 if (ActionReady(OccultQuick))
                 {
@@ -369,12 +369,12 @@ internal partial class OccultCrescent
             }
 
             if (!Phantom_TimeMage_Comet_RequireSpeed ||
-                LocalPlayer.HasStatus(Buffs.OccultQuick) ||
-                LocalPlayer.HasStatus(RoleActions.Magic.Buffs.Swiftcast) ||
-                LocalPlayer.HasStatus(BLM.Buffs.Triplecast) ||
-                LocalPlayer.HasStatus(PLD.Buffs.Requiescat) ||
-                LocalPlayer.HasStatus(RDM.Buffs.Dualcast) ||
-                LocalPlayer.HasStatus(Buffs.Dualcast))
+                LocalPlayer.HasStatus(Buffs.OccultQuick, out var _, false) ||
+                LocalPlayer.HasStatus(RoleActions.Magic.Buffs.Swiftcast, out var _, false) ||
+                LocalPlayer.HasStatus(BLM.Buffs.Triplecast, out var _, false) ||
+                LocalPlayer.HasStatus(PLD.Buffs.Requiescat, out var _, false) ||
+                LocalPlayer.HasStatus(RDM.Buffs.Dualcast, out var _, false) ||
+                LocalPlayer.HasStatus(Buffs.Dualcast, out var _, false))
             {
                 actionID = OccultComet; // damage
                 return true;
@@ -382,7 +382,7 @@ internal partial class OccultCrescent
         }
 
         var canDebuff = EnemiesInRange(OccultSlowga).Any(x => !x.IsImmuneToStatus(Debuffs.Slow)
-        && !x.HasStatus(Debuffs.Slow)
+        && !x.HasStatus(Debuffs.Slow, out var _, false)
         && (ICDTracker.StatusIsExpired(Debuffs.Slow, x.GameObjectId)
         || (ICDTracker.NumberOfTimesApplied(Debuffs.Slow, x.GameObjectId) < 3) && IsNotEnabled(Preset.Phantom_TimeMage_OccultSlowga_Wait)));
 
@@ -447,7 +447,7 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Bard_MightyMarch, MightyMarch) &&
-            !LocalPlayer.HasStatus(Buffs.MightyMarch) && PlayerHP <= Phantom_Bard_MightyMarch_Health)
+            !LocalPlayer.HasStatus(Buffs.MightyMarch, out var _, false) && PlayerHP <= Phantom_Bard_MightyMarch_Health)
         {
             actionID = MightyMarch; // aoe heal
             return true;
@@ -482,8 +482,8 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
         {
             if (IsEnabledAndUsable(Preset.Phantom_Oracle_Predict, Predict) && InCombat() && !CanWeave() &&
-                !LocalPlayer.HasStatus(Buffs.PredictionOfJudgment) && !LocalPlayer.HasStatus(Buffs.PredictionOfCleansing) &&
-                !LocalPlayer.HasStatus(Buffs.PredictionOfBlessing) && !LocalPlayer.HasStatus(Buffs.PredictionOfStarfall))
+                !LocalPlayer.HasStatus(Buffs.PredictionOfJudgment, out var _, false) && !LocalPlayer.HasStatus(Buffs.PredictionOfCleansing, out var _, false) &&
+                !LocalPlayer.HasStatus(Buffs.PredictionOfBlessing, out var _, false) && !LocalPlayer.HasStatus(Buffs.PredictionOfStarfall, out var _, false))
             {
                 ResetOracleDeck();
                 actionID = Predict; // start of the chain
@@ -501,7 +501,7 @@ internal partial class OccultCrescent
             Phantom_Oracle_SaveInvulnForStarfall &&
             IsEnabled(Preset.Phantom_Oracle_Invulnerability) &&
             ActionReady(Invulnerability) &&
-            !LocalPlayer.HasStatus(Buffs.Invulnerability);
+            !LocalPlayer.HasStatus(Buffs.Invulnerability, out var _, false);
         bool holdForStarfall = !lastCard && starfallStillInDeck && canStillInvulnForStarfall &&
                                LocalPlayer.Status(OracleCurrentCard).RemainingTimeOrZero() > 3f;
         bool tanking = PlayerHasTankStance();
@@ -512,7 +512,7 @@ internal partial class OccultCrescent
         bool needsJudgmentHeal = PlayerHP <= Phantom_Oracle_Judgment_PartyHP ||
                                  partyAvgHp <= Phantom_Oracle_Judgment_PartyHP;
 
-        if (LocalPlayer.HasStatus(Buffs.PredictionOfStarfall))
+        if (LocalPlayer.HasStatus(Buffs.PredictionOfStarfall, out var _, false))
         {
             if (IsEnabledAndUsable(Preset.Phantom_Oracle_Invulnerability, Invulnerability) &&
                 canStillInvulnForStarfall && InCombat())
@@ -522,7 +522,7 @@ internal partial class OccultCrescent
             }
 
             bool canStarfallSafely =
-                LocalPlayer.HasStatus(Buffs.Invulnerability) ||
+                LocalPlayer.HasStatus(Buffs.Invulnerability, out var _, false) ||
                 (PlayerHP >= Phantom_Oracle_Starfall_Health &&
                  !canStillInvulnForStarfall &&
                  !raidwideIncoming);
@@ -530,7 +530,7 @@ internal partial class OccultCrescent
             if (IsEnabledAndUsable(Preset.Phantom_Oracle_Starfall, Starfall) &&
                 canStarfallSafely &&
                 (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed ||
-                 LocalPlayer.HasStatus(Buffs.Invulnerability) || lastCard))
+                 LocalPlayer.HasStatus(Buffs.Invulnerability, out var _, false) || lastCard))
             {
                 MarkOracleCardPlayed(Buffs.PredictionOfStarfall);
                 actionID = Starfall; // damage + 90% total HP damage to self
@@ -545,7 +545,7 @@ internal partial class OccultCrescent
         // While tanking with Starfall still saved, prefer Cleansing (potency without self-harm)
         if (tanking && holdForStarfall &&
             IsEnabledAndUsable(Preset.Phantom_Oracle_Cleansing, Cleansing) &&
-            LocalPlayer.HasStatus(Buffs.PredictionOfCleansing))
+            LocalPlayer.HasStatus(Buffs.PredictionOfCleansing, out var _, false))
         {
             MarkOracleCardPlayed(Buffs.PredictionOfCleansing);
             actionID = Cleansing;
@@ -561,7 +561,7 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Oracle_Cleansing, Cleansing) &&
-            LocalPlayer.HasStatus(Buffs.PredictionOfCleansing) && CanInterruptEnemy())
+            LocalPlayer.HasStatus(Buffs.PredictionOfCleansing, out var _, false) && CanInterruptEnemy())
         {
             MarkOracleCardPlayed(Buffs.PredictionOfCleansing);
             actionID = Cleansing;
@@ -569,7 +569,7 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Oracle_Blessing, Blessing) &&
-            LocalPlayer.HasStatus(Buffs.PredictionOfBlessing) &&
+            LocalPlayer.HasStatus(Buffs.PredictionOfBlessing, out var _, false) &&
             (needsBlessingHeal || lastCard) &&
             (!holdForStarfall || lastCard || tanking))
         {
@@ -591,9 +591,9 @@ internal partial class OccultCrescent
             return true;
         }
 
-        // Judgment as heal when party/self is low — skip RestrictToBuff
+        // Judgment as heal when party/self is low � skip RestrictToBuff
         if (IsEnabledAndUsable(Preset.Phantom_Oracle_PhantomJudgment, PhantomJudgment) &&
-            LocalPlayer.HasStatus(Buffs.PredictionOfJudgment) &&
+            LocalPlayer.HasStatus(Buffs.PredictionOfJudgment, out var _, false) &&
             needsJudgmentHeal &&
             (!holdForStarfall || lastCard || tanking))
         {
@@ -609,7 +609,7 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Oracle_PhantomJudgment, PhantomJudgment) &&
-            LocalPlayer.HasStatus(Buffs.PredictionOfJudgment) &&
+            LocalPlayer.HasStatus(Buffs.PredictionOfJudgment, out var _, false) &&
             (!holdForStarfall || lastCard))
         {
             MarkOracleCardPlayed(Buffs.PredictionOfJudgment);
@@ -618,7 +618,7 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Oracle_Cleansing, Cleansing) &&
-            LocalPlayer.HasStatus(Buffs.PredictionOfCleansing) &&
+            LocalPlayer.HasStatus(Buffs.PredictionOfCleansing, out var _, false) &&
             (!holdForStarfall || lastCard))
         {
             MarkOracleCardPlayed(Buffs.PredictionOfCleansing);
@@ -628,7 +628,7 @@ internal partial class OccultCrescent
 
         if (IsEnabledAndUsable(Preset.Phantom_Oracle_Invulnerability, Invulnerability) &&
             !Phantom_Oracle_SaveInvulnForStarfall && InCombat() &&
-            !LocalPlayer.HasStatus(Buffs.Invulnerability) && PlayerHP <= Phantom_Oracle_Invulnerability_Health)
+            !LocalPlayer.HasStatus(Buffs.Invulnerability, out var _, false) && PlayerHP <= Phantom_Oracle_Invulnerability_Health)
         {
             actionID = Invulnerability;
             return true;
@@ -727,7 +727,7 @@ internal partial class OccultCrescent
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_Geomancer_AetherialGain, AetherialGain) &&
-                !LocalPlayer.HasStatus(Buffs.AetherialGain) &&
+                !LocalPlayer.HasStatus(Buffs.AetherialGain, out var _, false) &&
                 (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed))
             {
                 actionID = AetherialGain; // damage buff
@@ -735,28 +735,28 @@ internal partial class OccultCrescent
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_Geomancer_CloudyCaress, CloudyCaress) &&
-                !LocalPlayer.HasStatus(Buffs.CloudyCaress))
+                !LocalPlayer.HasStatus(Buffs.CloudyCaress, out var _, false))
             {
                 actionID = CloudyCaress; // Increases HP recovery
                 return true;
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_Geomancer_BlessedRain, BlessedRain) &&
-                !LocalPlayer.HasStatus(Buffs.BlessedRain))
+                !LocalPlayer.HasStatus(Buffs.BlessedRain, out var _, false))
             {
                 actionID = BlessedRain; // shield
                 return true;
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_Geomancer_MistyMirage, MistyMirage) &&
-                !LocalPlayer.HasStatus(Buffs.MistyMirage))
+                !LocalPlayer.HasStatus(Buffs.MistyMirage, out var _, false))
             {
                 actionID = MistyMirage; // evasion
                 return true;
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_Geomancer_HastyMirage, HastyMirage) &&
-                !LocalPlayer.HasStatus(Buffs.HastyMirage))
+                !LocalPlayer.HasStatus(Buffs.HastyMirage, out var _, false))
             {
                 actionID = HastyMirage; // movement speed
                 return true;
@@ -767,21 +767,21 @@ internal partial class OccultCrescent
         if (!CanWeave()) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Geomancer_BattleBell, BattleBell) &&
-            !LocalPlayer.HasStatus(Buffs.BattleBell))
+            !LocalPlayer.HasStatus(Buffs.BattleBell, out var _, false))
         {
             actionID = BattleBell; // buff
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Geomancer_RingingRespite, RingingRespite) &&
-            !LocalPlayer.HasStatus(Buffs.RingingRespite))
+            !LocalPlayer.HasStatus(Buffs.RingingRespite, out var _, false))
         {
             actionID = RingingRespite; // heal after damage
             return true;
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Geomancer_Suspend, Suspend) &&
-            !LocalPlayer.HasStatus(Buffs.Suspend) &&
+            !LocalPlayer.HasStatus(Buffs.Suspend, out var _, false) &&
             (InCombat() && Phantom_Geomancer_Suspend_InCombat ||
              !InCombat() && Phantom_Geomancer_Suspend_OutOfCombat))
         {
@@ -860,7 +860,7 @@ internal partial class OccultCrescent
             }
 
             if (IsEnabledAndUsable(Preset.Phantom_Dancer_SteadfastStance, SteadfastStance) &&
-                InCombat() && !LocalPlayer.HasStatus(Buffs.SteadfastStance))
+                InCombat() && !LocalPlayer.HasStatus(Buffs.SteadfastStance, out var _, false))
             {
                 actionID = SteadfastStance; // barrier
                 return true;
@@ -879,22 +879,22 @@ internal partial class OccultCrescent
         // Skip if no damage buff, and user wants things under buffs
         if (!IsEnabled(Preset.Phantom_RestrictToBuff) || Bursting.PlayerIsDamageBuffed)
         {
-            if (IsEnabled(Preset.Phantom_Dancer_Dance) && LocalPlayer.HasStatus(Buffs.PoisedToSwordDance))
+            if (IsEnabled(Preset.Phantom_Dancer_Dance) && LocalPlayer.HasStatus(Buffs.PoisedToSwordDance, out var _, false))
             {
                 actionID = PoisedToSwordDance;
                 return true;
             }
-            if (IsEnabled(Preset.Phantom_Dancer_Dance) && LocalPlayer.HasStatus(Buffs.TemptedToTango))
+            if (IsEnabled(Preset.Phantom_Dancer_Dance) && LocalPlayer.HasStatus(Buffs.TemptedToTango, out var _, false))
             {
                 actionID = TemptedToTango;
                 return true;
             }
-            if (IsEnabled(Preset.Phantom_Dancer_Dance) && LocalPlayer.HasStatus(Buffs.Jitterbugged))
+            if (IsEnabled(Preset.Phantom_Dancer_Dance) && LocalPlayer.HasStatus(Buffs.Jitterbugged, out var _, false))
             {
                 actionID = Jitterbug;
                 return true;
             }
-            if (IsEnabled(Preset.Phantom_Dancer_Dance) && LocalPlayer.HasStatus(Buffs.WillingToWaltz))
+            if (IsEnabled(Preset.Phantom_Dancer_Dance) && LocalPlayer.HasStatus(Buffs.WillingToWaltz, out var _, false))
             {
                 actionID = WillingToWaltz;
                 return true;
@@ -1011,7 +1011,7 @@ internal partial class OccultCrescent
         if (!IsEnabled(Preset.Phantom_WhiteMage))
             return false;
         if (IsEnabledAndUsable(Preset.Phantom_WhiteMage_OccultBlink, OccultBlink) && InCombat() && CanWeave() &&
-            !LocalPlayer.HasStatus(Buffs.OccultBlink))
+            !LocalPlayer.HasStatus(Buffs.OccultBlink, out var _, false))
         {
             actionID = OccultBlink;
             return true;
@@ -1157,7 +1157,7 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Summoner_EarthenWall, EarthenWall) && InCombat() &&
-            !LocalPlayer.HasStatus(Buffs.EarthenWall) && GroupDamageIncoming() && !IsMoving())
+            !LocalPlayer.HasStatus(Buffs.EarthenWall, out var _, false) && GroupDamageIncoming() && !IsMoving())
         {
             actionID = EarthenWall;
             return true;
@@ -1221,7 +1221,7 @@ internal partial class OccultCrescent
             return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_BlueMage_OccultMightyGuard, OccultMightyGuard) && InCombat() &&
-            !LocalPlayer.HasStatus(Buffs.OccultMightyGuard))
+            !LocalPlayer.HasStatus(Buffs.OccultMightyGuard, out var _, false))
         {
             actionID = OccultMightyGuard;
             return true;
@@ -1447,10 +1447,10 @@ internal partial class OccultCrescent
     private static bool CanUseNecromancerSpells()
     {
         if (Phantom_Necromancer_SpellDuringDrainTouch == 1)
-            return LocalPlayer.HasStatus(Buffs.DrainTouch);
+            return LocalPlayer.HasStatus(Buffs.DrainTouch, out var _, false);
         if (Phantom_Necromancer_SpellDuringDrainTouch == 2)
             return true;
-        return !LocalPlayer.HasStatus(Buffs.DrainTouch);
+        return !LocalPlayer.HasStatus(Buffs.DrainTouch, out var _, false);
     }
 
     private static bool ShouldUseDrainTouch()
@@ -1494,10 +1494,10 @@ internal partial class OccultCrescent
     }
 
     private static bool ShouldHoldOccultQuick() =>
-        LocalPlayer.HasStatus(RDM.Buffs.Manafication) ||
-        LocalPlayer.HasStatus(RDM.Buffs.Embolden) ||
-        LocalPlayer.HasStatus(RDM.Buffs.MagickedSwordPlay) ||
-        LocalPlayer.HasStatus(RDM.Buffs.GrandImpactReady);
+        LocalPlayer.HasStatus(RDM.Buffs.Manafication, out var _, false) ||
+        LocalPlayer.HasStatus(RDM.Buffs.Embolden, out var _, false) ||
+        LocalPlayer.HasStatus(RDM.Buffs.MagickedSwordPlay, out var _, false) ||
+        LocalPlayer.HasStatus(RDM.Buffs.GrandImpactReady, out var _, false);
 
     private static bool TryRetargetPhantomRaise(ref uint actionID, uint raiseAction)
     {
@@ -1568,13 +1568,13 @@ internal partial class OccultCrescent
     private static void UpdateOracleDeck()
     {
         uint card = 0;
-        if (LocalPlayer.HasStatus(Buffs.PredictionOfBlessing))
+        if (LocalPlayer.HasStatus(Buffs.PredictionOfBlessing, out var _, false))
             card = Buffs.PredictionOfBlessing;
-        else if (LocalPlayer.HasStatus(Buffs.PredictionOfCleansing))
+        else if (LocalPlayer.HasStatus(Buffs.PredictionOfCleansing, out var _, false))
             card = Buffs.PredictionOfCleansing;
-        else if (LocalPlayer.HasStatus(Buffs.PredictionOfJudgment))
+        else if (LocalPlayer.HasStatus(Buffs.PredictionOfJudgment, out var _, false))
             card = Buffs.PredictionOfJudgment;
-        else if (LocalPlayer.HasStatus(Buffs.PredictionOfStarfall))
+        else if (LocalPlayer.HasStatus(Buffs.PredictionOfStarfall, out var _, false))
             card = Buffs.PredictionOfStarfall;
 
         if (card == 0)
@@ -1761,3 +1761,4 @@ internal partial class OccultCrescent
 
     #endregion
 }
+

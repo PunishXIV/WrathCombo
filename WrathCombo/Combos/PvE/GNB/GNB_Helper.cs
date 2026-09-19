@@ -27,8 +27,8 @@ internal partial class GNB : Tank
     private static bool Fast => GCDLength < 2.5f; //not base GCD ("fastGNB")
     private static int HPThresholdNM => (GNB_ST_NM_BossOption == 1 || !TargetIsBoss()) ? GNB_ST_NM_HPOption : 0;
     private static int MaxCartridges
-        => TraitLevelChecked(Traits.CartridgeChargeII) ? LocalPlayer.HasStatus(Buffs.Bloodfest) ? 6 : 3 : //enhanced - 3 max base, 6 max buffed
-            TraitLevelChecked(Traits.CartridgeCharge) ? LocalPlayer.HasStatus(Buffs.Bloodfest) ? 4 : 2 : 0; //standard - 2 max base, 4 max buffed
+        => TraitLevelChecked(Traits.CartridgeChargeII) ? LocalPlayer.HasStatus(Buffs.Bloodfest, out var _, false) ? 6 : 3 : //enhanced - 3 max base, 6 max buffed
+            TraitLevelChecked(Traits.CartridgeCharge) ? LocalPlayer.HasStatus(Buffs.Bloodfest, out var _, false) ? 4 : 2 : 0; //standard - 2 max base, 4 max buffed
 
     private static bool CanGF
         => ActionLearned(GnashingFang) && //unlocked
@@ -36,7 +36,7 @@ internal partial class GNB : Tank
             Ammo > 0 && //at least 1 cartridge available
             GunStep == 0 && //not already in GF or Reign combos
             GetCooldownRemainingTime(GnashingFang) < 30.5f && //off cooldown
-            !LocalPlayer.HasStatus(Buffs.ReadyToBlast) //Hypervelocity safety - if we just used Burst Strike, we want to use Hypervelocity first even if we clip it
+            !LocalPlayer.HasStatus(Buffs.ReadyToBlast, out var _, false) //Hypervelocity safety - if we just used Burst Strike, we want to use Hypervelocity first even if we clip it
             ;
     private static bool CanDD
         => ActionLearned(DoubleDown) && //unlocked
@@ -47,31 +47,31 @@ internal partial class GNB : Tank
     private static bool CanSB
         => ActionLearned(SonicBreak) && //unlocked
             InActionRange(SonicBreak) && //in range
-            LocalPlayer.HasStatus(Buffs.ReadyToBreak) //has required buff
+            LocalPlayer.HasStatus(Buffs.ReadyToBreak, out var _, false) //has required buff
             ;
     private static bool CanContinue
         => ActionLearned(Continuation) && //unlocked
             InActionRange(JugularRip) &&
-            (LocalPlayer.HasStatus(Buffs.ReadyToRip) || //after Gnashing Fang 
-            LocalPlayer.HasStatus(Buffs.ReadyToTear) || //after Savage Claw
-            LocalPlayer.HasStatus(Buffs.ReadyToGouge)) //after Fated Circle
+            (LocalPlayer.HasStatus(Buffs.ReadyToRip, out var _, false) || //after Gnashing Fang 
+            LocalPlayer.HasStatus(Buffs.ReadyToTear, out var _, false) || //after Savage Claw
+            LocalPlayer.HasStatus(Buffs.ReadyToGouge, out var _, false)) //after Fated Circle
             ;
     private static bool CanHV
         => ActionLearned(Hypervelocity) && //unlocked
             InActionRange(Hypervelocity) && //in range
-            LocalPlayer.HasStatus(Buffs.ReadyToBlast) //has required buff
+            LocalPlayer.HasStatus(Buffs.ReadyToBlast, out var _, false) //has required buff
             ;
     private static bool CanFB
         => ActionLearned(FatedBrand) && //unlocked
             InActionRange(FatedBrand) && //in range
-            LocalPlayer.HasStatus(Buffs.ReadyToRaze) //has required buff
+            LocalPlayer.HasStatus(Buffs.ReadyToRaze, out var _, false) //has required buff
             ;
     private static bool CanContinueAny => CanContinue || CanHV || CanFB
             ;
     private static bool CanReign
         => ActionLearned(ReignOfBeasts) && //unlocked
             GunStep == 0 && //not already in GF or Reign combos
-            LocalPlayer.HasStatus(Buffs.ReadyToReign) //has required buff
+            LocalPlayer.HasStatus(Buffs.ReadyToReign, out var _, false) //has required buff
             ;
     #endregion
 
@@ -90,13 +90,13 @@ internal partial class GNB : Tank
     {
         #region Variables
         var mitigationRunning =
-            LocalPlayer.HasStatus(Role.Buffs.ArmsLength) ||
-            LocalPlayer.HasStatus(Role.Buffs.Rampart) ||
-            LocalPlayer.HasStatus(Buffs.Superbolide) ||
-            LocalPlayer.HasStatus(Buffs.Camouflage) ||
-            LocalPlayer.HasStatus(Buffs.Nebula) ||
-            LocalPlayer.HasStatus(Buffs.GreatNebula) ||
-            CurrentTarget.HasStatus(Role.Debuffs.Reprisal);
+            LocalPlayer.HasStatus(Role.Buffs.ArmsLength, out var _, false) ||
+            LocalPlayer.HasStatus(Role.Buffs.Rampart, out var _, false) ||
+            LocalPlayer.HasStatus(Buffs.Superbolide, out var _, false) ||
+            LocalPlayer.HasStatus(Buffs.Camouflage, out var _, false) ||
+            LocalPlayer.HasStatus(Buffs.Nebula, out var _, false) ||
+            LocalPlayer.HasStatus(Buffs.GreatNebula, out var _, false) ||
+            CurrentTarget.HasStatus(Role.Debuffs.Reprisal, out var _, false);
 
         var justMitted =
             JustUsed(OriginalHook(Camouflage)) ||
@@ -134,7 +134,7 @@ internal partial class GNB : Tank
         if (IsEnabled(Preset.GNB_Mit_Advanced_NonBoss_HeartOfStone) &&
             ActionReady(OriginalHook(HeartOfStone)) &&
             CanWeave() && !justMitted &&
-            !LocalPlayer.HasStatus(Buffs.Superbolide))
+            !LocalPlayer.HasStatus(Buffs.Superbolide, out var _, false))
         {
             actionID = OriginalHook(HeartOfStone);
             return true;
@@ -153,7 +153,7 @@ internal partial class GNB : Tank
         #region Heart of Light Overlapping 5+
         if ((numberOfEnemies >= 5 || pre68Mitigation) &&
             IsEnabled(Preset.GNB_Mit_Advanced_NonBoss_HeartOfLight) &&
-            ActionReady(HeartOfLight) && !LocalPlayer.HasStatus(Buffs.Superbolide))
+            ActionReady(HeartOfLight) && !LocalPlayer.HasStatus(Buffs.Superbolide, out var _, false))
         {
             actionID = HeartOfLight;
             return true;
@@ -162,7 +162,7 @@ internal partial class GNB : Tank
 
         #region Aurora Overlapping 3+
         if (numberOfEnemies >= 3 && IsEnabled(Preset.GNB_Mit_Advanced_NonBoss_Aurora) &&
-            ActionReady(Aurora) && !LocalPlayer.HasStatus(Buffs.Aurora) && !JustUsed(Aurora))
+            ActionReady(Aurora) && !LocalPlayer.HasStatus(Buffs.Aurora, out var _, false) && !JustUsed(Aurora))
         {
             actionID = OriginalHook(Aurora);
             return true;
@@ -316,7 +316,7 @@ internal partial class GNB : Tank
 
         if (IsEnabled(Preset.GNB_Mit_Advanced_Boss_Aurora) &&
             ActionReady(Aurora) && PlayerHealthPercentageHp() <= auroraThreshold &&
-            !LocalPlayer.HasStatus(Buffs.Aurora) && !JustUsed(Aurora))
+            !LocalPlayer.HasStatus(Buffs.Aurora, out var _, false) && !JustUsed(Aurora))
         {
             actionID = OriginalHook(Aurora);
             return true;
@@ -747,7 +747,7 @@ internal partial class GNB : Tank
             CanGF && //can use
             NMcd > 7 && //if No Mercy is close, then wait for it
             ComboTimer is > 8.5f or 0.0f && //our combo can actually drop if we carelessly send both charges asap in burst - we will use 8.5s as our threshold (if not in any combo, just use it)
-            !LocalPlayer.HasStatus(Buffs.ReadyToReign) && //don't use if Reign is currently active
+            !LocalPlayer.HasStatus(Buffs.ReadyToReign, out var _, false) && //don't use if Reign is currently active
             (burst == 1 || //not holding for burst - just send it
             burst == 0 && (GetRemainingCharges(GnashingFang) == 2 || (GetRemainingCharges(GnashingFang) == 1 && NMcd > 20))) //holding for burst - try to keep a charge for NM
             ;
@@ -779,9 +779,9 @@ internal partial class GNB : Tank
         InActionRange(LightningShot) && //in range
         !CanWeave() && //don't show during weaves for long-range OGCDs (e.g. Bloodfest)
         HasBattleTarget() && //has a target
-        (proc == 0 || (proc == 1 && !(CanContinue || LocalPlayer.HasStatus(Buffs.ReadyToBlast)))) && //proc holding
+        (proc == 0 || (proc == 1 && !(CanContinue || LocalPlayer.HasStatus(Buffs.ReadyToBlast, out var _, false)))) && //proc holding
         (burst == 0 || (burst == 1 && !HasNM)) && //burst holding
-        ((CanContinue || LocalPlayer.HasStatus(Buffs.ReadyToBlast)) ? GetTargetDistance() > 5 : !InMeleeRange()) //out of melee range - 5y for procs, 3y else
+        ((CanContinue || LocalPlayer.HasStatus(Buffs.ReadyToBlast, out var _, false)) ? GetTargetDistance() > 5 : !InMeleeRange()) //out of melee range - 5y for procs, 3y else
         ;
     private static uint STCombo(int overcap)
     {
@@ -964,8 +964,8 @@ internal partial class GNB : Tank
     [
         //Heart of Corundum
         (OriginalHook(HeartOfStone), Preset.GNB_Mit_OneButton_Corundum,
-            () => !LocalPlayer.HasStatus(Buffs.HeartOfCorundum) &&
-                  !LocalPlayer.HasStatus(Buffs.HeartOfStone) &&
+            () => !LocalPlayer.HasStatus(Buffs.HeartOfCorundum, out var _, false) &&
+                  !LocalPlayer.HasStatus(Buffs.HeartOfStone, out var _, false) &&
                   PlayerHealthPercentageHp() <= GNB_Mit_OneButton_Corundum_Health),
         //Aurora
         (Aurora, Preset.GNB_Mit_OneButton_Aurora,
@@ -1022,5 +1022,6 @@ internal partial class GNB : Tank
 
     #endregion
 }
+
 
 

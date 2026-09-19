@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Conditions;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
@@ -63,9 +63,9 @@ internal partial class DOL
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is SolidReason && LocalPlayer.HasStatus(Buffs.EurekaMoment))
+            if (actionID is SolidReason && LocalPlayer.HasStatus(Buffs.EurekaMoment, out var _, false))
                 return MinWiseToTheWorld;
-            if (actionID is AgelessWords && LocalPlayer.HasStatus(Buffs.EurekaMoment))
+            if (actionID is AgelessWords && LocalPlayer.HasStatus(Buffs.EurekaMoment, out var _, false))
                 return BtnWiseToTheWorld;
             return actionID;
         }
@@ -78,14 +78,14 @@ internal partial class DOL
         protected override uint Invoke(uint actionID)
         {
             //MIN
-            if (actionID is DOL.LayOfTheLand && !LocalPlayer.HasStatus(Buffs.Prospect))
+            if (actionID is DOL.LayOfTheLand && !LocalPlayer.HasStatus(Buffs.Prospect, out var _, false))
                 return Prospect;
-            if (actionID is DOL.LayOfTheLand2 && ActionLearned(TruthOfMountains) && !LocalPlayer.HasStatus(Buffs.TruthOfMountains))
+            if (actionID is DOL.LayOfTheLand2 && ActionLearned(TruthOfMountains) && !LocalPlayer.HasStatus(Buffs.TruthOfMountains, out var _, false))
                 return TruthOfMountains;
             //BTN
-            if (actionID is DOL.ArborCall && !LocalPlayer.HasStatus(Buffs.Triangulate))
+            if (actionID is DOL.ArborCall && !LocalPlayer.HasStatus(Buffs.Triangulate, out var _, false))
                 return Triangulate;
-            if (actionID is DOL.ArborCall2 && ActionLearned(TruthOfForests) && !LocalPlayer.HasStatus(Buffs.TruthOfForests))
+            if (actionID is DOL.ArborCall2 && ActionLearned(TruthOfForests) && !LocalPlayer.HasStatus(Buffs.TruthOfForests, out var _, false))
                 return TruthOfForests;
             return actionID;
         }
@@ -134,3 +134,4 @@ internal partial class DOL
         }
     }
 }
+

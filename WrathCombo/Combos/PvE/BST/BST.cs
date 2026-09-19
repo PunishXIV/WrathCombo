@@ -1,4 +1,4 @@
-﻿using ECommons.GameHelpers.LegacyPlayer;
+using ECommons.GameHelpers.LegacyPlayer;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
@@ -27,7 +27,7 @@ internal partial class BST : Melee
                     return ThirdBattlehorn;
             }
 
-            if (TargetIsBstPet(CurrentTarget) && !PetUnlocked(GetPetIdFromModel(CurrentTarget)) && !CurrentTarget!.HasStatus(Debuffs.InterestCaptured))
+            if (TargetIsBstPet(CurrentTarget) && !PetUnlocked(GetPetIdFromModel(CurrentTarget)) && !CurrentTarget!.HasStatus(Debuffs.InterestCaptured, out var _, false))
             {
                 if (ActionReady(Capture))
                     return Capture;
@@ -148,7 +148,7 @@ internal partial class BST : Melee
             }
 
             // Capture pets
-            if (IsEnabled(Preset.BST_AdvancedMode_Capture) && TargetIsBstPet(CurrentTarget) && !PetUnlocked(GetPetIdFromModel(CurrentTarget)) && !CurrentTarget!.HasStatus(Debuffs.InterestCaptured))
+            if (IsEnabled(Preset.BST_AdvancedMode_Capture) && TargetIsBstPet(CurrentTarget) && !PetUnlocked(GetPetIdFromModel(CurrentTarget)) && !CurrentTarget!.HasStatus(Debuffs.InterestCaptured, out var _, false))
             {
                 if (ActionReady(Capture))
                     return Capture;
@@ -407,3 +407,4 @@ internal partial class BST : Melee
         }
     }
 }
+

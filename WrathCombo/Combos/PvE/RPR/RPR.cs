@@ -17,12 +17,12 @@ internal partial class RPR : Melee
             ReportRPRPositionalHints();
 
             if (ActionLearned(Soulsow) &&
-                !LocalPlayer.HasStatus(Buffs.Soulsow) &&
+                !LocalPlayer.HasStatus(Buffs.Soulsow, out var _, false) &&
                 !PartyInCombat())
                 return Soulsow;
 
-            if (!LocalPlayer.HasStatus(Buffs.Executioner) &&
-                !LocalPlayer.HasStatus(Buffs.SoulReaver) &&
+            if (!LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) &&
+                !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) &&
                 ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
@@ -85,7 +85,7 @@ internal partial class RPR : Melee
                 return SoulSlice;
 
             return !InMeleeRange() && HasBattleTarget() &&
-                   !LocalPlayer.HasStatus(Buffs.Executioner) && !LocalPlayer.HasStatus(Buffs.SoulReaver)
+                   !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) && !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false)
                 ? RangedAttack(actionID, true, true)
                 : DoBasicCombo();
         }
@@ -100,7 +100,7 @@ internal partial class RPR : Melee
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpinningScythe)) return actionID;
 
             if (ActionLearned(Soulsow) &&
-                !LocalPlayer.HasStatus(Buffs.Soulsow) && !PartyInCombat())
+                !LocalPlayer.HasStatus(Buffs.Soulsow, out var _, false) && !PartyInCombat())
                 return Soulsow;
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
@@ -170,15 +170,15 @@ internal partial class RPR : Melee
 
             if (IsEnabled(Preset.RPR_ST_SoulSow) &&
                 ActionLearned(Soulsow) &&
-                !LocalPlayer.HasStatus(Buffs.Soulsow) && !PartyInCombat())
+                !LocalPlayer.HasStatus(Buffs.Soulsow, out var _, false) && !PartyInCombat())
                 return Soulsow;
 
             if (IsEnabled(Preset.RPR_ST_Opener) &&
                 Opener().FullOpener(ref actionID) && HasBattleTarget())
                 return actionID;
 
-            if (!LocalPlayer.HasStatus(Buffs.Executioner) &&
-                !LocalPlayer.HasStatus(Buffs.SoulReaver) &&
+            if (!LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) &&
+                !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) &&
                 ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
                 return contentAction;
 
@@ -275,7 +275,7 @@ internal partial class RPR : Melee
                 return SoulSlice;
 
             return !InMeleeRange() && HasBattleTarget() &&
-                   !LocalPlayer.HasStatus(Buffs.Executioner) && !LocalPlayer.HasStatus(Buffs.SoulReaver)
+                   !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) && !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false)
                 ? RangedAttack(actionID,
                     IsEnabled(Preset.RPR_ST_RangedFillerHarvestMoon),
                     IsEnabled(Preset.RPR_ST_RangedFiller),
@@ -295,7 +295,7 @@ internal partial class RPR : Melee
 
             if (IsEnabled(Preset.RPR_AoE_SoulSow) &&
                 ActionLearned(Soulsow) &&
-                !LocalPlayer.HasStatus(Buffs.Soulsow) && !PartyInCombat())
+                !LocalPlayer.HasStatus(Buffs.Soulsow, out var _, false) && !PartyInCombat())
                 return Soulsow;
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
@@ -442,12 +442,12 @@ internal partial class RPR : Melee
                 IsEnabled(Preset.RPR_TrueNorthGluttony) &&
                 !onAoE &&
                 Role.CanTrueNorth() &&
-                (LocalPlayer.Status(Buffs.SoulReaver).Stacks is 2 || LocalPlayer.HasStatus(Buffs.Executioner)))
+                (LocalPlayer.Status(Buffs.SoulReaver).Stacks is 2 || LocalPlayer.HasStatus(Buffs.Executioner, out var _, false)))
                 return Role.TrueNorth;
 
             if (ogcd)
             {
-                if (ActionReady(Enshroud) || LocalPlayer.HasStatus(Buffs.IdealHost))
+                if (ActionReady(Enshroud) || LocalPlayer.HasStatus(Buffs.IdealHost, out var _, false))
                     return Enshroud;
 
                 if (TryBloodStalkGrimSwatheEnshroudWeaves(ref actionID))
@@ -458,13 +458,13 @@ internal partial class RPR : Melee
                 return actionID;
 
             if (!enshroudCombo && sacrificiumOnly &&
-                LocalPlayer.HasStatus(Buffs.Enshrouded) && LocalPlayer.HasStatus(Buffs.Oblatio))
+                LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) && LocalPlayer.HasStatus(Buffs.Oblatio, out var _, false))
                 return OriginalHook(Gluttony);
 
             if (ActionReady(Gluttony) &&
-                !LocalPlayer.HasStatus(Buffs.Enshrouded) &&
-                !LocalPlayer.HasStatus(Buffs.SoulReaver) &&
-                !LocalPlayer.HasStatus(Buffs.Executioner))
+                !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) &&
+                !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) &&
+                !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false))
                 return Gluttony;
 
             if (gibbetGallows)
@@ -505,7 +505,7 @@ internal partial class RPR : Melee
                 actionID is not (ShadowOfDeath or BloodStalk))
                 return actionID;
 
-            bool soulsowReady = ActionReady(Soulsow) && !LocalPlayer.HasStatus(Buffs.Soulsow);
+            bool soulsowReady = ActionReady(Soulsow) && !LocalPlayer.HasStatus(Buffs.Soulsow, out var _, false);
 
             if (soulsowReady && !InCombat() && IsSoulsowEnabledForAction(actionID))
                 return Soulsow;
@@ -558,17 +558,17 @@ internal partial class RPR : Melee
                 return actionID;
 
             if (IsEnabled(Preset.RPR_TrueNorthEnshroud) &&
-                (LocalPlayer.Status(Buffs.SoulReaver).Stacks is 2 || LocalPlayer.HasStatus(Buffs.Executioner)) &&
+                (LocalPlayer.Status(Buffs.SoulReaver).Stacks is 2 || LocalPlayer.HasStatus(Buffs.Executioner, out var _, false)) &&
                 Role.CanTrueNorth())
                 return Role.TrueNorth;
 
-            if (LocalPlayer.HasStatus(Buffs.SoulReaver) || LocalPlayer.HasStatus(Buffs.Executioner))
+            if (LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) || LocalPlayer.HasStatus(Buffs.Executioner, out var _, false))
             {
-                if (LocalPlayer.HasStatus(Buffs.EnhancedGibbet))
+                if (LocalPlayer.HasStatus(Buffs.EnhancedGibbet, out var _, false))
                     return OriginalHook(Gibbet);
 
-                if (LocalPlayer.HasStatus(Buffs.EnhancedGallows) ||
-                    !LocalPlayer.HasStatus(Buffs.EnhancedGibbet) && !LocalPlayer.HasStatus(Buffs.EnhancedGallows))
+                if (LocalPlayer.HasStatus(Buffs.EnhancedGallows, out var _, false) ||
+                    !LocalPlayer.HasStatus(Buffs.EnhancedGibbet, out var _, false) && !LocalPlayer.HasStatus(Buffs.EnhancedGallows, out var _, false))
                     return OriginalHook(Gallows);
             }
 
@@ -585,10 +585,10 @@ internal partial class RPR : Melee
             if (actionID is not Enshroud)
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.PerfectioParata))
+            if (LocalPlayer.HasStatus(Buffs.PerfectioParata, out var _, false))
                 return OriginalHook(Communio);
 
-            if (LocalPlayer.HasStatus(Buffs.Enshrouded))
+            if (LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false))
                 return Communio;
 
             return actionID;
@@ -606,7 +606,7 @@ internal partial class RPR : Melee
 
             switch (actionID)
             {
-                case Gibbet or Gallows when LocalPlayer.HasStatus(Buffs.Enshrouded):
+                case Gibbet or Gallows when LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false):
                     {
                         if (Gauge is { LemureShroud: 1, VoidShroud: 0 } && ActionLearned(Communio))
                             return Communio;
@@ -618,7 +618,7 @@ internal partial class RPR : Melee
                         break;
                     }
 
-                case Guillotine when LocalPlayer.HasStatus(Buffs.Enshrouded):
+                case Guillotine when LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false):
                     {
                         if (Gauge is { LemureShroud: 1, VoidShroud: 0 } && ActionLearned(Communio))
                             return Communio;
@@ -635,3 +635,4 @@ internal partial class RPR : Melee
         }
     }
 }
+

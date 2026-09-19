@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Native;
@@ -186,14 +186,14 @@ internal partial class PCT : Caster
 
             if (actionID == BlizzardinCyan && choice is 0 or 1)
             {
-                return LocalPlayer.HasStatus(Buffs.SubtractivePalette)
+                return LocalPlayer.HasStatus(Buffs.SubtractivePalette, out var _, false)
                     ? OriginalHook(BlizzardinCyan)
                     : OriginalHook(FireInRed);
 
             }
             if (actionID == BlizzardIIinCyan && choice is 0 or 2)
             {
-                return LocalPlayer.HasStatus(Buffs.SubtractivePalette)
+                return LocalPlayer.HasStatus(Buffs.SubtractivePalette, out var _, false)
                     ? OriginalHook(BlizzardIIinCyan)
                     : OriginalHook(FireIIinRed);
             }
@@ -217,7 +217,7 @@ internal partial class PCT : Caster
             }
             if (actionID == WeaponMotif)
             {
-                if (CombinedMotifsWeapon && LocalPlayer.HasStatus(Buffs.HammerTime))
+                if (CombinedMotifsWeapon && LocalPlayer.HasStatus(Buffs.HammerTime, out var _, false))
                     return OriginalHook(HammerStamp);
 
                 if (gauge.WeaponMotifDrawn)
@@ -225,7 +225,7 @@ internal partial class PCT : Caster
             }
             if (actionID == LandscapeMotif)
             {
-                if (CombinedMotifsLandscape && LocalPlayer.HasStatus(Buffs.Starstruck))
+                if (CombinedMotifsLandscape && LocalPlayer.HasStatus(Buffs.Starstruck, out var _, false))
                     return OriginalHook(StarPrism);
 
                 if (gauge.LandscapeMotifDrawn)
@@ -241,10 +241,11 @@ internal partial class PCT : Caster
         {
             if (actionID != HolyInWhite)
                 return actionID;
-            if (LocalPlayer.HasStatus(Buffs.MonochromeTones))
+            if (LocalPlayer.HasStatus(Buffs.MonochromeTones, out var _, false))
                 return CometinBlack;
             return actionID;
         }
     }
     #endregion
 }
+

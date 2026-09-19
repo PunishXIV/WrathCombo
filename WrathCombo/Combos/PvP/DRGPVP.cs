@@ -1,4 +1,4 @@
-﻿using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.DRGPvP.Config;
@@ -91,13 +91,13 @@ internal static class DRGPvP
 
                 if (CanWeave())
                 {
-                    if (IsEnabled(Preset.DRGPvP_HighJump) && IsOffCooldown(HighJump) && !LocalPlayer.HasStatus(Buffs.StarCrossReady) && (LocalPlayer.HasStatus(Buffs.LifeOfTheDragon) || GetCooldownRemainingTime(Geirskogul) > 5)) // Will high jump after Gierskogul OR if Geir will be on cd for 2 more gcds.
+                    if (IsEnabled(Preset.DRGPvP_HighJump) && IsOffCooldown(HighJump) && !LocalPlayer.HasStatus(Buffs.StarCrossReady, out var _, false) && (LocalPlayer.HasStatus(Buffs.LifeOfTheDragon, out var _, false) || GetCooldownRemainingTime(Geirskogul) > 5)) // Will high jump after Gierskogul OR if Geir will be on cd for 2 more gcds.
                         return HighJump;
 
                     if (IsEnabled(Preset.DRGPvP_Nastrond)) // Nastrond Finisher logic
                     {
-                        if (LocalPlayer.HasStatus(Buffs.LifeOfTheDragon) && PlayerHealthPercentageHp() < DRGPvP_LOTD_HPValue
-                            || LocalPlayer.HasStatus(Buffs.LifeOfTheDragon) && LocalPlayer.Status(Buffs.LifeOfTheDragon).RemainingTimeOrZero() < DRGPvP_LOTD_Duration)
+                        if (LocalPlayer.HasStatus(Buffs.LifeOfTheDragon, out var _, false) && PlayerHealthPercentageHp() < DRGPvP_LOTD_HPValue
+                            || LocalPlayer.HasStatus(Buffs.LifeOfTheDragon, out var _, false) && LocalPlayer.Status(Buffs.LifeOfTheDragon).RemainingTimeOrZero() < DRGPvP_LOTD_Duration)
                             return Nastrond;
                     }
                     if (IsEnabled(Preset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && InActionRange(HorridRoar)) // HorridRoar Roar on cd
@@ -106,16 +106,16 @@ internal static class DRGPvP
                        
                 if (IsEnabled(Preset.DRGPvP_Geirskogul) && IsOffCooldown(Geirskogul)) 
                 {
-                    if (IsEnabled(Preset.DRGPvP_BurstProtection) && WasLastAbility(ElusiveJump) && LocalPlayer.HasStatus(Buffs.FirstmindsFocus))// With evasive burst mode
+                    if (IsEnabled(Preset.DRGPvP_BurstProtection) && WasLastAbility(ElusiveJump) && LocalPlayer.HasStatus(Buffs.FirstmindsFocus, out var _, false))// With evasive burst mode
                         return Geirskogul;
                     if (!IsEnabled(Preset.DRGPvP_BurstProtection))// Without evasive burst mode so you can still use Gier, which will let you still use high jump
                         return Geirskogul;
                 }                       
                                                    
-                if (IsEnabled(Preset.DRGPvP_WyrmwindThrust) && LocalPlayer.HasStatus(Buffs.FirstmindsFocus) && InActionRange(WyrmwindThrust) && GetTargetDistance() >= DRGPvP_Distance_Threshold)
+                if (IsEnabled(Preset.DRGPvP_WyrmwindThrust) && LocalPlayer.HasStatus(Buffs.FirstmindsFocus, out var _, false) && InActionRange(WyrmwindThrust) && GetTargetDistance() >= DRGPvP_Distance_Threshold)
                     return WyrmwindThrust;
 
-                if (IsEnabled(Preset.DRGPvP_Geirskogul) && LocalPlayer.HasStatus(Buffs.StarCrossReady))
+                if (IsEnabled(Preset.DRGPvP_Geirskogul) && LocalPlayer.HasStatus(Buffs.StarCrossReady, out var _, false))
                     return Starcross;
                        
             }
@@ -138,7 +138,7 @@ internal static class DRGPvP
             if (actionID is not ElusiveJump) 
                 return actionID;
             
-            if (LocalPlayer.HasStatus(Buffs.FirstmindsFocus) || IsOnCooldown(Geirskogul))
+            if (LocalPlayer.HasStatus(Buffs.FirstmindsFocus, out var _, false) || IsOnCooldown(Geirskogul))
             {
                 return 26;
             }

@@ -95,8 +95,8 @@ internal partial class AST
     }
     internal static bool RaidwideAspectedHelios()
     {
-        return IsEnabled(Preset.AST_Raidwide_AspectedHelios) && LocalPlayer.HasStatus(Buffs.NeutralSect) && GroupDamageIncoming() && 
-               !LocalPlayer.HasStatus(Buffs.NeutralSectShield);
+        return IsEnabled(Preset.AST_Raidwide_AspectedHelios) && LocalPlayer.HasStatus(Buffs.NeutralSect, out var _, false) && GroupDamageIncoming() && 
+               !LocalPlayer.HasStatus(Buffs.NeutralSectShield, out var _, false);
     }
     
     #endregion
@@ -116,7 +116,7 @@ internal partial class AST
             case 0:
                 action = CelestialIntersection;
                 enabled = IsEnabled(Preset.AST_ST_Heals_CelestialIntersection) &&
-                          ActionReady(CelestialIntersection) && !healTarget.HasStatus(Buffs.Intersection) &&
+                          ActionReady(CelestialIntersection) && !healTarget.HasStatus(Buffs.Intersection, out var _, false) &&
                           GetRemainingCharges(CelestialIntersection) > AST_ST_SimpleHeals_CelestialIntersectionCharges &&
                           (CanWeave() || !AST_ST_SimpleHeals_WeaveIntersection);
                 return AST_ST_SimpleHeals_CelestialIntersection;
@@ -167,7 +167,7 @@ internal partial class AST
                           ActionReady(AspectedBenefic) && stopHot &&
                           (aspectedBeneficHoT is null || 
                            aspectedBeneficHoT.RemainingTime <= refreshTime || 
-                           neutralSectShield is null && LocalPlayer.HasStatus(Buffs.NeutralSect));
+                           neutralSectShield is null && LocalPlayer.HasStatus(Buffs.NeutralSect, out var _, false));
                 return AST_ST_SimpleHeals_AspectedBeneficHigh;
             case 8:
                 action = CelestialOpposition;
@@ -230,13 +230,13 @@ internal partial class AST
             case 2:
                 action = Horoscope;
                 enabled = IsEnabled(Preset.AST_AoE_Heals_Horoscope) && ActionReady(Horoscope) &&
-                          !LocalPlayer.HasStatus(Buffs.Horoscope) && !LocalPlayer.HasStatus(Buffs.HoroscopeHelios) &&
+                          !LocalPlayer.HasStatus(Buffs.Horoscope, out var _, false) && !LocalPlayer.HasStatus(Buffs.HoroscopeHelios, out var _, false) &&
                           (CanWeave() || !AST_AoE_SimpleHeals_WeaveHoroscope);
                 return AST_AoE_SimpleHeals_Horoscope;
             case 3:
                 action = HoroscopeHeal;
                 enabled = IsEnabled(Preset.AST_AoE_Heals_HoroscopeHeal) &&
-                          LocalPlayer.HasStatus(Buffs.HoroscopeHelios) &&
+                          LocalPlayer.HasStatus(Buffs.HoroscopeHelios, out var _, false) &&
                           (CanWeave() || !AST_AoE_SimpleHeals_WeaveHoroscopeHeal);
                 return AST_AoE_SimpleHeals_HoroscopeHeal;
             case 4:
@@ -248,15 +248,15 @@ internal partial class AST
             case 5:
                 action = StellarDetonation;
                 enabled = IsEnabled(Preset.AST_AoE_Heals_StellarDetonation) && 
-                          LocalPlayer.HasStatus(Buffs.GiantDominance) && 
+                          LocalPlayer.HasStatus(Buffs.GiantDominance, out var _, false) && 
                           (CanWeave() || !AST_AoE_SimpleHeals_WeaveStellarDetonation);
                 return AST_AoE_SimpleHeals_StellarDetonation;
             case 6:
                 action = OriginalHook(AspectedHelios);
                 enabled = IsEnabled(Preset.AST_AoE_Heals_Aspected) && ActionReady(AspectedHelios) &&
-                          (ActionLearned(HeliosConjuction) && !LocalPlayer.HasStatus(Buffs.HeliosConjunction) || 
-                           !ActionLearned(HeliosConjuction) && !LocalPlayer.HasStatus(Buffs.AspectedHelios) ||
-                           LocalPlayer.HasStatus(Buffs.NeutralSect) && !LocalPlayer.HasStatus(Buffs.NeutralSectShield));
+                          (ActionLearned(HeliosConjuction) && !LocalPlayer.HasStatus(Buffs.HeliosConjunction, out var _, false) || 
+                           !ActionLearned(HeliosConjuction) && !LocalPlayer.HasStatus(Buffs.AspectedHelios, out var _, false) ||
+                           LocalPlayer.HasStatus(Buffs.NeutralSect, out var _, false) && !LocalPlayer.HasStatus(Buffs.NeutralSectShield, out var _, false));
                 return AST_AoE_SimpleHeals_Aspected;
             
             case 7:
@@ -683,5 +683,6 @@ internal partial class AST
 
     #endregion
 }
+
 
 

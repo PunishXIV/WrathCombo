@@ -178,7 +178,7 @@ internal partial class DRK
         {
             var has = false;
             if (LocalPlayer is not null)
-                has = LocalPlayer.HasStatus(Buffs.BlackestNightShield);
+                has = LocalPlayer.HasStatus(Buffs.BlackestNightShield, out var _, false);
 
             return has;
         }
@@ -217,14 +217,14 @@ internal partial class DRK
         JustUsed(LivingDead);
 
     internal static bool MitigationRunning =>
-        LocalPlayer.HasStatus(Role.Buffs.ArmsLength) ||
-        LocalPlayer.HasStatus(Role.Buffs.Rampart) ||
-        LocalPlayer.HasStatus(Buffs.LivingDead) ||
-        LocalPlayer.HasStatus(Buffs.UndeadRebirth) ||
-        LocalPlayer.HasStatus(Buffs.DarkMind) ||
-        LocalPlayer.HasStatus(Buffs.ShadowedVigil) ||
-        LocalPlayer.HasStatus(Buffs.ShadowWall) ||
-        CurrentTarget.HasStatus(Role.Debuffs.Reprisal);
+        LocalPlayer.HasStatus(Role.Buffs.ArmsLength, out var _, false) ||
+        LocalPlayer.HasStatus(Role.Buffs.Rampart, out var _, false) ||
+        LocalPlayer.HasStatus(Buffs.LivingDead, out var _, false) ||
+        LocalPlayer.HasStatus(Buffs.UndeadRebirth, out var _, false) ||
+        LocalPlayer.HasStatus(Buffs.DarkMind, out var _, false) ||
+        LocalPlayer.HasStatus(Buffs.ShadowedVigil, out var _, false) ||
+        LocalPlayer.HasStatus(Buffs.ShadowWall, out var _, false) ||
+        CurrentTarget.HasStatus(Role.Debuffs.Reprisal, out var _, false);
 
     #endregion
 
@@ -527,5 +527,6 @@ internal partial class DRK
 
     #endregion
 }
+
 
 

@@ -1,4 +1,4 @@
-﻿using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -83,21 +83,21 @@ internal class DRKPvP
                         return OriginalHook(Plunge);
                 }
 
-                if (IsEnabled(Preset.DRKPvP_Scorn) && LocalPlayer.HasStatus(Buffs.Scorn))
+                if (IsEnabled(Preset.DRKPvP_Scorn) && LocalPlayer.HasStatus(Buffs.Scorn, out var _, false))
                     return OriginalHook(Eventide);
 
                 if (canWeave)
                 {
-                    if (IsEnabled(Preset.DRKPvP_BlackestNight) && ActionReady(BlackestNight) && !LocalPlayer.HasStatus(Buffs.BlackestNight) && !WasLastAbility(BlackestNight))
+                    if (IsEnabled(Preset.DRKPvP_BlackestNight) && ActionReady(BlackestNight) && !LocalPlayer.HasStatus(Buffs.BlackestNight, out var _, false) && !WasLastAbility(BlackestNight))
                         return OriginalHook(BlackestNight);
 
                     if (IsEnabled(Preset.DRKPvP_SaltedEarth) && ActionReady(SaltedEarth) && IsEnabled(Preset.DRKPvP_SaltedEarth))
                         return OriginalHook(SaltedEarth);
 
-                    if (IsEnabled(Preset.DRKPvP_SaltAndDarkness) && LocalPlayer.HasStatus(Buffs.SaltedEarthDMG) && ActionReady(SaltAndDarkness))
+                    if (IsEnabled(Preset.DRKPvP_SaltAndDarkness) && LocalPlayer.HasStatus(Buffs.SaltedEarthDMG, out var _, false) && ActionReady(SaltAndDarkness))
                         return OriginalHook(SaltAndDarkness);
 
-                    if (IsEnabled(Preset.DRKPvP_Shadowbringer) && !LocalPlayer.HasStatus(Buffs.Blackblood) && (LocalPlayer.HasStatus(Buffs.DarkArts) || PlayerHealthPercentageHp() >= shadowBringerThreshold))
+                    if (IsEnabled(Preset.DRKPvP_Shadowbringer) && !LocalPlayer.HasStatus(Buffs.Blackblood, out var _, false) && (LocalPlayer.HasStatus(Buffs.DarkArts, out var _, false) || PlayerHealthPercentageHp() >= shadowBringerThreshold))
                         return OriginalHook(Shadowbringer);
                 }
 

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
@@ -405,7 +405,7 @@ internal partial class BST
             if (JobGauge.BeastTP < 100 && JobGauge.PlayerTP < 100)
                 return false;
 
-            if (p.HasStatus(Buffs.RampantHeart) || p.HasStatus(Buffs.DurantHeart) || p.HasStatus(Buffs.EldritchHeart) || p.HasStatus(Buffs.VolantHeart))
+            if (p.HasStatus(Buffs.RampantHeart, out var _, false) || p.HasStatus(Buffs.DurantHeart, out var _, false) || p.HasStatus(Buffs.EldritchHeart, out var _, false) || p.HasStatus(Buffs.VolantHeart, out var _, false))
                 return true;
 
             return false;

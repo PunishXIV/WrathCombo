@@ -1,4 +1,4 @@
-﻿using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -117,7 +117,7 @@ internal static class GNBPvP
                 //RoughDivide overcap protection
                 if (IsEnabled(Preset.GNBPvP_RoughDivide))
                 {
-                    if (HasCharges(RoughDivide) && !LocalPlayer.HasStatus(Buffs.NoMercy) && !JustUsed(RoughDivide, 3f) &&
+                    if (HasCharges(RoughDivide) && !LocalPlayer.HasStatus(Buffs.NoMercy, out var _, false) && !JustUsed(RoughDivide, 3f) &&
                         (ActionReady(FatedCircle)|| ActionReady(GnashingFang) || GetRemainingCharges(RoughDivide) == 2)) // Will RD for for no mercy when at 2 charges, or before the fated circle or gnashing fang combo
                         return RoughDivide;
                 }
@@ -125,7 +125,7 @@ internal static class GNBPvP
                 //Fated Circle and Followup
                 if (IsEnabled(Preset.GNBPvP_FatedCircle))
                 {
-                    if (ActionReady(FatedCircle) && LocalPlayer.HasStatus(Buffs.NoMercy) && OriginalHook(Continuation) == Continuation)
+                    if (ActionReady(FatedCircle) && LocalPlayer.HasStatus(Buffs.NoMercy, out var _, false) && OriginalHook(Continuation) == Continuation)
                         return FatedCircle;
                 }
 
@@ -145,7 +145,7 @@ internal static class GNBPvP
                 return actionID;
 
             return CanWeave() && 
-                   (LocalPlayer.HasStatus(Buffs.ReadyToRip) || LocalPlayer.HasStatus(Buffs.ReadyToTear) || LocalPlayer.HasStatus(Buffs.ReadyToGouge))
+                   (LocalPlayer.HasStatus(Buffs.ReadyToRip, out var _, false) || LocalPlayer.HasStatus(Buffs.ReadyToTear, out var _, false) || LocalPlayer.HasStatus(Buffs.ReadyToGouge, out var _, false))
                 ? OriginalHook(Continuation)
                 : actionID;
         }

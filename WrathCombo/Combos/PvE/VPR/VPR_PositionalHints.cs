@@ -19,7 +19,7 @@ internal partial class VPR
         if (!CanReportPositionalHints())
             return;
 
-        if (LocalPlayer.HasStatus(Buffs.Reawakened))
+        if (LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false))
         {
             ClearUpcomingPositional();
             return;
@@ -49,25 +49,25 @@ internal partial class VPR
 
     private static bool TryReportVPRStingFinisher(int gcdsUntil)
     {
-        if (LocalPlayer.HasStatus(Buffs.HindsbaneVenom) && ActionLearned(HindsbaneFang))
+        if (LocalPlayer.HasStatus(Buffs.HindsbaneVenom, out var _, false) && ActionLearned(HindsbaneFang))
         {
             ReportUpcomingPositional(PositionalDirection.Rear, HindsbaneFang, gcdsUntil);
             return true;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.FlanksbaneVenom) && ActionLearned(FlanksbaneFang))
+        if (LocalPlayer.HasStatus(Buffs.FlanksbaneVenom, out var _, false) && ActionLearned(FlanksbaneFang))
         {
             ReportUpcomingPositional(PositionalDirection.Flank, FlanksbaneFang, gcdsUntil);
             return true;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.HindstungVenom) && ActionLearned(HindstingStrike))
+        if (LocalPlayer.HasStatus(Buffs.HindstungVenom, out var _, false) && ActionLearned(HindstingStrike))
         {
             ReportUpcomingPositional(PositionalDirection.Rear, HindstingStrike, gcdsUntil);
             return true;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.FlankstungVenom) && ActionLearned(FlankstingStrike))
+        if (LocalPlayer.HasStatus(Buffs.FlankstungVenom, out var _, false) && ActionLearned(FlankstingStrike))
         {
             ReportUpcomingPositional(PositionalDirection.Flank, FlankstingStrike, gcdsUntil);
             return true;
@@ -97,7 +97,7 @@ internal partial class VPR
 
     private static bool TryReportVicewinderCoilPositionalHints(bool vicewinderBuffPrio)
     {
-        if (!ActionLearned(Vicewinder) || LocalPlayer.HasStatus(Buffs.Reawakened))
+        if (!ActionLearned(Vicewinder) || LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false))
             return false;
 
         bool vicewinderInRotation = !IsEnabled(Preset.VPR_ST_AdvancedMode) ||
@@ -161,12 +161,13 @@ internal partial class VPR
     }
 
     private static uint UpcomingHindFinisher() =>
-        LocalPlayer.HasStatus(Buffs.HindsbaneVenom) && ActionLearned(HindsbaneFang)
+        LocalPlayer.HasStatus(Buffs.HindsbaneVenom, out var _, false) && ActionLearned(HindsbaneFang)
             ? HindsbaneFang
             : HindstingStrike;
 
     private static uint UpcomingFlankFinisher() =>
-        LocalPlayer.HasStatus(Buffs.FlanksbaneVenom) && ActionLearned(FlanksbaneFang)
+        LocalPlayer.HasStatus(Buffs.FlanksbaneVenom, out var _, false) && ActionLearned(FlanksbaneFang)
             ? FlanksbaneFang
             : FlankstingStrike;
 }
+

@@ -82,7 +82,7 @@ internal static class SMNPvP
             int radiantThreshold = SMNPvP_RadiantAegisThreshold;
             #endregion
 
-            if (PvPCommon.TargetImmuneToDamage() && LocalPlayer.HasStatus(Buffs.FurtherRuin)) // Block for ruin 4 because it is on action ID
+            if (PvPCommon.TargetImmuneToDamage() && LocalPlayer.HasStatus(Buffs.FurtherRuin, out var _, false)) // Block for ruin 4 because it is on action ID
                 return All.Cease;
                     
             if (!PvPCommon.TargetImmuneToDamage())
@@ -104,10 +104,10 @@ internal static class SMNPvP
                 if (IsEnabled(Preset.SMNPvP_BurstMode_DeathFlare) && bahamutBurst && IsOffCooldown(DeathFlare))
                     return DeathFlare;
 
-                if (LocalPlayer.HasStatus(Buffs.FurtherRuin))
+                if (LocalPlayer.HasStatus(Buffs.FurtherRuin, out var _, false))
                     return actionID;
 
-                if (IsEnabled(Preset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !LocalPlayer.HasStatus(Buffs.FurtherRuin))
+                if (IsEnabled(Preset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !LocalPlayer.HasStatus(Buffs.FurtherRuin, out var _, false))
                     return Necrotize;
                         
                 // Ifrit (check CrimsonCyclone conditions)

@@ -1,4 +1,4 @@
-ï»¿using ECommons.DalamudServices;
+using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.MathHelpers;
@@ -48,9 +48,9 @@ namespace WrathCombo.Data.BattleData
 
                         if (targetID is 18051 or 18052 or 18053)
                         {
-                            if (LocalPlayer.HasStatus(4192)) return Result(targetID != 18051); // Alliance A Red Epic
-                            if (LocalPlayer.HasStatus(4194)) return Result(targetID != 18053); // Alliance B Yellow Fated
-                            if (LocalPlayer.HasStatus(4196)) return Result(targetID != 18052); // Alliance C Blue Vaunted
+                            if (LocalPlayer.HasStatus(4192, out var _, false)) return Result(targetID != 18051); // Alliance A Red Epic
+                            if (LocalPlayer.HasStatus(4194, out var _, false)) return Result(targetID != 18053); // Alliance B Yellow Fated
+                            if (LocalPlayer.HasStatus(4196, out var _, false)) return Result(targetID != 18052); // Alliance C Blue Vaunted
                         }
                         return Invincible.False;
                     };
@@ -63,8 +63,8 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 18219 or 18225)
                         {
-                            if (LocalPlayer.HasStatus(4389)) return Result(targetID != 18225); // Target Wolf of Wind
-                            if (LocalPlayer.HasStatus(4390)) return Result(targetID != 18219); // Target Wolf of Stone
+                            if (LocalPlayer.HasStatus(4389, out var _, false)) return Result(targetID != 18225); // Target Wolf of Wind
+                            if (LocalPlayer.HasStatus(4390, out var _, false)) return Result(targetID != 18219); // Target Wolf of Stone
                         }
                         return Invincible.False;
                     };
@@ -77,8 +77,8 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 18666 or 18667)
                         {
-                            if (LocalPlayer.HasStatus(4559)) return Result(targetID != 18667); // Target Eminent Grief
-                            if (LocalPlayer.HasStatus(4560)) return Result(targetID != 18666); // Target Devoured Eater
+                            if (LocalPlayer.HasStatus(4559, out var _, false)) return Result(targetID != 18667); // Target Eminent Grief
+                            if (LocalPlayer.HasStatus(4560, out var _, false)) return Result(targetID != 18666); // Target Devoured Eater
                         }
                         return Invincible.False;
                     };
@@ -99,11 +99,11 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 18576 or 18577 or 18578 or 18579 or 18642)
                         {
-                            if (LocalPlayer.HasStatus(3065)) return Result(targetID != 18642 || GetTargetDistance(target) > 20);  // Hellmaker checking for fire floor debuff
-                            if (LocalPlayer.HasStatus(4542)) return Result(targetID != 18576); // Alpha
-                            if (LocalPlayer.HasStatus(4543)) return Result(targetID != 18577); // Beta
-                            if (LocalPlayer.HasStatus(4544)) return Result(targetID != 18578); // Gamma
-                            if (LocalPlayer.HasStatus(4545)) return Result(targetID != 18579); // Delta
+                            if (LocalPlayer.HasStatus(3065, out var _, false)) return Result(targetID != 18642 || GetTargetDistance(target) > 20);  // Hellmaker checking for fire floor debuff
+                            if (LocalPlayer.HasStatus(4542, out var _, false)) return Result(targetID != 18576); // Alpha
+                            if (LocalPlayer.HasStatus(4543, out var _, false)) return Result(targetID != 18577); // Beta
+                            if (LocalPlayer.HasStatus(4544, out var _, false)) return Result(targetID != 18578); // Gamma
+                            if (LocalPlayer.HasStatus(4545, out var _, false)) return Result(targetID != 18579); // Delta
                         }
                         return Invincible.False;
                     };
@@ -191,8 +191,8 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (tar?.NameId is 14491 or 14490)
                         {
-                            if (LocalPlayer.HasStatus(4192)) return Result(tar.NameId != 14491); // Two-headed Aevis Blue Head
-                            if (LocalPlayer.HasStatus(4194)) return Result(tar.NameId != 14490); // Two-headed Aevis Green Head
+                            if (LocalPlayer.HasStatus(4192, out var _, false)) return Result(tar.NameId != 14491); // Two-headed Aevis Blue Head
+                            if (LocalPlayer.HasStatus(4194, out var _, false)) return Result(tar.NameId != 14490); // Two-headed Aevis Green Head
                         }
                         return Invincible.False;
                     };
@@ -205,8 +205,8 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 19508 or 19509)
                         {
-                            if (LocalPlayer.HasStatus(4192)) return Result(targetID != 19508); // Epic Hero (Î±) â€” Chaos
-                            if (LocalPlayer.HasStatus(4194)) return Result(targetID != 19509); // Fated Hero (Î²) â€” Exdeath
+                            if (LocalPlayer.HasStatus(4192, out var _, false)) return Result(targetID != 19508); // Epic Hero (a) — Chaos
+                            if (LocalPlayer.HasStatus(4194, out var _, false)) return Result(targetID != 19509); // Fated Hero (ß) — Exdeath
                         }
                         return Invincible.False;
                     };
@@ -263,3 +263,4 @@ namespace WrathCombo.Data.BattleData
         }
     }
 }
+

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -309,7 +309,7 @@ internal abstract partial class CustomComboFunctions
         if ((targetchara.IsHostile() && status.StatusCategory != 2) || (targetchara.IsFriendly() && status.StatusCategory != 1))
             return false;
 
-        if (!targetchara.IsStatusCapped || targetchara.HasStatus(statusId))
+        if (!targetchara.IsStatusCapped || targetchara.HasStatus(statusId, out var _, false))
             return true;
 
         return false;

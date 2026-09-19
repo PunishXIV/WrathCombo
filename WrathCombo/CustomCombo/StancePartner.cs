@@ -132,7 +132,7 @@ public static class StancePartner
     (Job job, uint action, ushort buff, ulong? target, ref bool
         callAgain)
     {
-        if (WrathCombo.JobID != job || CustomComboFunctions.LocalPlayer.HasStatus(buff))
+        if (WrathCombo.JobID != job || CustomComboFunctions.LocalPlayer.HasStatus(buff, out var _, false))
             return;
         PluginLog.Verbose(
             $"OnIPCInstanceChange: Trying to cast {action.ActionName()}");
@@ -166,3 +166,4 @@ public static class StancePartner
                 (ulong)target);
     }
 }
+

@@ -73,7 +73,7 @@ internal partial class DRK
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Disesteem)) &&
                 ActionReady(Disesteem) &&
                 TraitLevelChecked(Traits.EnhancedShadowIII) &&
-                LocalPlayer.HasStatus(Buffs.Scorn) &&
+                LocalPlayer.HasStatus(Buffs.Scorn, out var _, false) &&
                 ((Gauge.DarksideTimeRemaining > 0 &&
                   LocalPlayer.Status(Buffs.Scorn).RemainingTimeOrZero() < 24) ||
                  LocalPlayer.Status(Buffs.Scorn).RemainingTimeOrZero() < 14))
@@ -210,7 +210,7 @@ internal partial class DRK
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Salt)) &&
                 ActionLearned(SaltedEarth) &&
                 IsOffCooldown(SaltedEarth) &&
-                !LocalPlayer.HasStatus(Buffs.SaltedEarth) &&
+                !LocalPlayer.HasStatus(Buffs.SaltedEarth, out var _, false) &&
                 saltStill &&
                 GetTargetHPPercent(Target(flags)) >= saltHPThreshold)
                 return (action = SaltedEarth) != 0;
@@ -243,7 +243,7 @@ internal partial class DRK
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Darkness)) &&
                 ActionLearned(SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
-                LocalPlayer.HasStatus(Buffs.SaltedEarth) &&
+                LocalPlayer.HasStatus(Buffs.SaltedEarth, out var _, false) &&
                 darknessTimeSatisfied)
                 return (action = OriginalHook(SaltAndDarkness)) != 0;
 
@@ -267,7 +267,7 @@ internal partial class DRK
                   IsAoEEnabled(flags, Preset.DRK_AoE_CD_BringerBurst)) &&
                  // Burst, to send the pooled ShB's
                  GetCooldownRemainingTime(LivingShadow) >= 90 &&
-                 !LocalPlayer.HasStatus(Buffs.Scorn));
+                 !LocalPlayer.HasStatus(Buffs.Scorn, out var _, false));
 
             #endregion
 
@@ -313,7 +313,7 @@ internal partial class DRK
                 // Trying to die (unless it's the final moments)
                 LocalPlayer.Status(Buffs.LivingDead).RemainingTimeOrZero() < 1 &&
                 // Has better healing
-                !LocalPlayer.HasStatus(Buffs.WalkingDead))
+                !LocalPlayer.HasStatus(Buffs.WalkingDead, out var _, false))
                 return (action = AbyssalDrain) != 0;
 
             #endregion
@@ -775,7 +775,7 @@ internal partial class DRK
             if ((flags.HasFlag(Combo.Simple) ||
                  IsSTEnabled(flags, Preset.DRK_ST_Sp_ScarletChain) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_Sp_ImpalementChain)) &&
-                LocalPlayer.HasStatus(Buffs.EnhancedDelirium) &&
+                LocalPlayer.HasStatus(Buffs.EnhancedDelirium, out var _, false) &&
                 LocalPlayer.Status(Buffs.EnhancedDelirium).Stacks > 0)
                 if (flags.HasFlag(Combo.ST))
                     return (action = OriginalHook(Bloodspiller)) != 0;
@@ -809,7 +809,7 @@ internal partial class DRK
 
             #endregion
 
-            if (LocalPlayer.HasStatus(Buffs.Scorn)) return false;
+            if (LocalPlayer.HasStatus(Buffs.Scorn, out var _, false)) return false;
 
             #region Blood Spending after Delirium Chain
 

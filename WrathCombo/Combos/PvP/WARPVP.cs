@@ -83,7 +83,7 @@ internal static class WARPvP
                 }
 
                 // Primal Wrath if in melee range and Wrathfull effect is active
-                if (IsEnabled(Preset.WARPvP_BurstMode_PrimalScream) && InMeleeRange() && canWeave && LocalPlayer.HasStatus(Buffs.Wrathfull))
+                if (IsEnabled(Preset.WARPvP_BurstMode_PrimalScream) && InMeleeRange() && canWeave && LocalPlayer.HasStatus(Buffs.Wrathfull, out var _, false))
                     return OriginalHook(PrimalScream);
 
                 // Blota and PrimalRend conditions based on range and cooldowns
@@ -101,7 +101,7 @@ internal static class WARPvP
                     // PrimalRend if ready or BurstMode enabled
                     if (IsEnabled(Preset.WARPvP_BurstMode_PrimalRend))
                     {
-                        if ((IsOffCooldown(PrimalRend) || LocalPlayer.HasStatus(Buffs.PrimalRuinationReady)))
+                        if ((IsOffCooldown(PrimalRend) || LocalPlayer.HasStatus(Buffs.PrimalRuinationReady, out var _, false)))
                             return OriginalHook(PrimalRend);
                     }
 
@@ -111,7 +111,7 @@ internal static class WARPvP
                 if (InMeleeRange())
                 {
                     // Inner Chaos effect logic
-                    if (IsEnabled(Preset.WARPvP_BurstMode_InnerChaos) && LocalPlayer.HasStatus(Buffs.InnerChaosReady))
+                    if (IsEnabled(Preset.WARPvP_BurstMode_InnerChaos) && LocalPlayer.HasStatus(Buffs.InnerChaosReady, out var _, false))
                         return OriginalHook(Blota);
 
                     // Onslaught and Orogeny conditions for melee
@@ -119,7 +119,7 @@ internal static class WARPvP
                         return OriginalHook(Onslaught);
 
                     // Nascent Chaos and Orogeny conditions
-                    if (IsEnabled(Preset.WARPvP_BurstMode_Bloodwhetting) && LocalPlayer.HasStatus(Buffs.NascentChaos))
+                    if (IsEnabled(Preset.WARPvP_BurstMode_Bloodwhetting) && LocalPlayer.HasStatus(Buffs.NascentChaos, out var _, false))
                         return OriginalHook(Bloodwhetting);
 
                     if (IsEnabled(Preset.WARPvP_BurstMode_Orogeny) && !GetCooldown(Orogeny).IsCooldown && canWeave)
@@ -128,7 +128,7 @@ internal static class WARPvP
                     // PrimalRend if ready or BurstMode enabled
                     if (IsEnabled(Preset.WARPvP_BurstMode_PrimalRend))
                     {
-                        if (IsOffCooldown(PrimalRend) || LocalPlayer.HasStatus(Buffs.PrimalRuinationReady))
+                        if (IsOffCooldown(PrimalRend) || LocalPlayer.HasStatus(Buffs.PrimalRuinationReady, out var _, false))
                             return OriginalHook(PrimalRend);
                     }
 

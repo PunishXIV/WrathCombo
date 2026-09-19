@@ -137,7 +137,7 @@ internal partial class WHM
                 action = LiturgyOfTheBell;
                 enabled =
                     IsEnabled(Preset.WHM_STHeals_LiturgyOfTheBell) &&
-                    !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell) &&
+                    !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell, out var _, false) &&
                     TimeStoodStill >= TS.FromSeconds(3) &&
                     (!WHM_STHeals_LiturgyOfTheBellOptions[1] ||
                      !InBossEncounter()) &&
@@ -157,10 +157,10 @@ internal partial class WHM
     public static int GetMatchingConfigAoE(int i, IGameObject? OptionalTarget,
         out uint action, out bool enabled)
     {
-        var medica3Check = !LocalPlayer.HasStatus(Buffs.Medica3) ||
+        var medica3Check = !LocalPlayer.HasStatus(Buffs.Medica3, out var _, false) ||
                            LocalPlayer.Status(Buffs.Medica3).RemainingTimeOrZero() <=
                            WHM_AoEHeals_MedicaTime;
-        var medica2Check = !LocalPlayer.HasStatus(Buffs.Medica2) ||
+        var medica2Check = !LocalPlayer.HasStatus(Buffs.Medica2, out var _, false) ||
                            LocalPlayer.Status(Buffs.Medica2).RemainingTimeOrZero() <=
                            WHM_AoEHeals_MedicaTime;
 
@@ -180,7 +180,7 @@ internal partial class WHM
                           !IsMoving() &&
                           NumberOfAlliesInRange(Cure3, OptionalTarget) >= WHM_AoEHeals_Cure3Allies &&
                           (LocalPlayer.CurrentMp >= WHM_AoEHeals_Cure3MP ||
-                           LocalPlayer.HasStatus(Buffs.ThinAir));
+                           LocalPlayer.HasStatus(Buffs.ThinAir, out var _, false));
                 return WHM_AoEHeals_Cure3HP;
 
             case 2:
@@ -193,7 +193,7 @@ internal partial class WHM
                 action = Temperance;
                 enabled = IsEnabled(Preset.WHM_AoEHeals_Temperance) &&
                           (CanWeave() || !WHM_AoEHeals_TemperanceWeave) &&
-                          !LocalPlayer.HasStatus(Buffs.DivineGrace) &&
+                          !LocalPlayer.HasStatus(Buffs.DivineGrace, out var _, false) &&
                           ContentCheck.IsInConfiguredContent(
                               WHM_AoEHeals_TemperanceDifficulty,
                               WHM_AoEHeals_TemperanceDifficultyListSet);
@@ -213,7 +213,7 @@ internal partial class WHM
                 action = LiturgyOfTheBell;
                 enabled =
                     IsEnabled(Preset.WHM_AoEHeals_LiturgyOfTheBell) &&
-                    !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell) &&
+                    !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell, out var _, false) &&
                     (CanWeave() || !WHM_AoEHeals_LiturgyWeave) &&
                     ContentCheck.IsInConfiguredContent(
                         WHM_AoEHeals_LiturgyDifficulty,
@@ -266,7 +266,7 @@ internal partial class WHM
     {
         return IsEnabled(Preset.WHM_Raidwide_LiturgyOfTheBell) &&
                ActionReady(LiturgyOfTheBell) &&
-               !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell) &&
+               !LocalPlayer.HasStatus(Buffs.LiturgyOfTheBell, out var _, false) &&
                GroupDamageIncoming() && CanWeave();
     }
     internal static bool RaidwidePlenaryIndulgence()
@@ -452,5 +452,6 @@ internal partial class WHM
     }
     #endregion
 }
+
 
 

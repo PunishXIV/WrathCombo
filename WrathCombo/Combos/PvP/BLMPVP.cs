@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -164,20 +164,20 @@ internal static class BLMPvP
             bool inCombat = InCombat();
             bool hasTarget = HasTarget();
             bool isTargetNPC = CurrentTarget is IBattleNpc && CurrentTarget.BaseId != 8016;
-            bool hasParadox = LocalPlayer.HasStatus(Buffs.Paradox);
-            bool hasResonance = LocalPlayer.HasStatus(Buffs.SoulResonance);
-            bool hasWreathOfFire = LocalPlayer.HasStatus(Buffs.WreathOfFire);
+            bool hasParadox = LocalPlayer.HasStatus(Buffs.Paradox, out var _, false);
+            bool hasResonance = LocalPlayer.HasStatus(Buffs.SoulResonance, out var _, false);
+            bool hasWreathOfFire = LocalPlayer.HasStatus(Buffs.WreathOfFire, out var _, false);
             bool hasFlareStar = OriginalHook(SoulResonance) is FlareStar;
             bool hasFrostStar = OriginalHook(SoulResonance) is FrostStar;
             bool targetHasGuard = CurrentTarget.HasStatus(PvPCommon.Buffs.Guard, true);
             bool targetHasHeavy = CurrentTarget.HasStatus(PvPCommon.Debuffs.Heavy, true);
             bool isPlayerTargeted = CurrentTarget?.TargetObjectId == LocalPlayer.GameObjectId;
-            bool isParadoxPrimed = LocalPlayer.HasStatus(Buffs.UmbralIce1) || LocalPlayer.HasStatus(Buffs.AstralFire1);
+            bool isParadoxPrimed = LocalPlayer.HasStatus(Buffs.UmbralIce1, out var _, false) || LocalPlayer.HasStatus(Buffs.AstralFire1, out var _, false);
             bool isMovingAdjusted = TimeMoving.TotalMilliseconds / 1000f >= BLMPvP_Movement_Threshold;
-            bool isResonanceExpiring = LocalPlayer.HasStatus(Buffs.SoulResonance) && LocalPlayer.Status(Buffs.SoulResonance).RemainingTimeOrZero() <= 10;
-            bool hasUmbralIce = LocalPlayer.HasStatus(Buffs.UmbralIce1) || LocalPlayer.HasStatus(Buffs.UmbralIce2) || LocalPlayer.HasStatus(Buffs.UmbralIce3);
-            bool isElementalStarDelayed = LocalPlayer.HasStatus(Buffs.ElementalStar) && LocalPlayer.Status(Buffs.ElementalStar).RemainingTimeOrZero() <= 20;
-            bool hasAstralFire = LocalPlayer.HasStatus(Buffs.AstralFire1) || LocalPlayer.HasStatus(Buffs.AstralFire2) || LocalPlayer.HasStatus(Buffs.AstralFire3);
+            bool isResonanceExpiring = LocalPlayer.HasStatus(Buffs.SoulResonance, out var _, false) && LocalPlayer.Status(Buffs.SoulResonance).RemainingTimeOrZero() <= 10;
+            bool hasUmbralIce = LocalPlayer.HasStatus(Buffs.UmbralIce1, out var _, false) || LocalPlayer.HasStatus(Buffs.UmbralIce2, out var _, false) || LocalPlayer.HasStatus(Buffs.UmbralIce3, out var _, false);
+            bool isElementalStarDelayed = LocalPlayer.HasStatus(Buffs.ElementalStar, out var _, false) && LocalPlayer.Status(Buffs.ElementalStar).RemainingTimeOrZero() <= 20;
+            bool hasAstralFire = LocalPlayer.HasStatus(Buffs.AstralFire1, out var _, false) || LocalPlayer.HasStatus(Buffs.AstralFire2, out var _, false) || LocalPlayer.HasStatus(Buffs.AstralFire3, out var _, false);
             bool targetHasImmunity = CurrentTarget.HasStatus(PLDPvP.Buffs.HallowedGround, true) || CurrentTarget.HasStatus(DRKPvP.Buffs.UndeadRedemption, true);
             #endregion
 

@@ -80,17 +80,17 @@ internal static class BRDPvP
                 if (canWeave)
                 {
                     // Silence shot that gives PP, set up to not happen right after apex to tighten burst and silence after the bigger damage. Apex > Harmonic> Silent > Burst > PP or Apex > Burst > Silent >  PP
-                    if (IsEnabled(Preset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown && !WasLastAction(ApexArrow) && !LocalPlayer.HasStatus(Buffs.Repertoire)) 
+                    if (IsEnabled(Preset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown && !WasLastAction(ApexArrow) && !LocalPlayer.HasStatus(Buffs.Repertoire, out var _, false)) 
                         return OriginalHook(SilentNocturne);
 
-                    if (IsEnabled(Preset.BRDPvP_EncoreOfLight) && LocalPlayer.HasStatus(Buffs.EncoreofLightReady)) // LB finisher shot
+                    if (IsEnabled(Preset.BRDPvP_EncoreOfLight) && LocalPlayer.HasStatus(Buffs.EncoreofLightReady, out var _, false)) // LB finisher shot
                         return OriginalHook(FinalFantasia);
                 }
 
-                if (IsEnabled(Preset.BRDPvP_ApexArrow) && ActionReady(ApexArrow) && !LocalPlayer.HasStatus(Buffs.BlastArrowReady)) // Use on cd to keep up buff
+                if (IsEnabled(Preset.BRDPvP_ApexArrow) && ActionReady(ApexArrow) && !LocalPlayer.HasStatus(Buffs.BlastArrowReady, out var _, false)) // Use on cd to keep up buff
                     return OriginalHook(ApexArrow);
 
-                if (LocalPlayer.HasStatus(Buffs.FrontlineMarch))
+                if (LocalPlayer.HasStatus(Buffs.FrontlineMarch, out var _, false))
                 {
                     if (IsEnabled(Preset.BRDPvP_HarmonicArrow) &&    //Harmonic Logic. Slider plus execute ranges
                         (harmonicCharges >= BRDPvP_HarmonicArrowCharges ||
@@ -99,7 +99,7 @@ internal static class BRDPvP
                          harmonicCharges == 3 && GetTargetCurrentHP() <= 15000))
                         return OriginalHook(HarmonicArrow);
 
-                    if (IsEnabled(Preset.BRDPvP_BlastArrow) && LocalPlayer.HasStatus(Buffs.BlastArrowReady)) // Blast arrow when ready
+                    if (IsEnabled(Preset.BRDPvP_BlastArrow) && LocalPlayer.HasStatus(Buffs.BlastArrowReady, out var _, false)) // Blast arrow when ready
                         return OriginalHook(BlastArrow);
                 }
                 return OriginalHook(PowerfulShot); // Main shot but also Pitch Perfect

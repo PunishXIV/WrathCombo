@@ -1,4 +1,4 @@
-﻿using ECommons.DalamudServices;
+using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace WrathCombo.Data.BattleData
                     _invincibleCheck = (target, targetID, _) =>
                     {
                         // Thanatos, Spooky Ghosts Only
-                        if (targetID is 2350 && !LocalPlayer.HasStatus(398)) return Invincible.True;
+                        if (targetID is 2350 && !LocalPlayer.HasStatus(398, out var _, false)) return Invincible.True;
                         // Allagan Bomb
                         if (targetID is 2407 &&
                             (NumberOfObjectsInRange<SelfCircle>(30,
@@ -100,3 +100,4 @@ namespace WrathCombo.Data.BattleData
         }
     }
 }
+

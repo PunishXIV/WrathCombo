@@ -60,7 +60,7 @@ internal partial class MNK : Melee
             if (UseMasterfulBlitz(false))
                 return OriginalHook(MasterfulBlitz);
 
-            if (LocalPlayer.HasStatus(Buffs.FormlessFist) ||
+            if (LocalPlayer.HasStatus(Buffs.FormlessFist, out var _, false) ||
                 ForceSecondOpo(false))
                 return ForcedOpoGCD(false);
 
@@ -124,7 +124,7 @@ internal partial class MNK : Melee
             if (UseMasterfulBlitz(true))
                 return OriginalHook(MasterfulBlitz);
 
-            if (LocalPlayer.HasStatus(Buffs.FormlessFist) ||
+            if (LocalPlayer.HasStatus(Buffs.FormlessFist, out var _, false) ||
                 ForceSecondOpo(true))
                 return ForcedOpoGCD(true);
 
@@ -238,7 +238,7 @@ internal partial class MNK : Melee
                 UseMasterfulBlitz(false))
                 return OriginalHook(MasterfulBlitz);
 
-            if (LocalPlayer.HasStatus(Buffs.FormlessFist) ||
+            if (LocalPlayer.HasStatus(Buffs.FormlessFist, out var _, false) ||
                 ForceSecondOpo(false, IsEnabled(Preset.MNK_STUseFiresReply)))
                 return ForcedOpoGCD(false);
 
@@ -331,7 +331,7 @@ internal partial class MNK : Melee
                 UseMasterfulBlitz(true))
                 return OriginalHook(MasterfulBlitz);
 
-            if (LocalPlayer.HasStatus(Buffs.FormlessFist) ||
+            if (LocalPlayer.HasStatus(Buffs.FormlessFist, out var _, false) ||
                 ForceSecondOpo(true, IsEnabled(Preset.MNK_AoEUseFiresReply)))
                 return ForcedOpoGCD(true);
 
@@ -366,7 +366,7 @@ internal partial class MNK : Melee
             if (DoPerfectBalanceCombo(ref actionID))
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.PerfectBalance))
+            if (LocalPlayer.HasStatus(Buffs.PerfectBalance, out var _, false))
                 return OriginalHook(Bootshine);
 
             if (MNK_BasicCombo_MasterfulBlitz &&
@@ -377,13 +377,13 @@ internal partial class MNK : Melee
             if (!ActionLearned(TrueStrike))
                 return Bootshine;
 
-            if (LocalPlayer.HasStatus(Buffs.OpoOpoForm) || LocalPlayer.HasStatus(Buffs.FormlessFist))
+            if (LocalPlayer.HasStatus(Buffs.OpoOpoForm, out var _, false) || LocalPlayer.HasStatus(Buffs.FormlessFist, out var _, false))
                 return OpoFormGCD();
 
-            if (LocalPlayer.HasStatus(Buffs.RaptorForm))
+            if (LocalPlayer.HasStatus(Buffs.RaptorForm, out var _, false))
                 return RaptorFormGCD();
 
-            if (LocalPlayer.HasStatus(Buffs.CoeurlForm))
+            if (LocalPlayer.HasStatus(Buffs.CoeurlForm, out var _, false))
                 return CoeurlFormGCD();
 
             return OriginalHook(Bootshine);
@@ -473,10 +473,11 @@ internal partial class MNK : Melee
             if (actionID is not PerfectBalance)
                 return actionID;
 
-            return LocalPlayer.HasStatus(Buffs.PerfectBalance) &&
+            return LocalPlayer.HasStatus(Buffs.PerfectBalance, out var _, false) &&
                    ActionLearned(PerfectBalance)
                 ? All.Cease
                 : actionID;
         }
     }
 }
+

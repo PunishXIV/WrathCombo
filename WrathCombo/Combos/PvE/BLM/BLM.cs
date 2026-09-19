@@ -330,7 +330,7 @@ internal partial class BLM : Caster
             if (actionID is not Triplecast)
                 return actionID;
 
-            return LocalPlayer.HasStatus(Buffs.Triplecast) && ActionLearned(Triplecast)
+            return LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) && ActionLearned(Triplecast)
                 ? All.Cease
                 : actionID;
         }
@@ -350,16 +350,16 @@ internal partial class BLM : Caster
                 Fire when BLM_F1to3 == 0 && BLM_Fire1_Despair && IsInFirePhase && MP.Cur < 2400 && ActionLearned(Despair) => Despair,
 
                 Fire when BLM_F1to3 == 0 && ActionLearned(Fire3) &&
-                          (AstralFireStacks is 1 or 2 && LocalPlayer.HasStatus(Buffs.Firestarter) ||
+                          (AstralFireStacks is 1 or 2 && LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false) ||
                            ActionLearned(Paradox) && !IsParadoxActive ||
                            !InCombat() && ActionLearned(Fire4) ||
                            IsInIcePhase && !IsParadoxActive ||
                            !ActionLearned(Fire4) &&
-                           LocalPlayer.HasStatus(Buffs.Firestarter)) && !JustUsed(Fire3) => Fire3,
+                           LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false)) && !JustUsed(Fire3) => Fire3,
 
                 Fire3 when BLM_F1to3 == 1 && ActionLearned(Fire3) && IsInFirePhase &&
                            (ActionLearned(Paradox) && IsParadoxActive && AstralFireStacks is 3 ||
-                            !ActionLearned(Fire4) && !LocalPlayer.HasStatus(Buffs.Firestarter)) &&
+                            !ActionLearned(Fire4) && !LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false)) &&
                            !JustUsed(OriginalHook(Fire)) => OriginalHook(Fire),
 
                 _ => actionID
@@ -600,7 +600,7 @@ internal partial class BLM : Caster
             if (actionID is not LeyLines)
                 return actionID;
 
-            return LocalPlayer.HasStatus(Buffs.LeyLines) && ActionLearned(BetweenTheLines)
+            return LocalPlayer.HasStatus(Buffs.LeyLines, out var _, false) && ActionLearned(BetweenTheLines)
                 ? BetweenTheLines
                 : actionID;
         }
@@ -616,7 +616,7 @@ internal partial class BLM : Caster
                 return actionID;
 
             return ActionReady(BetweenTheLines) &&
-                   LocalPlayer.HasStatus(Buffs.LeyLines) && !LocalPlayer.HasStatus(Buffs.CircleOfPower) && !IsMoving()
+                   LocalPlayer.HasStatus(Buffs.LeyLines, out var _, false) && !LocalPlayer.HasStatus(Buffs.CircleOfPower, out var _, false) && !IsMoving()
                 ? BetweenTheLines
                 : actionID;
         }
@@ -624,3 +624,4 @@ internal partial class BLM : Caster
 
     #endregion
 }
+

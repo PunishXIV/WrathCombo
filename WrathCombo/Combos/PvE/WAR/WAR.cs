@@ -213,7 +213,7 @@ internal partial class WAR
                     WAR_FC_Onslaught_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(WAR_FC_Onslaught_TimeStill))
                     return Onslaught;
             
-                if (IsEnabled(Preset.WAR_FC_PrimalRend) && LocalPlayer.HasStatus(Buffs.PrimalRendReady) && 
+                if (IsEnabled(Preset.WAR_FC_PrimalRend) && LocalPlayer.HasStatus(Buffs.PrimalRendReady, out var _, false) && 
                     HasSurgingTempest &&
                     GetTargetDistance() <= WAR_FC_PrimalRend_Distance && 
                     (WAR_FC_PrimalRend_Movement == 1 || 
@@ -222,7 +222,7 @@ internal partial class WAR
                      WAR_FC_PrimalRend_EarlyLate == 1 && (LocalPlayer.Status(Buffs.PrimalRendReady).RemainingTimeOrZero() <= 15 || !HasIR.Stacks && !HasBF.Stacks && !HasWrathful)))
                     return PrimalRend;
             
-                if (IsEnabled(Preset.WAR_FC_PrimalRuination) && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady) &&
+                if (IsEnabled(Preset.WAR_FC_PrimalRuination) && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady, out var _, false) &&
                     HasSurgingTempest)
                     return PrimalRuination;
             }
@@ -251,8 +251,8 @@ internal partial class WAR
         protected internal override Preset Preset => Preset.WAR_PrimalCombo_InnerRelease;
 
         protected override uint Invoke(uint action) => action is not (Berserk or InnerRelease) ? OriginalHook(action) :
-            ActionLearned(PrimalRend) && LocalPlayer.HasStatus(Buffs.PrimalRendReady) ? PrimalRend :
-            ActionLearned(PrimalRuination) && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady) ? PrimalRuination : OriginalHook(action);
+            ActionLearned(PrimalRend) && LocalPlayer.HasStatus(Buffs.PrimalRendReady, out var _, false) ? PrimalRend :
+            ActionLearned(PrimalRuination) && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady, out var _, false) ? PrimalRuination : OriginalHook(action);
     }
     #endregion
 
@@ -482,3 +482,4 @@ internal partial class WAR
     #endregion
     #endregion
 }
+

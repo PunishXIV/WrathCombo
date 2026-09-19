@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using System.Collections.Generic;
@@ -151,7 +151,7 @@ internal partial class All
             if (actionID is WHM.Raise &&
                 IsEnabled(Preset.WHM_ThinAirRaise) &&
                 ActionReady(WHM.ThinAir) &&
-                !LocalPlayer.HasStatus(WHM.Buffs.ThinAir))
+                !LocalPlayer.HasStatus(WHM.Buffs.ThinAir, out var _, false))
                 return WHM.ThinAir;
 
             if (IsEnabled(Preset.ALL_Healer_Raise_Retarget))
@@ -236,8 +236,8 @@ internal partial class All
                 actionID is SMN.Resurrection && Player.Job is not Job.SMN)
                 return actionID;
 
-            if (LocalPlayer.HasStatus(RoleActions.Magic.Buffs.Swiftcast) ||
-                LocalPlayer.HasStatus(RDM.Buffs.Dualcast))
+            if (LocalPlayer.HasStatus(RoleActions.Magic.Buffs.Swiftcast, out var _, false) ||
+                LocalPlayer.HasStatus(RDM.Buffs.Dualcast, out var _, false))
 
                 if (IsEnabled(Preset.ALL_Caster_Raise_Retarget))
                     return actionID.Retarget(replacedActions.ToArray(),
@@ -277,7 +277,7 @@ internal partial class All
         protected internal override Preset Preset => Preset.ALL_Melee_TrueNorth;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is RoleActions.Melee.TrueNorth && LocalPlayer.HasStatus(RoleActions.Melee.Buffs.TrueNorth)
+            actionID is RoleActions.Melee.TrueNorth && LocalPlayer.HasStatus(RoleActions.Melee.Buffs.TrueNorth, out var _, false)
                 ? Cease
                 : actionID;
     }
@@ -326,3 +326,4 @@ internal partial class All
         }
     }
 }
+

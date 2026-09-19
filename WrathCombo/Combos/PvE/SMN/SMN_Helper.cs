@@ -470,7 +470,7 @@ internal partial class SMN
             #endregion
             
             #region Fester and Painflare
-            if (energyDrainEnabled && ActionReady(OriginalHook(Fester)) && !LocalPlayer.HasStatus(Buffs.TitansFavor))
+            if (energyDrainEnabled && ActionReady(OriginalHook(Fester)) && !LocalPlayer.HasStatus(Buffs.TitansFavor, out var _, false))
             {
                 //Fire asap without pooling
                 //Too low level for Searing Light
@@ -492,7 +492,7 @@ internal partial class SMN
             #endregion
             
             #region Searing Flash
-            if (searingFlashEnabled && LocalPlayer.HasStatus(Buffs.RubysGlimmer))
+            if (searingFlashEnabled && LocalPlayer.HasStatus(Buffs.RubysGlimmer, out var _, false))
             {
                 actionID = SearingFlash;
                 return true;
@@ -545,7 +545,7 @@ internal partial class SMN
             
             #region Radiant Aegis Overcap
             if (radiantAegisEnabled && 
-                !LocalPlayer.HasStatus(Buffs.SearingLight) && !LocalPlayer.HasStatus(Buffs.TitansFavor) && // Dont use in window or when titan needs to do the mountainbuster
+                !LocalPlayer.HasStatus(Buffs.SearingLight, out var _, false) && !LocalPlayer.HasStatus(Buffs.TitansFavor, out var _, false) && // Dont use in window or when titan needs to do the mountainbuster
                 GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis)) // The shield is super long so no waiting on raidwide
             {
                 actionID = RadiantAegis;
@@ -675,14 +675,14 @@ internal partial class SMN
         #region Garuda Phase
         if (IsGarudaAttuned || OriginalHook(AstralFlow) is Slipstream)
         {
-            if (egiAstralFlowEnabled && slipstreamEnabled && LocalPlayer.HasStatus(Buffs.GarudasFavor))
+            if (egiAstralFlowEnabled && slipstreamEnabled && LocalPlayer.HasStatus(Buffs.GarudasFavor, out var _, false))
             {
                 if (swiftcastEgiEnabled && swiftcastPhase is 1 or 3 && Role.CanSwiftcast()) // Forced Swiftcast option
                 {
                     actionID = Role.Swiftcast;
                     return true;
                 }
-                if (!IsMoving() || LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
+                if (!IsMoving() || LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false))
                 {
                     actionID = OriginalHook(AstralFlow);
                     return true;
@@ -711,7 +711,7 @@ internal partial class SMN
                     return true;
                 }
             }
-            if (ruin4Enabled && LocalPlayer.HasStatus(Buffs.FurtherRuin) && IsMoving())
+            if (ruin4Enabled && LocalPlayer.HasStatus(Buffs.FurtherRuin, out var _, false) && IsMoving())
             {
                 actionID = Ruin4;
                 return true;
@@ -728,7 +728,7 @@ internal partial class SMN
                 return true;
             }
 
-            if (egiSummonAttacksEnabled && GemshineReady && (!IsMoving() || LocalPlayer.HasStatus(Role.Buffs.Swiftcast)))
+            if (egiSummonAttacksEnabled && GemshineReady && (!IsMoving() || LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false)))
             {
                 if (flags.HasFlag(Combo.ST))
                 {
@@ -742,15 +742,15 @@ internal partial class SMN
                 }
             }
 
-            if (IfritAstralFlowCyclone && LocalPlayer.HasStatus(Buffs.IfritsFavor) &&
+            if (IfritAstralFlowCyclone && LocalPlayer.HasStatus(Buffs.IfritsFavor, out var _, false) &&
                 GetTargetDistance() <= crimsonCycloneMeleeDistance  //Melee Check
-                || IfritAstralFlowStrike && LocalPlayer.HasStatus(Buffs.CrimsonStrike) && InMeleeRange()) //After Strike
+                || IfritAstralFlowStrike && LocalPlayer.HasStatus(Buffs.CrimsonStrike, out var _, false) && InMeleeRange()) //After Strike
             {
                 actionID = OriginalHook(AstralFlow);
                 return true;
             }
 
-            if (ruin4Enabled && LocalPlayer.HasStatus(Buffs.FurtherRuin) && !LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
+            if (ruin4Enabled && LocalPlayer.HasStatus(Buffs.FurtherRuin, out var _, false) && !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false))
             {
                 actionID = Ruin4;
                 return true;
@@ -760,7 +760,7 @@ internal partial class SMN
         
         #region Ruin 4 Dump
         //Dump for ruin 4 if all your summons are done and you arent ready to demi yet. 
-        if (ruin4Enabled && !IsAttunedAny && DemiNone && LocalPlayer.HasStatus(Buffs.FurtherRuin) && !CanSummonEgi)
+        if (ruin4Enabled && !IsAttunedAny && DemiNone && LocalPlayer.HasStatus(Buffs.FurtherRuin, out var _, false) && !CanSummonEgi)
         {
             actionID = Ruin4;
             return true;
@@ -857,6 +857,7 @@ internal partial class SMN
     }
     #endregion
 }
+
 
 
 

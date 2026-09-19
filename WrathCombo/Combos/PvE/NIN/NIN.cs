@@ -654,13 +654,13 @@ internal partial class NIN : Melee
                 return actionID;
 
 
-            if (NIN_HideMug_Toggle && LocalPlayer.HasStatus(Buffs.Hidden) &&
+            if (NIN_HideMug_Toggle && LocalPlayer.HasStatus(Buffs.Hidden, out var _, false) &&
                 (ActionLearned(Suiton) || !NIN_HideMug_ToggleLevelCheck)) //Check level to get ShadowWalker buff.
                 StatusManager.ExecuteStatusOff(Buffs.Hidden);
 
             if (NIN_HideMug_Trick &&
                 (!NIN_HideMug_Mug || !NIN_HideMug_TrickAfterMug || IsOnCooldown(OriginalHook(Mug)) || !InCombat()) && //Check mug if you want mug to have priority
-                (LocalPlayer.HasStatus(Buffs.Hidden) || LocalPlayer.HasStatus(Buffs.ShadowWalker))) //Check for ability to use trick
+                (LocalPlayer.HasStatus(Buffs.Hidden, out var _, false) || LocalPlayer.HasStatus(Buffs.ShadowWalker, out var _, false))) //Check for ability to use trick
                 return OriginalHook(TrickAttack);
 
             if (InCombat() && NIN_HideMug_Mug)
@@ -679,7 +679,7 @@ internal partial class NIN : Melee
             if (actionID is not Chi)
                 return actionID;
 
-            return TraitLevelChecked(250) && LocalPlayer.HasStatus(Buffs.Kassatsu)
+            return TraitLevelChecked(250) && LocalPlayer.HasStatus(Buffs.Kassatsu, out var _, false)
                 ? Jin
                 : actionID;
         }
@@ -694,7 +694,7 @@ internal partial class NIN : Melee
             if (actionID is not Kassatsu)
                 return actionID;
 
-            return LocalPlayer.HasStatus(Buffs.ShadowWalker) || LocalPlayer.HasStatus(Buffs.Hidden)
+            return LocalPlayer.HasStatus(Buffs.ShadowWalker, out var _, false) || LocalPlayer.HasStatus(Buffs.Hidden, out var _, false)
                 ? OriginalHook(TrickAttack)
                 : actionID;
         }
@@ -712,7 +712,7 @@ internal partial class NIN : Melee
             if (IsEnabled(Preset.NIN_TCJ) && STTenChiJin(ref actionID))
                 return actionID;
 
-            return LocalPlayer.HasStatus(Buffs.ShadowWalker)
+            return LocalPlayer.HasStatus(Buffs.ShadowWalker, out var _, false)
                 ? Meisui
                 : actionID;
         }
@@ -724,10 +724,10 @@ internal partial class NIN : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Ten or Chi or Jin) || !LocalPlayer.HasStatus(Buffs.Mudra))
+            if (actionID is not (Ten or Chi or Jin) || !LocalPlayer.HasStatus(Buffs.Mudra, out var _, false))
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.TenChiJin))
+            if (LocalPlayer.HasStatus(Buffs.TenChiJin, out var _, false))
                 return actionID;
 
             int mudrapath = NIN_SimpleMudra_Choice;
@@ -748,7 +748,7 @@ internal partial class NIN : Melee
 
                     if (JutsuFromFlags == FumaShuriken)
                     {
-                        if (LocalPlayer.HasStatus(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
+                        if (LocalPlayer.HasStatus(Buffs.Kassatsu, out var _, false) && Traits.EnhancedKasatsu.TraitLevelChecked())
                             return JinCombo;
 
                         if (Chi.LevelChecked())
@@ -834,7 +834,7 @@ internal partial class NIN : Melee
 
                     if (JutsuFromFlags == FumaShuriken)
                     {
-                        if (LocalPlayer.HasStatus(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
+                        if (LocalPlayer.HasStatus(Buffs.Kassatsu, out var _, false) && Traits.EnhancedKasatsu.TraitLevelChecked())
                             return OriginalHook(Ten);
                         return OriginalHook(Chi);
                     }
@@ -856,7 +856,7 @@ internal partial class NIN : Melee
             if (!MudraSigns.Any(x => x == actionID))
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.TenChiJin))
+            if (LocalPlayer.HasStatus(Buffs.TenChiJin, out var _, false))
                 return actionID;
 
             if (JutsuFromFlags == Rabbit)
@@ -866,7 +866,7 @@ internal partial class NIN : Melee
             {
                 case Ten when ActionLearned(HyoshoRanryu) && HasKassatsu:
                     return UseHyoshoRanryu(ref actionID);
-                case Ten when ActionLearned(Suiton) && !LocalPlayer.HasStatus(Buffs.ShadowWalker) && TrickCD <= 20:
+                case Ten when ActionLearned(Suiton) && !LocalPlayer.HasStatus(Buffs.ShadowWalker, out var _, false) && TrickCD <= 20:
                     return UseSuiton(ref actionID);
                 case Ten:
                     return ActionLearned(Raiton)
@@ -874,7 +874,7 @@ internal partial class NIN : Melee
                         : UseFumaShuriken(ref actionID);
                 case Chi when ActionLearned(GokaMekkyaku) && HasKassatsu:
                     return UseGokaMekkyaku(ref actionID);
-                case Chi when ActionLearned(Huton) && !LocalPlayer.HasStatus(Buffs.ShadowWalker) && TrickCD <= 20:
+                case Chi when ActionLearned(Huton) && !LocalPlayer.HasStatus(Buffs.ShadowWalker, out var _, false) && TrickCD <= 20:
                     return UseHuton(ref actionID);
                 case Chi:
                     return ActionLearned(Katon)
@@ -892,3 +892,4 @@ internal partial class NIN : Melee
 
     #endregion
 }
+

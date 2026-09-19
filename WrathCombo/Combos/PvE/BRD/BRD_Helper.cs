@@ -125,9 +125,9 @@ internal partial class BRD
     internal static bool CanBardWeave => CanWeave();
     internal static bool CanWeaveDelayed => CanDelayedWeave();
     internal static bool CanIronJaws => ActionLearned(IronJaws);
-    internal static bool BuffWindow => LocalPlayer.HasStatus(Buffs.RagingStrikes) &&
-                                       (LocalPlayer.HasStatus(Buffs.BattleVoice) || !ActionLearned(BattleVoice)) &&
-                                       (LocalPlayer.HasStatus(Buffs.RadiantFinale) || !ActionLearned(RadiantFinale));
+    internal static bool BuffWindow => LocalPlayer.HasStatus(Buffs.RagingStrikes, out var _, false) &&
+                                       (LocalPlayer.HasStatus(Buffs.BattleVoice, out var _, false) || !ActionLearned(BattleVoice)) &&
+                                       (LocalPlayer.HasStatus(Buffs.RadiantFinale, out var _, false) || !ActionLearned(RadiantFinale));
 
     //Buff Tracking
     internal static float RagingCD => GetCooldownRemainingTime(RagingStrikes);
@@ -390,22 +390,22 @@ internal partial class BRD
         {
             if (allBuffsEnabled && !SongNone && ActionLearned(MagesBallad))
             {
-                if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !LocalPlayer.HasStatus(Buffs.RadiantEncoreReady))
+                if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !LocalPlayer.HasStatus(Buffs.RadiantEncoreReady, out var _, false))
                 {
                     actionID = RadiantFinale;
                     return true;
                 }
-                if (ActionReady(BattleVoice) && (LocalPlayer.HasStatus(Buffs.RadiantFinale) || !ActionLearned(RadiantFinale)))
+                if (ActionReady(BattleVoice) && (LocalPlayer.HasStatus(Buffs.RadiantFinale, out var _, false) || !ActionLearned(RadiantFinale)))
                 {
                     actionID = BattleVoice;
                     return true;
                 }
-                if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !ActionLearned(BattleVoice) || LocalPlayer.HasStatus(Buffs.BattleVoice)))
+                if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !ActionLearned(BattleVoice) || LocalPlayer.HasStatus(Buffs.BattleVoice, out var _, false)))
                 {
                     actionID = RagingStrikes;
                     return true;
                 }
-                if (ActionReady(Barrage) && LocalPlayer.HasStatus(Buffs.RagingStrikes) && !LocalPlayer.HasStatus(Buffs.ResonantArrowReady))
+                if (ActionReady(Barrage) && LocalPlayer.HasStatus(Buffs.RagingStrikes, out var _, false) && !LocalPlayer.HasStatus(Buffs.ResonantArrowReady, out var _, false))
                 {
                     actionID = Barrage;
                     return true;
@@ -641,7 +641,7 @@ internal partial class BRD
         //Raging jaws option dot refresh for snapshot
         bool RagingJawsRefresh()
         {
-            return ActionReady(IronJaws) && LocalPlayer.HasStatus(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35;
+            return ActionReady(IronJaws) && LocalPlayer.HasStatus(Buffs.RagingStrikes, out var _, false) && PurpleRemaining < 35 && BlueRemaining < 35;
         }
         int ComputeHpThreshold(IGameObject? x)
         {
@@ -700,25 +700,25 @@ internal partial class BRD
 
         var widevolleyEnemyCount = NumberOfEnemiesInRange(OriginalHook(WideVolley));
 
-        if (flags.HasFlag(Combo.AoE) && LocalPlayer.HasStatus(Buffs.Barrage) && widevolleyEnemyCount >= 3)
+        if (flags.HasFlag(Combo.AoE) && LocalPlayer.HasStatus(Buffs.Barrage, out var _, false) && widevolleyEnemyCount >= 3)
         {
             actionID = OriginalHook(WideVolley); //Uses on 3 or more. 
             return true;
         }
-        if (LocalPlayer.HasStatus(Buffs.Barrage))
+        if (LocalPlayer.HasStatus(Buffs.Barrage, out var _, false))
         {
             actionID = OriginalHook(StraightShot); // Use on two or less
             return true;
         }
-        if (radiantEncoreEnabled && LocalPlayer.HasStatus(Buffs.RadiantEncoreReady) && LocalPlayer.Status(Buffs.RadiantFinale).RemainingTimeOrZero() < 16 &&
-            (LocalPlayer.HasStatus(Buffs.RagingStrikes) || !ragingEnabled))
+        if (radiantEncoreEnabled && LocalPlayer.HasStatus(Buffs.RadiantEncoreReady, out var _, false) && LocalPlayer.Status(Buffs.RadiantFinale).RemainingTimeOrZero() < 16 &&
+            (LocalPlayer.HasStatus(Buffs.RagingStrikes, out var _, false) || !ragingEnabled))
         {
             actionID = OriginalHook(RadiantEncore);
             return true;
         }
         if (apexComboEnabled)
         {
-            if (LocalPlayer.HasStatus(Buffs.BlastArrowReady))
+            if (LocalPlayer.HasStatus(Buffs.BlastArrowReady, out var _, false))
             {
                 actionID = BlastArrow;
                 return true;
@@ -731,18 +731,18 @@ internal partial class BRD
             }
         }
 
-        if (resonantArrowEnabled && LocalPlayer.HasStatus(Buffs.ResonantArrowReady))
+        if (resonantArrowEnabled && LocalPlayer.HasStatus(Buffs.ResonantArrowReady, out var _, false))
         {
             actionID = ResonantArrow;
             return true;
         }
 
-        if (flags.HasFlag(Combo.AoE) && LocalPlayer.HasStatus(Buffs.HawksEye) && widevolleyEnemyCount >= 2)
+        if (flags.HasFlag(Combo.AoE) && LocalPlayer.HasStatus(Buffs.HawksEye, out var _, false) && widevolleyEnemyCount >= 2)
         {
             actionID = OriginalHook(WideVolley); //Uses on 2 or more. 
             return true;
         }
-        if (LocalPlayer.HasStatus(Buffs.HawksEye))
+        if (LocalPlayer.HasStatus(Buffs.HawksEye, out var _, false))
         {
             actionID = OriginalHook(StraightShot);
             return true;
@@ -957,5 +957,6 @@ internal partial class BRD
     }
     #endregion
 }
+
 
 

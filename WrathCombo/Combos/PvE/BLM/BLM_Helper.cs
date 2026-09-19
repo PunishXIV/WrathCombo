@@ -66,7 +66,7 @@ internal partial class BLM
         ActionLearned(FlareStar) && AstralSoulStacks is 6;
 
     private static float TimeSinceFirestarterBuff =>
-        LocalPlayer.HasStatus(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
+        LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
 
     private static uint FireSpam =>
         ActionReady(Fire4)
@@ -74,12 +74,12 @@ internal partial class BLM
             : Fire;
 
     private static bool CanFire3 =>
-        ActionLearned(Fire3) && LocalPlayer.HasStatus(Buffs.Firestarter) &&
+        ActionLearned(Fire3) && LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false) &&
         (AstralFireStacks < 3 || !ActionLearned(Fire4) && TimeSinceFirestarterBuff >= GCD * 3);
 
     private static bool CanFireParadox =>
         IsParadoxActive && MP.Cur >= MP.FireParadox &&
-        (!LocalPlayer.HasStatus(Buffs.Firestarter) && AstralFireStacks < 3 ||
+        (!LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false) && AstralFireStacks < 3 ||
          JustUsed(FlareStar, GCD * 4) ||
          !ActionLearned(FlareStar) && ActionReady(Despair));
 
@@ -137,7 +137,7 @@ internal partial class BLM
     }
 
     private static bool UseAoEThunder(int hpThreshold = 0, float dotRefresh = 3f) =>
-        ActionLearned(OriginalHook(Thunder2)) && LocalPlayer.HasStatus(Buffs.Thunderhead) &&
+        ActionLearned(OriginalHook(Thunder2)) && LocalPlayer.HasStatus(Buffs.Thunderhead, out var _, false) &&
         CurrentTarget.CanApplyStatus(ThunderList[OriginalHook(Thunder2)]) &&
         GetTargetHPPercent() > hpThreshold &&
         (!IsInIcePhase || JustUsedFreezeOrBlizzard || IsEndOfIcePhaseAoE || !ActionReady(Freeze)) &&
@@ -249,8 +249,8 @@ internal partial class BLM
         }
 
         if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
-            (LocalPlayer.HasStatus(Role.Buffs.Swiftcast) ||
-             LocalPlayer.HasStatus(Buffs.Triplecast) ||
+            (LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false) ||
+             LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) ||
              JustUsed(Freeze, 10f)))
         {
             actionID = Blizzard3;
@@ -296,7 +296,7 @@ internal partial class BLM
         bool allowMoving = true,
         double timeStillSeconds = 2.5,
         int hpThreshold = 0) =>
-        ActionReady(LeyLines) && !LocalPlayer.HasStatus(Buffs.LeyLines) &&
+        ActionReady(LeyLines) && !LocalPlayer.HasStatus(Buffs.LeyLines, out var _, false) &&
         !JustUsed(LeyLines) &&
         GetRemainingCharges(LeyLines) > minCharges &&
         (allowMoving || !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(timeStillSeconds)) &&
@@ -325,7 +325,7 @@ internal partial class BLM
         if (useSwiftcast &&
             ActionReady(Role.Swiftcast) && JustUsed(Despair) &&
             GetCooldownRemainingTime(Manafont) > GCD &&
-            !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+            !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
             InActionRange(Fire) && HasBattleTarget())
         {
             actionID = Role.Swiftcast;
@@ -334,9 +334,9 @@ internal partial class BLM
 
         if (useTriplecast &&
             ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
-            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast) && !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false) && !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
             InActionRange(Fire) && HasBattleTarget() &&
-            (triplecastIgnoreLeyLines || !LocalPlayer.HasStatus(Buffs.LeyLines)) &&
+            (triplecastIgnoreLeyLines || !LocalPlayer.HasStatus(Buffs.LeyLines, out var _, false)) &&
             (!triplecastRequireChargeReserve || HasTriplecastChargesForMovement()) &&
             JustUsed(Despair) && !JustUsed(Triplecast) && !JustUsed(Manafont))
         {
@@ -346,8 +346,8 @@ internal partial class BLM
 
         if (useTranspose &&
             ActionReady(Transpose) &&
-            (LocalPlayer.HasStatus(Role.Buffs.Swiftcast) ||
-             LocalPlayer.HasStatus(Buffs.Triplecast) ||
+            (LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false) ||
+             LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) ||
              transposeIncludeLowMp && !ActionLearned(Fire3) && MP.Cur < MP.FireI))
         {
             actionID = Transpose;
@@ -383,7 +383,7 @@ internal partial class BLM
         if (ActionReady(Blizzard3) && UmbralIceStacks < 3)
         {
             if (useSwiftcast &&
-                ActionReady(Role.Swiftcast) && !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+                ActionReady(Role.Swiftcast) && !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
                 HasBattleTarget() && InActionRange(Blizzard))
             {
                 actionID = Role.Swiftcast;
@@ -393,8 +393,8 @@ internal partial class BLM
             if (useTriplecast &&
                 ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
                 HasBattleTarget() && InActionRange(Blizzard) && !JustUsed(Triplecast) &&
-                !LocalPlayer.HasStatus(Role.Buffs.Swiftcast) && !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-                (triplecastIgnoreLeyLines || !LocalPlayer.HasStatus(Buffs.LeyLines)) &&
+                !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false) && !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+                (triplecastIgnoreLeyLines || !LocalPlayer.HasStatus(Buffs.LeyLines, out var _, false)) &&
                 (!triplecastRequireChargeReserve || HasTriplecastChargesForMovement()) &&
                 JustUsed(Despair) && !JustUsed(Manafont))
             {
@@ -455,9 +455,9 @@ internal partial class BLM
         }
 
         if (ActionReady(Triplecast) &&
-            !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast) &&
-            !LocalPlayer.HasStatus(Buffs.LeyLines) &&
+            !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false) &&
+            !LocalPlayer.HasStatus(Buffs.LeyLines, out var _, false) &&
             !JustUsed(Triplecast))
         {
             actionID = Triplecast;
@@ -467,24 +467,24 @@ internal partial class BLM
         if (ActionLearned(Paradox) &&
             IsInFirePhase && IsParadoxActive &&
             MP.Cur >= MP.FireParadox &&
-            !LocalPlayer.HasStatus(Buffs.Firestarter) &&
-            !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
+            !LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false) &&
+            !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false))
         {
             actionID = OriginalHook(Fire);
             return true;
         }
 
         if (ActionReady(Role.Swiftcast) &&
-            !LocalPlayer.HasStatus(Buffs.Triplecast))
+            !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false))
         {
             actionID = Role.Swiftcast;
             return true;
         }
 
         if (HasPolyglot &&
-            !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
+            !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+            !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false))
         {
             actionID = PolyglotSpell;
             return true;
@@ -501,7 +501,7 @@ internal partial class BLM
         IsMoving() && InCombat() &&
         InActionRange(Fire2) && HasBattleTarget() &&
         ActionReady(Triplecast) &&
-        !LocalPlayer.HasStatus(Buffs.Triplecast) &&
+        !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
         !JustUsed(Triplecast);
 
     private static bool UseAoEManafont() =>
@@ -544,7 +544,7 @@ internal partial class BLM
         }
 
         if (useTriplecast &&
-            !LocalPlayer.HasStatus(Buffs.Triplecast) && ActionReady(Triplecast) &&
+            !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) && ActionReady(Triplecast) &&
             HasBattleTarget() && InActionRange(Fire2) && !JustUsed(Triplecast) &&
             GetRemainingCharges(Triplecast) > triplecastHoldCharges &&
             IsUmbralHeartCapped && GetCooldownRemainingTime(Manafont) > GCD * 3)
@@ -647,15 +647,15 @@ internal partial class BLM
                   ActionReady(Despair) &&
                   TraitLevelChecked(Traits.EnhancedAstralFire) &&
                   IsInFirePhase && MP.Cur is >= 800 and < 1500 &&
-                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast)),
+                  !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false)),
 
         (Triplecast, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementTriplecast] &&
                   ActionReady(Triplecast) &&
-                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast) &&
-                  !LocalPlayer.HasStatus(Buffs.LeyLines) &&
+                  !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false) &&
+                  !LocalPlayer.HasStatus(Buffs.LeyLines, out var _, false) &&
                   !JustUsed(Triplecast)),
 
         (OriginalHook(Fire), Preset.BLM_ST_Movement,
@@ -663,35 +663,35 @@ internal partial class BLM
                   ActionReady(OriginalHook(Paradox)) &&
                   IsInFirePhase && IsParadoxActive &&
                   MP.Cur >= MP.FireParadox &&
-                  !LocalPlayer.HasStatus(Buffs.Firestarter) &&
-                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast)),
+                  !LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false) &&
+                  !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false)),
 
         (Role.Swiftcast, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementSwiftcast] &&
                   ActionReady(Role.Swiftcast) &&
-                  !LocalPlayer.HasStatus(Buffs.Triplecast)),
+                  !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false)),
 
         (Xenoglossy, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementXenoglossy] &&
                   ActionReady(Xenoglossy) &&
                   HasPolyglot &&
-                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast)),
+                  !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false)),
 
         (Fire3, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementFire3] &&
                   ActionReady(Fire3) &&
                   IsInFirePhase &&
-                  LocalPlayer.HasStatus(Buffs.Firestarter) &&
-                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast)),
+                  LocalPlayer.HasStatus(Buffs.Firestarter, out var _, false) &&
+                  !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false)),
 
         (Scathe, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[MovementScathe] &&
                   ActionReady(Scathe) &&
-                  !LocalPlayer.HasStatus(Buffs.Triplecast) &&
-                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
+                  !LocalPlayer.HasStatus(Buffs.Triplecast, out var _, false) &&
+                  !LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false))
     ];
 
     private static bool TryMovementAction(int index, ref uint actionID)
@@ -968,3 +968,4 @@ internal partial class BLM
 
     #endregion
 }
+

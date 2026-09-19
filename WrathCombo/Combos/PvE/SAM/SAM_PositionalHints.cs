@@ -24,7 +24,7 @@ internal partial class SAM
         if (TryReportOpenerPositionalHint(Opener(), TryReportSAMActionPositional))
             return;
 
-        if (LocalPlayer.HasStatus(Buffs.MeikyoShisui))
+        if (LocalPlayer.HasStatus(Buffs.MeikyoShisui, out var _, false))
         {
             ReportSAMMeikyoHints(useGekko, useKasha);
             return;
@@ -52,9 +52,9 @@ internal partial class SAM
 
     private static void ReportSAMMeikyoHints(bool useGekko, bool useKasha)
     {
-        if (useGekko && ActionLearned(Gekko) && (!HasGetsu || !LocalPlayer.HasStatus(Buffs.Fugetsu)))
+        if (useGekko && ActionLearned(Gekko) && (!HasGetsu || !LocalPlayer.HasStatus(Buffs.Fugetsu, out var _, false)))
             ReportUpcomingPositional(PositionalDirection.Rear, Gekko, 1);
-        else if (useKasha && ActionLearned(Kasha) && (!HasKa || !LocalPlayer.HasStatus(Buffs.Fuka)))
+        else if (useKasha && ActionLearned(Kasha) && (!HasKa || !LocalPlayer.HasStatus(Buffs.Fuka, out var _, false)))
             ReportUpcomingPositional(PositionalDirection.Flank, Kasha, 1);
         else if (SenCount is 3)
         {
@@ -90,7 +90,7 @@ internal partial class SAM
             ActionLearned(Shifu) &&
             ((OnTargetsFlank() || OnTargetsFront()) && !HasKa && ActionLearned(Kasha) ||
              OnTargetsRear() && HasGetsu && ActionLearned(Kasha) ||
-             !LocalPlayer.HasStatus(Buffs.Fuka) ||
+             !LocalPlayer.HasStatus(Buffs.Fuka, out var _, false) ||
              SenCount is 3 && refreshFuka ||
              !ActionLearned(Gekko)))
         {
@@ -103,7 +103,7 @@ internal partial class SAM
             (!ActionLearned(Kasha) && ActionLearned(Gekko) ||
              (OnTargetsRear() || OnTargetsFront()) && !HasGetsu && ActionLearned(Gekko) ||
              OnTargetsFlank() && HasKa && ActionLearned(Gekko) ||
-             !LocalPlayer.HasStatus(Buffs.Fugetsu) ||
+             !LocalPlayer.HasStatus(Buffs.Fugetsu, out var _, false) ||
              SenCount is 3 && refreshFugetsu))
         {
             ReportUpcomingPositional(PositionalDirection.Rear, Gekko, gcdsUntil);
@@ -130,3 +130,4 @@ internal partial class SAM
         }
     }
 }
+

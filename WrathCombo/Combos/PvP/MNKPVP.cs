@@ -1,4 +1,4 @@
-﻿using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.MNKPvP.Config;
@@ -77,16 +77,16 @@ internal static class MNKPvP
                     GetTargetHPPercent() <= MNKPvP_SmiteThreshold)
                     return PvPMelee.Smite;
                 
-                if (LocalPlayer.HasStatus(Buffs.FireResonance) && ComboAction is PouncingCoeurl)
+                if (LocalPlayer.HasStatus(Buffs.FireResonance, out var _, false) && ComboAction is PouncingCoeurl)
                     return actionID;
 
                 if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && NumberOfEnemiesInRange(RisingPhoenix) >= 1 &&
-                    (!LocalPlayer.HasStatus(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || // capped on charges
+                    (!LocalPlayer.HasStatus(Buffs.FireResonance, out var _, false) && GetRemainingCharges(RisingPhoenix) > 1 || // capped on charges
                      ComboAction is PouncingCoeurl && GetRemainingCharges(RisingPhoenix) > 0)) // use last charge to buff phantom rush
                     return OriginalHook(RisingPhoenix);
 
-                if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && !LocalPlayer.HasStatus(Buffs.EarthResonance) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95 || //Pop Riddle of earth
-                    LocalPlayer.HasStatus(Buffs.EarthResonance) && LocalPlayer.Status(Buffs.EarthResonance).RemainingTimeOrZero() <= 2) //Fire earths reply before it expires
+                if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && !LocalPlayer.HasStatus(Buffs.EarthResonance, out var _, false) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95 || //Pop Riddle of earth
+                    LocalPlayer.HasStatus(Buffs.EarthResonance, out var _, false) && LocalPlayer.Status(Buffs.EarthResonance).RemainingTimeOrZero() <= 2) //Fire earths reply before it expires
                     return OriginalHook(RiddleOfEarth);
 
                 if (IsEnabled(Preset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(Thunderclap) > 0 && !InMeleeRange())

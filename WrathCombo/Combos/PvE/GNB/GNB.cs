@@ -66,7 +66,7 @@ internal partial class GNB : Tank
             //2.4x - just use it after Burst Strike
             if (JustUsed(BurstStrike, 5f) &&
                 ActionLearned(Hypervelocity) &&
-                LocalPlayer.HasStatus(Buffs.ReadyToBlast) &&
+                LocalPlayer.HasStatus(Buffs.ReadyToBlast, out var _, false) &&
                 (!Slow || NMcd > 1.3f))
                 return Hypervelocity;
 
@@ -179,7 +179,7 @@ internal partial class GNB : Tank
             if (IsEnabled(Preset.GNB_ST_Continuation) &&
                 JustUsed(BurstStrike, 5f) &&
                 ActionLearned(Hypervelocity) &&
-                LocalPlayer.HasStatus(Buffs.ReadyToBlast) &&
+                LocalPlayer.HasStatus(Buffs.ReadyToBlast, out var _, false) &&
                 (!Slow || (IsEnabled(Preset.GNB_ST_NoMercy) && NMcd > 1.3f)))
                 return Hypervelocity;
 
@@ -291,7 +291,7 @@ internal partial class GNB : Tank
                 if (ShouldUseDoubleDown(Preset.GNB_AoE_Simple))
                     return DoubleDown;
 
-                if (ShouldUseSonicBreak(Preset.GNB_AoE_Simple) && !LocalPlayer.HasStatus(Buffs.ReadyToRaze))
+                if (ShouldUseSonicBreak(Preset.GNB_AoE_Simple) && !LocalPlayer.HasStatus(Buffs.ReadyToRaze, out var _, false))
                     return SonicBreak;
 
                 if (GunStep is 3 or 4)
@@ -369,7 +369,7 @@ internal partial class GNB : Tank
                 if (IsEnabled(Preset.GNB_AoE_SonicBreak) && CanSB &&
                     ((GNB_AoE_SonicBreak_EarlyOrLate == 0) ||
                     (GNB_AoE_SonicBreak_EarlyOrLate == 1 && LocalPlayer.Status(Buffs.ReadyToBreak).RemainingTimeOrZero() <= (GCDLength + 10.000f))) &&
-                    !LocalPlayer.HasStatus(Buffs.ReadyToRaze))
+                    !LocalPlayer.HasStatus(Buffs.ReadyToRaze, out var _, false))
                     return SonicBreak;
 
                 if (IsEnabled(Preset.GNB_AoE_Reign) &&
@@ -424,7 +424,7 @@ internal partial class GNB : Tank
             if (IsEnabled(Preset.GNB_GF_Continuation) &&
                 JustUsed(BurstStrike, 5f) &&
                 ActionLearned(Hypervelocity) &&
-                LocalPlayer.HasStatus(Buffs.ReadyToBlast) &&
+                LocalPlayer.HasStatus(Buffs.ReadyToBlast, out var _, false) &&
                 (!Slow || (IsEnabled(Preset.GNB_GF_NoMercy) && NMcd > 1.3f)))
                 return Hypervelocity;
 
@@ -769,3 +769,4 @@ internal partial class GNB : Tank
     }
     #endregion
 }
+

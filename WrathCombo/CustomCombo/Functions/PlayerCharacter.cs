@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Memory;
 using ECommons.DalamudServices;
@@ -65,11 +65,11 @@ internal abstract partial class CustomComboFunctions
     {
         return Player.Job switch
         {
-            Job.GLA or Job.PLD => LocalPlayer.HasStatus(PLD.Buffs.IronWill),
-            Job.MRD or Job.WAR => LocalPlayer.HasStatus(WAR.Buffs.Defiance),
-            Job.DRK => LocalPlayer.HasStatus(DRK.Buffs.Grit),
-            Job.GNB => LocalPlayer.HasStatus(GNB.Buffs.RoyalGuard),
-            Job.BLU => LocalPlayer.HasStatus(BLU.Buffs.TankMimicry),
+            Job.GLA or Job.PLD => LocalPlayer.HasStatus(PLD.Buffs.IronWill, out var _, false),
+            Job.MRD or Job.WAR => LocalPlayer.HasStatus(WAR.Buffs.Defiance, out var _, false),
+            Job.DRK => LocalPlayer.HasStatus(DRK.Buffs.Grit, out var _, false),
+            Job.GNB => LocalPlayer.HasStatus(GNB.Buffs.RoyalGuard, out var _, false),
+            Job.BLU => LocalPlayer.HasStatus(BLU.Buffs.TankMimicry, out var _, false),
             _ => false
         };
     }

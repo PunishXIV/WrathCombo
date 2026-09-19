@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Statuses;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -48,7 +49,7 @@ internal partial class AST : Healer
             #region OGCDs
 
             if (ActionReady(Lightspeed) && InCombat() && IsMoving() &&
-                !LocalPlayer.HasStatus(Buffs.Lightspeed))
+                !LocalPlayer.HasStatus(Buffs.Lightspeed, out Dalamud.Game.ClientState.Statuses.IStatus? _))
                 return Lightspeed;
 
             if (CanWeave() && InCombat())
@@ -71,20 +72,20 @@ internal partial class AST : Healer
 
                 //Divination
                 if (ActionReady(Divination) && HasBattleTarget() &&
-                    !HasDivination && !LocalPlayer.HasStatus(Buffs.Divining) &&
+                    !HasDivination && !LocalPlayer.HasStatus(Buffs.Divining, out IStatus? _) &&
                     (GetTargetHPPercent() >= 10 || InBossEncounter()) &&
                     StandStill)
                     return Divination;
 
                 //Earthly Star
-                if (!LocalPlayer.HasStatus(Buffs.EarthlyDominance) &&
+                if (!LocalPlayer.HasStatus(Buffs.EarthlyDominance, out IStatus? _) &&
                     ActionReady(EarthlyStar) && StandStill &&
                     (GetTargetHPPercent() >= 10 || InBossEncounter()) &&
                     IsOffCooldown(EarthlyStar))
                     return EarthlyStar.Retarget(replacedActions, SimpleTarget.Self);
 
                 //Oracle
-                if (LocalPlayer.HasStatus(Buffs.Divining))
+                if (LocalPlayer.HasStatus(Buffs.Divining, out IStatus? _))
                     return Oracle;
             }
             #endregion
@@ -92,7 +93,7 @@ internal partial class AST : Healer
             #region GCDS
             var dotAction = OriginalHook(Combust);
             CombustList.TryGetValue(dotAction, out var dotDebuffID);
-            var target = IsMoving() && !LocalPlayer.HasStatus(Buffs.Lightspeed)
+            var target = IsMoving() && !LocalPlayer.HasStatus(Buffs.Lightspeed, out IStatus? _)
                 ? SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 30, 99)
                 : SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 99);
             
@@ -125,7 +126,7 @@ internal partial class AST : Healer
 
             #region OGCDs
             if (ActionReady(Lightspeed) && IsMoving() &&
-                !LocalPlayer.HasStatus(Buffs.Lightspeed))
+                !LocalPlayer.HasStatus(Buffs.Lightspeed, out IStatus? _))
                 return Lightspeed;
 
             if (InCombat() && CanWeave())
@@ -148,18 +149,18 @@ internal partial class AST : Healer
 
                 //Divination
                 if (HasBattleTarget() && ActionReady(Divination) && StandStill &&
-                    !LocalPlayer.HasStatus(Buffs.Divining) && !HasDivination &&
+                    !LocalPlayer.HasStatus(Buffs.Divining, out IStatus? _) && !HasDivination &&
                     (GetTargetHPPercent() >= 10 || InBossEncounter()))
                     return Divination;
 
                 //Earthly Star
                 if (ActionLearned(EarthlyStar) && IsOffCooldown(EarthlyStar) &&
-                    !LocalPlayer.HasStatus(Buffs.EarthlyDominance) && StandStill &&
+                    !LocalPlayer.HasStatus(Buffs.EarthlyDominance, out IStatus? _) && StandStill &&
                     (GetTargetHPPercent() >= 10 || InBossEncounter()))
                     return EarthlyStar.Retarget(actions, SimpleTarget.Self);
 
                 //Oracle
-                if (LocalPlayer.HasStatus(Buffs.Divining))
+                if (LocalPlayer.HasStatus(Buffs.Divining, out IStatus? _))
                     return Oracle;
             }
             #endregion
@@ -167,7 +168,7 @@ internal partial class AST : Healer
             #region GCDs
 
             if (ActionReady(Macrocosmos) && StandStill && !InBossEncounter() &&
-                !LocalPlayer.HasStatus(Buffs.Macrocosmos))
+                !LocalPlayer.HasStatus(Buffs.Macrocosmos, out IStatus? _))
                 return Macrocosmos;
 
             var dotAction = OriginalHook(Combust);
@@ -254,7 +255,7 @@ internal partial class AST : Healer
 
             #region OGCDs
             if (IsEnabled(Preset.AST_DPS_LightSpeed) && ActionReady(Lightspeed) &&
-                InCombat() && IsMoving() && !LocalPlayer.HasStatus(Buffs.Lightspeed) &&
+                InCombat() && IsMoving() && !LocalPlayer.HasStatus(Buffs.Lightspeed, out IStatus? _) &&
                 GetTargetHPPercent() > AST_ST_DPS_LightSpeedOption && //Hp Check
                 (IsNotEnabled(Preset.AST_DPS_LightSpeedHold) || GetRemainingCharges(Lightspeed) >= 2)) //Hold for 2 charges
                 return Lightspeed;
@@ -285,20 +286,20 @@ internal partial class AST : Healer
 
                 //Lightspeed Burst
                 if (IsEnabled(Preset.AST_DPS_LightspeedBurst) && IsEnabled(Preset.AST_DPS_Divination) && ActionReady(Lightspeed) &&
-                    !LocalPlayer.HasStatus(Buffs.Lightspeed) && DivinationCD < 5 && WaitGCDs)
+                    !LocalPlayer.HasStatus(Buffs.Lightspeed, out IStatus? _) && DivinationCD < 5 && WaitGCDs)
                     return Lightspeed;
 
                 //Divination
                 if (IsEnabled(Preset.AST_DPS_Divination) && ActionReady(Divination) &&
                     !HasDivination && HasBattleTarget() &&
-                    !LocalPlayer.HasStatus(Buffs.Divining) &&
+                    !LocalPlayer.HasStatus(Buffs.Divining, out IStatus? _) &&
                     GetTargetHPPercent() > divHPThreshold &&
                     (WaitGCDs || StandStill))
                     return Divination;
 
                 //Earthly Star
                 if (IsEnabled(Preset.AST_ST_DPS_EarthlyStar) && IsOffCooldown(EarthlyStar) &&
-                    ActionLearned(EarthlyStar) && !LocalPlayer.HasStatus(Buffs.EarthlyDominance) &&
+                    ActionLearned(EarthlyStar) && !LocalPlayer.HasStatus(Buffs.EarthlyDominance, out IStatus? _) &&
                     (WaitGCDs || StandStill))
                     return AST_ST_DPS_EarthlyStarSubOption == 1
                         ? EarthlyStar.Retarget(replacedActions, SimpleTarget.Self)
@@ -306,7 +307,7 @@ internal partial class AST : Healer
 
                 //Stellar Detonation
                 if (IsEnabled(Preset.AST_ST_DPS_StellarDetonation) &&
-                    LocalPlayer.HasStatus(Buffs.GiantDominance) &&
+                    LocalPlayer.HasStatus(Buffs.GiantDominance, out IStatus? _) &&
                     HasBattleTarget() &&
                     GetTargetHPPercent() <= AST_ST_DPS_StellarDetonation_Threshold &&
                     (AST_ST_DPS_StellarDetonation_SubOption == 1 || !InBossEncounter()))
@@ -314,7 +315,7 @@ internal partial class AST : Healer
 
                 //Oracle
                 if (IsEnabled(Preset.AST_DPS_Oracle) &&
-                    LocalPlayer.HasStatus(Buffs.Divining))
+                    LocalPlayer.HasStatus(Buffs.Divining, out IStatus? _))
                     return Oracle;
             }
             #endregion
@@ -330,7 +331,7 @@ internal partial class AST : Healer
                 var target = SimpleTarget.DottableEnemy(
                     dotAction, dotDebuffID, 0, 30, 99);
                 if (IsEnabled(Preset.AST_ST_DPS_Move_DoT) &&
-                    !LocalPlayer.HasStatus(Buffs.Lightspeed) &&
+                    !LocalPlayer.HasStatus(Buffs.Lightspeed, out IStatus? _) &&
                     target is not null)
                     return dotAction.Retarget(replacedActions, target);
             }
@@ -391,7 +392,7 @@ internal partial class AST : Healer
 
             #region OGCDs
             if (IsEnabled(Preset.AST_AOE_LightSpeed) && ActionReady(Lightspeed) &&
-                IsMoving() && InCombat() && !LocalPlayer.HasStatus(Buffs.Lightspeed) &&
+                IsMoving() && InCombat() && !LocalPlayer.HasStatus(Buffs.Lightspeed, out IStatus? _) &&
                 GetTargetHPPercent() > AST_AOE_LightSpeedOption &&
                 (IsNotEnabled(Preset.AST_AOE_LightSpeedHold) || GetRemainingCharges(Lightspeed) >= 2))
                 return Lightspeed;
@@ -422,14 +423,14 @@ internal partial class AST : Healer
 
                 //Lightspeed Burst
                 if (IsEnabled(Preset.AST_AOE_LightspeedBurst) && IsEnabled(Preset.AST_AOE_Divination) && ActionReady(Lightspeed) &&
-                    !LocalPlayer.HasStatus(Buffs.Lightspeed) &&
+                    !LocalPlayer.HasStatus(Buffs.Lightspeed, out IStatus? _) &&
                     DivinationCD < 5 && WaitGCDs)
                     return Lightspeed;
 
                 //Divination
                 if (IsEnabled(Preset.AST_AOE_Divination) && ActionReady(Divination) &&
                     !HasDivination && HasBattleTarget() &&
-                    !LocalPlayer.HasStatus(Buffs.Divining) &&
+                    !LocalPlayer.HasStatus(Buffs.Divining, out IStatus? _) &&
                     GetTargetHPPercent() > divHPThreshold &&
                     (WaitGCDs || StandStill))
                     return Divination;
@@ -437,7 +438,7 @@ internal partial class AST : Healer
                 //Earthly Star
                 if (IsEnabled(Preset.AST_AOE_DPS_EarthlyStar) &&
                     ActionLearned(EarthlyStar) && IsOffCooldown(EarthlyStar) &&
-                    !LocalPlayer.HasStatus(Buffs.EarthlyDominance) &&
+                    !LocalPlayer.HasStatus(Buffs.EarthlyDominance, out IStatus? _) &&
                     (WaitGCDs || StandStill))
                     return AST_AOE_DPS_EarthlyStarSubOption == 1
                         ? EarthlyStar.Retarget(actions, SimpleTarget.Self)
@@ -445,14 +446,14 @@ internal partial class AST : Healer
 
                 //Stellar Detonation
                 if (IsEnabled(Preset.AST_AOE_DPS_StellarDetonation) &&
-                    LocalPlayer.HasStatus(Buffs.GiantDominance) && HasBattleTarget() &&
+                    LocalPlayer.HasStatus(Buffs.GiantDominance, out IStatus? _) && HasBattleTarget() &&
                     GetTargetHPPercent() <= AST_AOE_DPS_StellarDetonation_Threshold &&
                     (AST_AOE_DPS_StellarDetonation_SubOption == 1 || !InBossEncounter()))
                     return StellarDetonation;
 
                 //Oracle
                 if (IsEnabled(Preset.AST_AOE_Oracle) &&
-                    LocalPlayer.HasStatus(Buffs.Divining))
+                    LocalPlayer.HasStatus(Buffs.Divining, out IStatus? _))
                     return Oracle;
             }
             #endregion
@@ -461,7 +462,7 @@ internal partial class AST : Healer
 
             //MacroCosmos
             if (IsEnabled(Preset.AST_AOE_DPS_MacroCosmos) && ActionReady(Macrocosmos) &&
-                InCombat() && StandStill && !LocalPlayer.HasStatus(Buffs.Macrocosmos) &&
+                InCombat() && StandStill && !LocalPlayer.HasStatus(Buffs.Macrocosmos, out IStatus? _) &&
                 (AST_AOE_DPS_MacroCosmos_SubOption == 1 || !InBossEncounter()))
                 return Macrocosmos;
 
@@ -529,8 +530,8 @@ internal partial class AST : Healer
             }
 
             if (ActionReady(AspectedBenefic) &&
-                (!healTarget.HasStatus(Buffs.AspectedBenefic) ||
-                 !healTarget.HasStatus(Buffs.NeutralSectShield) && LocalPlayer.HasStatus(Buffs.NeutralSect)))
+                (!healTarget.HasStatus(Buffs.AspectedBenefic, out IStatus? _) ||
+                 !healTarget.HasStatus(Buffs.NeutralSectShield, out IStatus? _) && LocalPlayer.HasStatus(Buffs.NeutralSect, out IStatus? _)))
                 return OriginalHook(AspectedBenefic).RetargetIfEnabled(actionID);
 
             if ((HasArrow || HasBole) &&
@@ -540,7 +541,7 @@ internal partial class AST : Healer
             if (HasEwer || HasSpire)
                 return OriginalHook(Play3).RetargetIfEnabled(actionID);
 
-            if (ActionReady(CelestialIntersection) && !LocalPlayer.HasStatus(Buffs.Intersection) && GetRemainingCharges(EssentialDignity) <= GetRemainingCharges(CelestialIntersection))
+            if (ActionReady(CelestialIntersection) && !LocalPlayer.HasStatus(Buffs.Intersection, out IStatus? _) && GetRemainingCharges(EssentialDignity) <= GetRemainingCharges(CelestialIntersection))
                 return CelestialIntersection.RetargetIfEnabled(actionID);
 
             if (ActionReady(EssentialDignity))
@@ -570,10 +571,10 @@ internal partial class AST : Healer
             if (OriginalHook(Macrocosmos) == MicroCosmos && GetPartyAvgHPPercent() < 50)
                 return MicroCosmos;
 
-            if (LocalPlayer.HasStatus(Buffs.GiantDominance))
+            if (LocalPlayer.HasStatus(Buffs.GiantDominance, out IStatus? _))
                 return StellarDetonation;
 
-            if (LocalPlayer.HasStatus(Buffs.HoroscopeHelios))
+            if (LocalPlayer.HasStatus(Buffs.HoroscopeHelios, out IStatus? _))
                 return HoroscopeHeal;
 
             if (ActionReady(OriginalHook(CelestialOpposition)))
@@ -687,13 +688,13 @@ internal partial class AST : Healer
             #endregion
 
             //Horoscope check to trigger the ability to do the larger Horoscope Heal
-            if (LocalPlayer.HasStatus(Buffs.Horoscope))
-                return LocalPlayer.HasStatus(Buffs.HeliosConjunction) || LocalPlayer.HasStatus(Buffs.AspectedHelios)
+            if (LocalPlayer.HasStatus(Buffs.Horoscope, out IStatus? _))
+                return LocalPlayer.HasStatus(Buffs.HeliosConjunction, out IStatus? _) || LocalPlayer.HasStatus(Buffs.AspectedHelios, out IStatus? _)
                     ? Helios
                     : OriginalHook(AspectedHelios);
 
             //Check for Suntouched to finish the combo after Neutral sect regardless of priorities
-            if (IsEnabled(Preset.AST_AoE_Heals_NeutralSect) && LocalPlayer.HasStatus(Buffs.Suntouched) && CanWeave())
+            if (IsEnabled(Preset.AST_AoE_Heals_NeutralSect) && LocalPlayer.HasStatus(Buffs.Suntouched, out IStatus? _) && CanWeave())
                 return SunSign;
 
             if (IsEnabled(Preset.AST_AoE_Heals_Lucid) &&
@@ -752,7 +753,7 @@ internal partial class AST : Healer
     {
         protected internal override Preset Preset => Preset.AST_Lightspeed_Protection;
         protected override uint Invoke(uint actionID) =>
-            actionID is Lightspeed && LocalPlayer.HasStatus(Buffs.Lightspeed)
+            actionID is Lightspeed && LocalPlayer.HasStatus(Buffs.Lightspeed, out IStatus? _)
                 ? All.Cease
                 : actionID;
     }
@@ -784,7 +785,7 @@ internal partial class AST : Healer
 
             if (AST_Mit_ST_Options[0] &&
                 ActionReady(CelestialIntersection) &&
-                !healStack.HasStatus(Buffs.Intersection))
+                !healStack.HasStatus(Buffs.Intersection, out IStatus? _))
                 return IsEnabled(Preset.AST_Retargets_CelestialIntersection)
                     ? CelestialIntersection.Retarget(Exaltation, healStack)
                     : CelestialIntersection;
@@ -813,7 +814,7 @@ internal partial class AST : Healer
             if (ActionReady(OriginalHook(NeutralSect)))
                 return OriginalHook(NeutralSect);
 
-            if (LocalPlayer.HasStatus(Buffs.NeutralSect) && !LocalPlayer.HasStatus(Buffs.NeutralSectShield))
+            if (LocalPlayer.HasStatus(Buffs.NeutralSect, out IStatus? _) && !LocalPlayer.HasStatus(Buffs.NeutralSectShield, out IStatus? _))
                 return OriginalHook(AspectedHelios);
 
             return actionID;

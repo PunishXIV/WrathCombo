@@ -412,7 +412,7 @@ internal static class SimpleTarget
     public static IBattleChara? StunnableEnemy(int reStunCheck = 3) =>
         GetValidEnemies(3)
             .Where(x => !x.IsBoss() &&
-                        !x.HasStatus(All.Debuffs.Stun) &&
+                        !x.HasStatus(All.Debuffs.Stun, out var _, false) &&
                         (ICDTracker.StatusIsExpired(All.Debuffs.Stun,
                              x.GameObjectId) ||
                          ICDTracker.Trackers.FirstOrDefault(y =>
@@ -554,7 +554,7 @@ internal static class SimpleTarget
     public static IBattleChara? KardionTarget =>
         GetPartyMembers()
             .Select(x => x.BattleChara)
-            .FirstOrDefault(x => x is not null && x.HasStatus(SGE.Buffs.Kardion));
+            .FirstOrDefault(x => x is not null && x.HasStatus(SGE.Buffs.Kardion, out var _, false));
 
     public static IBattleChara? AnyDeadPartyMember =>
         GetPartyMembers()

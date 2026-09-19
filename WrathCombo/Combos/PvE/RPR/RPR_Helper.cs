@@ -19,36 +19,36 @@ internal partial class RPR
 
     private static bool UseShadowOfDeath(int dotRefresh = 8, bool trashOnly = true, bool arcaneCircleEnabled = true)
     {
-        if (ActionLearned(ShadowOfDeath) && !LocalPlayer.HasStatus(Buffs.SoulReaver) &&
-            !LocalPlayer.HasStatus(Buffs.Executioner) && !LocalPlayer.HasStatus(Buffs.PerfectioParata) &&
-            !LocalPlayer.HasStatus(Buffs.ImmortalSacrifice) && !IsComboExpiring(3) &&
+        if (ActionLearned(ShadowOfDeath) && !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) &&
+            !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) && !LocalPlayer.HasStatus(Buffs.PerfectioParata, out var _, false) &&
+            !LocalPlayer.HasStatus(Buffs.ImmortalSacrifice, out var _, false) && !IsComboExpiring(3) &&
             CurrentTarget.CanApplyStatus(Debuffs.DeathsDesign) &&
             !JustUsed(ShadowOfDeath) && InActionRange(ShadowOfDeath))
         {
             float ddRemaining = CurrentTarget.Status(Debuffs.DeathsDesign).RemainingTimeOrZero();
-            bool deathsDesignMissing = !CurrentTarget.HasStatus(Debuffs.DeathsDesign);
+            bool deathsDesignMissing = !CurrentTarget.HasStatus(Debuffs.DeathsDesign, out var _, false);
 
             if (trashOnly && !InBossEncounter() &&
-                !LocalPlayer.HasStatus(Buffs.Enshrouded) &&
+                !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) &&
                 ddRemaining <= dotRefresh)
                 return true;
 
             if (!trashOnly || InBossEncounter() || !arcaneCircleEnabled)
             {
                 //Pre-burst
-                if (ActionLearned(PlentifulHarvest) && !LocalPlayer.HasStatus(Buffs.Enshrouded) &&
+                if (ActionLearned(PlentifulHarvest) && !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) &&
                     UsesBurstAlignment && AcCD <= 9f + GCD * 2 &&
                     ddRemaining < 30)
                     return true;
 
                 //Double enshroud
-                if (ActionLearned(PlentifulHarvest) && LocalPlayer.HasStatus(Buffs.Enshrouded) &&
+                if (ActionLearned(PlentifulHarvest) && LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) &&
                     AcCD <= GCD && Lemure is 4 &&
                     (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
                 //lvl 88+ general use
-                if (ActionLearned(PlentifulHarvest) && !LocalPlayer.HasStatus(Buffs.Enshrouded) &&
+                if (ActionLearned(PlentifulHarvest) && !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) &&
                     ddRemaining <= dotRefresh &&
                     (deathsDesignMissing || AcCD > GCD * 8 || IsOffCooldown(ArcaneCircle)))
                     return true;
@@ -75,7 +75,7 @@ internal partial class RPR
         bool allowHarpeWhileMoving = true)
     {
         if (useHarvestMoon &&
-            ActionReady(HarvestMoon) && LocalPlayer.HasStatus(Buffs.Soulsow))
+            ActionReady(HarvestMoon) && LocalPlayer.HasStatus(Buffs.Soulsow, out var _, false))
             return HarvestMoon;
 
         if (IsPerfectioReady && InActionRange(PerfectioAction) &&
@@ -85,13 +85,13 @@ internal partial class RPR
         if (useRangedFiller &&
             ActionReady(OriginalHook(Harpe)))
         {
-            if (LocalPlayer.HasStatus(Buffs.Enshrouded) && Lemure is 1 &&
+            if (LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) && Lemure is 1 &&
                 ActionLearned(Communio))
                 return Communio;
 
-            if (enhancedHarpeOnly && LocalPlayer.HasStatus(Buffs.EnhancedHarpe) ||
+            if (enhancedHarpeOnly && LocalPlayer.HasStatus(Buffs.EnhancedHarpe, out var _, false) ||
                 (!enhancedHarpeOnly || allowHarpeWhileMoving) &&
-                (!IsMoving() || LocalPlayer.HasStatus(Buffs.EnhancedHarpe)))
+                (!IsMoving() || LocalPlayer.HasStatus(Buffs.EnhancedHarpe, out var _, false)))
                 return OriginalHook(Harpe);
         }
 
@@ -139,23 +139,23 @@ internal partial class RPR
         InBossEncounter();
 
     private static bool InNormalRotation =>
-        !LocalPlayer.HasStatus(Buffs.Enshrouded) && !LocalPlayer.HasStatus(Buffs.SoulReaver) &&
-        !LocalPlayer.HasStatus(Buffs.Executioner) && !LocalPlayer.HasStatus(Buffs.ImmortalSacrifice) &&
-        !LocalPlayer.HasStatus(Buffs.IdealHost) && !LocalPlayer.HasStatus(Buffs.PerfectioParata);
+        !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) && !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) && !LocalPlayer.HasStatus(Buffs.ImmortalSacrifice, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.IdealHost, out var _, false) && !LocalPlayer.HasStatus(Buffs.PerfectioParata, out var _, false);
 
     private static bool UseEnshroud(bool onAoE = false)
     {
         if (onAoE && IsComboExpiring(6))
             return false;
 
-        if ((ActionReady(Enshroud) || LocalPlayer.HasStatus(Buffs.IdealHost)) &&
-            !LocalPlayer.HasStatus(Buffs.SoulReaver) && !LocalPlayer.HasStatus(Buffs.Executioner) && HasBattleTarget() &&
-            !LocalPlayer.HasStatus(Buffs.PerfectioParata) && !LocalPlayer.HasStatus(Buffs.Enshrouded))
+        if ((ActionReady(Enshroud) || LocalPlayer.HasStatus(Buffs.IdealHost, out var _, false)) &&
+            !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) && !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) && HasBattleTarget() &&
+            !LocalPlayer.HasStatus(Buffs.PerfectioParata, out var _, false) && !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false))
         {
             if (!ActionLearned(PlentifulHarvest))
                 return true;
 
-            if (LocalPlayer.HasStatus(Buffs.ArcaneCircle))
+            if (LocalPlayer.HasStatus(Buffs.ArcaneCircle, out var _, false))
                 return true;
 
             if (ActionLearned(PlentifulHarvest) &&
@@ -166,11 +166,11 @@ internal partial class RPR
                 JustUsed(PlentifulHarvest, 5))
                 return true;
 
-            if (!LocalPlayer.HasStatus(Buffs.ArcaneCircle) && !IsDebuffExpiring(5) &&
+            if (!LocalPlayer.HasStatus(Buffs.ArcaneCircle, out var _, false) && !IsDebuffExpiring(5) &&
                 AcCD.InRange(49, 66))
                 return true;
 
-            if (!LocalPlayer.HasStatus(Buffs.ArcaneCircle) && !IsDebuffExpiring(5) &&
+            if (!LocalPlayer.HasStatus(Buffs.ArcaneCircle, out var _, false) && !IsDebuffExpiring(5) &&
                 Soul >= 90)
                 return true;
         }
@@ -200,7 +200,7 @@ internal partial class RPR
 
     private static bool UseTrueNorthForGluttony(bool advanced = false, int tnChargePool = 0) =>
         !InPostBurstSequence &&
-        !LocalPlayer.HasStatus(Buffs.Enshrouded) &&
+        !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) &&
         ActionLearned(Gluttony) && GetCooldownRemainingTime(Gluttony) <= GCD && Role.CanTrueNorth() &&
         (!advanced || GetRemainingCharges(Role.TrueNorth) > tnChargePool);
 
@@ -246,7 +246,7 @@ internal partial class RPR
         bool useArcaneCircleBoss = true,
         bool arcaneCircleEnabled = true,
         int arcaneCircleBossOption = 0) =>
-        LocalPlayer.HasStatus(Buffs.Enshrouded) && LocalPlayer.HasStatus(Buffs.Oblatio) &&
+        LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) && LocalPlayer.HasStatus(Buffs.Oblatio, out var _, false) &&
         (onAoE
             ? Lemure is 2 && VoidShroud is 1
             : Lemure <= 4) &&
@@ -258,14 +258,14 @@ internal partial class RPR
          !arcaneCircleEnabled);
 
     private static bool UseLemure(bool onAoE = false) =>
-        LocalPlayer.HasStatus(Buffs.Enshrouded) && VoidShroud >= 2 &&
+        LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) && VoidShroud >= 2 &&
         ActionLearned(onAoE ? LemuresScythe : LemuresSlice) &&
         (!onAoE || InActionRange(OriginalHook(GrimSwathe)));
 
     private static bool UseEnshroudWeaves(ref uint actionID, bool onAoE, bool sacrificium = true, bool lemure = true,
         bool useArcaneCircleBoss = true, bool arcaneCircleEnabled = true, int arcaneCircleBossOption = 0)
     {
-        if (!LocalPlayer.HasStatus(Buffs.Enshrouded))
+        if (!LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false))
             return false;
 
         if (sacrificium && UseSacrificium(onAoE, useArcaneCircleBoss, arcaneCircleEnabled, arcaneCircleBossOption))
@@ -291,7 +291,7 @@ internal partial class RPR
         ActionLearned(actionId) && (HasCharges(actionId) || GetCooldownRemainingTime(actionId) <= GCD);
 
     private static bool IsPerfectioReady =>
-        LocalPlayer.HasStatus(Buffs.PerfectioParata) && ActionLearned(Perfectio);
+        LocalPlayer.HasStatus(Buffs.PerfectioParata, out var _, false) && ActionLearned(Perfectio);
 
     private static uint PerfectioAction =>
         WithinGCD(Perfectio) ? Perfectio : OriginalHook(Communio);
@@ -353,8 +353,8 @@ internal partial class RPR
         if (!InPostBurstSequence)
             return 0;
 
-        if (LocalPlayer.HasStatus(Buffs.SoulReaver) || LocalPlayer.HasStatus(Buffs.Executioner) ||
-            LocalPlayer.HasStatus(Buffs.ImmortalSacrifice))
+        if (LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) || LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) ||
+            LocalPlayer.HasStatus(Buffs.ImmortalSacrifice, out var _, false))
             return 0;
 
         if (ActionLearned(onAoE ? WhorlOfDeath : ShadowOfDeath) &&
@@ -371,30 +371,30 @@ internal partial class RPR
     }
 
     private static bool HasImmortalSacrificeStacks =>
-        LocalPlayer.HasStatus(Buffs.ImmortalSacrifice) && LocalPlayer.Status(Buffs.ImmortalSacrifice).Stacks > 0;
+        LocalPlayer.HasStatus(Buffs.ImmortalSacrifice, out var _, false) && LocalPlayer.Status(Buffs.ImmortalSacrifice).Stacks > 0;
 
     private static bool UsePlentifulHarvest() =>
-        !LocalPlayer.HasStatus(Buffs.Enshrouded) && !LocalPlayer.HasStatus(Buffs.SoulReaver) &&
-        !LocalPlayer.HasStatus(Buffs.Executioner) && HasImmortalSacrificeStacks &&
+        !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) && !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) && HasImmortalSacrificeStacks &&
         (LocalPlayer.Status(Buffs.BloodsownCircle).RemainingTimeOrZero() <= 1 || JustUsed(Communio));
 
     private static bool UseWhorlOfDeath(int refreshThreshold = 6, int hpThreshold = 0) =>
         ActionLearned(WhorlOfDeath) && InActionRange(WhorlOfDeath) &&
         CurrentTarget.CanApplyStatus(Debuffs.DeathsDesign) &&
         CurrentTarget.Status(Debuffs.DeathsDesign).RemainingTimeOrZero() < refreshThreshold &&
-        !LocalPlayer.HasStatus(Buffs.SoulReaver) && !LocalPlayer.HasStatus(Buffs.Executioner) &&
+        !LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) && !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false) &&
         GetTargetHPPercent() > hpThreshold;
 
     private static bool UseGuillotine(bool enshroudEnabled = true) =>
         !IsShroudOvercapping(enshroudEnabled, true) &&
-        (LocalPlayer.HasStatus(Buffs.SoulReaver) || LocalPlayer.HasStatus(Buffs.Executioner)) &&
-        !LocalPlayer.HasStatus(Buffs.Enshrouded) && ActionLearned(Guillotine) &&
+        (LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) || LocalPlayer.HasStatus(Buffs.Executioner, out var _, false)) &&
+        !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) && ActionLearned(Guillotine) &&
         InActionRange(OriginalHook(Guillotine));
 
     private static bool UseGibbetGallowsGCD(bool enshroudEnabled = true) =>
         !IsShroudOvercapping(enshroudEnabled) &&
-        ActionLearned(Gibbet) && !LocalPlayer.HasStatus(Buffs.Enshrouded) &&
-        (LocalPlayer.HasStatus(Buffs.SoulReaver) || LocalPlayer.HasStatus(Buffs.Executioner));
+        ActionLearned(Gibbet) && !LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false) &&
+        (LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) || LocalPlayer.HasStatus(Buffs.Executioner, out var _, false));
 
     private static bool UseGibbetGallows(ref uint actionID,
         int positionalChoice = 1,
@@ -403,9 +403,9 @@ internal partial class RPR
         int tnChargePool = 0,
         bool holdTnCharge = false)
     {
-        bool neitherEnhanced = !LocalPlayer.HasStatus(Buffs.EnhancedGibbet) && !LocalPlayer.HasStatus(Buffs.EnhancedGallows);
+        bool neitherEnhanced = !LocalPlayer.HasStatus(Buffs.EnhancedGibbet, out var _, false) && !LocalPlayer.HasStatus(Buffs.EnhancedGallows, out var _, false);
 
-        if (LocalPlayer.HasStatus(Buffs.EnhancedGibbet) ||
+        if (LocalPlayer.HasStatus(Buffs.EnhancedGibbet, out var _, false) ||
             !useSimpleTrueNorth && positionalChoice is 1 && neitherEnhanced)
         {
             if (useSimpleTrueNorth && Role.CanTrueNorth() && !OnTargetsFlank() || useDynamicTrueNorth &&
@@ -421,7 +421,7 @@ internal partial class RPR
             return true;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.EnhancedGallows) ||
+        if (LocalPlayer.HasStatus(Buffs.EnhancedGallows, out var _, false) ||
             useSimpleTrueNorth && neitherEnhanced ||
             !useSimpleTrueNorth && positionalChoice is 0 && neitherEnhanced)
         {
@@ -443,7 +443,7 @@ internal partial class RPR
 
     private static bool UseEnshroudComboGCD(ref uint actionID, bool onAoE, bool communio = true, bool reaping = true)
     {
-        if (!LocalPlayer.HasStatus(Buffs.Enshrouded))
+        if (!LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false))
             return false;
 
         if (onAoE)
@@ -469,15 +469,15 @@ internal partial class RPR
             return true;
         }
 
-        if (reaping && LocalPlayer.HasStatus(Buffs.EnhancedVoidReaping))
+        if (reaping && LocalPlayer.HasStatus(Buffs.EnhancedVoidReaping, out var _, false))
         {
             actionID = OriginalHook(Gibbet);
             return true;
         }
 
         if (reaping &&
-            (LocalPlayer.HasStatus(Buffs.EnhancedCrossReaping) ||
-             !LocalPlayer.HasStatus(Buffs.EnhancedCrossReaping) && !LocalPlayer.HasStatus(Buffs.EnhancedVoidReaping)))
+            (LocalPlayer.HasStatus(Buffs.EnhancedCrossReaping, out var _, false) ||
+             !LocalPlayer.HasStatus(Buffs.EnhancedCrossReaping, out var _, false) && !LocalPlayer.HasStatus(Buffs.EnhancedVoidReaping, out var _, false)))
         {
             actionID = OriginalHook(Gallows);
             return true;
@@ -488,10 +488,10 @@ internal partial class RPR
 
     private static bool TryBloodStalkGrimSwatheEnshroudWeaves(ref uint actionID)
     {
-        if (!LocalPlayer.HasStatus(Buffs.Enshrouded))
+        if (!LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false))
             return false;
 
-        if (Lemure is 2 && LocalPlayer.HasStatus(Buffs.Oblatio))
+        if (Lemure is 2 && LocalPlayer.HasStatus(Buffs.Oblatio, out var _, false))
         {
             actionID = OriginalHook(Gluttony);
             return true;
@@ -511,13 +511,13 @@ internal partial class RPR
     {
         bool onAoE = actionID is GrimSwathe;
 
-        if (LocalPlayer.HasStatus(Buffs.PerfectioParata))
+        if (LocalPlayer.HasStatus(Buffs.PerfectioParata, out var _, false))
         {
             actionID = OriginalHook(Communio);
             return true;
         }
 
-        if (!LocalPlayer.HasStatus(Buffs.Enshrouded))
+        if (!LocalPlayer.HasStatus(Buffs.Enshrouded, out var _, false))
             return false;
 
         if (Lemure is 1 && VoidShroud is 0 && ActionLearned(Communio))
@@ -526,7 +526,7 @@ internal partial class RPR
             return true;
         }
 
-        if (Lemure is 2 && VoidShroud is 1 && LocalPlayer.HasStatus(Buffs.Oblatio))
+        if (Lemure is 2 && VoidShroud is 1 && LocalPlayer.HasStatus(Buffs.Oblatio, out var _, false))
         {
             actionID = OriginalHook(Gluttony);
             return true;
@@ -550,14 +550,14 @@ internal partial class RPR
             return false;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.EnhancedVoidReaping))
+        if (LocalPlayer.HasStatus(Buffs.EnhancedVoidReaping, out var _, false))
         {
             actionID = OriginalHook(Gibbet);
             return true;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.EnhancedCrossReaping) ||
-            !LocalPlayer.HasStatus(Buffs.EnhancedCrossReaping) && !LocalPlayer.HasStatus(Buffs.EnhancedVoidReaping))
+        if (LocalPlayer.HasStatus(Buffs.EnhancedCrossReaping, out var _, false) ||
+            !LocalPlayer.HasStatus(Buffs.EnhancedCrossReaping, out var _, false) && !LocalPlayer.HasStatus(Buffs.EnhancedVoidReaping, out var _, false))
         {
             actionID = OriginalHook(Gallows);
             return true;
@@ -571,7 +571,7 @@ internal partial class RPR
         if (IsShroudOvercapping(enshroudEnabled, actionID is GrimSwathe))
             return false;
 
-        if (!LocalPlayer.HasStatus(Buffs.SoulReaver) && !LocalPlayer.HasStatus(Buffs.Executioner))
+        if (!LocalPlayer.HasStatus(Buffs.SoulReaver, out var _, false) && !LocalPlayer.HasStatus(Buffs.Executioner, out var _, false))
             return false;
 
         if (actionID is GrimSwathe)
@@ -586,14 +586,14 @@ internal partial class RPR
         if (actionID is not BloodStalk)
             return false;
 
-        if (LocalPlayer.HasStatus(Buffs.EnhancedGibbet))
+        if (LocalPlayer.HasStatus(Buffs.EnhancedGibbet, out var _, false))
         {
             actionID = OriginalHook(Gibbet);
             return true;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.EnhancedGallows) ||
-            !LocalPlayer.HasStatus(Buffs.EnhancedGibbet))
+        if (LocalPlayer.HasStatus(Buffs.EnhancedGallows, out var _, false) ||
+            !LocalPlayer.HasStatus(Buffs.EnhancedGibbet, out var _, false))
         {
             actionID = OriginalHook(Gallows);
             return true;
@@ -669,7 +669,7 @@ internal partial class RPR
     {
         float gcd = GCD * times;
 
-        return CurrentTarget.HasStatus(Debuffs.DeathsDesign) && CurrentTarget.Status(Debuffs.DeathsDesign).RemainingTimeOrZero() < gcd;
+        return CurrentTarget.HasStatus(Debuffs.DeathsDesign, out var _, false) && CurrentTarget.Status(Debuffs.DeathsDesign).RemainingTimeOrZero() < gcd;
     }
 
     #endregion
@@ -777,7 +777,7 @@ internal partial class RPR
 
         public RPRStandardOpenerLvl100()
         {
-            SkipSteps.Add(([2], () => LocalPlayer.HasStatus(Buffs.Soulsow)));
+            SkipSteps.Add(([2], () => LocalPlayer.HasStatus(Buffs.Soulsow, out var _, false)));
             SkipSteps.Add(([3], () => InMeleeRange()));
         }
     }
@@ -865,7 +865,7 @@ internal partial class RPR
 
         public RPRStandardOpenerLvl90()
         {
-            SkipSteps.Add(([2], () => LocalPlayer.HasStatus(Buffs.Soulsow)));
+            SkipSteps.Add(([2], () => LocalPlayer.HasStatus(Buffs.Soulsow, out var _, false)));
             SkipSteps.Add(([3], () => InMeleeRange()));
         }
     }
@@ -973,3 +973,4 @@ internal partial class RPR
 
     #endregion
 }
+

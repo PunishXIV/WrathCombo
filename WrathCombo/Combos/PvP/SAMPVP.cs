@@ -1,4 +1,4 @@
-﻿using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.SAMPvP.Config;
@@ -108,12 +108,12 @@ internal static class SAMPvP
             bool isMoving = IsMoving();
             bool inCombat = InCombat();
             bool hasTarget = HasTarget();
-            bool hasKaiten = LocalPlayer.HasStatus(Buffs.Kaiten);
+            bool hasKaiten = LocalPlayer.HasStatus(Buffs.Kaiten, out var _, false);
             bool hasZanshin = OriginalHook(Chiten) is Zanshin;
             bool hasBind = LocalPlayer.HasStatus(PvPCommon.Debuffs.Bind, true);
             bool targetHasImmunity = PvPCommon.TargetImmuneToDamage();
             bool isTargetPrimed = hasTarget && !targetHasImmunity;
-            bool targetHasKuzushi = CurrentTarget.HasStatus(Debuffs.Kuzushi);
+            bool targetHasKuzushi = CurrentTarget.HasStatus(Debuffs.Kuzushi, out var _, false);
             bool hasKaeshiNamikiri = OriginalHook(OgiNamikiri) is Kaeshi;
             bool hasTendo = OriginalHook(MeikyoShisui) is TendoSetsugekka;
             bool isYukikazePrimed = ComboTimer == 0 || ComboAction is Kasha;

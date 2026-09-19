@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using WrathCombo.Extensions;
 
@@ -47,14 +47,14 @@ namespace WrathCombo.Data.BattleData
                     {
                         if (targetID is 9339 or 9340) //numbers are for Regular
                         {
-                            if (LocalPlayer.HasStatus(1660)) return Result(targetID == 9339); // Packet Filter M
-                            if (LocalPlayer.HasStatus(1661)) return Result(targetID == 9340); // Packet Filter F
+                            if (LocalPlayer.HasStatus(1660, out var _, false)) return Result(targetID == 9339); // Packet Filter M
+                            if (LocalPlayer.HasStatus(1661, out var _, false)) return Result(targetID == 9340); // Packet Filter F
                             if (targetID is 9340 && targetStatuses.Contains(671)) return Invincible.True; // F being covered by M
                         }
 
                         //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500
-                        if ((targetStatuses.Contains(3454) is true && LocalPlayer.HasStatus(3499)) ||
-                            (targetStatuses.Contains(1675) is true && LocalPlayer.HasStatus(3500)))
+                        if ((targetStatuses.Contains(3454) is true && LocalPlayer.HasStatus(3499, out var _, false)) ||
+                            (targetStatuses.Contains(1675) is true && LocalPlayer.HasStatus(3500, out var _, false)))
                             return Invincible.True;
 
                         return Invincible.CheckStatuses;
@@ -79,3 +79,4 @@ namespace WrathCombo.Data.BattleData
         }
     }
 }
+

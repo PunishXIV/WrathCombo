@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -144,11 +144,11 @@ internal static class RDMPvP
             bool isEnabledViceOfThorns = IsEnabled(Preset.RDMPvP_Forte) && RDMPvP_Forte_SubOption;
             bool isEnabledPrefulgence = IsEnabled(Preset.RDMPvP_Embolden) && RDMPvP_Embolden_SubOption;
             bool hasEnchantedRiposte = IsOffCooldown(EnchantedRiposte) && OriginalHook(EnchantedRiposte) is EnchantedRiposte;
-            bool isViceOfThornsExpiring = LocalPlayer.HasStatus(Buffs.ThornedFlourish) && LocalPlayer.Status(Buffs.ThornedFlourish).RemainingTimeOrZero() <= 3;
-            bool isPrefulgenceExpiring = LocalPlayer.HasStatus(Buffs.PrefulgenceReady) && LocalPlayer.Status(Buffs.PrefulgenceReady).RemainingTimeOrZero() <= 3;
+            bool isViceOfThornsExpiring = LocalPlayer.HasStatus(Buffs.ThornedFlourish, out var _, false) && LocalPlayer.Status(Buffs.ThornedFlourish).RemainingTimeOrZero() <= 3;
+            bool isPrefulgenceExpiring = LocalPlayer.HasStatus(Buffs.PrefulgenceReady, out var _, false) && LocalPlayer.Status(Buffs.PrefulgenceReady).RemainingTimeOrZero() <= 3;
             bool isMovementDependant = !RDMPvP_Displacement_SubOption || (RDMPvP_Displacement_SubOption && !isMoving);
             bool targetHasImmunity = CurrentTarget.HasStatus(PLDPvP.Buffs.HallowedGround, true) || CurrentTarget.HasStatus(DRKPvP.Buffs.UndeadRedemption, true);
-            bool isDisplacementPrimed = !hasBind && !JustUsed(Displacement, 8f) && !LocalPlayer.HasStatus(Buffs.Displacement) && hasScorch && InActionRange(Displacement);
+            bool isDisplacementPrimed = !hasBind && !JustUsed(Displacement, 8f) && !LocalPlayer.HasStatus(Buffs.Displacement, out var _, false) && hasScorch && InActionRange(Displacement);
             bool isCorpsPrimed = !hasBind && !JustUsed(CorpsACorps, 8f) && chargesCorps > RDMPvP_Corps_Charges && GetTargetDistance() <= RDMPvP_Corps_Range;
             #endregion
 

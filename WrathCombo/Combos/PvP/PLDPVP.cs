@@ -1,4 +1,4 @@
-﻿using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -97,19 +97,19 @@ internal static class PLDPvP
 
             if (IsEnabled(Preset.PLDPvP_PhalanxCombo))
             {
-                if (LocalPlayer.HasStatus(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
+                if (LocalPlayer.HasStatus(Buffs.BladeOfFaithReady, out var _, false) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
                     return OriginalHook(Phalanx);
             }
 
             // Check if the custom combo preset is enabled and ConfiteorReady is active
-            if (IsEnabled(Preset.PLDPvP_Confiteor) && LocalPlayer.HasStatus(Buffs.ConfiteorReady))
+            if (IsEnabled(Preset.PLDPvP_Confiteor) && LocalPlayer.HasStatus(Buffs.ConfiteorReady, out var _, false))
                 return OriginalHook(Imperator);
 
             var missinghealth = LocalPlayer.MaxHp - LocalPlayer.CurrentHp;
 
             if (IsEnabled(Preset.PLDPvP_HolySpirit) && ActionReady(HolySpirit) && missinghealth >= PLDPvP_HolySpirit_Threshold)
             {
-                if (!InMeleeRange() || !LocalPlayer.HasStatus(Buffs.AttonementReady) && !LocalPlayer.HasStatus(Buffs.SupplicationReady) && !LocalPlayer.HasStatus(Buffs.SepulchreReady))
+                if (!InMeleeRange() || !LocalPlayer.HasStatus(Buffs.AttonementReady, out var _, false) && !LocalPlayer.HasStatus(Buffs.SupplicationReady, out var _, false) && !LocalPlayer.HasStatus(Buffs.SepulchreReady, out var _, false))
                     return HolySpirit;
             }
             return actionID;

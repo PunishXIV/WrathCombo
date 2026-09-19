@@ -43,7 +43,7 @@ internal partial class SCH : Healer
                 if (!WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
                     return Aetherflow;
 
-                if (LocalPlayer.HasStatus(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
+                if (LocalPlayer.HasStatus(Buffs.ImpactImminent, out var _, false) && !JustUsed(ChainStratagem))
                     return BanefulImpaction;
 
                 if (ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem)
@@ -96,7 +96,7 @@ internal partial class SCH : Healer
             if (!WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow && CanWeave())
                 return Aetherflow;
 
-            if (LocalPlayer.HasStatus(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
+            if (LocalPlayer.HasStatus(Buffs.ImpactImminent, out var _, false) && !JustUsed(ChainStratagem) && CanWeave())
                 return BanefulImpaction;
 
             if (ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem && CanWeave())
@@ -201,7 +201,7 @@ internal partial class SCH : Healer
                 return Expedient;
             
             if (ActionReady(OriginalHook(Adloquium)))
-                return ActionReady(OriginalHook(EmergencyTactics)) && (healTarget.HasStatus(Buffs.Galvanize, true) || !LocalPlayer.HasStatus(Buffs.EmergencyTactics))
+                return ActionReady(OriginalHook(EmergencyTactics)) && (healTarget.HasStatus(Buffs.Galvanize, true) || !LocalPlayer.HasStatus(Buffs.EmergencyTactics, out var _, false))
                     ? OriginalHook(EmergencyTactics)
                     : OriginalHook(Adloquium).RetargetIfEnabled(actionID);
             
@@ -316,7 +316,7 @@ internal partial class SCH : Healer
                 if (IsEnabled(Preset.SCH_ST_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
                     return Aetherflow;
 
-                if (IsEnabled(Preset.SCH_ST_ADV_DPS_BanefulImpact) && LocalPlayer.HasStatus(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
+                if (IsEnabled(Preset.SCH_ST_ADV_DPS_BanefulImpact) && LocalPlayer.HasStatus(Buffs.ImpactImminent, out var _, false) && !JustUsed(ChainStratagem))
                     return BanefulImpaction;
 
 
@@ -395,7 +395,7 @@ internal partial class SCH : Healer
             if (IsEnabled(Preset.SCH_AoE_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow && CanWeave())
                 return Aetherflow;
 
-            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_BanefulImpact) && LocalPlayer.HasStatus(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_BanefulImpact) && LocalPlayer.HasStatus(Buffs.ImpactImminent, out var _, false) && !JustUsed(ChainStratagem) && CanWeave())
                 return BanefulImpaction;
 
             if (IsEnabled(Preset.SCH_AoE_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem &&
@@ -619,7 +619,7 @@ internal partial class SCH : Healer
             if (ActionReady(Recitation))
                 return Recitation;
 
-            if (!LocalPlayer.HasStatus(Buffs.Recitation) || !ActionReady(Recitation))
+            if (!LocalPlayer.HasStatus(Buffs.Recitation, out var _, false) || !ActionReady(Recitation))
             {
                 if (SCH_Recitation_Mode == 1 && ActionReady(OriginalHook(Succor)))
                     return OriginalHook(Succor);
@@ -675,7 +675,7 @@ internal partial class SCH : Healer
 
             if (IsEnabled(Preset.SCH_Aetherflow_Recite) &&
                 ActionLearned(Recitation) &&
-                (IsOffCooldown(Recitation) || LocalPlayer.HasStatus(Buffs.Recitation)))
+                (IsOffCooldown(Recitation) || LocalPlayer.HasStatus(Buffs.Recitation, out var _, false)))
             {
                 //Recitation Indominability and Excogitation, with optional check against AF zero stack count
                 bool alwaysShowReciteExcog = SCH_Aetherflow_Recite_ExcogMode == 1;
@@ -685,7 +685,7 @@ internal partial class SCH : Healer
                      !alwaysShowReciteExcog && !hasAetherFlows) && actionID is Excogitation)
                 {
                     //Do not merge this nested if with above. Won't procede with next set
-                    return LocalPlayer.HasStatus(Buffs.Recitation) && IsOffCooldown(Excogitation)
+                    return LocalPlayer.HasStatus(Buffs.Recitation, out var _, false) && IsOffCooldown(Excogitation)
                         ? Excogitation
                         : Recitation;
                 }
@@ -697,7 +697,7 @@ internal partial class SCH : Healer
                      !alwaysShowReciteIndom && !hasAetherFlows) && actionID is Indomitability)
                 {
                     //Same as above, do not nest with above. It won't procede with the next set
-                    return LocalPlayer.HasStatus(Buffs.Recitation) && IsOffCooldown(Excogitation)
+                    return LocalPlayer.HasStatus(Buffs.Recitation, out var _, false) && IsOffCooldown(Excogitation)
                         ? Indomitability
                         : Recitation;
                 }
@@ -761,7 +761,7 @@ internal partial class SCH : Healer
             IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
 
             //Check for the Galvanize shield buff. Start applying if it doesn't exist
-            if (!healStack.HasStatus(Buffs.Galvanize))
+            if (!healStack.HasStatus(Buffs.Galvanize, out var _, false))
             {
                 if (IsEnabled(Preset.SCH_DeploymentTactics_Recitation) && ActionReady(Recitation))
                     return Recitation;
@@ -828,14 +828,14 @@ internal partial class SCH : Healer
                 return Recitation;
 
             if (ActionReady(Adloquium) &&
-                !healStack.HasStatus(Buffs.Galvanize))
+                !healStack.HasStatus(Buffs.Galvanize, out var _, false))
                 return IsEnabled(Preset.SCH_Retarget_Adloquium)
                 ? OriginalHook(Adloquium).Retarget(Protraction, healStack)
                 : OriginalHook(Adloquium);
 
             if (SCH_Mit_STOptions[1] &&
                 ActionReady(DeploymentTactics) &&
-                healStack.HasStatus(Buffs.Catalyze))
+                healStack.HasStatus(Buffs.Catalyze, out var _, false))
                 return IsEnabled(Preset.SCH_Retarget_DeploymentTactics)
                     ? DeploymentTactics.Retarget(Protraction, healStack)
                     : DeploymentTactics;
@@ -879,15 +879,15 @@ internal partial class SCH : Healer
                 if (ActionReady(Recitation) && ActionReady(DeploymentTactics))
                     return Recitation;
 
-                if (LocalPlayer.HasStatus(Buffs.Recitation))
+                if (LocalPlayer.HasStatus(Buffs.Recitation, out var _, false))
                     return Adloquium.Retarget(SacredSoil, SimpleTarget.Self);
 
-                if (ActionReady(DeploymentTactics) && LocalPlayer.HasStatus(Buffs.Catalyze))
+                if (ActionReady(DeploymentTactics) && LocalPlayer.HasStatus(Buffs.Catalyze, out var _, false))
                     return DeploymentTactics.Retarget(SacredSoil, SimpleTarget.Self);
             }
 
-            if (!LocalPlayer.HasStatus(Buffs.Galvanize) &&
-                !LocalPlayer.HasStatus(SGE.Buffs.EukrasianPrognosis))
+            if (!LocalPlayer.HasStatus(Buffs.Galvanize, out var _, false) &&
+                !LocalPlayer.HasStatus(SGE.Buffs.EukrasianPrognosis, out var _, false))
                 return OriginalHook(Succor);
 
             if (SCH_Mit_AoEOptions[2] &&
@@ -959,3 +959,4 @@ internal partial class SCH : Healer
 
     #endregion
 }
+

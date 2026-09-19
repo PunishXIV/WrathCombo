@@ -306,7 +306,7 @@ internal partial class DRK : Tank
             if (IsEnabled(Preset.DRK_oGCD_SaltedEarth) &&
                 IsOffCooldown(SaltedEarth) &&
                 ActionLearned(SaltedEarth) &&
-                !LocalPlayer.HasStatus(Buffs.SaltedEarth))
+                !LocalPlayer.HasStatus(Buffs.SaltedEarth, out var _, false))
                 return SaltedEarth;
 
             if (IsOffCooldown(CarveAndSpit) &&
@@ -316,7 +316,7 @@ internal partial class DRK : Tank
             if (IsEnabled(Preset.DRK_oGCD_SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
                 ActionLearned(SaltAndDarkness) &&
-                LocalPlayer.HasStatus(Buffs.SaltedEarth))
+                LocalPlayer.HasStatus(Buffs.SaltedEarth, out var _, false))
                 return SaltAndDarkness;
 
             if (IsEnabled(Preset.DRK_oGCD_Shadowbringer) &&
@@ -490,3 +490,4 @@ internal partial class DRK : Tank
 
     #endregion
 }
+

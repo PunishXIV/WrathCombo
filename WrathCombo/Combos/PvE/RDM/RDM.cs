@@ -533,8 +533,8 @@ internal partial class RDM : Caster
 
             if (ActionLearned(Verraise))
             {
-                bool schwifty = LocalPlayer.HasStatus(Role.Buffs.Swiftcast);
-                if (schwifty || LocalPlayer.HasStatus(Buffs.Dualcast))
+                bool schwifty = LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false);
+                if (schwifty || LocalPlayer.HasStatus(Buffs.Dualcast, out var _, false))
                     return IsEnabled(Preset.RDM_Raise_Retarget)
                         ? Verraise.Retarget(Role.Swiftcast,
                             SimpleTarget.Stack.AllyToRaise)
@@ -715,7 +715,7 @@ internal partial class RDM : Caster
                     return Fleche;
                 if (RDM_Riposte_Weaves_Options[1] && ActionReady(ContreSixte))
                     return ContreSixte;
-                if (RDM_Riposte_Weaves_Options[2] && LocalPlayer.HasStatus(Buffs.ThornedFlourish))
+                if (RDM_Riposte_Weaves_Options[2] && LocalPlayer.HasStatus(Buffs.ThornedFlourish, out var _, false))
                     return ViceOfThorns;
                 if (RDM_Riposte_Weaves_Options[3] && CanPrefulgence)
                     return Prefulgence;
@@ -769,7 +769,7 @@ internal partial class RDM : Caster
                     return Fleche;
                 if (RDM_Moulinet_Weaves_Options[1] && ActionReady(ContreSixte))
                     return ContreSixte;
-                if (RDM_Moulinet_Weaves_Options[2] && LocalPlayer.HasStatus(Buffs.ThornedFlourish))
+                if (RDM_Moulinet_Weaves_Options[2] && LocalPlayer.HasStatus(Buffs.ThornedFlourish, out var _, false))
                     return ViceOfThorns;
                 if (RDM_Moulinet_Weaves_Options[3] && CanPrefulgence)
                     return Prefulgence;
@@ -876,7 +876,7 @@ internal partial class RDM : Caster
                 return ContreSixte;
 
             if (RDM_OGCDs_Options[1] &&
-                LocalPlayer.HasStatus(Buffs.ThornedFlourish))
+                LocalPlayer.HasStatus(Buffs.ThornedFlourish, out var _, false))
                 return ViceOfThorns;
 
             if (RDM_OGCDs_Options[2] &&
@@ -898,3 +898,4 @@ internal partial class RDM : Caster
     }
     #endregion 
 }
+

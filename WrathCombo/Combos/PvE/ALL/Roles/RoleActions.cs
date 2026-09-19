@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
@@ -147,7 +147,7 @@ internal static partial class RoleActions
             CurrentTarget.CanApplyStatus(Debuffs.Feint);
 
         public static bool CanTrueNorth() =>
-            ActionReady(TrueNorth) && TargetNeedsPositionals() && !LocalPlayer.HasStatus(Buffs.TrueNorth) && CanDelayedWeave();
+            ActionReady(TrueNorth) && TargetNeedsPositionals() && !LocalPlayer.HasStatus(Buffs.TrueNorth, out var _, false) && CanDelayedWeave();
 
         public static class Buffs
         {
@@ -208,3 +208,4 @@ internal static partial class RoleActions
         }
     }
 }
+

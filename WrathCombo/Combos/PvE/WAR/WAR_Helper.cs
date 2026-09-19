@@ -21,11 +21,11 @@ internal partial class WAR : Tank
     internal static int BeastGauge => Gauge.BeastGauge;
     internal static (float Cooldown, float Status, int Stacks) IR => (GetCooldownRemainingTime(OriginalHook(Berserk)), LocalPlayer.Status(Buffs.InnerReleaseBuff).RemainingTimeOrZero(), LocalPlayer.Status(Buffs.InnerReleaseStacks).Stacks);
     internal static (float Status, int Stacks) BF => (LocalPlayer.Status(Buffs.BurgeoningFury).RemainingTimeOrZero(), LocalPlayer.Status(Buffs.BurgeoningFury).Stacks);
-    internal static (bool Status, bool Stacks) HasIR => (IR.Status > 0, IR.Stacks > 0 || LocalPlayer.HasStatus(Buffs.InnerReleaseStacks));
-    internal static (bool Status, bool Stacks) HasBF => (BF.Status > 0 || LocalPlayer.HasStatus(Buffs.BurgeoningFury), (BF.Stacks > 0 || LocalPlayer.HasStatus(Buffs.BurgeoningFury)));
-    internal static bool HasSurgingTempest => !ActionLearned(StormsEye) || LocalPlayer.HasStatus(Buffs.SurgingTempest);
-    internal static bool HasNascentChaos => LocalPlayer.HasStatus(Buffs.NascentChaos);
-    internal static bool HasWrathful => LocalPlayer.HasStatus(Buffs.Wrathful);
+    internal static (bool Status, bool Stacks) HasIR => (IR.Status > 0, IR.Stacks > 0 || LocalPlayer.HasStatus(Buffs.InnerReleaseStacks, out var _, false));
+    internal static (bool Status, bool Stacks) HasBF => (BF.Status > 0 || LocalPlayer.HasStatus(Buffs.BurgeoningFury, out var _, false), (BF.Stacks > 0 || LocalPlayer.HasStatus(Buffs.BurgeoningFury, out var _, false)));
+    internal static bool HasSurgingTempest => !ActionLearned(StormsEye) || LocalPlayer.HasStatus(Buffs.SurgingTempest, out var _, false);
+    internal static bool HasNascentChaos => LocalPlayer.HasStatus(Buffs.NascentChaos, out var _, false);
+    internal static bool HasWrathful => LocalPlayer.HasStatus(Buffs.Wrathful, out var _, false);
     #endregion
 
     #region Openers
@@ -354,7 +354,7 @@ internal partial class WAR : Tank
         if (HasBattleTarget())
         {
             #region Primal Rend
-            if (primalRendEnabled && HasSurgingTempest && LocalPlayer.HasStatus(Buffs.PrimalRendReady) &&
+            if (primalRendEnabled && HasSurgingTempest && LocalPlayer.HasStatus(Buffs.PrimalRendReady, out var _, false) &&
                 GetTargetDistance() <= primalRendDistanceThreshold && //Distance Slider Check
                 (primalRendMovement == 1 || //Any Movement
                  primalRendMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(primalRendTimeStoodStill)) && //Time Stood Still Slider Check
@@ -368,7 +368,7 @@ internal partial class WAR : Tank
             #endregion
 
             #region Primal Ruination
-            if (primalRuinationEnabled && HasSurgingTempest && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady))
+            if (primalRuinationEnabled && HasSurgingTempest && LocalPlayer.HasStatus(Buffs.PrimalRuinationReady, out var _, false))
             {
                 actionID = PrimalRuination;
                 return true;
@@ -377,7 +377,7 @@ internal partial class WAR : Tank
 
             #region Inner Beast/Fell Cleave/ Decimate
             if (fellCleaveEnabled && HasSurgingTempest && ActionLearned(OriginalHook(InnerBeast)) &&
-                (LocalPlayer.HasStatus(Buffs.InnerReleaseStacks) || //Use if you have IR stacks
+                (LocalPlayer.HasStatus(Buffs.InnerReleaseStacks, out var _, false) || //Use if you have IR stacks
                  BeastGauge >= spenderGaugeThreshold)) //Use if you have Nascent Buff
             {
                 int enemyCount = NumberOfEnemiesInRange(Role.Reprisal);
@@ -455,7 +455,7 @@ internal partial class WAR : Tank
     [
         //Bloodwhetting
         (OriginalHook(RawIntuition), Preset.WAR_Mit_Bloodwhetting,
-            () => !LocalPlayer.HasStatus(Buffs.RawIntuition) && !LocalPlayer.HasStatus(Buffs.BloodwhettingDefenseLong) && PlayerHealthPercentageHp() <= WAR_Mit_Bloodwhetting_Health),
+            () => !LocalPlayer.HasStatus(Buffs.RawIntuition, out var _, false) && !LocalPlayer.HasStatus(Buffs.BloodwhettingDefenseLong, out var _, false) && PlayerHealthPercentageHp() <= WAR_Mit_Bloodwhetting_Health),
         //Equilibrium
         (Equilibrium, Preset.WAR_Mit_Equilibrium,
             () => PlayerHealthPercentageHp() <= WAR_Mit_Equilibrium_Health),
@@ -470,7 +470,7 @@ internal partial class WAR : Tank
             () => Role.CanRampart()),
         //Shake it Off
         (ShakeItOff, Preset.WAR_Mit_ShakeItOff,
-            () => !LocalPlayer.HasStatus(Buffs.ShakeItOff) && (WAR_Mit_ShakeItOff_PartyRequirement == (int)PartyRequirement.No || IsInParty())),
+            () => !LocalPlayer.HasStatus(Buffs.ShakeItOff, out var _, false) && (WAR_Mit_ShakeItOff_PartyRequirement == (int)PartyRequirement.No || IsInParty())),
         //Arm's Length
         (Role.ArmsLength, Preset.WAR_Mit_ArmsLength,
             () => Role.CanArmsLength(WAR_Mit_ArmsLength_EnemyCount, WAR_Mit_ArmsLength_Boss)),
@@ -519,13 +519,13 @@ internal partial class WAR : Tank
         var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
         var pre56Mitigation = !ActionLearned(RawIntuition) && numberOfEnemies >= 3;
 
-        var mitigationRunning = LocalPlayer.HasStatus(Role.Buffs.ArmsLength) ||
-                                LocalPlayer.HasStatus(Role.Buffs.Rampart) ||
-                                LocalPlayer.HasStatus(Buffs.Holmgang) ||
-                                LocalPlayer.HasStatus(Buffs.ThrillOfBattle) ||
-                                LocalPlayer.HasStatus(Buffs.Vengeance) ||
-                                LocalPlayer.HasStatus(Buffs.Damnation) ||
-                                CurrentTarget.HasStatus(Role.Debuffs.Reprisal);
+        var mitigationRunning = LocalPlayer.HasStatus(Role.Buffs.ArmsLength, out var _, false) ||
+                                LocalPlayer.HasStatus(Role.Buffs.Rampart, out var _, false) ||
+                                LocalPlayer.HasStatus(Buffs.Holmgang, out var _, false) ||
+                                LocalPlayer.HasStatus(Buffs.ThrillOfBattle, out var _, false) ||
+                                LocalPlayer.HasStatus(Buffs.Vengeance, out var _, false) ||
+                                LocalPlayer.HasStatus(Buffs.Damnation, out var _, false) ||
+                                CurrentTarget.HasStatus(Role.Debuffs.Reprisal, out var _, false);
 
         var justMitted = JustUsed(OriginalHook(ThrillOfBattle)) ||
                           JustUsed(OriginalHook(Vengeance)) ||
@@ -923,5 +923,6 @@ internal partial class WAR : Tank
 
     #endregion
 }
+
 
 

@@ -60,7 +60,7 @@ internal partial class DNC
     ///     Below 96 there is no Finishing Move, so Standard should still go out on cooldown.
     /// </summary>
     private static bool ShouldHoldStandardForFinishingMove =>
-        ActionLearned(FinishingMove) && LocalPlayer.HasStatus(Buffs.TechnicalFinish);
+        ActionLearned(FinishingMove) && LocalPlayer.HasStatus(Buffs.TechnicalFinish, out var _, false);
 
     /// <summary>
     ///     Checks if any enemy is within 8 yalms.
@@ -231,7 +231,7 @@ internal partial class DNC
         DesiredDancePartner is not null &&
         (
             // Have no partner and one is theoretically available
-            (!LocalPlayer.HasStatus(Buffs.ClosedPosition) &&
+            (!LocalPlayer.HasStatus(Buffs.ClosedPosition, out var _, false) &&
              (IsInParty() || HasCompanionPresent())) ||
             // Have a partner, but it's not the optimal one
             (CurrentDancePartner is not null &&
@@ -257,7 +257,7 @@ internal partial class DNC
         if (IsDancePartnerReady(desired))
             return desired;
 
-        if (LocalPlayer.HasStatus(Buffs.ClosedPosition))
+        if (LocalPlayer.HasStatus(Buffs.ClosedPosition, out var _, false))
             return null;
 
         var fallback = SimpleTarget.AnySelfishDPS ??
@@ -441,7 +441,7 @@ internal partial class DNC
         target.BattleChara.HasStatus(Buffs.Partner, true);
 
     private static bool HasMyPartner(WrathPartyMember target) =>
-        target.BattleChara.HasStatus(Buffs.Partner);
+        target.BattleChara.HasStatus(Buffs.Partner, out var _, false);
 
     #endregion
 
@@ -977,5 +977,6 @@ internal partial class DNC
 
     #endregion
 }
+
 
 

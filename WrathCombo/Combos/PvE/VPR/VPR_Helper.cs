@@ -35,34 +35,34 @@ internal partial class VPR
                 if (ComboAction is ReavingMaw or SteelMaw)
                 {
                     if (ActionLearned(HuntersBite) &&
-                        LocalPlayer.HasStatus(Buffs.GrimhuntersVenom))
+                        LocalPlayer.HasStatus(Buffs.GrimhuntersVenom, out var _, false))
                         return OriginalHook(SteelMaw);
 
                     if (ActionLearned(SwiftskinsBite) &&
-                        (LocalPlayer.HasStatus(Buffs.GrimskinsVenom) ||
-                         !LocalPlayer.HasStatus(Buffs.Swiftscaled) && !LocalPlayer.HasStatus(Buffs.HuntersInstinct)))
+                        (LocalPlayer.HasStatus(Buffs.GrimskinsVenom, out var _, false) ||
+                         !LocalPlayer.HasStatus(Buffs.Swiftscaled, out var _, false) && !LocalPlayer.HasStatus(Buffs.HuntersInstinct, out var _, false)))
                         return OriginalHook(ReavingMaw);
                 }
 
                 if (ComboAction is HuntersBite or SwiftskinsBite)
                 {
-                    if (LocalPlayer.HasStatus(Buffs.GrimhuntersVenom) && ActionLearned(JaggedMaw))
+                    if (LocalPlayer.HasStatus(Buffs.GrimhuntersVenom, out var _, false) && ActionLearned(JaggedMaw))
                         return OriginalHook(SteelMaw);
 
-                    if (LocalPlayer.HasStatus(Buffs.GrimskinsVenom) && ActionLearned(BloodiedMaw))
+                    if (LocalPlayer.HasStatus(Buffs.GrimskinsVenom, out var _, false) && ActionLearned(BloodiedMaw))
                         return OriginalHook(ReavingMaw);
                 }
 
                 if (ComboAction is BloodiedMaw or JaggedMaw)
-                    return ActionLearned(ReavingMaw) && LocalPlayer.HasStatus(Buffs.HonedReavers)
+                    return ActionLearned(ReavingMaw) && LocalPlayer.HasStatus(Buffs.HonedReavers, out var _, false)
                         ? OriginalHook(ReavingMaw)
                         : OriginalHook(SteelMaw);
             }
 
             //for lower lvls
             if (ActionLearned(ReavingMaw) &&
-                (LocalPlayer.HasStatus(Buffs.HonedReavers) ||
-                 !LocalPlayer.HasStatus(Buffs.HonedReavers) && !LocalPlayer.HasStatus(Buffs.HonedSteel)))
+                (LocalPlayer.HasStatus(Buffs.HonedReavers, out var _, false) ||
+                 !LocalPlayer.HasStatus(Buffs.HonedReavers, out var _, false) && !LocalPlayer.HasStatus(Buffs.HonedSteel, out var _, false)))
                 return OriginalHook(ReavingMaw);
 
             return OriginalHook(SteelMaw);
@@ -84,33 +84,33 @@ internal partial class VPR
 
             if (ComboAction is HuntersSting or SwiftskinsSting)
             {
-                if ((LocalPlayer.HasStatus(Buffs.FlanksbaneVenom) || LocalPlayer.HasStatus(Buffs.HindsbaneVenom)) &&
+                if ((LocalPlayer.HasStatus(Buffs.FlanksbaneVenom, out var _, false) || LocalPlayer.HasStatus(Buffs.HindsbaneVenom, out var _, false)) &&
                     ActionLearned(HindstingStrike))
                     return IsTrueNorthReady(useTrueNorth, trueNorthCharges, dynamicHoldCharge) &&
-                           (!OnTargetsRear() && LocalPlayer.HasStatus(Buffs.HindsbaneVenom) ||
-                            !OnTargetsFlank() && LocalPlayer.HasStatus(Buffs.FlanksbaneVenom))
+                           (!OnTargetsRear() && LocalPlayer.HasStatus(Buffs.HindsbaneVenom, out var _, false) ||
+                            !OnTargetsFlank() && LocalPlayer.HasStatus(Buffs.FlanksbaneVenom, out var _, false))
                         ? Role.TrueNorth
                         : OriginalHook(ReavingFangs);
 
-                if ((LocalPlayer.HasStatus(Buffs.FlankstungVenom) || LocalPlayer.HasStatus(Buffs.HindstungVenom)) &&
+                if ((LocalPlayer.HasStatus(Buffs.FlankstungVenom, out var _, false) || LocalPlayer.HasStatus(Buffs.HindstungVenom, out var _, false)) &&
                     ActionLearned(FlanksbaneFang))
                     return IsTrueNorthReady(useTrueNorth, trueNorthCharges, dynamicHoldCharge) &&
-                           (!OnTargetsRear() && LocalPlayer.HasStatus(Buffs.HindstungVenom) ||
-                            !OnTargetsFlank() && LocalPlayer.HasStatus(Buffs.FlankstungVenom))
+                           (!OnTargetsRear() && LocalPlayer.HasStatus(Buffs.HindstungVenom, out var _, false) ||
+                            !OnTargetsFlank() && LocalPlayer.HasStatus(Buffs.FlankstungVenom, out var _, false))
                         ? Role.TrueNorth
                         : OriginalHook(SteelFangs);
             }
 
             if (ComboAction is HindstingStrike or HindsbaneFang or FlankstingStrike or FlanksbaneFang)
-                return ActionLearned(ReavingFangs) && LocalPlayer.HasStatus(Buffs.HonedReavers)
+                return ActionLearned(ReavingFangs) && LocalPlayer.HasStatus(Buffs.HonedReavers, out var _, false)
                     ? OriginalHook(ReavingFangs)
                     : OriginalHook(SteelFangs);
         }
 
         //LowLevels
         if (ActionLearned(ReavingFangs) &&
-            (LocalPlayer.HasStatus(Buffs.HonedReavers) ||
-             !LocalPlayer.HasStatus(Buffs.HonedReavers) && !LocalPlayer.HasStatus(Buffs.HonedSteel)))
+            (LocalPlayer.HasStatus(Buffs.HonedReavers, out var _, false) ||
+             !LocalPlayer.HasStatus(Buffs.HonedReavers, out var _, false) && !LocalPlayer.HasStatus(Buffs.HonedSteel, out var _, false)))
             return OriginalHook(ReavingFangs);
 
         return OriginalHook(SteelFangs);
@@ -131,40 +131,40 @@ internal partial class VPR
         RattlingCoilStacks > 0;
 
     private static bool HasHindVenom =>
-        LocalPlayer.HasStatus(Buffs.HindstungVenom) ||
-        LocalPlayer.HasStatus(Buffs.HindsbaneVenom);
+        LocalPlayer.HasStatus(Buffs.HindstungVenom, out var _, false) ||
+        LocalPlayer.HasStatus(Buffs.HindsbaneVenom, out var _, false);
 
     private static bool HasFlankVenom =>
-        LocalPlayer.HasStatus(Buffs.FlankstungVenom) ||
-        LocalPlayer.HasStatus(Buffs.FlanksbaneVenom);
+        LocalPlayer.HasStatus(Buffs.FlankstungVenom, out var _, false) ||
+        LocalPlayer.HasStatus(Buffs.FlanksbaneVenom, out var _, false);
 
     private static bool IsMissingSwiftscaled =>
-        !LocalPlayer.HasStatus(Buffs.Swiftscaled);
+        !LocalPlayer.HasStatus(Buffs.Swiftscaled, out var _, false);
 
     private static bool IsMissingHuntersInstinct =>
-        !LocalPlayer.HasStatus(Buffs.HuntersInstinct);
+        !LocalPlayer.HasStatus(Buffs.HuntersInstinct, out var _, false);
 
     private static bool IsMissingBasicComboVenom =>
-        !LocalPlayer.HasStatus(Buffs.FlanksbaneVenom) &&
-        !LocalPlayer.HasStatus(Buffs.FlankstungVenom) &&
-        !LocalPlayer.HasStatus(Buffs.HindsbaneVenom) &&
-        !LocalPlayer.HasStatus(Buffs.HindstungVenom);
+        !LocalPlayer.HasStatus(Buffs.FlanksbaneVenom, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.FlankstungVenom, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.HindsbaneVenom, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.HindstungVenom, out var _, false);
 
     private static bool IsSTComboWeaveBlocked =>
-        !LocalPlayer.HasStatus(Buffs.HuntersVenom) &&
-        !LocalPlayer.HasStatus(Buffs.SwiftskinsVenom) &&
-        !LocalPlayer.HasStatus(Buffs.PoisedForTwinblood) &&
-        !LocalPlayer.HasStatus(Buffs.PoisedForTwinfang);
+        !LocalPlayer.HasStatus(Buffs.HuntersVenom, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.SwiftskinsVenom, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.PoisedForTwinblood, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.PoisedForTwinfang, out var _, false);
 
     private static bool IsAoEComboWeaveBlocked =>
-        !LocalPlayer.HasStatus(Buffs.FellhuntersVenom) &&
-        !LocalPlayer.HasStatus(Buffs.FellskinsVenom) &&
-        !LocalPlayer.HasStatus(Buffs.PoisedForTwinblood) &&
-        !LocalPlayer.HasStatus(Buffs.PoisedForTwinfang);
+        !LocalPlayer.HasStatus(Buffs.FellhuntersVenom, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.FellskinsVenom, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.PoisedForTwinblood, out var _, false) &&
+        !LocalPlayer.HasStatus(Buffs.PoisedForTwinfang, out var _, false);
 
     private static bool HasBothBuffs =>
-        LocalPlayer.HasStatus(Buffs.Swiftscaled) &&
-        LocalPlayer.HasStatus(Buffs.HuntersInstinct);
+        LocalPlayer.HasStatus(Buffs.Swiftscaled, out var _, false) &&
+        LocalPlayer.HasStatus(Buffs.HuntersInstinct, out var _, false);
 
     private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
         hpBossOption == 1 || !isBoss ? hpOption : 0;
@@ -191,7 +191,7 @@ internal partial class VPR
 
     private static bool ShouldSaveOfferingForBurst =>
         UsesBurstAlignment &&
-        (LocalPlayer.HasStatus(Buffs.ReadyToReawaken) || IreCD is > 0 and <= IreOfferingSaveWindow);
+        (LocalPlayer.HasStatus(Buffs.ReadyToReawaken, out var _, false) || IreCD is > 0 and <= IreOfferingSaveWindow);
 
     #endregion
 
@@ -206,17 +206,17 @@ internal partial class VPR
         if (onAoE)
         {
             if (!ActionReady(Reawaken) || GetTargetHPPercent() <= hpThresholdUsageAoE ||
-                !LocalPlayer.HasStatus(Buffs.Swiftscaled) || !LocalPlayer.HasStatus(Buffs.HuntersInstinct) ||
-                LocalPlayer.HasStatus(Buffs.Reawakened) || !IsAoEComboWeaveBlocked)
+                !LocalPlayer.HasStatus(Buffs.Swiftscaled, out var _, false) || !LocalPlayer.HasStatus(Buffs.HuntersInstinct, out var _, false) ||
+                LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) || !IsAoEComboWeaveBlocked)
                 return false;
 
             if (UsesBurstAlignment && JustUsed(Ouroboros, GCD * 12) && SerpentOffering >= 50)
                 return true;
 
-            return LocalPlayer.HasStatus(Buffs.ReadyToReawaken) || SerpentOffering >= 50;
+            return LocalPlayer.HasStatus(Buffs.ReadyToReawaken, out var _, false) || SerpentOffering >= 50;
         }
 
-        if (!(ActionReady(Reawaken) && !LocalPlayer.HasStatus(Buffs.Reawakened) &&
+        if (!(ActionReady(Reawaken) && !LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) &&
               InActionRange(Reawaken) && IsSTComboWeaveBlocked && HasBattleTarget() &&
               !IsEmpowermentExpiring(6) && !IsComboExpiring(6) &&
               GetTargetHPPercent() > hpThresholdUsage))
@@ -226,7 +226,7 @@ internal partial class VPR
             GetTargetHPPercent() < hpThresholdDontSave)
             return true;
 
-        if (!JustUsed(SerpentsIre, GCD) && LocalPlayer.HasStatus(Buffs.ReadyToReawaken))
+        if (!JustUsed(SerpentsIre, GCD) && LocalPlayer.HasStatus(Buffs.ReadyToReawaken, out var _, false))
             return true;
 
         if (UsesBurstAlignment && JustUsed(Ouroboros, GCD * 12) && SerpentOffering >= 50)
@@ -282,18 +282,18 @@ internal partial class VPR
     {
         float gcd = GCD * times;
 
-        return LocalPlayer.HasStatus(Buffs.HonedSteel) && LocalPlayer.Status(Buffs.HonedSteel).RemainingTimeOrZero() < gcd ||
-               LocalPlayer.HasStatus(Buffs.HonedReavers) && LocalPlayer.Status(Buffs.HonedReavers).RemainingTimeOrZero() < gcd;
+        return LocalPlayer.HasStatus(Buffs.HonedSteel, out var _, false) && LocalPlayer.Status(Buffs.HonedSteel).RemainingTimeOrZero() < gcd ||
+               LocalPlayer.HasStatus(Buffs.HonedReavers, out var _, false) && LocalPlayer.Status(Buffs.HonedReavers).RemainingTimeOrZero() < gcd;
     }
 
     private static bool IsVenomExpiring(float times)
     {
         float gcd = GCD * times;
 
-        return LocalPlayer.HasStatus(Buffs.FlankstungVenom) && LocalPlayer.Status(Buffs.FlankstungVenom).RemainingTimeOrZero() < gcd ||
-               LocalPlayer.HasStatus(Buffs.FlanksbaneVenom) && LocalPlayer.Status(Buffs.FlanksbaneVenom).RemainingTimeOrZero() < gcd ||
-               LocalPlayer.HasStatus(Buffs.HindstungVenom) && LocalPlayer.Status(Buffs.HindstungVenom).RemainingTimeOrZero() < gcd ||
-               LocalPlayer.HasStatus(Buffs.HindsbaneVenom) && LocalPlayer.Status(Buffs.HindsbaneVenom).RemainingTimeOrZero() < gcd;
+        return LocalPlayer.HasStatus(Buffs.FlankstungVenom, out var _, false) && LocalPlayer.Status(Buffs.FlankstungVenom).RemainingTimeOrZero() < gcd ||
+               LocalPlayer.HasStatus(Buffs.FlanksbaneVenom, out var _, false) && LocalPlayer.Status(Buffs.FlanksbaneVenom).RemainingTimeOrZero() < gcd ||
+               LocalPlayer.HasStatus(Buffs.HindstungVenom, out var _, false) && LocalPlayer.Status(Buffs.HindstungVenom).RemainingTimeOrZero() < gcd ||
+               LocalPlayer.HasStatus(Buffs.HindsbaneVenom, out var _, false) && LocalPlayer.Status(Buffs.HindsbaneVenom).RemainingTimeOrZero() < gcd;
     }
 
     private static bool IsEmpowermentExpiring(float times)
@@ -330,13 +330,13 @@ internal partial class VPR
         if (!enabled)
             return false;
 
-        if (LocalPlayer.HasStatus(Buffs.PoisedForTwinfang) && InActionRange(OriginalHook(Twinfang)))
+        if (LocalPlayer.HasStatus(Buffs.PoisedForTwinfang, out var _, false) && InActionRange(OriginalHook(Twinfang)))
         {
             actionID = OriginalHook(Twinfang);
             return true;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.PoisedForTwinblood) && InActionRange(OriginalHook(Twinblood)))
+        if (LocalPlayer.HasStatus(Buffs.PoisedForTwinblood, out var _, false) && InActionRange(OriginalHook(Twinblood)))
         {
             actionID = OriginalHook(Twinblood);
             return true;
@@ -348,19 +348,19 @@ internal partial class VPR
     private static bool UseViceTwinWeaves(ref uint actionID, bool onAoE, bool enabled, bool requireMelee = true,
         bool ignoreRange = false)
     {
-        if (!enabled || LocalPlayer.HasStatus(Buffs.Reawakened))
+        if (!enabled || LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false))
             return false;
 
         if (onAoE)
         {
-            if (LocalPlayer.HasStatus(Buffs.FellhuntersVenom) &&
+            if (LocalPlayer.HasStatus(Buffs.FellhuntersVenom, out var _, false) &&
                 (ignoreRange || InActionRange(TwinfangThresh)))
             {
                 actionID = OriginalHook(Twinfang);
                 return true;
             }
 
-            if (LocalPlayer.HasStatus(Buffs.FellskinsVenom) &&
+            if (LocalPlayer.HasStatus(Buffs.FellskinsVenom, out var _, false) &&
                 (ignoreRange || InActionRange(TwinbloodThresh)))
             {
                 actionID = OriginalHook(Twinblood);
@@ -370,14 +370,14 @@ internal partial class VPR
             return false;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.HuntersVenom) &&
+        if (LocalPlayer.HasStatus(Buffs.HuntersVenom, out var _, false) &&
             (!requireMelee || ignoreRange || InActionRange(OriginalHook(Twinfang))))
         {
             actionID = OriginalHook(Twinfang);
             return true;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.SwiftskinsVenom) &&
+        if (LocalPlayer.HasStatus(Buffs.SwiftskinsVenom, out var _, false) &&
             (!requireMelee || ignoreRange || InActionRange(OriginalHook(Twinblood))))
         {
             actionID = OriginalHook(Twinblood);
@@ -398,7 +398,7 @@ internal partial class VPR
     private static bool UseUncoiledFuryInRotation(bool onAoE) =>
         !ShouldHoldNewTwinblade &&
         HasBothBuffs &&
-        !LocalPlayer.HasStatus(Buffs.Reawakened) && !LocalPlayer.HasStatus(Buffs.ReadyToReawaken) &&
+        !LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) && !LocalPlayer.HasStatus(Buffs.ReadyToReawaken, out var _, false) &&
         !JustUsed(Ouroboros) &&
         (onAoE
             ? !UsedVicepit && !UsedHuntersDen && !UsedSwiftskinsDen && IsAoEComboWeaveBlocked &&
@@ -410,7 +410,7 @@ internal partial class VPR
         IsCoilsCapped &&
         ActionReady(UncoiledFury) &&
         InActionRange(UncoiledFury) &&
-        !LocalPlayer.HasStatus(Buffs.Reawakened) &&
+        !LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) &&
         (onAoE ? IsAoEComboWeaveBlocked : IsSTComboWeaveBlocked) &&
         (ActionLearned(SerpentsIre) && IreCD <= GCD * (onAoE ? 2 : 3) ||
          HasCharges(onAoE ? Vicepit : Vicewinder));
@@ -437,7 +437,7 @@ internal partial class VPR
 
     private static bool UseVicepitCombo(ref uint actionId, bool ignoreRange = false)
     {
-        if (LocalPlayer.HasStatus(Buffs.Reawakened))
+        if (LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false))
             return false;
 
         if (UsedSwiftskinsDen &&
@@ -458,7 +458,7 @@ internal partial class VPR
     }
 
     private static bool UseVicepit(bool ignoreRange = false) =>
-        WithinGCD(Vicepit) && !LocalPlayer.HasStatus(Buffs.Reawakened) && !JustUsed(Vicepit) &&
+        WithinGCD(Vicepit) && !LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) && !JustUsed(Vicepit) &&
         !ShouldHoldNewTwinblade &&
         (ignoreRange || InActionRange(Vicepit)) &&
         (!HasBothBuffs || IreCD >= GCD * 4 || !ActionLearned(SerpentsIre));
@@ -486,7 +486,7 @@ internal partial class VPR
         bool useTrueNorth = false,
         int trueNorthCharges = 0,
         bool dynamicHoldCharge = false) =>
-        useReawakenCombo && LocalPlayer.HasStatus(Buffs.Reawakened)
+        useReawakenCombo && LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false)
             ? ReawakenCombo(actionId)
             : DoBasicCombo(useTrueNorth, onAoE, trueNorthCharges, dynamicHoldCharge);
 
@@ -500,7 +500,7 @@ internal partial class VPR
         !IsComboExpiring(6) && !IsVenomExpiring(4) && !IsHoningExpiring(4) &&
         !UsedVicewinder && !UsedHuntersCoil && !UsedSwiftskinsCoil &&
         !JustUsed(SerpentsIre, GCD * 4) && !JustUsed(Vicewinder) &&
-        !JustUsed(Ouroboros) && !LocalPlayer.HasStatus(Buffs.Reawakened) &&
+        !JustUsed(Ouroboros) && !LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) &&
         (!HasBothBuffs ||
          IsEmpowermentExpiring(4) ||
          IreCD >= GCD * 3 && InBossEncounter() || !InBossEncounter() || !ActionLearned(SerpentsIre));
@@ -515,7 +515,7 @@ internal partial class VPR
 
         if ((UsedVicewinder || UsedSwiftskinsCoil || UsedHuntersCoil) &&
             ActionLearned(Vicewinder) &&
-            !LocalPlayer.HasStatus(Buffs.Reawakened) &&
+            !LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) &&
             TryGetNextVicewinderCoil(vicewinderBuffPrio, out uint coil))
         {
             actionId = coil;
@@ -553,7 +553,7 @@ internal partial class VPR
     {
         coil = 0;
 
-        if (!LocalPlayer.HasStatus(Buffs.Swiftscaled) ||
+        if (!LocalPlayer.HasStatus(Buffs.Swiftscaled, out var _, false) ||
             HasBothBuffs && (!OnTargetsFlank() || !TargetNeedsPositionals()) ||
             vicewinderBuffPrio && LocalPlayer.Status(Buffs.Swiftscaled).RemainingTimeOrZero() < GCD * 6)
         {
@@ -561,7 +561,7 @@ internal partial class VPR
             return true;
         }
 
-        if (!LocalPlayer.HasStatus(Buffs.HuntersInstinct) ||
+        if (!LocalPlayer.HasStatus(Buffs.HuntersInstinct, out var _, false) ||
             HasBothBuffs && (!OnTargetsRear() || !TargetNeedsPositionals()) ||
             vicewinderBuffPrio && LocalPlayer.Status(Buffs.HuntersInstinct).RemainingTimeOrZero() < GCD * 6)
         {
@@ -612,12 +612,12 @@ internal partial class VPR
             IsOffCooldown(SerpentsIre);
 
         private protected static bool OpenerReawakenAlreadyUsed() =>
-            LocalPlayer.HasStatus(Buffs.Reawakened) || JustUsed(Reawaken);
+            LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) || JustUsed(Reawaken);
 
         private protected static bool OpenerTwinBiteMissed() =>
             OpenerReawakenAlreadyUsed() ||
-            !LocalPlayer.HasStatus(Buffs.HuntersVenom) &&
-            !LocalPlayer.HasStatus(Buffs.SwiftskinsVenom) &&
+            !LocalPlayer.HasStatus(Buffs.HuntersVenom, out var _, false) &&
+            !LocalPlayer.HasStatus(Buffs.SwiftskinsVenom, out var _, false) &&
             !JustUsed(HuntersCoil) &&
             !JustUsed(SwiftskinsCoil);
 
@@ -827,7 +827,7 @@ internal partial class VPR
     private static SerpentCombo SerpentCombo => Gauge.SerpentCombo;
 
     private static bool IsLegacyWeaveReady =>
-        LocalPlayer.HasStatus(Buffs.Reawakened) &&
+        LocalPlayer.HasStatus(Buffs.Reawakened, out var _, false) &&
         (SerpentCombo.HasFlag(SerpentCombo.FirstLegacy) ||
          SerpentCombo.HasFlag(SerpentCombo.SecondLegacy) ||
          SerpentCombo.HasFlag(SerpentCombo.ThirdLegacy) ||
@@ -927,3 +927,4 @@ internal partial class VPR
 
     #endregion
 }
+

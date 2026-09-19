@@ -102,7 +102,7 @@ internal partial class SGE
 
     private static bool UseKardia() =>
         ActionLearned(Kardia) &&
-        !LocalPlayer.HasStatus(Buffs.Kardia) &&
+        !LocalPlayer.HasStatus(Buffs.Kardia, out var _, false) &&
         Target is not null;
 
     private static bool UseRaidwide(ref uint actionID)
@@ -124,7 +124,7 @@ internal partial class SGE
 
         if (RaidwideEprognosis())
         {
-            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia)
+            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false)
                 ? OriginalHook(Prognosis)
                 : Eukrasia;
             return true;
@@ -181,7 +181,7 @@ internal partial class SGE
         ActionReady(Rhizomata) && Addersgall < threshold;
 
     private static bool UseSoteria() =>
-        ActionReady(Soteria) && LocalPlayer.HasStatus(Buffs.Kardia);
+        ActionReady(Soteria) && LocalPlayer.HasStatus(Buffs.Kardia, out var _, false);
 
     private static bool UsePhysis() =>
         ActionReady(OriginalHook(Physis));
@@ -198,16 +198,16 @@ internal partial class SGE
         ActionReady(Ixochole) && HasAddersgall;
 
     private static bool UsePhilosophia() =>
-        ActionReady(Philosophia) && !LocalPlayer.HasStatus(Buffs.Panhaima);
+        ActionReady(Philosophia) && !LocalPlayer.HasStatus(Buffs.Panhaima, out var _, false);
 
     private static bool UsePanhaima() =>
-        ActionReady(Panhaima) && !LocalPlayer.HasStatus(Buffs.Eudaimonia);
+        ActionReady(Panhaima) && !LocalPlayer.HasStatus(Buffs.Eudaimonia, out var _, false);
 
     private static bool UseZoe() =>
         ActionReady(Zoe) && (ActionReady(Pneuma) || !ActionLearned(Pneuma));
 
     private static bool UseAoEPepsis() =>
-        ActionReady(Pepsis) && LocalPlayer.HasStatus(Buffs.EukrasianPrognosis);
+        ActionReady(Pepsis) && LocalPlayer.HasStatus(Buffs.EukrasianPrognosis, out var _, false);
 
     private static bool UsePhlegma(bool burst, int chargePool, bool psycheEnabled)
     {
@@ -276,7 +276,7 @@ internal partial class SGE
             if (target is not null && target.CanApplyStatus(debuff.Debuff) &&
                 !JustUsedOn(debuff.Eukrasian, target) && ActionLearned(Eukrasia))
             {
-                actionID = LocalPlayer.HasStatus(Buffs.Eukrasia)
+                actionID = LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false)
                     ? dotAction.Retarget(retargetIds, target)
                     : Eukrasia;
                 return true;
@@ -290,7 +290,7 @@ internal partial class SGE
 
         if (ShouldRefreshEDosis())
         {
-            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia) ? dotAction : Eukrasia;
+            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false) ? dotAction : Eukrasia;
             return true;
         }
 
@@ -302,7 +302,7 @@ internal partial class SGE
             !JustUsedOn(debuff.Eukrasian, multiTarget) &&
             SGE_ST_Adv_DPS_EDosis_TwoTarget && ActionLearned(Eukrasia))
         {
-            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia)
+            actionID = LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false)
                 ? dotAction.Retarget(retargetIds, multiTarget)
                 : Eukrasia;
             return true;
@@ -368,7 +368,7 @@ internal partial class SGE
         (Eukrasia,
             () => SGE_ST_Adv_DPS_Movement[2] &&
                   ActionReady(Eukrasia) &&
-                  !LocalPlayer.HasStatus(Buffs.Eukrasia))
+                  !LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false))
     ];
 
     private static bool TryMovementOption(int index, ref uint actionID)
@@ -389,7 +389,7 @@ internal partial class SGE
     private static bool UseEukrasianDiagnosis(IGameObject? healTarget, bool simpleMode, ref uint actionID)
     {
         if (!ActionLearned(Eukrasia) ||
-            healTarget.HasStatus(Buffs.EukrasianDiagnosis))
+            healTarget.HasStatus(Buffs.EukrasianDiagnosis, out var _, false))
             return false;
 
         if (!simpleMode)
@@ -401,7 +401,7 @@ internal partial class SGE
                                !healTarget.HasStatus(Buffs.EukrasianDiagnosis, true) &&
                                !healTarget.HasStatus(Buffs.EukrasianPrognosis, true);
             bool scholarShieldCheck = !SGE_ST_Adv_Heal_EDiagnosisOpts[1] ||
-                                      !LocalPlayer.HasStatus(SCH.Buffs.Galvanize);
+                                      !LocalPlayer.HasStatus(SCH.Buffs.Galvanize, out var _, false);
             if (!shieldCheck || !scholarShieldCheck)
                 return false;
 
@@ -410,7 +410,7 @@ internal partial class SGE
                 return false;
         }
 
-        if (LocalPlayer.HasStatus(Buffs.Eukrasia) && ActionReady(EukrasianDiagnosis))
+        if (LocalPlayer.HasStatus(Buffs.Eukrasia, out var _, false) && ActionReady(EukrasianDiagnosis))
         {
             actionID = EukrasianDiagnosis.RetargetIfEnabled(actionID);
             return true;
@@ -434,7 +434,7 @@ internal partial class SGE
                            !healTarget.HasStatus(Buffs.EukrasianPrognosis, true);
 
         bool scholarShieldCheck = !SGE_ST_Adv_Heal_EDiagnosisOpts[1] ||
-                                  !LocalPlayer.HasStatus(SCH.Buffs.Galvanize);
+                                  !LocalPlayer.HasStatus(SCH.Buffs.Galvanize, out var _, false);
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
 
         switch (i)
@@ -455,7 +455,7 @@ internal partial class SGE
 
             case 2:
                 if (!IsEnabled(Preset.SGE_ST_Adv_Heal_Pepsis) ||
-                    !healTarget.HasStatus(Buffs.EukrasianDiagnosis))
+                    !healTarget.HasStatus(Buffs.EukrasianDiagnosis, out var _, false))
                     return false;
                 action = Pepsis;
                 config = SGE_ST_Adv_Heal_Pepsis;
@@ -591,7 +591,7 @@ internal partial class SGE
 
             case 5:
                 if (!IsEnabled(Preset.SGE_AoE_Adv_Heal_Pepsis) ||
-                    !LocalPlayer.HasStatus(Buffs.EukrasianPrognosis))
+                    !LocalPlayer.HasStatus(Buffs.EukrasianPrognosis, out var _, false))
                     return false;
                 action = Pepsis;
                 config = SGE_AoE_Adv_Heal_PepsisOption;
@@ -825,3 +825,4 @@ internal partial class SGE
 
     #endregion
 }
+

@@ -92,7 +92,7 @@ internal partial class MCH : PhysicalRanged
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpreadShot, Scattergun))
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
+            if (LocalPlayer.HasStatus(Buffs.Flamethrower, out var _, false) || JustUsed(Flamethrower, GCD))
                 return All.Cease;
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
@@ -137,7 +137,7 @@ internal partial class MCH : PhysicalRanged
                     return FullMetalField;
 
                 if (ActionReady(Flamethrower) &&
-                    !LocalPlayer.HasStatus(Buffs.Reassembled) &&
+                    !LocalPlayer.HasStatus(Buffs.Reassembled, out var _, false) &&
                     !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(3))
                     return Flamethrower;
 
@@ -306,7 +306,7 @@ internal partial class MCH : PhysicalRanged
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.AoEDPS, SpreadShot, Scattergun))
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.Flamethrower) || JustUsed(Flamethrower, GCD))
+            if (LocalPlayer.HasStatus(Buffs.Flamethrower, out var _, false) || JustUsed(Flamethrower, GCD))
                 return All.Cease;
 
             if (ContentSpecificActions.TryGet(ref actionID, out uint contentAction))
@@ -367,7 +367,7 @@ internal partial class MCH : PhysicalRanged
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_FlameThrower) &&
                     ActionReady(Flamethrower) &&
-                    !LocalPlayer.HasStatus(Buffs.Reassembled) &&
+                    !LocalPlayer.HasStatus(Buffs.Reassembled, out var _, false) &&
                     (MCH_AoE_FlamethrowerMovement == 1 ||
                      MCH_AoE_FlamethrowerMovement == 0 && !IsMoving() &&
                      TimeStoodStill > TimeSpan.FromSeconds(MCH_AoE_FlamethrowerTimeStill)) &&
@@ -432,7 +432,7 @@ internal partial class MCH : PhysicalRanged
                 return actionID;
 
             return (IsOnCooldown(Dismantle) || !ActionLearned(Dismantle) || !HasBattleTarget()) &&
-                   ActionReady(Tactician) && !LocalPlayer.HasStatus(Buffs.Tactician)
+                   ActionReady(Tactician) && !LocalPlayer.HasStatus(Buffs.Tactician, out var _, false)
                 ? Tactician
                 : actionID;
         }
@@ -449,17 +449,17 @@ internal partial class MCH : PhysicalRanged
 
             if (IsEnabled(Preset.MCH_Heatblast_AutoBarrel) &&
                 ActionReady(BarrelStabilizer) && !IsOverheated &&
-                !LocalPlayer.HasStatus(Buffs.FullMetalMachinist))
+                !LocalPlayer.HasStatus(Buffs.FullMetalMachinist, out var _, false))
                 return BarrelStabilizer;
 
             if (IsEnabled(Preset.MCH_Heatblast_Wildfire) &&
                 ActionReady(Wildfire) && JustUsed(Hypercharge) &&
-                !LocalPlayer.HasStatus(Buffs.Wildfire) &&
+                !LocalPlayer.HasStatus(Buffs.Wildfire, out var _, false) &&
                 CurrentTarget.CanApplyStatus(Debuffs.Wildfire))
                 return Wildfire;
 
             if (!IsOverheated &&
-                (ActionReady(Hypercharge) || LocalPlayer.HasStatus(Buffs.Hypercharged)))
+                (ActionReady(Hypercharge) || LocalPlayer.HasStatus(Buffs.Hypercharged, out var _, false)))
                 return Hypercharge;
 
             if (IsEnabled(Preset.MCH_Heatblast_GaussRound) &&
@@ -485,11 +485,11 @@ internal partial class MCH : PhysicalRanged
 
             if (IsEnabled(Preset.MCH_AutoCrossbow_AutoBarrel) &&
                 ActionReady(BarrelStabilizer) && !IsOverheated &&
-                !LocalPlayer.HasStatus(Buffs.FullMetalMachinist))
+                !LocalPlayer.HasStatus(Buffs.FullMetalMachinist, out var _, false))
                 return BarrelStabilizer;
 
             if (!IsOverheated &&
-                (ActionReady(Hypercharge) || LocalPlayer.HasStatus(Buffs.Hypercharged)))
+                (ActionReady(Hypercharge) || LocalPlayer.HasStatus(Buffs.Hypercharged, out var _, false)))
                 return Hypercharge;
 
             if (IsEnabled(Preset.MCH_AutoCrossbow_GaussRound) &&
@@ -530,7 +530,7 @@ internal partial class MCH : PhysicalRanged
 
             return actionID switch
             {
-                HotShot when ActionLearned(Excavator) && LocalPlayer.HasStatus(Buffs.ExcavatorReady) => CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill),
+                HotShot when ActionLearned(Excavator) && LocalPlayer.HasStatus(Buffs.ExcavatorReady, out var _, false) => CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill),
                 HotShot when ActionLearned(Chainsaw) => CalcBestAction(actionID, Chainsaw, AirAnchor, Drill),
                 HotShot when ActionLearned(AirAnchor) => CalcBestAction(actionID, AirAnchor, Drill),
                 HotShot when ActionLearned(Drill) => CalcBestAction(actionID, Drill, HotShot),
@@ -560,3 +560,4 @@ internal partial class MCH : PhysicalRanged
         }
     }
 }
+

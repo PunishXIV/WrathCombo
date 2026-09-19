@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Conditions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
@@ -128,13 +128,13 @@ internal partial class BLU : Caster
         {
             if (actionID is FinalSting)
             {
-                if (IsEnabled(Preset.BLU_SoloMode) && HasCondition(ConditionFlag.BoundByDuty) && !LocalPlayer.HasStatus(Buffs.BasicInstinct) && GetPartyMembers().Count == 0 && ActionReady(BasicInstinct))
+                if (IsEnabled(Preset.BLU_SoloMode) && HasCondition(ConditionFlag.BoundByDuty) && !LocalPlayer.HasStatus(Buffs.BasicInstinct, out var _, false) && GetPartyMembers().Count == 0 && ActionReady(BasicInstinct))
                     return BasicInstinct;
-                if (!LocalPlayer.HasStatus(Buffs.Whistle) && ActionReady(Whistle) && !WasLastAction(Whistle))
+                if (!LocalPlayer.HasStatus(Buffs.Whistle, out var _, false) && ActionReady(Whistle) && !WasLastAction(Whistle))
                     return Whistle;
-                if (!LocalPlayer.HasStatus(Buffs.Tingle) && ActionReady(Tingle) && !WasLastSpell(Tingle))
+                if (!LocalPlayer.HasStatus(Buffs.Tingle, out var _, false) && ActionReady(Tingle) && !WasLastSpell(Tingle))
                     return Tingle;
-                if (!LocalPlayer.HasStatus(Buffs.MoonFlute) && !WasLastSpell(MoonFlute) && ActionReady(MoonFlute))
+                if (!LocalPlayer.HasStatus(Buffs.MoonFlute, out var _, false) && !WasLastSpell(MoonFlute) && ActionReady(MoonFlute))
                     return MoonFlute;
                 if (IsEnabled(Preset.BLU_Primals))
                 {
@@ -200,9 +200,9 @@ internal partial class BLU : Caster
             {
                 if (!CurrentTarget.HasStatus(Debuffs.Offguard, true) && ActionReady(Offguard))
                     return Offguard;
-                if (!CurrentTarget.HasStatus(Debuffs.Malodorous, true) && LocalPlayer.HasStatus(Buffs.TankMimicry) && ActionReady(BadBreath))
+                if (!CurrentTarget.HasStatus(Debuffs.Malodorous, true) && LocalPlayer.HasStatus(Buffs.TankMimicry, out var _, false) && ActionReady(BadBreath))
                     return BadBreath;
-                if (ActionReady(Devour) && LocalPlayer.HasStatus(Buffs.TankMimicry))
+                if (ActionReady(Devour) && LocalPlayer.HasStatus(Buffs.TankMimicry, out var _, false))
                     return Devour;
                 if (Role.CanLucidDream(9000))
                     return Role.LucidDreaming;
@@ -216,7 +216,7 @@ internal partial class BLU : Caster
     {
         protected internal override Preset Preset => Preset.BLU_Addle;
 
-        protected override uint Invoke(uint actionID) => actionID is MagicHammer && IsOnCooldown(MagicHammer) && ActionReady(Role.Addle) && !CurrentTarget.HasStatus(Role.Debuffs.Addle) && !CurrentTarget.HasStatus(Debuffs.Conked) ? Role.Addle : actionID;
+        protected override uint Invoke(uint actionID) => actionID is MagicHammer && IsOnCooldown(MagicHammer) && ActionReady(Role.Addle) && !CurrentTarget.HasStatus(Role.Debuffs.Addle, out var _, false) && !CurrentTarget.HasStatus(Debuffs.Conked, out var _, false) ? Role.Addle : actionID;
     }
 
     internal class BLU_KnightCombo : CustomCombo
@@ -227,9 +227,9 @@ internal partial class BLU : Caster
         {
             if (actionID is WhiteKnightsTour or BlackKnightsTour)
             {
-                if (CurrentTarget.HasStatus(Debuffs.Slow) && ActionReady(BlackKnightsTour))
+                if (CurrentTarget.HasStatus(Debuffs.Slow, out var _, false) && ActionReady(BlackKnightsTour))
                     return BlackKnightsTour;
-                if (CurrentTarget.HasStatus(Debuffs.Bind) && ActionReady(WhiteKnightsTour))
+                if (CurrentTarget.HasStatus(Debuffs.Bind, out var _, false) && ActionReady(WhiteKnightsTour))
                     return WhiteKnightsTour;
             }
 
@@ -245,9 +245,9 @@ internal partial class BLU : Caster
         {
             if (actionID is PeripheralSynthesis)
             {
-                if (!CurrentTarget.HasStatus(Debuffs.Lightheaded) && ActionReady(PeripheralSynthesis))
+                if (!CurrentTarget.HasStatus(Debuffs.Lightheaded, out var _, false) && ActionReady(PeripheralSynthesis))
                     return PeripheralSynthesis;
-                if (CurrentTarget.HasStatus(Debuffs.Lightheaded) && ActionReady(MustardBomb))
+                if (CurrentTarget.HasStatus(Debuffs.Lightheaded, out var _, false) && ActionReady(MustardBomb))
                     return MustardBomb;
             }
 
@@ -270,7 +270,7 @@ internal partial class BLU : Caster
         {
             if (actionID is DeepClean)
             {
-                if (ActionReady(PeatPelt) && !CurrentTarget.HasStatus(Debuffs.Begrimed))
+                if (ActionReady(PeatPelt) && !CurrentTarget.HasStatus(Debuffs.Begrimed, out var _, false))
                     return PeatPelt;
             }
 
@@ -287,7 +287,7 @@ internal partial class BLU : Caster
             if (actionID is not SongOfTorment)
                 return actionID;
 
-            if (IsSpellActive(Bristle) && ActionReady(Bristle) && !LocalPlayer.HasStatus(Buffs.Bristle))
+            if (IsSpellActive(Bristle) && ActionReady(Bristle) && !LocalPlayer.HasStatus(Buffs.Bristle, out var _, false))
                 return Bristle;
 
             return ActionReady(SongOfTorment) ? SongOfTorment : actionID;
@@ -303,7 +303,7 @@ internal partial class BLU : Caster
             if (actionID is not (FeatherRain or Eruption))
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.PhantomFlurry))
+            if (LocalPlayer.HasStatus(Buffs.PhantomFlurry, out var _, false))
                 return OriginalHook(PhantomFlurry);
 
             if (IsEnabled(Preset.BLU_PrimalCombo_WingedReprobation) &&
@@ -372,18 +372,18 @@ internal partial class BLU : Caster
             if (actionID is not MoonFlute)
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.WaningNocturne))
+            if (LocalPlayer.HasStatus(Buffs.WaningNocturne, out var _, false))
                 return actionID;
 
             if (LocalPlayer.Status(Buffs.PhantomFlurry).RemainingTimeOrZero() > 0)
                 return All.Cease;
 
-            if (!LocalPlayer.HasStatus(Buffs.MoonFlute))
+            if (!LocalPlayer.HasStatus(Buffs.MoonFlute, out var _, false))
             {
-                if (ActionReady(Whistle) && !LocalPlayer.HasStatus(Buffs.Whistle) && !WasLastAction(Whistle))
+                if (ActionReady(Whistle) && !LocalPlayer.HasStatus(Buffs.Whistle, out var _, false) && !WasLastAction(Whistle))
                     return Whistle;
 
-                if (ActionReady(Tingle) && !LocalPlayer.HasStatus(Buffs.Tingle))
+                if (ActionReady(Tingle) && !LocalPlayer.HasStatus(Buffs.Tingle, out var _, false))
                     return Tingle;
 
                 if (IsSpellActive(RoseOfDestruction) && GetCooldownRemainingTime(RoseOfDestruction) < 1f)
@@ -410,7 +410,7 @@ internal partial class BLU : Caster
                 if ((!CurrentTarget.HasStatus(Debuffs.BreathOfMagic, true) && IsSpellActive(BreathOfMagic)) ||
                     (!CurrentTarget.HasStatus(Debuffs.MortalFlame, true) && IsSpellActive(MortalFlame)))
                 {
-                    if (ActionReady(Bristle) && !LocalPlayer.HasStatus(Buffs.Bristle))
+                    if (ActionReady(Bristle) && !LocalPlayer.HasStatus(Buffs.Bristle, out var _, false))
                         return Bristle;
 
                     if (ActionReady(FeatherRain))
@@ -431,7 +431,7 @@ internal partial class BLU : Caster
                 if (ActionReady(WingedReprobation) &&
                     !WasLastSpell(WingedReprobation) &&
                     !WasLastAbility(FeatherRain) &&
-                    (!LocalPlayer.HasStatus(Buffs.WingedReprobation) ||
+                    (!LocalPlayer.HasStatus(Buffs.WingedReprobation, out var _, false) ||
                      LocalPlayer.Status(Buffs.WingedReprobation)?.Param < 2))
                     return WingedReprobation;
 
@@ -457,7 +457,7 @@ internal partial class BLU : Caster
                 return BeingMortal;
 
             if (ActionReady(Bristle) &&
-                !LocalPlayer.HasStatus(Buffs.Bristle) &&
+                !LocalPlayer.HasStatus(Buffs.Bristle, out var _, false) &&
                 ActionReady(MatraMagic))
                 return Bristle;
 
@@ -467,7 +467,7 @@ internal partial class BLU : Caster
             if (IsSpellActive(Surpanakha) && GetRemainingCharges(Surpanakha) > 0)
                 return Surpanakha;
 
-            if (ActionReady(MatraMagic) && LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
+            if (ActionReady(MatraMagic) && LocalPlayer.HasStatus(Role.Buffs.Swiftcast, out var _, false))
                 return MatraMagic;
 
             if (ActionReady(BeingMortal) && IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
@@ -476,7 +476,7 @@ internal partial class BLU : Caster
             if (ActionReady(PhantomFlurry))
                 return PhantomFlurry;
 
-            if (LocalPlayer.HasStatus(Buffs.MoonFlute))
+            if (LocalPlayer.HasStatus(Buffs.MoonFlute, out var _, false))
                 return All.Cease;
 
             return actionID;
@@ -485,3 +485,4 @@ internal partial class BLU : Caster
 
     #endregion
 }
+
