@@ -684,7 +684,7 @@ internal partial class PCT
         internal static uint BlizzardinCyanSteps => OriginalHook(BlizzardinCyan);
 
         internal static uint HolyInWhiteOrCometinBlack =>
-            HasStatusEffect(Buffs.MonochromeTones) ? CometinBlack : HolyInWhite;
+            LocalPlayer.HasStatus(Buffs.MonochromeTones) ? CometinBlack : HolyInWhite;
     }
 
     internal abstract class PCTMaxLvlOpenerBase : PCTOpenerBase
@@ -787,7 +787,7 @@ internal partial class PCT
         ];
 
         public PCT2ndStarryMaxLvl() =>
-            SkipSteps.Add(([18], () => !HasStatusEffect(Buffs.RainbowBright)));
+            SkipSteps.Add(([18], () => !LocalPlayer.HasStatus(Buffs.RainbowBright)));
     }
 
     internal class PCT3rdStarryMaxLvl : PCTMaxLvlOpenerBase
@@ -827,7 +827,7 @@ internal partial class PCT
         ];
 
         public PCT3rdStarryMaxLvl() =>
-            SkipSteps.Add(([19], () => !HasStatusEffect(Buffs.RainbowBright)));
+            SkipSteps.Add(([19], () => !LocalPlayer.HasStatus(Buffs.RainbowBright)));
     }
 
     internal class PCT2ndStarryLvl90 : PCTLvl90OpenerBase
