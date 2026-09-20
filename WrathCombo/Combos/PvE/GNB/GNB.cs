@@ -162,7 +162,7 @@ internal partial class GNB : Tank
                 return OriginalHook(Continuation);
 
             //No Mercy
-            if (ShouldUseNoMercy(Preset.GNB_ST_NoMercy, HPThresholdNM))
+            if (ShouldUseNoMercy(Preset.GNB_ST_NoMercy, (GNB_ST_NM_BossOption == 1 || !TargetIsBoss()) ? GNB_ST_NM_HPOption : 0))
                 return NoMercy;
 
             //Bloodfest

@@ -790,7 +790,7 @@ internal partial class SMN
 
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
-            5,
+            6,
         ];
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =

@@ -393,6 +393,50 @@ internal partial class BLU : Caster
                     return MoonFlute;
             }
 
+            if (HasHealerMimicry && LocalPlayer.HasStatus(Buffs.MoonFlute))
+            {
+                if (CanWeave())
+                {
+                    if (!Config.BLU_ManualJKick && ActionReady(JKick))
+                        return JKick;
+
+                    if (ActionReady(Nightbloom))
+                        return Nightbloom;
+
+                    if (UseConvictionMarcato(ref actionID))
+                        return actionID;
+
+                    if (ActionReady(FeatherRain))
+                        return FeatherRain.Retarget(MoonFlute, Target);
+
+                    if (ActionReady(SeaShanty))
+                        return SeaShanty;
+
+                    if (ActionReady(ShockStrike))
+                        return ShockStrike;
+
+                    if (ActionReady(BeingMortal))
+                        return BeingMortal;
+
+                    if (IsSpellActive(Surpanakha) && GetRemainingCharges(Surpanakha) > 0)
+                        return Surpanakha;
+
+                    if (ActionReady(PhantomFlurry))
+                        return PhantomFlurry;
+                }
+
+                if (ActionReady(TripleTrident))
+                    return TripleTrident;
+
+                if (ActionReady(WingedReprobation))
+                    return OriginalHook(WingedReprobation);
+
+                if (IsSpellActive(SonicBoom))
+                    return SonicBoom;
+
+                return All.Cease;
+            }
+
             if (!Config.BLU_ManualJKick && ActionReady(JKick))
                 return JKick;
 
@@ -445,29 +489,30 @@ internal partial class BLU : Caster
             if (UseConvictionMarcato(ref actionID))
                 return actionID;
 
-            if (ActionReady(WingedReprobation) &&
-                !WasLastAbility(ShockStrike) &&
-                LocalPlayer.Status(Buffs.WingedReprobation)?.Param < 2)
-                return WingedReprobation;
-
             if (ActionReady(ShockStrike))
                 return ShockStrike;
 
             if (ActionReady(BeingMortal) && IsNotEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
                 return BeingMortal;
 
-            if (ActionReady(Bristle) &&
+            if (ActionReady(WingedReprobation))
+                return OriginalHook(WingedReprobation);
+
+            if (!HasHealerMimicry &&
+                ActionReady(Bristle) &&
                 !LocalPlayer.HasStatus(Buffs.Bristle) &&
                 ActionReady(MatraMagic))
                 return Bristle;
 
-            if (ActionReady(Role.Swiftcast))
+            if (!HasHealerMimicry && ActionReady(Role.Swiftcast))
                 return Role.Swiftcast;
 
             if (IsSpellActive(Surpanakha) && GetRemainingCharges(Surpanakha) > 0)
                 return Surpanakha;
 
-            if (ActionReady(MatraMagic) && LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
+            if (!HasHealerMimicry &&
+                ActionReady(MatraMagic) &&
+                LocalPlayer.HasStatus(Role.Buffs.Swiftcast))
                 return MatraMagic;
 
             if (ActionReady(BeingMortal) && IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
@@ -475,6 +520,9 @@ internal partial class BLU : Caster
 
             if (ActionReady(PhantomFlurry))
                 return PhantomFlurry;
+
+            if (LocalPlayer.HasStatus(Buffs.MoonFlute) && IsSpellActive(SonicBoom))
+                return SonicBoom;
 
             if (LocalPlayer.HasStatus(Buffs.MoonFlute))
                 return All.Cease;

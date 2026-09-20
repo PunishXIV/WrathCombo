@@ -787,7 +787,7 @@ internal partial class PCT
         ];
 
         public PCT2ndStarryMaxLvl() =>
-            SkipSteps.Add(([18], () => !HasStatusEffect(Buffs.RainbowBright)));
+            SkipSteps.Add(([19], () => !HasStatusEffect(Buffs.RainbowBright)));
     }
 
     internal class PCT3rdStarryMaxLvl : PCTMaxLvlOpenerBase
@@ -827,7 +827,7 @@ internal partial class PCT
         ];
 
         public PCT3rdStarryMaxLvl() =>
-            SkipSteps.Add(([19], () => !HasStatusEffect(Buffs.RainbowBright)));
+            SkipSteps.Add(([20], () => !HasStatusEffect(Buffs.RainbowBright)));
     }
 
     internal class PCT2ndStarryLvl90 : PCTLvl90OpenerBase

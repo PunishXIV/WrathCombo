@@ -31,7 +31,6 @@ using WrathCombo.Resources.Localization.UI.Settings;
 using WrathCombo.Services;
 using static WrathCombo.Attributes.PossiblyRetargetedAttribute;
 using static WrathCombo.Core.PresetStorage;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
 using AW = WrathCombo.Data.ActionWatching;
 namespace WrathCombo.Window.Functions;
@@ -95,6 +94,9 @@ internal class Presets : ConfigWindow
         var comboType = presetData.ComboType;
 
         ImGui.Spacing();
+
+        if (parent?.Attributes().ComboType is ComboType.AdvancedDPS)
+            DrawBurstAttribute(presetData);
 
         if (presetData.AutoAction != null && (!presetData.IsPvP || HiddenFeaturesData.FeaturesEnabled))
         {
@@ -413,7 +415,7 @@ internal class Presets : ConfigWindow
                 }
                 else
                 {
-                   texture = Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
+                    texture = Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
                 }
 
                 if (texture is not null)
@@ -443,6 +445,41 @@ internal class Presets : ConfigWindow
         {
             ex.Log();
         }
+    }
+
+    private static void DrawBurstAttribute(PresetData presetData)
+    {
+
+        if (!Service.Configuration.BurstPresets.ContainsKey(presetData.Preset))
+        {
+            Service.Configuration.BurstPresets.Add(presetData.Preset, true);
+            Service.Configuration.Save();
+        }
+
+        bool val = Service.Configuration.BurstPresets[presetData.Preset];
+
+        var colour = val ? ImGuiColors.HealerGreen : ImGuiColors.DalamudRed;
+
+        ImGui.PushStyleColor(ImGuiCol.Button, colour);
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, colour);
+        ImGui.PushStyleColor(ImGuiCol.ButtonActive, colour);
+
+        if (ImGuiEx.Button($"###BurstCustom{presetData.Preset}"))
+        {
+            Service.Configuration.BurstPresets[presetData.Preset] = !val;
+            Service.Configuration.Save();
+        }
+
+        ImGui.PopStyleColor(3);
+
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.TextUnformatted(FeaturesUI.Hover_BurstToggle);
+            ImGui.Text(val ? FeaturesUI.IncludedBurst : FeaturesUI.ExcludedBurst);
+            ImGui.EndTooltip();
+        }
+        ImGui.SameLine();
     }
 
     private static void DrawReplaceAttribute(PresetData presetData, CustomActionType customActMode)

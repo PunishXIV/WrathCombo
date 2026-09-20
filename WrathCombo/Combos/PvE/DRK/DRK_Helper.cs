@@ -352,7 +352,7 @@ internal partial class DRK
         {
             SkipSteps.Add(([6], () => DRK_ST_OpenerAction == (int)PullAction.HardSlash)); // Skip the duplicate HardSlash, if pulling with HardSlash
             SkipSteps.Add(([8], () => IsOnCooldown(SaltedEarth))); // Skip Salted Earth if on cooldown
-            SkipSteps.Add(([9], () => DRK_ST_OpenerAction == (int)PullAction.Unmend)); // Skip the aligning HardSlash, if pulling with Unmend
+            SkipSteps.Add(([9], () => DRK_ST_OpenerAction == (int)PullAction.Unmend));
             SkipSteps.Add(([16], () => !ActionReady(SaltAndDarkness))); // Skip Salt and Darkness when not ready
             SkipSteps.Add(([19], () => Gauge.Blood < 50)); // Skip Blood spenders when no Blood
         }

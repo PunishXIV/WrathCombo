@@ -643,6 +643,17 @@ internal partial class SAM
             GetRemainingCharges(Role.TrueNorth) >= 1 &&
             IsOffCooldown(Ikishoten) &&
             SenCount is 0;
+
+        protected static bool TendoKaeshiUnavailable() =>
+            !HasStatusEffect(Buffs.TsubameReady) &&
+            !HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) &&
+            !JustUsed(TendoSetsugekka);
+
+        protected static bool ShohaUnavailable() =>
+            MeditationStacks < 3 &&
+            !JustUsed(OgiNamikiri) &&
+            !JustUsed(TendoSetsugekka) &&
+            !JustUsed(MidareSetsugekka);
     }
 
     internal class SAMLvl70Opener : SAMOpenerBase
@@ -706,6 +717,9 @@ internal partial class SAM
             () => KaeshiSetsugekka // 21
         ];
 
+        public SAMLvl80Opener() =>
+            SkipSteps.Add(([20], ShohaUnavailable));
+
         public override bool HasCooldowns() =>
             base.HasCooldowns() &&
             GetRemainingCharges(MeikyoShisui) is 2 &&
@@ -745,6 +759,9 @@ internal partial class SAM
         ];
 
         public override List<int> AllowUpgradeSteps { get; set; } = [20];
+
+        public SAMLvl90Opener() =>
+            SkipSteps.Add(([16], ShohaUnavailable));
 
         public override bool HasCooldowns() =>
             base.HasCooldowns() &&
@@ -795,8 +812,9 @@ internal partial class SAM
             SkipSteps.Add(([22], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 2));
             SkipSteps.Add(([27], () => !ActionReady(Gyoten) || (int)SAM_ST_Opener_IncludeGyoten is 1 or 3));
             SkipSteps.Add(([9, 26], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))));
-            SkipSteps.Add(([11, 28], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)));
-            SkipSteps.Add(([15], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko))));
+            SkipSteps.Add(([11, 28], TendoKaeshiUnavailable));
+            SkipSteps.Add(([15], () => SenCount is not 1 && !(SenCount is 0 && JustUsed(Gekko))));
+            SkipSteps.Add(([17], ShohaUnavailable));
         }
 
         public override bool HasCooldowns() =>
@@ -837,16 +855,16 @@ internal partial class SAM
             () => Shoha, // 23
             () => Yukikaze, // 24
             () => TendoKaeshiSetsugekka, // 25
-            () => Kasha, // 26
-            () => Gyofu, // 27
-            () => Yukikaze // 28
+            () => Gyofu, // 26
+            () => Yukikaze // 27
         ];
 
         public SAMFRUOpener()
         {
             SkipSteps.Add(([19, 21], () => !ActionReady(Shinten)));
             SkipSteps.Add(([9, 22], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))));
-            SkipSteps.Add(([11, 25], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)));
+            SkipSteps.Add(([11, 25], TendoKaeshiUnavailable));
+            SkipSteps.Add(([23], ShohaUnavailable));
         }
 
         public override bool HasCooldowns() =>

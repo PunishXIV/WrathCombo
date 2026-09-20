@@ -28,8 +28,10 @@ internal class JobInfoAttribute : Attribute
         };
 
         Order = order;
-        Role = GetRoleFromJob(Job);
         RoleForIcon = jobRoleIcon == JobRole.All ? null : jobRoleIcon;
+        // For Normal Jobs, get the role. For Roles & Content, use the Icon if given
+        Role = job is Job.ADV ? jobRoleIcon : GetRoleFromJob(job); ;
+
     }
 
     /// <summary> Associated job ID (with gathering jobs mapped to MIN). </summary>

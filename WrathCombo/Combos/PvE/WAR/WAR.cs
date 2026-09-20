@@ -1,6 +1,5 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using System;
-using ECommons;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
