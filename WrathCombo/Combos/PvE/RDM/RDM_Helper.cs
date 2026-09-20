@@ -404,7 +404,7 @@ internal partial class RDM
         public GapClosing()
         {
             SkipSteps.Add(([17, 22], () => !InMeleeRange()));
-            SkipSteps.Add(([36], () => !LocalPlayer.HasStatus(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast)));
+            SkipSteps.Add(([37], () => !LocalPlayer.HasStatus(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast)));
         }
     }
 
@@ -451,7 +451,7 @@ internal partial class RDM
         ];
 
         public FirstGCD() =>
-            SkipSteps.Add(([12, 16], () => !InMeleeRange()));
+            SkipSteps.Add(([13, 17], () => !InMeleeRange()));
 
         public override bool HasCooldowns() =>
             base.HasCooldowns() &&

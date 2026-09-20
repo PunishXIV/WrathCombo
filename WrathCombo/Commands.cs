@@ -875,6 +875,31 @@ public partial class WrathCombo
             return;
         }
 
+        if (argument.Length > 1 && argument[1] == "custom")
+        {
+            var presetsToToggle = Service.Configuration.BurstPresets.Where(x => x.Key.Attributes()?.JobInfo.Job == Player.Job && x.Value);
+            if (presetsToToggle.Count() == 0)
+            {
+                DuoLog.Error("No custom burst presets defined for your current job. Please open the job in the UI to populate this list");
+                return;
+            }
+
+            bool hold = argument.Length > 2 && argument[2] is "hold" or "disable";
+            bool resume = argument.Length > 2 && argument[2] is "resume" or "enable";
+            bool toggle = !hold && !resume;
+
+            foreach (var preset in presetsToToggle.Select(x => x.Key))
+            {
+                if (hold)
+                    PresetStorage.DisablePreset(preset, ConfigChangeSource.Command);
+                if (resume)
+                    PresetStorage.EnablePreset(preset, ConfigChangeSource.Command);
+                if (toggle)
+                    PresetStorage.TogglePreset(preset, ConfigChangeSource.Command);
+            }
+            return;
+        }
+
         if (!BurstPresetMap.TryGetValue(Player.Job, out var presets))
         {
             DuoLog.Error("No burst presets defined for your current job.");

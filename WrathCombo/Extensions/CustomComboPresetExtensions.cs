@@ -13,10 +13,9 @@ namespace WrathCombo.Extensions;
 
 internal static partial class PresetExtensions
 {
-    public static PresetStorage.PresetData Attributes(this Preset preset)
+    public static PresetStorage.PresetData? Attributes(this Preset preset)
     {
-
-        return PresetStorage.AllPresets[preset];
+        return PresetStorage.AllPresets.TryGetValue(preset, out var attr) ? attr : null;
     }
 
     public static string Name(this Preset? preset) =>

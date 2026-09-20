@@ -67,7 +67,7 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
             .Where(kvp => (int)kvp.Key > 100)
             .Where(kvp => kvp.Value.Parent == null)
             .Where(kvp => kvp.Value.JobInfo != null)
-            .OrderBy(kvp => GetRoleOrder(kvp.Value.JobInfo.Role))
+            .OrderBy(kvp => kvp.Value.JobInfo.Job is Job.ADV ? 5 : GetRoleOrder(kvp.Value.JobInfo.Role))
             .ThenByDescending(kvp => kvp.Value.JobInfo.Job is Job.ADV)
             .ThenByDescending(kvp => kvp.Value.JobInfo.Job is Job.MIN)
             .ThenBy(kvp => kvp.Value.JobInfo.Job)
@@ -280,8 +280,6 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 
         if (OpenWindow == OpenWindow.None)
             OpenWindow = OpenWindow.PvE;
-
-        ImGui.TextWrapped($"Tip: If a combo replaces an action, you can drag the action directly from this window to your hotbar!"); //Todo Remove this after some time once people are used to it.
 
         switch (OpenWindow)
         {

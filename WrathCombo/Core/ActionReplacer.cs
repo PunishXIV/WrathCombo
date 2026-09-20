@@ -223,8 +223,6 @@ internal sealed class ActionReplacer : IDisposable
     {
         var playerJob = Player.Job;
         var upgradedJob = playerJob.GetUpgradedJob();
-        if (upgradedJob is Job.BTN or Job.FSH)
-            upgradedJob = Job.MIN; // Allow all DoL jobs to be used for DoL combos
 
         FilteredCombos = CustomCombos.Where(x =>
         {
@@ -235,11 +233,17 @@ internal sealed class ActionReplacer : IDisposable
             if (presetData.IsPvP != CustomComboFunctions.InPvP()) // Are we in PvP?
                 return false;
 
-            return
-                // Role & Content
-                (presetData.JobInfo.Job is Job.ADV && presetData.JobInfo.Role is JobRole role && role.MatchesPlayerJob()) ||
-                // Job Specific
-                presetData.JobInfo.Job == upgradedJob;
+            return presetData.JobInfo.Job switch
+            {
+                // Role & Content - Custom Combos for Roles & Content are not top level. Read the role from the Root Parent
+                Job.ADV => presetData.RootParent.Attributes().JobInfo.Role.MatchesPlayerJob(),
+
+                // DoL - Check role match for gatherer jobs
+                Job.BTN or Job.MIN or Job.FSH => presetData.JobInfo.Role.MatchesPlayerJob(),
+
+                // Job Specific - Match against the upgraded job
+                _ => presetData.JobInfo.Job == upgradedJob
+            };
         });
 
         var filteredCombos = FilteredCombos as CustomCombo[] ?? FilteredCombos.ToArray();

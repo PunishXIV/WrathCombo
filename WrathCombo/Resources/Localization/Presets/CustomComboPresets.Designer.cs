@@ -17913,7 +17913,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Occult Aero into the rotation..
+        ///   Looks up a localized string similar to Adds the highest available Occult Aero into the rotation. Only one Aero can be active at a time..
         /// </summary>
         internal static string Phantom_BlueMage_OccultAero_Desc {
             get {
@@ -19532,6 +19532,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string Phantom_RedMage_OccultLibra_Name {
             get {
                 return ResourceManager.GetString("Phantom_RedMage_OccultLibra_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reapply Occult Libra before the weakness drops, instead of waiting until it is gone..
+        /// </summary>
+        internal static string Phantom_RedMage_OccultLibra_Refresh_Desc {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultLibra_Refresh_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh Early.
+        /// </summary>
+        internal static string Phantom_RedMage_OccultLibra_Refresh_Name {
+            get {
+                return ResourceManager.GetString("Phantom_RedMage_OccultLibra_Refresh_Name", resourceCulture);
             }
         }
         

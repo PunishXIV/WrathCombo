@@ -2384,6 +2384,7 @@ public enum Preset
 
     [AutoAction(false, false)]
     [ReplaceSkill(BST.SmashAxe)]
+    [SimpleDPSCombo]
     [JobInfo(Job.BST)]
     BST_SimpleMode = 2500,
 

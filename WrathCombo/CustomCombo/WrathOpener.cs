@@ -81,7 +81,7 @@ public abstract class WrathOpener
 
                 if (value == OpenerState.OpenerReady)
                 {
-                    if (Service.Configuration.OutputOpenerLogs)
+                    if (Service.Configuration.OutputOpenerLogs && !SilenceOutput)
                         DuoLog.Information("Opener Now Ready");
                     else
                         Svc.Log.Debug($"Opener Now Ready");
@@ -89,7 +89,7 @@ public abstract class WrathOpener
 
                 if (value == OpenerState.FailedOpener)
                 {
-                    if (Service.Configuration.OutputOpenerLogs)
+                    if (Service.Configuration.OutputOpenerLogs && !SilenceOutput)
                         DuoLog.Error($"Opener Failed at step {OpenerStep}, {CurrentOpenerAction.ActionName()}");
                     else
                         Svc.Log.Information($"Opener Failed at step {OpenerStep}, {CurrentOpenerAction.ActionName()}");
@@ -100,7 +100,7 @@ public abstract class WrathOpener
 
                 if (value == OpenerState.OpenerFinished)
                 {
-                    if (Service.Configuration.OutputOpenerLogs)
+                    if (Service.Configuration.OutputOpenerLogs && !SilenceOutput)
                         DuoLog.Information("Opener Finished");
                     else
                         Svc.Log.Debug($"Opener Finished");
@@ -173,6 +173,8 @@ public abstract class WrathOpener
 
     public bool CacheReady = false;
 
+    private bool SilenceOutput = false;
+
     public unsafe bool FullOpener(ref uint actionID)
     {
         if (IsOccupied())
@@ -187,11 +189,13 @@ public abstract class WrathOpener
             return false;
         }
 
+
         if (CurrentState == OpenerState.OpenerNotReady)
         {
             if (HasCooldowns() && (!InCombat() || AllowReopener))
             {
                 CurrentState = OpenerState.OpenerReady;
+                SilenceOutput = false;
                 OpenerStep = 1;
                 CurrentOpenerAction = OpenerActions.First().Invoke();
             }
@@ -222,10 +226,10 @@ public abstract class WrathOpener
                 }
             }
 
+            bool prevStepSkipping = false;
             if (OpenerStep > 1)
             {
                 bool skipStepFound = SkipSteps.FindFirst(x => x.Steps.FindFirst(y => y == OpenerStep - 1, out var t), out var p);
-                bool prevStepSkipping = false;
 
                 if (skipStepFound)
                 {
@@ -236,17 +240,19 @@ public abstract class WrathOpener
                         SkippingStep = OpenerStep;
                         StopSkippingAt = DateTime.Now.AddSeconds(20);
                     }
-                    else if (!prevStepSkipping)
-                    {
-                        SkippingStep = 0;
-                        StopSkippingAt = null;
-                    }
+                }
+
+                if (StopSkippingAt is not null && SkippingStep != OpenerStep)
+                {
+                    StopSkippingAt = null;
+                    SkippingStep = 0;
                 }
 
                 if (StopSkippingAt is not null && DateTime.Now > StopSkippingAt)
                 {
                     Svc.Log.Debug($"Stopping skipping at step {OpenerStep} after 20 seconds");
                     StopSkippingAt = null;
+                    SilenceOutput = true;
                     CurrentState = OpenerState.FailedOpener;
                     return false;
                 }
@@ -254,7 +260,6 @@ public abstract class WrathOpener
                 if (!prevStepSkipping)
                 {
                     bool delay = PrepullDelays.FindFirst(x => x.Steps.Any(y => y == DelayedStep && y == OpenerStep), out var hold);
-                    Svc.Log.Debug($"Delay: {delay} - {OpenerStep}");
                     if ((!delay && ActionWatching.TimeSinceLastAction.TotalSeconds >= Service.Configuration.OpenerTimeout) || (delay && (DateTime.Now - DelayedAt).TotalSeconds > DelayedSecs + Service.Configuration.OpenerTimeout))
                     {
                         CurrentState = OpenerState.FailedOpener;

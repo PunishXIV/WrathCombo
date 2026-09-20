@@ -287,7 +287,7 @@ internal partial class SCH
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => CountdownActive || InCombat() || !SCH_Opener_PrepullBlock),
-            ([8, 10, 12, 18, 20, 22], () => Gauge.Aetherflow == 0)
+            ([9, 11, 13, 19, 21, 23], () => Gauge.Aetherflow == 0)
         ];
 
         public override List<(int[] Steps, Func<float> HoldDelay)> PrepullDelays { get; set; } =

@@ -698,7 +698,7 @@ internal partial class DNC
         ];
 
         public FifteenSecondOpener() =>
-            SkipSteps.Add(([4], () => !DNC_ST_OpenerOption_Peloton));
+            SkipSteps.Add(([5], () => !DNC_ST_OpenerOption_Peloton));
     }
 
     internal static SevenSecondOpener Opener07S = new();
@@ -794,7 +794,7 @@ internal partial class DNC
         ];
 
         public ThirtySecondTechOpener() =>
-            SkipSteps.Add(([5], () => !DNC_ST_OpenerOption_Peloton));
+            SkipSteps.Add(([6], () => !DNC_ST_OpenerOption_Peloton));
     }
 
     internal static SevenPlusSecondTechOpener Opener07PlusSTech = new();

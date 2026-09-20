@@ -562,10 +562,7 @@ internal partial class BLU
         ];
 
         public override bool HasCooldowns() =>
-            ActionReady(MoonFlute) &&
-            (!IsSpellActive(Nightbloom) || ActionReady(Nightbloom)) &&
-            (!IsSpellActive(PhantomFlurry) || ActionReady(PhantomFlurry)) &&
-            (!IsSpellActive(Surpanakha) || GetRemainingCharges(Surpanakha) == 4);
+            ActionReady(MoonFlute);
     }
 
     internal class BLUMoonFluteOpener : BLUOpenerBase
@@ -601,21 +598,21 @@ internal partial class BLU
             ([1], () => CountdownActive || InCombat() || !BLU_Opener_PrepullBlock),
             ([2], () => !IsSpellActive(Whistle) || LocalPlayer.HasStatus(Buffs.Whistle)),
             ([3], () => !IsSpellActive(Tingle) || LocalPlayer.HasStatus(Buffs.Tingle)),
-            ([4], () => !IsSpellActive(RoseOfDestruction)),
+            ([4], () => !IsSpellActive(RoseOfDestruction) || !ActionReady(RoseOfDestruction)),
             ([6], () => !IsSpellActive(JKick) || BLU_ManualJKick || !ActionReady(JKick)),
             ([7], () => !IsSpellActive(TripleTrident) || !ActionReady(TripleTrident)),
-            ([8], () => !IsSpellActive(Nightbloom)),
-            ([9], () => !IsSpellActive(WingedReprobation)),
-            ([10], () => !IsSpellActive(FeatherRain)),
-            ([11], () => !IsSpellActive(SeaShanty)),
-            ([12], () => !IsSpellActive(WingedReprobation)),
-            ([13], () => !IsSpellActive(ShockStrike)),
-            ([14], () => !IsSpellActive(BeingMortal)),
-            ([15], () => !IsSpellActive(Bristle) || LocalPlayer.HasStatus(Buffs.Bristle)),
-            ([16], () => !ActionReady(Role.Swiftcast)),
-            ([17, 18, 19, 20], () => !IsSpellActive(Surpanakha)),
-            ([21], () => !IsSpellActive(MatraMagic) || !LocalPlayer.HasStatus(Buffs.DPSMimicry)),
-            ([22], () => !IsSpellActive(PhantomFlurry))
+            ([8], () => !IsSpellActive(Nightbloom) || !ActionReady(Nightbloom)),
+            ([9], () => !IsSpellActive(WingedReprobation) || !ActionReady(WingedReprobation)),
+            ([10], () => !IsSpellActive(FeatherRain) || !ActionReady(FeatherRain)),
+            ([11], () => !IsSpellActive(SeaShanty) || !ActionReady(SeaShanty)),
+            ([12], () => !IsSpellActive(WingedReprobation) || !ActionReady(WingedReprobation)),
+            ([13], () => !IsSpellActive(ShockStrike) || !ActionReady(ShockStrike)),
+            ([14], () => !IsSpellActive(BeingMortal) || !ActionReady(BeingMortal)),
+            ([15], () => HasHealerMimicry || !IsSpellActive(Bristle) || LocalPlayer.HasStatus(Buffs.Bristle)),
+            ([16], () => HasHealerMimicry || !ActionReady(Role.Swiftcast)),
+            ([17, 18, 19, 20], () => !IsSpellActive(Surpanakha) || !ActionReady(Surpanakha)),
+            ([21], () => HasHealerMimicry || !IsSpellActive(MatraMagic) || !LocalPlayer.HasStatus(Buffs.DPSMimicry) || !ActionReady(MatraMagic)),
+            ([22], () => !IsSpellActive(PhantomFlurry) || !ActionReady(PhantomFlurry))
         ];
 
         public override List<int> AllowUpgradeSteps { get; set; } = [9, 12];
@@ -659,21 +656,21 @@ internal partial class BLU
             ([1], () => CountdownActive || InCombat() || !BLU_Opener_PrepullBlock),
             ([2], () => !IsSpellActive(Whistle) || LocalPlayer.HasStatus(Buffs.Whistle)),
             ([3], () => !IsSpellActive(Tingle) || LocalPlayer.HasStatus(Buffs.Tingle)),
-            ([4], () => !IsSpellActive(RoseOfDestruction)),
+            ([4], () => !IsSpellActive(RoseOfDestruction) || !ActionReady(RoseOfDestruction)),
             ([6], () => !IsSpellActive(JKick) || BLU_ManualJKick || !ActionReady(JKick)),
             ([7], () => !IsSpellActive(TripleTrident) || !ActionReady(TripleTrident)),
-            ([8], () => !IsSpellActive(Nightbloom)),
+            ([8], () => !IsSpellActive(Nightbloom) || !ActionReady(Nightbloom)),
             ([9], () => !IsSpellActive(Bristle) || LocalPlayer.HasStatus(Buffs.Bristle)),
-            ([10], () => !IsSpellActive(FeatherRain)),
-            ([11], () => !IsSpellActive(SeaShanty)),
+            ([10], () => !IsSpellActive(FeatherRain) || !ActionReady(FeatherRain)),
+            ([11], () => !IsSpellActive(SeaShanty) || !ActionReady(SeaShanty)),
             ([12], () => !IsSpellActive(BreathOfMagic) && !IsSpellActive(MortalFlame)),
-            ([13], () => !IsSpellActive(ShockStrike)),
-            ([14], () => !IsSpellActive(Bristle) || LocalPlayer.HasStatus(Buffs.Bristle)),
-            ([15], () => !ActionReady(Role.Swiftcast)),
-            ([16, 17, 18, 19], () => !IsSpellActive(Surpanakha)),
-            ([20], () => !IsSpellActive(MatraMagic) || !LocalPlayer.HasStatus(Buffs.DPSMimicry)),
-            ([21], () => !IsSpellActive(BeingMortal)),
-            ([22], () => !IsSpellActive(PhantomFlurry))
+            ([13], () => !IsSpellActive(ShockStrike) || !ActionReady(ShockStrike)),
+            ([14], () => HasHealerMimicry || !IsSpellActive(Bristle) || LocalPlayer.HasStatus(Buffs.Bristle)),
+            ([15], () => HasHealerMimicry || !ActionReady(Role.Swiftcast)),
+            ([16, 17, 18, 19], () => !IsSpellActive(Surpanakha) || !ActionReady(Surpanakha)),
+            ([20], () => HasHealerMimicry || !IsSpellActive(MatraMagic) || !LocalPlayer.HasStatus(Buffs.DPSMimicry) || !ActionReady(MatraMagic)),
+            ([21], () => !IsSpellActive(BeingMortal) || !ActionReady(BeingMortal)),
+            ([22], () => !IsSpellActive(PhantomFlurry) || !ActionReady(PhantomFlurry))
         ];
     }
 

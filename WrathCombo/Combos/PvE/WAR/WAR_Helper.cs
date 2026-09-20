@@ -55,7 +55,6 @@ internal partial class WAR : Tank
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => CountdownActive || InCombat() || !WAR_Opener_PrepullBlock),
-            ([2], () => InMeleeRange()),
             ([11, 13, 15], () => !HasCharges(Onslaught) || WAR_ST_BalanceOpener_GapcloserChoice == 0)
         ];
 
@@ -71,11 +70,11 @@ internal partial class WAR : Tank
         public override List<Func<uint>> OpenerActions { get; set; } =
         [
             () => All.Cease, // 1
-            () => Tomahawk, // 2
+            () => InMeleeRange() ? HeavySwing : Tomahawk, // 2
             () => Infuriate, // 3
-            () => HeavySwing, // 4
-            () => Maim, // 5
-            () => StormsEye, // 6
+            () => ComboAction is HeavySwing ? Maim : HeavySwing, // 4
+            () => ComboAction is Maim ? StormsEye : Maim, // 5
+            () => ComboAction is StormsEye or StormsPath ? HeavySwing : StormsEye, // 6
             () => InnerRelease, // 7
             () => Items.UseItem(Items.GetStrongestPotionRow(Items.PotionType.Strength)), // 8
             () => InnerChaos, // 9
@@ -91,9 +90,9 @@ internal partial class WAR : Tank
             () => PrimalRend, // 19
             () => PrimalRuination, // 20
             () => InnerChaos, // 21
-            () => HeavySwing, // 22
-            () => Maim, // 23
-            () => StormsPath, // 24
+            () => ComboAction is HeavySwing ? Maim : HeavySwing, // 22
+            () => ComboAction is Maim ? StormsPath : Maim, // 23
+            () => ComboAction is StormsEye or StormsPath ? HeavySwing : StormsPath, // 24
             () => FellCleave, // 25
             () => Infuriate, // 26
             () => InnerChaos // 27
