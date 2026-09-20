@@ -786,6 +786,7 @@ public partial class WrathCombo
     {
         argument ??= [""];
 
+        EnsureConfigWindow();
         ConfigWindow.ClearAnySearches();
 
         // Toggle the window state
