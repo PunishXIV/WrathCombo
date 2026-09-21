@@ -737,7 +737,7 @@ internal partial class BLM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([1], () => CountdownActive || InCombat() || !BLM_Opener_PrepullBlock),
-            ([8], () => HasStatusEffect(Buffs.LeyLines))
+            ([8], () => LocalPlayer.HasStatus(Buffs.LeyLines))
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } = [8];

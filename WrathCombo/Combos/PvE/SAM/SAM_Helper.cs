@@ -119,7 +119,7 @@ internal partial class SAM
             return false;
 
         bool haveBuffs =
-            HasStatusEffect(Buffs.Fuka) && HasStatusEffect(Buffs.Fugetsu);
+            LocalPlayer.HasStatus(Buffs.Fuka) && LocalPlayer.HasStatus(Buffs.Fugetsu);
 
         // After downtime, Meikyo → Gekko/Kasha reapplies buffs then Tendo.
         // If Meikyo is unavailable, spend 3 Sen anyway so Hakaze doesn't overwrite them.
@@ -130,9 +130,9 @@ internal partial class SAM
 
             return useMidare &&
                    SenCount is 3 &&
-                   !HasStatusEffect(Buffs.TsubameReady) &&
-                   (HasStatusEffect(Buffs.Tendo) ||
-                    !ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.MeikyoShisui));
+                   !LocalPlayer.HasStatus(Buffs.TsubameReady) &&
+                   (LocalPlayer.HasStatus(Buffs.Tendo) ||
+                    !ActionReady(MeikyoShisui) && !LocalPlayer.HasStatus(Buffs.MeikyoShisui));
         }
 
         if (onAoE)
@@ -204,14 +204,14 @@ internal partial class SAM
         InCombat() &&
         HasBattleTarget() &&
         !InOpenerWindow() &&
-        (!HasStatusEffect(Buffs.Fugetsu) ||
-         !HasStatusEffect(Buffs.Fuka) ||
+        (!LocalPlayer.HasStatus(Buffs.Fugetsu) ||
+         !LocalPlayer.HasStatus(Buffs.Fuka) ||
          ComboTimer is 0);
 
     // Combo path to 3 Sen would finish after Senei is already up — skip combos with Meikyo.
     private static bool NeedMeikyoAcceleration()
     {
-        if (SenCount is 3 || HasStatusEffect(Buffs.MeikyoShisui))
+        if (SenCount is 3 || LocalPlayer.HasStatus(Buffs.MeikyoShisui))
             return false;
 
         float seneiCd = ActionLearned(Senei) ? GetCooldownRemainingTime(Senei) : 0f;
@@ -645,8 +645,8 @@ internal partial class SAM
             SenCount is 0;
 
         protected static bool TendoKaeshiUnavailable() =>
-            !HasStatusEffect(Buffs.TsubameReady) &&
-            !HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) &&
+            !LocalPlayer.HasStatus(Buffs.TsubameReady) &&
+            !LocalPlayer.HasStatus(Buffs.TendoKaeshiSetsugekkaReady) &&
             !JustUsed(TendoSetsugekka);
 
         protected static bool ShohaUnavailable() =>

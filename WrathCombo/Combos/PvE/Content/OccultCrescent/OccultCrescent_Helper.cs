@@ -5,7 +5,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
 using System;
 using System.Reflection;
 using WrathCombo.Services;
-using static WrathCombo.Combos.PvE.JobIDExtensions;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.OccultCrescent.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -189,11 +189,11 @@ internal partial class OccultCrescent
 
     internal static bool StatusNeedsRefresh(uint status, IGameObject? target = null, bool anyOwner = false, int? remainingOverride = null)
     {
-        if (!HasStatusEffect(status, target, anyOwner))
+        if (!(target ?? LocalPlayer).HasStatus(status, anyOwner))
             return true;
 
         int remaining = remainingOverride ?? Phantom_StatusRefresh_Remaining;
-        return GetStatusEffectRemainingTime(status, target, anyOwner) <= remaining;
+        return (target ?? LocalPlayer).Status(status, anyOwner).RemainingTimeOrZero() <= remaining;
     }
 
     internal static bool WantOccultAero =>
