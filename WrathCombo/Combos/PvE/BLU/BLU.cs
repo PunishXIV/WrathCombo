@@ -303,8 +303,8 @@ internal partial class BLU : Caster
             if (actionID is not (FeatherRain or Eruption))
                 return actionID;
 
-            if (LocalPlayer.HasStatus(Buffs.PhantomFlurry))
-                return OriginalHook(PhantomFlurry);
+            if (HandlePhantomFlurry(ref actionID))
+                return actionID;
 
             if (IsEnabled(Preset.BLU_PrimalCombo_WingedReprobation) &&
                 LocalPlayer.Status(Buffs.WingedReprobation)?.Param > 1 &&
@@ -372,18 +372,25 @@ internal partial class BLU : Caster
             if (actionID is not MoonFlute)
                 return actionID;
 
+            if (IsEnabled(Preset.BLU_ST_DPS_MightyGuardBurstBlock) &&
+                HasDPSMimicry &&
+                LocalPlayer.HasStatus(Buffs.MightyGuard))
+                return actionID;
+
             if (LocalPlayer.HasStatus(Buffs.WaningNocturne))
                 return actionID;
 
-            if (LocalPlayer.Status(Buffs.PhantomFlurry).RemainingTimeOrZero() > 0)
-                return All.Cease;
+            if (HandlePhantomFlurry(ref actionID))
+                return actionID;
 
             if (!LocalPlayer.HasStatus(Buffs.MoonFlute))
             {
                 if (ActionReady(Whistle) && !LocalPlayer.HasStatus(Buffs.Whistle) && !WasLastAction(Whistle))
                     return Whistle;
 
-                if (ActionReady(Tingle) && !LocalPlayer.HasStatus(Buffs.Tingle))
+                if (ActionReady(Tingle) &&
+                    !JustUsed(Tingle) &&
+                    !LocalPlayer.HasStatus(Buffs.Tingle))
                     return Tingle;
 
                 if (IsSpellActive(RoseOfDestruction) && GetCooldownRemainingTime(RoseOfDestruction) < 1f)
