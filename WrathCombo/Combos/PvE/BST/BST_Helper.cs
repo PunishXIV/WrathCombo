@@ -1,8 +1,10 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
+using ECommons.DalamudServices.Legacy;
 using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets.Experimental;
 using System;
@@ -316,8 +318,11 @@ internal partial class BST
 
     public unsafe static TmpBSTGauge JobGauge => *_jobGauge;
 
+    public static bool PetIsTargetable => CurrentPet?.DataId > 0 && Svc.Objects.Any(x => x.EntityId == CurrentPet?.EntityId && x.IsTargetable);
+
     public unsafe static Buddy.BuddyMember? CurrentPet => *UIState.Instance()->Buddy.PetInfo.Pet;
-    public static unsafe bool CurrentPetIsBMPet => CurrentPet?.DataId > 0 && Svc.Data.GetExcelSheet<XBMPet>().Any(x => x.Pet.RowId == CurrentPet?.DataId);
+    private unsafe static PetInfo? _petInfo => UIState.Instance()->Buddy.PetInfo;
+    public static unsafe bool CurrentPetIsBMPet => CurrentPet?.DataId > 0 && Svc.Data.GetExcelSheet<XBMPet>().Any(x => x.Pet.RowId == CurrentPet?.DataId) && PetIsTargetable; 
 
     public static Pet? CurrentPetSheet => CurrentPetIsBMPet ? Svc.Data.GetExcelSheet<Pet>().GetRow(CurrentPet?.DataId ?? 0) : null;
 

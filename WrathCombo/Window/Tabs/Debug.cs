@@ -17,6 +17,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System;
@@ -369,6 +370,7 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText($"Current Pet is BMPet?:", $"{BST.CurrentPetIsBMPet}");
                     CustomStyleText($"Current Pet", $"{BST.CurrentPetSheet?.Name ?? "??"} (ID: {BST.CurrentPetSheet?.RowId ?? 0})");
                     CustomStyleText($"Current Pet Trick Action", $"{BST.CurrentPetTrickAction?.ActionName() ?? "??"} (ID: {BST.CurrentPetTrickAction ?? 0})");
+                    CustomStyleText($"Pet is Targetable?:", $"{BST.PetIsTargetable}");
 
                     Util.ShowStruct(BST._jobGauge);
                     break;
