@@ -98,7 +98,8 @@ internal partial class BST
         BorrowWave = 47242,
         BorrowScale = 47243,
         BorrowSoul = 47244,
-        BorrowAsh = 47245;
+        BorrowAsh = 47245,
+        Snarl = 46751;
 
     public static class TrickActions
     {

@@ -1,5 +1,3 @@
-using ECommons.DalamudServices;
-using ECommons.GameHelpers.LegacyPlayer;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
@@ -15,6 +13,9 @@ internal partial class BST : Melee
         {
             if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SmashAxe))
                 return actionID;
+
+            if (CurrentTarget.HasStatus(2552, true) && ActionReady(Snarl) && CurrentTarget.TargetObjectId == LocalPlayer.GameObjectId) //For crucible
+                return Snarl;
 
             if (!CurrentPetIsBMPet && InCombat() && !JustUsed(FirstBattlehorn) && !JustUsed(SecondBattlehorn) && !JustUsed(ThirdBattlehorn) && !LocalPlayer.IsCasting)
             {
@@ -34,93 +35,96 @@ internal partial class BST : Melee
                     return Capture;
             }
 
-            if (CanInterruptEnemy() && ActionReady(SoulCrush))
-                return SoulCrush;
-
-            if (FinisherReady && FinisherActions.Count > 0)
+            if (InMeleeRange())
             {
-                if (FinisherActions[0] == CounterClockwiseInstinctualAction && !InInstinctualCombo)
-                    return All.Cease;
+                if (CanInterruptEnemy() && ActionReady(SoulCrush))
+                    return SoulCrush;
 
-                if (FinisherActions[0] == Rally && JobGauge.MasterInstinct != 3)
-                    return All.Cease;
-
-                return FinisherActions[0];
-            }
-
-
-
-            //Intentional > Instinctual
-            if (AbleToIntentional)
-            {
-                if (JobGauge.ActiveAffinity is Data.InstinctualAffinity.Moonstalker)
+                if (FinisherReady && FinisherActions.Count > 0)
                 {
-                    if (ActionReady(RisenFall))
-                        return RisenFall;
+                    if (FinisherActions[0] == CounterClockwiseInstinctualAction && !InInstinctualCombo)
+                        return All.Cease;
+
+                    if (FinisherActions[0] == Rally && JobGauge.MasterInstinct != 3)
+                        return All.Cease;
+
+                    return FinisherActions[0];
                 }
 
-                if (JobGauge.ActiveAffinity is Data.InstinctualAffinity.Sunstrider)
-                {
-                    if (ActionReady(Calamity))
-                        return Calamity;
-                }
 
-                if (CanStartInstinctualCombo || InInstinctualCombo)
+
+                //Intentional > Instinctual
+                if (AbleToIntentional)
                 {
-                    bool cantOmniDirection = !ActionLearned(ClockwiseInstinctualAction) || !ActionLearned(CounterClockwiseInstinctualAction);
-                    if (RallyStackFocus is RallyingType.None or RallyingType.Rally || (cantOmniDirection && !ActionLearned(CounterClockwiseInstinctualAction))) //Prioritize our stacks
+                    if (JobGauge.ActiveAffinity is Data.InstinctualAffinity.Moonstalker)
+                    {
+                        if (ActionReady(RisenFall))
+                            return RisenFall;
+                    }
+
+                    if (JobGauge.ActiveAffinity is Data.InstinctualAffinity.Sunstrider)
+                    {
+                        if (ActionReady(Calamity))
+                            return Calamity;
+                    }
+
+                    if (CanStartInstinctualCombo || InInstinctualCombo)
+                    {
+                        bool cantOmniDirection = !ActionLearned(ClockwiseInstinctualAction) || !ActionLearned(CounterClockwiseInstinctualAction);
+                        if (RallyStackFocus is RallyingType.None or RallyingType.Rally || (cantOmniDirection && !ActionLearned(CounterClockwiseInstinctualAction))) //Prioritize our stacks
+                        {
+                            if (ActionReady(Trick))
+                                return Trick;
+
+                            if (ActionReady(ClockwiseInstinctualAction))
+                                return ClockwiseInstinctualAction;
+                        }
+                        else
+                        {
+                            if (ActionReady(CounterClockwiseInstinctualAction))
+                                return CounterClockwiseInstinctualAction;
+
+                            if (ActionReady(Trick))
+                                return Trick;
+                        }
+                    }
+                }
+                else if (ActionLearned(InstinctualComboAxe))
+                {
+                    //Fallback to instinctual
+                    if (RallyStackFocus is RallyingType.None or RallyingType.Rally) //Prioritize our stacks
                     {
                         if (ActionReady(Trick))
                             return Trick;
 
-                        if (ActionReady(ClockwiseInstinctualAction))
-                            return ClockwiseInstinctualAction;
+                        if (ActionReady(InstinctualComboAxe))
+                            return InstinctualComboAxe;
                     }
                     else
                     {
-                        if (ActionReady(CounterClockwiseInstinctualAction))
-                            return CounterClockwiseInstinctualAction;
+                        if (ActionReady(InstinctualComboAxe))
+                            return InstinctualComboAxe;
 
                         if (ActionReady(Trick))
                             return Trick;
                     }
+
                 }
-            }
-            else if (ActionLearned(InstinctualComboAxe))
-            {
-                //Fallback to instinctual
-                if (RallyStackFocus is RallyingType.None or RallyingType.Rally) //Prioritize our stacks
+                else if (InstinctualComboAxe == 0) //If somehow you're at level 4-7 with a pet that isn't Rampant
                 {
-                    if (ActionReady(Trick))
-                        return Trick;
-
-                    if (ActionReady(InstinctualComboAxe))
-                        return InstinctualComboAxe;
-                }
-                else
-                {
-                    if (ActionReady(InstinctualComboAxe))
-                        return InstinctualComboAxe;
-
-                    if (ActionReady(Trick))
-                        return Trick;
+                    if (ActionReady(AvalancheAxe))
+                        return AvalancheAxe;
                 }
 
+                if (ActionReady(TemperedRelease) && CanWeave())
+                    return TemperedRelease;
+
+                if (BST_SimpleMode_CycleBeasts && TraitLevelChecked(Traits.WildHeartII) && !ActionReady(TemperedRelease) && ActionReady(PartingBlow) && !OnLastHorn && CanWeave())
+                    return PartingBlow;
+
+                if (CanWeave() && ActionReady(ShieldCharge) && GetRemainingCharges(ShieldCharge) > 1) //Save one for manual use
+                    return ShieldCharge;
             }
-            else if (InstinctualComboAxe == 0) //If somehow you're at level 4-7 with a pet that isn't Rampant
-            {
-                if (ActionReady(AvalancheAxe))
-                    return AvalancheAxe;
-            }
-
-            if (ActionReady(TemperedRelease) && CanWeave() && CurrentPetReleaseAction != TemperedReleaseActions.Wespe_FinalSting)
-                return TemperedRelease;
-
-            if (BST_SimpleMode_CycleBeasts && TraitLevelChecked(Traits.WildHeartII) && !ActionReady(TemperedRelease) && ActionReady(PartingBlow) && !OnLastHorn && CanWeave())
-                return PartingBlow;
-
-            if (CanWeave() && InMeleeRange() && ActionReady(ShieldCharge) && GetRemainingCharges(ShieldCharge) > 1) //Save one for manual use
-                return ShieldCharge;
 
             if (BasicCombo(out var basic))
                 return basic;

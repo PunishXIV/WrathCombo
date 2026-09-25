@@ -121,7 +121,15 @@ namespace WrathCombo.Data.BattleData
                     _invincibleCheck = (target, targetID, _) =>
                         Result(targetID is 19287 or 19288 && GetTargetCurrentHP(target) <= 1);
                     break;
+                case 1341: //Crucible Board 3
+                    _invincibleCheck = (target, targetID, statuses) =>
+                    {
+                        if (targetID is 0x4C95 && statuses.Any(x => x == 5434))
+                            return Invincible.True;
 
+                        return Invincible.False;
+                    };
+                    break;
                 case 1345: // The Clyteum
                            // The Eye of the Scorpion
                            // This finds the helper

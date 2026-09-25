@@ -27,7 +27,7 @@ namespace WrathCombo.Data.BattleData
         /// 3. Cached status IDs on the target.<br/>
         /// </summary>
         /// <returns>Enum flag for Invincibility (true/false/check statuses)</returns>
-        private static Func<IBattleChara, uint, HashSet<uint>, Invincible> _invincibleCheck = (_, _, _) => Invincible.CheckStatuses;
+        private static Func<IBattleChara, uint, HashSet<uint>, Invincible> _invincibleCheck = (target, targetId, statuses) => Invincible.CheckStatuses;
 
         /// <summary>
         /// Current encounter-specific pause actions check.
