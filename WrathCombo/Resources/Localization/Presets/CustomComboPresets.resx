@@ -1529,6 +1529,24 @@ Feather Rain is Retargeted to your target.</value>
   <data name="BLU_ST_DPS_SharpenedKnife_Name" xml:space="preserve">
     <value>Sharpened Knife</value>
   </data>
+  <data name="BLU_ST_DPS_RevengeBlast_Desc" xml:space="preserve">
+    <value>Replaces Sonic Boom with Revenge Blast while it is equipped, the target is in melee range, and player HP is below the configured threshold.</value>
+  </data>
+  <data name="BLU_ST_DPS_RevengeBlast_Name" xml:space="preserve">
+    <value>Revenge Blast at Low HP</value>
+  </data>
+  <data name="BLU_ST_DPS_MightyGuardBurstBlock_Desc" xml:space="preserve">
+    <value>Holds the two-minute burst kit while Mighty Guard is active. Fillers, utilities, Revenge Blast, and White Death remain available.</value>
+  </data>
+  <data name="BLU_ST_DPS_MightyGuardBurstBlock_Name" xml:space="preserve">
+    <value>Hold Burst while Mighty Guard</value>
+  </data>
+  <data name="BLU_ColdFogWhiteDeath_Desc" xml:space="preserve">
+    <value>Uses White Death instead of the normal filler while Touch of Frost from Cold Fog is active.</value>
+  </data>
+  <data name="BLU_ColdFogWhiteDeath_Name" xml:space="preserve">
+    <value>Cold Fog to White Death</value>
+  </data>
   <data name="BLU_ST_DPS_SongOfTorment_Desc" xml:space="preserve">
     <value>Adds Song of Torment.</value>
   </data>
