@@ -1,12 +1,11 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
-using ECommons;
-using ECommons.DalamudServices;
+﻿using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using System.Linq;
 using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.CustomComboNS.Functions.WrathMath;
 
 namespace WrathCombo.Data.BattleData
 {

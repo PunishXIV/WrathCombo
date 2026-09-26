@@ -7,6 +7,7 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.DRK.Config;
+using static WrathCombo.CustomComboNS.Functions.WrathMath;
 
 // ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable UnusedType.Global
