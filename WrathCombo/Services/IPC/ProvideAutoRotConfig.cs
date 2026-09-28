@@ -109,7 +109,7 @@ public partial class Provider
     ///     The <see cref="SetResult" /> status code indicating the result of the
     ///     operation.
     /// </returns>
-    /// <seealso cref="AutoRotationConfigOption"/>
+    /// <seealso cref="arcOption"/>
     [EzIPC]
     public SetResult SetAutoRotationConfigState
         (Guid lease, object passedOption, object value)
