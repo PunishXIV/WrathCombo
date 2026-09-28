@@ -3,7 +3,6 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.GameHelpers;
 using System;
 using System.Collections.Generic;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using WrathCombo.Combos.PvE.ALL;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -354,7 +353,7 @@ internal partial class RDM
         public Standard()
         {
             SkipSteps.Add(([15, 17, 21, 22], () => !InMeleeRange()));
-            SkipSteps.Add(([7], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast)));
+            SkipSteps.Add(([7], () => !LocalPlayer.HasStatus(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast)));
         }
     }
 
@@ -405,7 +404,7 @@ internal partial class RDM
         public GapClosing()
         {
             SkipSteps.Add(([17, 22], () => !InMeleeRange()));
-            SkipSteps.Add(([37], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast)));
+            SkipSteps.Add(([37], () => !LocalPlayer.HasStatus(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast)));
         }
     }
 

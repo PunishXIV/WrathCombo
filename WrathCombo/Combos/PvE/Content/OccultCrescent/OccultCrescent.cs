@@ -1061,8 +1061,8 @@ internal partial class OccultCrescent
              GroupDamageIncoming() ||
              NumberOfEnemiesInRange(OccultToad) >= 2) &&
             EnemiesInRange(OccultToad).Any(x =>
-                !ImmuneToStatus(x, Debuffs.OccultToad) &&
-                !HasStatusEffect(Debuffs.OccultToad, x)))
+                !x.IsImmuneToStatus(Debuffs.OccultToad) &&
+                !x.HasStatus(Debuffs.OccultToad)))
         {
             actionID = OccultToad;
             return true;
@@ -1342,10 +1342,10 @@ internal partial class OccultCrescent
 
     private static bool HasLibraWeakness(IGameObject? tar) =>
         tar is not null &&
-        (HasStatusEffect(Debuffs.FireWeakness, tar, true) ||
-         HasStatusEffect(Debuffs.IceWeakness, tar, true) ||
-         HasStatusEffect(Debuffs.LightningWeakness, tar, true) ||
-         HasStatusEffect(Debuffs.WindWeakness, tar, true));
+        (tar.HasStatus(Debuffs.FireWeakness, true) ||
+         tar.HasStatus(Debuffs.IceWeakness, true) ||
+         tar.HasStatus(Debuffs.LightningWeakness, true) ||
+         tar.HasStatus(Debuffs.WindWeakness, true));
 
     private static bool LibraNeedsRefresh(IGameObject? tar)
     {
@@ -1360,17 +1360,17 @@ internal partial class OccultCrescent
 
         float remaining = 0;
 
-        if (HasStatusEffect(Debuffs.FireWeakness, tar, true))
-            remaining = Math.Max(remaining, GetStatusEffectRemainingTime(Debuffs.FireWeakness, tar, true));
+        if (tar.HasStatus(Debuffs.FireWeakness, true))
+            remaining = Math.Max(remaining, tar.Status(Debuffs.FireWeakness, true).RemainingTimeOrZero());
 
-        if (HasStatusEffect(Debuffs.IceWeakness, tar, true))
-            remaining = Math.Max(remaining, GetStatusEffectRemainingTime(Debuffs.IceWeakness, tar, true));
+        if (tar.HasStatus(Debuffs.IceWeakness, true))
+            remaining = Math.Max(remaining, tar.Status(Debuffs.IceWeakness, true).RemainingTimeOrZero());
 
-        if (HasStatusEffect(Debuffs.LightningWeakness, tar, true))
-            remaining = Math.Max(remaining, GetStatusEffectRemainingTime(Debuffs.LightningWeakness, tar, true));
+        if (tar.HasStatus(Debuffs.LightningWeakness, true))
+            remaining = Math.Max(remaining, tar.Status(Debuffs.LightningWeakness, true).RemainingTimeOrZero());
 
-        if (HasStatusEffect(Debuffs.WindWeakness, tar, true))
-            remaining = Math.Max(remaining, GetStatusEffectRemainingTime(Debuffs.WindWeakness, tar, true));
+        if (tar.HasStatus(Debuffs.WindWeakness, true))
+            remaining = Math.Max(remaining, tar.Status(Debuffs.WindWeakness, true).RemainingTimeOrZero());
 
         return remaining <= Phantom_RedMage_OccultLibra_RefreshRemaining;
     }
