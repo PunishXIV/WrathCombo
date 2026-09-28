@@ -30,15 +30,7 @@ internal partial class MCH
                     DrawRadioButton(MCH_SelectedOpener,
                         MCH_Config.Early0Opener,
                         FormatAndCache(MCH_Config.UseEarly0Opener, Wildfire.ActionName()), 1, descriptionAsTooltip: true);
-
-                    ImGuiEx.TextUnderlined("Target Settings");
-                    ImGui.Spacing();
-                    DrawRadioButton(MCH_HaveTarget,
-                        Generics.HaveBattleTarget,
-                        Generics.RequireTarget, 0, descriptionAsTooltip: true);
-                    DrawRadioButton(MCH_HaveTarget,
-                        Generics.NoTarget,
-                        Generics.NoRequireTarget, 1, descriptionAsTooltip: true);
+                    
                     DrawOpenerPrepullBlockChoice(MCH_Opener_PrepullBlock);
                     break;
 

@@ -1,6 +1,5 @@
 using System;
 using WrathCombo.CustomComboNS;
-using WrathCombo.Data;
 using WrathCombo.Native;
 using static WrathCombo.Combos.PvE.MCH.Config;
 using WrathCombo.Extensions;
@@ -161,11 +160,8 @@ internal partial class MCH : PhysicalRanged
 
         protected override uint Invoke(uint actionID)
         {
-            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SplitShot, HeatedSplitShot))
-                return actionID;
-
-            if (IsEnabled(Preset.MCH_ST_Adv_Opener) &&
-                (MCH_HaveTarget == 1 || HasBattleTarget()) &&
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SplitShot, HeatedSplitShot) ||
+                IsEnabled(Preset.MCH_ST_Adv_Opener) &&
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
@@ -398,13 +394,10 @@ internal partial class MCH : PhysicalRanged
     {
         protected internal override Preset Preset => Preset.MCH_ST_BasicCombo;
 
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not (CleanShot or HeatedCleanShot))
-                return actionID;
-
-            return DoBasicCombo();
-        }
+        protected override uint Invoke(uint actionID) =>
+            actionID is not (CleanShot or HeatedCleanShot) ?
+                actionID :
+                DoBasicCombo();
     }
 
     internal class MCH_DismantleProtection : CustomCombo
