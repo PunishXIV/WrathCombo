@@ -22,11 +22,9 @@ internal partial class DRG
                     ImGui.Spacing();
                     DrawRadioButton(DRG_SelectedOpener,
                         Generics.StandardOpener, Generics.UsesStandardOpener, 0, descriptionAsTooltip: true);
-
                     DrawRadioButton(DRG_SelectedOpener,
                         FormatAndCache(Generics.Action_Opener, PiercingTalon.ActionName()),
                         FormatAndCache(Generics.Use_0_Opener, PiercingTalon.ActionName()), 1, descriptionAsTooltip: true);
-
                     DrawOpenerPrepullBlockChoice(DRG_Opener_PrepullBlock);
                     break;
 

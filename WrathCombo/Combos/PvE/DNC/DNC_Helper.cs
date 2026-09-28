@@ -1,5 +1,3 @@
-#region
-
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
@@ -19,16 +17,6 @@ using static WrathCombo.Combos.PvE.DNC.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
-
-// ReSharper disable ReturnTypeCanBeNotNullable
-// ReSharper disable UnusedType.Global
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable InconsistentNaming
-// ReSharper disable CheckNamespace
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable MemberHidesStaticFromOuterClass
-
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 

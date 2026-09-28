@@ -29,11 +29,9 @@ internal partial class SGE
                     DrawRadioButton(SGE_SelectedOpener,
                         FormatAndCache(Generics.Action_Opener, Toxikon.ActionName()),
                         FormatAndCache(Generics.Use_0_Opener, Toxikon.ActionName()), 0, descriptionAsTooltip: true);
-
                     DrawRadioButton(SGE_SelectedOpener,
                         FormatAndCache(Generics.Action_Opener, Pneuma.ActionName()),
                         FormatAndCache(Generics.Use_0_Opener, Pneuma.ActionName()), 1, descriptionAsTooltip: true);
-
                     DrawOpenerPrepullBlockChoice(SGE_Opener_PrepullBlock);
                     break;
 

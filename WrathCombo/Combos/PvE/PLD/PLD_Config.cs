@@ -101,7 +101,6 @@ internal partial class PLD
                     DrawRadioButton(PLD_SelectedOpener, Generics.StandardOpener, "", 0, descriptionAsTooltip: true);
                     DrawRadioButton(PLD_SelectedOpener, "Early Buff Opener",
                         "Moves the buff window forward about 1 GCD.", 1, descriptionAsTooltip: true);
-
                     ImGuiEx.TextUnderlined($"{Intervene.ActionName()} Settings");
                     ImGui.Spacing();
                     DrawRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
@@ -110,7 +109,6 @@ internal partial class PLD
                     DrawRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene,
                         FormatAndCache(Generics.DontUse0, Intervene.ActionName()),
                         FormatAndCache(Generics.GapcloseSkip, Intervene.ActionName()), 1, descriptionAsTooltip: true);
-
                     DrawOpenerPrepullBlockChoice(PLD_Opener_PrepullBlock);
                     break;
 

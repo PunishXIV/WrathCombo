@@ -26,11 +26,9 @@ internal partial class MCH
                     DrawRadioButton(MCH_SelectedOpener,
                         Generics.StandardOpener,
                         Generics.UsesStandardOpener, 0, descriptionAsTooltip: true);
-
                     DrawRadioButton(MCH_SelectedOpener,
                         MCH_Config.Early0Opener,
                         FormatAndCache(MCH_Config.UseEarly0Opener, Wildfire.ActionName()), 1, descriptionAsTooltip: true);
-                    
                     DrawOpenerPrepullBlockChoice(MCH_Opener_PrepullBlock);
                     break;
 

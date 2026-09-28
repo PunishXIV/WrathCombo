@@ -172,13 +172,13 @@ internal partial class GNB
                 case Preset.GNB_ST_Opener:
                     DrawBossOnlyChoice(GNB_ST_Balance_Content);
                     DrawOpenerPotionChoice(GNB_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(GNB_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined($"{NoMercy.ActionName()} Settings");
                     ImGui.Spacing();
                     DrawRadioButton(GNB_Opener_NM,
                         $"Normal {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} normally in all openers", 0, descriptionAsTooltip: true);
                     DrawRadioButton(GNB_Opener_NM,
                         $"Early {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} as soon as possible in all openers", 1, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(GNB_Opener_PrepullBlock);
                     break;
 
                 case Preset.GNB_ST_NoMercy:

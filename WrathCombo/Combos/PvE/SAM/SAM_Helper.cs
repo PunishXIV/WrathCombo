@@ -717,8 +717,10 @@ internal partial class SAM
             () => KaeshiSetsugekka // 21
         ];
 
-        public SAMLvl80Opener() =>
+        public SAMLvl80Opener()
+        {
             SkipSteps.Add(([20], ShohaUnavailable));
+        }
 
         public override bool HasCooldowns() =>
             base.HasCooldowns() &&
@@ -760,8 +762,10 @@ internal partial class SAM
 
         public override List<int> AllowUpgradeSteps { get; set; } = [20];
 
-        public SAMLvl90Opener() =>
+        public SAMLvl90Opener()
+        {
             SkipSteps.Add(([16], ShohaUnavailable));
+        }
 
         public override bool HasCooldowns() =>
             base.HasCooldowns() &&

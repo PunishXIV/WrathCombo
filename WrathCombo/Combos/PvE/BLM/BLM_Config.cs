@@ -19,16 +19,15 @@ internal partial class BLM
                 case Preset.BLM_ST_Opener:
                     DrawBossOnlyChoice(BLM_Balance_Content);
                     DrawOpenerPotionChoice(BLM_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(BLM_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(BLM_SelectedOpener,
                         Generics.StandardOpener,
                         Generics.UsesStandardOpener, 0, descriptionAsTooltip: true);
-
                     DrawRadioButton(BLM_SelectedOpener,
                         FormatAndCache(Generics.Action_Opener, Flare.ActionName()),
                         FormatAndCache(Generics.Use_0_Opener, Flare.ActionName()), 1, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(BLM_Opener_PrepullBlock);
                     break;
 
                 case Preset.BLM_ST_LeyLines:

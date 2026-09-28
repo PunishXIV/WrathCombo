@@ -125,11 +125,12 @@ internal partial class AST
                 case Preset.AST_ST_DPS_Opener:
                     DrawBossOnlyChoice(AST_ST_DPS_Balance_Content);
                     DrawOpenerPotionChoice(AST_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(AST_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined($"{EarthlyStar.ActionName()} Settings");
                     ImGui.Spacing();
                     DrawRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(Generics.Use0, EarthlyStar.ActionName()), Text.FormatAndCache(AST_Config.PlacesEarthlyStarInTheOpener, EarthlyStar.ActionName()), 0, descriptionAsTooltip: true);
                     DrawRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(Generics.DontUse0, EarthlyStar.ActionName()), Text.FormatAndCache(AST_Config.DoesNotUseEarthlyStarInTheOpener, EarthlyStar.ActionName()), 1, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(AST_Opener_PrepullBlock);
+                    
                     break;
 
                 case Preset.AST_ST_DPS:

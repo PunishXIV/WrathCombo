@@ -63,13 +63,13 @@ internal partial class SMN
                 case Preset.SMN_ST_Advanced_Combo_Balance_Opener:
                     DrawBossOnlyChoice(SMN_Balance_Content);
                     DrawOpenerPotionChoice(SMN_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(SMN_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Swiftcast Settings");
                     ImGui.Spacing();
                     DrawRadioButton(SMN_Opener_SkipSwiftcast, "Use Swiftcast",
                         "Will use Swiftcast in opener to try and snapshot in pots for lower gcds", 1, descriptionAsTooltip: true);
                     DrawRadioButton(SMN_Opener_SkipSwiftcast, "Skip Swiftcast",
                         "Will not use swiftcast in opener for higher gcds", 2, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(SMN_Opener_PrepullBlock);
                     break;
 
                 case Preset.SMN_ST_Advanced_Combo_Titan:
