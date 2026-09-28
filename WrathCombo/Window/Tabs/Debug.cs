@@ -583,7 +583,7 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText($"Cache:", WrathOpener.CurrentOpener?.CacheReady);
                     CustomStyleText($"Pre-Checks:", $"Level: {WrathOpener.CurrentOpener?.LevelChecked}({Svc.PlayerState.EffectiveLevel}), CDs: {WrathOpener.CurrentOpener?.HasCooldowns()}");
                     CustomStyleText("Opener State:", WrathOpener.CurrentOpener.CurrentState);
-                    CustomStyleText("Current Opener Action:", WrathOpener.CurrentOpener.CurrentOpenerAction.ActionName());
+                    CustomStyleText("Current Opener Action:", $"{WrathOpener.CurrentOpener.CurrentOpenerAction.ActionName()} ({WrathOpener.CurrentOpener.CurrentOpenerAction})");
                     CustomStyleText("Current Opener Step:", $"{WrathOpener.CurrentOpener.OpenerStep} / {WrathOpener.CurrentOpener.OpenerActions.Count}");
                     CustomStyleText("Delayed Step:", WrathOpener.CurrentOpener.DelayedStep);
                     CustomStyleText("Delayed Seconds:", WrathOpener.CurrentOpener.DelayedSecs);
@@ -606,7 +606,8 @@ internal class Debug : ConfigWindow, IDisposable
                         foreach (var action in WrathOpener.CurrentOpener.OpenerActions)
                         {
                             stepIndex++;
-                            CustomStyleText($"Opener Action {stepIndex}:", action.Invoke().ActionName());
+                            var act = action.Invoke();
+                            CustomStyleText($"Opener Action {stepIndex}:", $"{act.ActionName()} ({act})");
                         }
                     }
                 }
