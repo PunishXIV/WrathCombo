@@ -22,11 +22,11 @@ internal partial class SCH
                 case Preset.SCH_ST_ADV_DPS_Balance_Opener:
                     DrawBossOnlyChoice(SCH_ST_DPS_OpenerContent);
                     DrawOpenerPotionChoice(SCH_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(SCH_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(SCH_ST_DPS_OpenerOption, "Dissipation First", "Uses Dissipation first, then Aetherflow", 0, descriptionAsTooltip: true);
                     DrawRadioButton(SCH_ST_DPS_OpenerOption, "Aetherflow First", "Uses Aetherflow first, then Dissipation", 1, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(SCH_Opener_PrepullBlock);
                     break;
 
                 case Preset.SCH_ST_ADV_DPS:

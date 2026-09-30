@@ -12,47 +12,6 @@ internal partial class SAM
 {
     internal static class Config
     {
-        public static UserInt
-            SAM_Balance_Content = new("SAM_Balance_Content", 1),
-            SAM_ST_Opener_IncludeGyoten = new("SAM_ST_Opener_IncludeGyoten"),
-            SAM_ST_HiganbanaHPOption = new("SAM_ST_HiganbanaHPOption"),
-            SAM_ST_HiganbanaAddsHPOption = new("SAM_ST_HiganbanaAddsHPOption", 25),
-            SAM_ST_HiganbanaTrashHPOption = new("SAM_ST_HiganbanaTrashHPOption", 100),
-            SAM_ST_HiganbanaRefresh = new("SAM_ST_HiganbanaRefresh", 15),
-            SAM_ST_ShintenKenkiOvercap = new("SAM_ST_ShintenKenkiOvercap", 65),
-            SAM_ST_YukikazeCombo_Prio = new("SAM_ST_YukikazeCombo_Prio", 1),
-            SAM_ST_ShintenExecuteHP = new("SAM_ST_ShintenExecuteHP", 5),
-            SAM_ST_MeikyoExecuteHP = new("SAM_ST_MeikyoExecuteHP", 5),
-            SAM_ST_TrueNorthCharges = new("SAM_ST_TrueNorthCharges"),
-            SAM_ST_SecondWindOption = new("SAM_ST_SecondWindOption", 40),
-            SAM_ST_BloodbathOption = new("SAM_ST_BloodbathOption", 30),
-            SAM_AoE_KyutenKenkiOvercap = new("SAM_AoE_KyutenKenkiOvercap", 50),
-            SAM_AoE_SecondWindOption = new("SAM_AoE_SecondWindOption", 40),
-            SAM_AoE_BloodbathOption = new("SAM_AoE_BloodbathOption", 30),
-            SAM_Gekko_KenkiOvercapAmount = new("SAM_Gekko_KenkiOvercapAmount", 65),
-            SAM_Kasha_KenkiOvercapAmount = new("SAM_Kasha_KenkiOvercapAmount", 65),
-            SAM_Yukikaze_KenkiOvercapAmount = new("SAM_Yukikaze_KenkiOvercapAmount", 65),
-            SAM_Oka_KenkiOvercapAmount = new("SAM_Oka_KenkiOvercapAmount", 50),
-            SAM_Mangetsu_KenkiOvercapAmount = new("SAM_Mangetsu_KenkiOvercapAmount", 50);
-
-        public static UserBool
-            SAM_ST_Opener_Potion = new("SAM_ST_Opener_Potion"),
-            SAM_ST_Opener_PrepullBlock = new("SAM_ST_Opener_PrepullBlock", true),
-            SAM_Gekko_KenkiOvercap = new("SAM_Gekko_KenkiOvercap"),
-            SAM_Kasha_KenkiOvercap = new("SAM_Kasha_KenkiOvercap"),
-            SAM_Yukikaze_KenkiOvercap = new("SAM_Yukikaze_KenkiOvercap"),
-            SAM_Yukikaze_Gekko = new("SAM_Yukikaze_Gekko"),
-            SAM_Yukikaze_Kasha = new("SAM_Yukikaze_Kasha"),
-            SAM_Mangetsu_Oka = new("SAM_Mangetsu_Oka"),
-            SAM_ST_Senei_Guren = new("SAM_ST_Senei_Guren"),
-            SAM_ST_OgiNamikiri_Movement = new("SAM_ST_OgiNamikiri_Movement"),
-            SAM_Oka_KenkiOvercap = new("SAM_Oka_KenkiOvercap"),
-            SAM_Mangetsu_KenkiOvercap = new("SAM_Mangetsu_KenkiOvercap"),
-            SAM_OgiShohaZanshin = new("SAM_OgiShohaZanshin");
-
-        public static UserFloat
-            SAM_ST_MeditateTimeStill = new("SAM_ST_MeditateTimeStill", 2.5f);
-
         internal static void Draw(Preset preset)
         {
             switch (preset)
@@ -60,12 +19,9 @@ internal partial class SAM
                 case Preset.SAM_ST_Adv_Opener:
                     DrawBossOnlyChoice(SAM_Balance_Content);
                     DrawOpenerPotionChoice(SAM_ST_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(SAM_ST_Opener_PrepullBlock);
-
                     ImGui.TextWrapped(SAM_Config.SecondsDelayFromFirstStep);
                     if (ImGui.IsItemHovered())
                         ImGui.SetTooltip(FormatAndCache(SAM_Config.DelaySavageBlade, All.Cease.ActionName()));
-
                     ImGuiEx.Spacing(new Vector2(0, 10));
                     ImGuiEx.TextUnderlined($"{Gyoten.ActionName()} Settings");
                     ImGui.Spacing();
@@ -81,6 +37,7 @@ internal partial class SAM
                     DrawRadioButton(SAM_ST_Opener_IncludeGyoten,
                         SAM_Config.SkipSecond,
                         FormatAndCache(SAM_Config.SkipSecondUseOf0, Gyoten.ActionName()), 3, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(SAM_ST_Opener_PrepullBlock);
                     break;
 
                 case Preset.SAM_ST_Adv_Higanbana:
@@ -233,5 +190,50 @@ internal partial class SAM
                     break;
             }
         }
+        
+        #region Variables
+
+        public static UserInt
+            SAM_Balance_Content = new("SAM_Balance_Content", 1),
+            SAM_ST_Opener_IncludeGyoten = new("SAM_ST_Opener_IncludeGyoten"),
+            SAM_ST_HiganbanaHPOption = new("SAM_ST_HiganbanaHPOption"),
+            SAM_ST_HiganbanaAddsHPOption = new("SAM_ST_HiganbanaAddsHPOption", 25),
+            SAM_ST_HiganbanaTrashHPOption = new("SAM_ST_HiganbanaTrashHPOption", 100),
+            SAM_ST_HiganbanaRefresh = new("SAM_ST_HiganbanaRefresh", 15),
+            SAM_ST_ShintenKenkiOvercap = new("SAM_ST_ShintenKenkiOvercap", 65),
+            SAM_ST_YukikazeCombo_Prio = new("SAM_ST_YukikazeCombo_Prio", 1),
+            SAM_ST_ShintenExecuteHP = new("SAM_ST_ShintenExecuteHP", 5),
+            SAM_ST_MeikyoExecuteHP = new("SAM_ST_MeikyoExecuteHP", 5),
+            SAM_ST_TrueNorthCharges = new("SAM_ST_TrueNorthCharges"),
+            SAM_ST_SecondWindOption = new("SAM_ST_SecondWindOption", 40),
+            SAM_ST_BloodbathOption = new("SAM_ST_BloodbathOption", 30),
+            SAM_AoE_KyutenKenkiOvercap = new("SAM_AoE_KyutenKenkiOvercap", 50),
+            SAM_AoE_SecondWindOption = new("SAM_AoE_SecondWindOption", 40),
+            SAM_AoE_BloodbathOption = new("SAM_AoE_BloodbathOption", 30),
+            SAM_Gekko_KenkiOvercapAmount = new("SAM_Gekko_KenkiOvercapAmount", 65),
+            SAM_Kasha_KenkiOvercapAmount = new("SAM_Kasha_KenkiOvercapAmount", 65),
+            SAM_Yukikaze_KenkiOvercapAmount = new("SAM_Yukikaze_KenkiOvercapAmount", 65),
+            SAM_Oka_KenkiOvercapAmount = new("SAM_Oka_KenkiOvercapAmount", 50),
+            SAM_Mangetsu_KenkiOvercapAmount = new("SAM_Mangetsu_KenkiOvercapAmount", 50);
+
+        public static UserBool
+            SAM_ST_Opener_Potion = new("SAM_ST_Opener_Potion"),
+            SAM_ST_Opener_PrepullBlock = new("SAM_ST_Opener_PrepullBlock", true),
+            SAM_Gekko_KenkiOvercap = new("SAM_Gekko_KenkiOvercap"),
+            SAM_Kasha_KenkiOvercap = new("SAM_Kasha_KenkiOvercap"),
+            SAM_Yukikaze_KenkiOvercap = new("SAM_Yukikaze_KenkiOvercap"),
+            SAM_Yukikaze_Gekko = new("SAM_Yukikaze_Gekko"),
+            SAM_Yukikaze_Kasha = new("SAM_Yukikaze_Kasha"),
+            SAM_Mangetsu_Oka = new("SAM_Mangetsu_Oka"),
+            SAM_ST_Senei_Guren = new("SAM_ST_Senei_Guren"),
+            SAM_ST_OgiNamikiri_Movement = new("SAM_ST_OgiNamikiri_Movement"),
+            SAM_Oka_KenkiOvercap = new("SAM_Oka_KenkiOvercap"),
+            SAM_Mangetsu_KenkiOvercap = new("SAM_Mangetsu_KenkiOvercap"),
+            SAM_OgiShohaZanshin = new("SAM_OgiShohaZanshin");
+
+        public static UserFloat
+            SAM_ST_MeditateTimeStill = new("SAM_ST_MeditateTimeStill", 2.5f);
+
+        #endregion
     }
 }

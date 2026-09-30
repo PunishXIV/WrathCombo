@@ -1,7 +1,4 @@
-#region
-
 using Dalamud.Interface.Colors;
-using Dalamud.Interface.Utility.Raii;
 using ECommons.ImGuiMethods;
 using System.Linq;
 using System.Numerics;
@@ -11,13 +8,6 @@ using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
-
-// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
-// ReSharper disable InconsistentNaming
-// ReSharper disable CheckNamespace
-// ReSharper disable ClassNeverInstantiated.Global
-
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 

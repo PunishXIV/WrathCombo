@@ -1,5 +1,4 @@
-﻿using ECommons.GameHelpers.LegacyPlayer;
-using WrathCombo.CustomComboNS;
+﻿using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
 

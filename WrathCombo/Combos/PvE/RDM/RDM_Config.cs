@@ -77,7 +77,6 @@ internal partial class RDM
                 case Preset.RDM_Balance_Opener:
                     DrawBossOnlyChoice(RDM_BalanceOpener_Content);
                     DrawOpenerPotionChoice(RDM_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(RDM_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(RDM_Opener_Selection, Generics.StandardOpener,
@@ -86,6 +85,7 @@ internal partial class RDM
                         RDM_Config.RDMOpenerWarning, 1, descriptionAsTooltip: true);
                     DrawRadioButton(RDM_Opener_Selection, RDM_Config.RDMFirstGCDOpener,
                         FormatAndCache(RDM_Config.RDMFirstGCDOpenerWarning, Acceleration.ActionName(), Veraero3.ActionName()), 2, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(RDM_Opener_PrepullBlock);
                     break;
 
                 case Preset.RDM_ST_ThunderAero:

@@ -80,13 +80,13 @@ internal partial class NIN
                 case Preset.NIN_ST_AdvancedMode_BalanceOpener:
                     DrawBossOnlyChoice(NIN_Balance_Content);
                     DrawOpenerPotionChoice(NIN_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(NIN_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 4th GCD {KunaisBane.ActionName()}", "", 0, descriptionAsTooltip: true);
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {Dokumori.ActionName()}", "", 1, descriptionAsTooltip: true);
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {KunaisBane.ActionName()}", "", 2, descriptionAsTooltip: true);
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Buff Rush", "", 3, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(NIN_Opener_PrepullBlock);
                     break;
 
                 case Preset.NIN_ST_AdvancedMode_Mug:

@@ -109,14 +109,13 @@ internal partial class WAR
                 case Preset.WAR_ST_BalanceOpener:
                     DrawBossOnlyChoice(WAR_BalanceOpener_Content);
                     DrawOpenerPotionChoice(WAR_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(WAR_Opener_PrepullBlock);
-
-                    ImGuiEx.TextUnderlined($"{Onslaught.ActionName()} Settings");
+                   ImGuiEx.TextUnderlined($"{Onslaught.ActionName()} Settings");
                     ImGui.Spacing();
                     DrawRadioButton(WAR_ST_BalanceOpener_GapcloserChoice,
                         "Use Gapclosers", "Uses Onslaughts use in opener.", 1, descriptionAsTooltip: true);
                     DrawRadioButton(WAR_ST_BalanceOpener_GapcloserChoice,
                         "No Gapclosers", "Skips Onslaughts use in opener.", 0, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(WAR_Opener_PrepullBlock);
                     break;
 
                 case Preset.WAR_ST_StormsEye:

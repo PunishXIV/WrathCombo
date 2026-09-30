@@ -55,13 +55,13 @@ internal partial class BRD
                 case Preset.BRD_ST_Adv_Balance_Standard:
                     DrawBossOnlyChoice(BRD_Balance_Content);
                     DrawOpenerPotionChoice(BRD_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(BRD_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(BRD_Adv_Opener_Selection, Generics.StandardOpener, "", 0, descriptionAsTooltip: true);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "2.48 Adjusted Standard Opener", "", 1, descriptionAsTooltip: true);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "2.49 Standard Comfy", "", 2, descriptionAsTooltip: true);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "Early Buff Window Opener", "Moves buff window forward about 1 GCD. Prepot with this.", 3, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(BRD_Opener_PrepullBlock);
                     break;
 
                 case Preset.BRD_Adv_DoT:

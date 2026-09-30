@@ -61,13 +61,13 @@ internal partial class PCT
                 case Preset.PCT_ST_Advanced_Openers:
                     DrawBossOnlyChoice(PCT_Balance_Content);
                     DrawOpenerPotionChoice(PCT_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(PCT_Opener_PrepullBlock);
                     ImGuiEx.TextUnderlined("Select Opener");
                     ImGui.Spacing();
                     DrawRadioButton(PCT_Opener_Choice, $"2nd GCD {StarryMuse.ActionName()}",
                         "Opener Failure Timeout (in Settings Tab) Must be set to 5+ seconds for opener to function due to long initial spell cast.", 0, descriptionAsTooltip: true);
                     DrawRadioButton(PCT_Opener_Choice, $"3rd GCD {StarryMuse.ActionName()}",
                         "Opener Failure Timeout (in Settings Tab) Must be set to 5+ seconds for opener to function due to long initial spell cast.", 1, descriptionAsTooltip: true);
+                    DrawOpenerPrepullBlockChoice(PCT_Opener_PrepullBlock);
                     break;
 
                 case Preset.PCT_ST_AdvancedMode_LucidDreaming:

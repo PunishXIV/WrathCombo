@@ -19,10 +19,9 @@ internal partial class VPR
                 case Preset.VPR_ST_Opener:
                     DrawBossOnlyChoice(VPR_Balance_Content);
                     DrawOpenerPotionChoice(VPR_Opener_Potion);
-                    DrawOpenerPrepullBlockChoice(VPR_Opener_PrepullBlock);
                     DrawAdditionalBoolChoice(VPR_Opener_ExcludeUF,
-                        FormatAndCache(Generics.Exclude0, UncoiledFury.ActionName()),
-                        "");
+                        FormatAndCache(Generics.Exclude0, UncoiledFury.ActionName()), "");
+                    DrawOpenerPrepullBlockChoice(VPR_Opener_PrepullBlock);
                     break;
 
                 case Preset.VPR_ST_SerpentsIre:

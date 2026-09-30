@@ -25,11 +25,9 @@ internal partial class MNK
                     DrawRadioButton(MNK_SelectedOpener,
                         MNK_Config.DoubleLunarOpener,
                         MNK_Config.DoubleLunarOpenerDesc, 0, descriptionAsTooltip: true);
-
                     DrawRadioButton(MNK_SelectedOpener,
                         MNK_Config.SolarLunarOpener,
                         MNK_Config.SolarLunarOpenerDesc, 1, descriptionAsTooltip: true);
-
                     DrawOpenerPrepullBlockChoice(MNK_Opener_PrepullBlock);
                     break;
 
