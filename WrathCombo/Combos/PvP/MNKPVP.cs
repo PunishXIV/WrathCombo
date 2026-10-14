@@ -1,8 +1,9 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.MNKPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.MNKPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -65,9 +66,9 @@ internal static class MNKPvP
         protected internal override Preset Preset => Preset.MNKPvP_Burst;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (DragonKick or TwinSnakes or Demolish or LeapingOpo or RisingRaptor or PouncingCoeurl or PhantomRush)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, DragonKick, TwinSnakes, Demolish, LeapingOpo, RisingRaptor, PouncingCoeurl, PhantomRush))
                 return actionID;
-            
+
             if (IsEnabled(Preset.MNKPvP_Burst_Meteodrive) && PvPCommon.TargetImmuneToDamage() && GetTargetCurrentHP() <= 20000 && IsLB1Ready)
                 return Meteordrive;
 
@@ -99,7 +100,26 @@ internal static class MNKPvP
                     return OriginalHook(FiresReply);
 
             }
-            return actionID;
+
+            if (ActionReady(TwinSnakes))
+                return TwinSnakes;
+
+            if (ActionReady(Demolish))
+                return Demolish;
+
+            if (ActionReady(LeapingOpo))
+                return LeapingOpo;
+
+            if (ActionReady(RisingRaptor))
+                return RisingRaptor;
+
+            if (ActionReady(PouncingCoeurl))
+                return PouncingCoeurl;
+
+            if (ActionReady(PhantomRush))
+                return PhantomRush;
+
+            return DragonKick;
         }
     }
 }

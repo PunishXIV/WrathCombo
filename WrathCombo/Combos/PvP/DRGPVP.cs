@@ -1,8 +1,9 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.DRGPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.DRGPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -58,7 +59,7 @@ internal static class DRGPvP
                     break;
 
                 case Preset.DRGPvP_ChaoticSpringSustain:
-                    DrawSliderInt(0, 101, DRGPvP_CS_HP_Threshold, "Chaotic Spring HP percentage threshold. Set to 100 to use on cd");
+                    DrawSliderInt(1, 100, DRGPvP_CS_HP_Threshold, "Chaotic Spring HP percentage threshold. Set to 100 to use on cd");
                     break;
                         
 
@@ -80,9 +81,9 @@ internal static class DRGPvP
         protected internal override Preset Preset => Preset.DRGPvP_Burst;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (RaidenThrust or FangAndClaw or WheelingThrust or Drakesbane)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, RaidenThrust, FangAndClaw, WheelingThrust, Drakesbane))
                 return actionID;
-            
+
             if (!CurrentTarget.HasStatus(PvPCommon.Buffs.Guard, true))
             {
                 if (IsEnabled(Preset.DRGPvP_Smite) && PvPMelee.CanSmite() && InActionRange(PvPMelee.Smite) && HasTarget() &&
@@ -121,12 +122,22 @@ internal static class DRGPvP
             }
             if (IsOffCooldown(ChaoticSpring) && InMeleeRange())
             {
-                if (IsEnabled(Preset.DRGPvP_ChaoticSpringSustain) && PlayerHealthPercentageHp() < DRGPvP_CS_HP_Threshold) // Chaotic Spring as a self heal option, it does not break combos of other skills
+                if (IsEnabled(Preset.DRGPvP_ChaoticSpringSustain) && PlayerHealthPercentageHp() <= DRGPvP_CS_HP_Threshold) // Chaotic Spring as a self heal option, it does not break combos of other skills
                     return ChaoticSpring;
                 if (IsEnabled(Preset.DRGPvP_ChaoticSpringExecute) && GetTargetCurrentHP() <= 8000) // Chaotic Spring Execute
                     return ChaoticSpring;
             }
-            return actionID;
+
+            if (ActionReady(FangAndClaw))
+                return FangAndClaw;
+
+            if (ActionReady(WheelingThrust))
+                return WheelingThrust;
+
+            if (ActionReady(Drakesbane))
+                return Drakesbane;
+
+            return RaidenThrust;
         }
     }
     internal class DRGPvP_BurstProtection : CustomCombo

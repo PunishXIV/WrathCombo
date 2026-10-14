@@ -9790,7 +9790,7 @@ public enum Preset
     SCHPvP_Adlo = 126006,
 
     [PvPCustomCombo]
-    [ReplaceSkill(SCHPvP.Adloquilum)]
+    [ReplaceSkill(SCHPvP.Adloquium)]
     [JobInfo(Job.SCH)]
     [Retargeted]
     SCHPvP_RetargetAdlo = 126007,

@@ -672,12 +672,15 @@ public class ActionWatching
                              newLoc is not null)
                         location = (Vector3)newLoc;
 
-                    var ret = ActionManager.Instance()->UseActionLocation
-                        (actionType, replacedWith, location: &location);
+                    if (ActionReady(replacedWith))
+                    {
+                        var ret = ActionManager.Instance()->UseActionLocation
+                            (actionType, replacedWith, location: &location);
 
-                    Service.ActionReplacer.EnableActionReplacingIfRequired();
+                        Service.ActionReplacer.EnableActionReplacingIfRequired();
 
-                    return ret;
+                        return ret;
+                    }
                 }
 
                 if (Service.Configuration.OverwriteQueue && actionManager->QueuedActionId != 0 && CanQueueCS(replacedWith))

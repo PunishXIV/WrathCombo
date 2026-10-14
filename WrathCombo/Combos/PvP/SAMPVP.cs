@@ -1,8 +1,9 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.SAMPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.SAMPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -99,7 +100,8 @@ internal static class SAMPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Yukikaze or Gekko or Kasha)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Yukikaze, Gekko, Kasha))
+                return actionID;
 
             #region Variables
             float targetCurrentPercentHp = GetTargetHPPercent();
@@ -170,9 +172,14 @@ internal static class SAMPvP
             if (hasKaeshiNamikiri)
                 return OriginalHook(OgiNamikiri);
 
-            // Kaiten
-            if (hasKaiten)
-                return OriginalHook(actionID);
+            if (ActionReady(Mangetsu))
+                return Mangetsu;
+
+            if (ActionReady(Oka))
+                return Oka; 
+
+            if (ActionReady(Hyosetsu))
+                return Hyosetsu;
 
             if (!isMoving && isTargetPrimed)
             {
@@ -184,7 +191,15 @@ internal static class SAMPvP
                 if (IsOffCooldown(OgiNamikiri))
                     return OriginalHook(OgiNamikiri);
             }
-            return actionID;
+
+
+            if (ActionReady(Gekko))
+                return Gekko;
+
+            if (ActionReady(Kasha))
+                return Kasha;
+
+            return Yukikaze;
         }
     }
 }

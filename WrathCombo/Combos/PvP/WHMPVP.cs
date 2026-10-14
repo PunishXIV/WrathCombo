@@ -2,9 +2,10 @@
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.WHMPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.WHMPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -81,9 +82,9 @@ internal static class WHMPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Glare) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Glare))
                 return actionID;
-            
+
             if (!PvPCommon.TargetImmuneToDamage())
             {
                 //Limit break, with health slider
@@ -130,7 +131,11 @@ internal static class WHMPvP
                         ? Cure2.Retarget(Glare, healTarget)
                         : Cure2;
             }
-            return actionID;
+
+            if (ActionReady(Glare4))
+                return Glare4;
+
+            return Glare;
         }
     }
       

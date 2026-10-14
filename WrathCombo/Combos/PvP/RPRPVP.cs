@@ -1,9 +1,10 @@
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.RPRPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.RPRPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -16,6 +17,9 @@ internal static class RPRPvP
         Slice = 29538,
         WaxingSlice = 29539,
         InfernalSlice = 29540,
+        ExecutionersGuilotine = 41456,
+        VoidReaping = 29543,
+        CrossReaping = 29544,
         HarvestMoon = 29545,
         PlentifulHarvest = 29546,
         GrimSwathe = 29547,
@@ -33,6 +37,7 @@ internal static class RPRPvP
             Soulsow = 2750,
             SoulReaver = 2854,
             GallowsOiled = 2856,
+            RipeForReaping = 2858,
             Enshrouded = 2863,
             ImmortalSacrifice = 3204,
             PlentifulHarvest = 3205,
@@ -82,7 +87,7 @@ internal static class RPRPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Slice or WaxingSlice or InfernalSlice)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Slice, WaxingSlice, InfernalSlice))
                 return actionID;
 
             #region Variables
@@ -179,7 +184,25 @@ internal static class RPRPvP
                         return HarvestMoon;
                 }
             }
-            return actionID;
+
+            if (ActionReady(ExecutionersGuilotine))
+                return ExecutionersGuilotine;
+
+            var enshroudedStacks = LocalPlayer.Status(Buffs.Enshrouded).Stacks % 2;
+
+            if (ActionReady(CrossReaping) && LocalPlayer.HasStatus(Buffs.RipeForReaping))
+                return CrossReaping;
+
+            if (ActionReady(VoidReaping))
+                return VoidReaping;
+
+            if (ComboAction == Slice)
+                return WaxingSlice;
+
+            if (ComboAction == WaxingSlice)
+                return InfernalSlice;
+
+            return Slice;
         }
     }
 }

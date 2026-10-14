@@ -2,9 +2,10 @@
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.RDMPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.RDMPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 
 namespace WrathCombo.Combos.PvP;
@@ -119,7 +120,8 @@ internal static class RDMPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Jolt3) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Jolt3))
+                return actionID;
 
             #region Variables
             float targetCurrentPercentHp = GetTargetHPPercent();
@@ -135,7 +137,7 @@ internal static class RDMPvP
             bool hasScorch = OriginalHook(EnchantedRiposte) is Scorch;
             bool hasViceOfThorns = OriginalHook(Forte) is ViceOfThorns;
             bool hasPrefulgence = OriginalHook(Embolden) is Prefulgence;
-            bool hasGrandImpact = OriginalHook(actionID) is GrandImpact;
+            bool hasGrandImpact = OriginalHook(Jolt3) is GrandImpact;
             bool targetHasGuard = CurrentTarget.HasStatus(PvPCommon.Buffs.Guard, true);
             bool hasForte = IsOffCooldown(Forte) && OriginalHook(Forte) is Forte;
             bool hasEmbolden = IsOffCooldown(Embolden) && OriginalHook(Embolden) is Embolden;
@@ -223,7 +225,7 @@ internal static class RDMPvP
             }
 
             // Grand Impact / Jolt III
-            return OriginalHook(actionID);
+            return OriginalHook(Jolt3);
         }
     }
     internal class RDMPvP_Dash_Feature : CustomCombo

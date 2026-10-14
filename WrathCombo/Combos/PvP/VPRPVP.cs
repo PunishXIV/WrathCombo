@@ -1,8 +1,9 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.VPRPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.VPRPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -14,7 +15,7 @@ internal static class VPRPvP
     internal const uint
         SteelFangs = 39157,
         HuntersSting = 39159,
-        BarbarousSlice = 39161,
+        BarbarousBite = 39161,
         PiercingFangs = 39158,
         SwiftskinsSting = 39160,
         RavenousBite = 39163,
@@ -118,8 +119,7 @@ internal static class VPRPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (SteelFangs or HuntersSting or BarbarousSlice or PiercingFangs or SwiftskinsSting or 
-                RavenousBite or FirstGeneration or SecondGeneration or ThirdGeneration or FourthGeneration)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SteelFangs, HuntersSting, BarbarousBite, PiercingFangs, SwiftskinsSting, RavenousBite, FirstGeneration, SecondGeneration, ThirdGeneration, FourthGeneration))
                 return actionID;
 
             #region Variables
@@ -145,7 +145,7 @@ internal static class VPRPvP
             bool hasCommonWeave = OriginalHook(SerpentsTail) is DeathRattle or TwinfangBite or TwinbloodBite;
             bool hasLegacyWeave = OriginalHook(SerpentsTail) is FirstLegacy or SecondLegacy or ThirdLegacy or FourthLegacy;
             bool isBloodcoilPrimed = IsOffCooldown(Bloodcoil) && hasTarget && !targetHasImmunity && !hasOuroboros && !hasSanguineFeast;
-            bool inGenerationsCombo = OriginalHook(actionID) is FirstGeneration or SecondGeneration or ThirdGeneration or FourthGeneration;
+            bool inGenerationsCombo = ActionReady(FirstGeneration) || ActionReady(SecondGeneration) || ActionReady(ThirdGeneration) || ActionReady(FourthGeneration);
             bool isUncoiledFuryPrimed = chargesUncoiledFury > 0 && hasTarget && !targetHasImmunity && targetCurrentPercentHp < VPRPvP_UncoiledFury_TargetHP;
             bool isUncoiledFuryDependant = !isUncoiledFuryEnabled || !(isUncoiledFuryEnabled && isUncoiledFuryPrimed);
             bool isSlitherPrimed = hasTarget && !inMeleeRange && isUncoiledFuryDependant && !hasSlither && !hasBind;
@@ -179,7 +179,19 @@ internal static class VPRPvP
             {
                 // Reawakened
                 if (inGenerationsCombo)
-                    return OriginalHook(actionID);
+                {
+                    if (ActionReady(FirstGeneration))
+                        return OriginalHook(FirstGeneration);
+
+                    if (ActionReady(SecondGeneration))
+                        return OriginalHook(SecondGeneration);
+
+                    if (ActionReady(ThirdGeneration))
+                        return OriginalHook(ThirdGeneration);
+                    
+                    if (ActionReady(FourthGeneration))
+                        return OriginalHook(FourthGeneration);
+                }
 
                 // Ouroboros / Sanguine Feast / Bloodcoil
                 if (hasOuroboros || hasSanguineFeast || (IsEnabled(Preset.VPRPvP_Bloodcoil) && isBloodcoilPrimed &&
@@ -191,7 +203,22 @@ internal static class VPRPvP
             if (isUncoiledFuryEnabled && isUncoiledFuryPrimed)
                 return OriginalHook(UncoiledFury);
 
-            return actionID;
+            if (ComboAction is SteelFangs)
+                return HuntersSting;
+
+            if (ComboAction is HuntersSting)
+                return BarbarousBite;
+
+            if (ComboAction is BarbarousBite)
+                return PiercingFangs;
+
+            if (ComboAction is PiercingFangs)
+                return SwiftskinsSting;
+
+            if (ComboAction is SwiftskinsSting)
+                return RavenousBite;    
+
+            return OriginalHook(SteelFangs);
         }
     }
 

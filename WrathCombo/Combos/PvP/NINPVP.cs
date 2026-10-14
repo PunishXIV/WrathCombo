@@ -1,11 +1,12 @@
-﻿using System;
+﻿using ECommons.GameHelpers;
+using System;
 using System.Linq;
-using ECommons.GameHelpers;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.NINPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.NINPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -52,7 +53,7 @@ internal static class NINPvP
             SealedHuton = 3196,
             SealedDoton = 3197,
             SealedForkedRaiju = 3195,
-            SealedMeisui = 3198,                
+            SealedMeisui = 3198,
             Dokumori = 4303;
     }
     #endregion
@@ -112,7 +113,7 @@ internal static class NINPvP
                     DrawSliderInt(0, 3, NINPvP_ST_FumaShuriken_RangedCharges,
                         "How many charges to retain for Ranged only. Set 0 to use all in melee. Set 3 use at range only.");
                     break;
-                
+
                 case Preset.NINPvP_AoE_FumaShuriken:
                     DrawSliderInt(0, 3, NINPvP_AoE_FumaShuriken_RangedCharges,
                         "How many charges to retain for Ranged only. Set 0 to use all in melee. Set 3 use at range only.");
@@ -153,16 +154,16 @@ internal static class NINPvP
         }
     }
     #endregion
-       
+
     internal class NINPvP_ST_BurstMode : CustomCombo
     {
         protected internal override Preset Preset => Preset.NINPvP_ST_BurstMode;
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (SpinningEdge or GustSlash or AeolianEdge)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, SpinningEdge, GustSlash, AeolianEdge))
                 return actionID;
-            
+
             // Cached variables for repeated conditions
             var bunshinStacks = LocalPlayer.HasStatus(Buffs.Bunshin) ? LocalPlayer.Status(Buffs.Bunshin).Stacks : 0;
             bool mudraMode = LocalPlayer.HasStatus(Buffs.ThreeMudra);
@@ -206,7 +207,7 @@ internal static class NINPvP
                     {
                         if (!IsEnabled(Preset.NINPvP_ST_ThreeMudraPool) || LocalPlayer.HasStatus(Buffs.Bunshin))
                             return OriginalHook(ThreeMudra);
-                    }  
+                    }
                 }
                 // Mudra mode actions
                 if (mudraMode)
@@ -237,15 +238,33 @@ internal static class NINPvP
                             }
                         }
                     }
-                    else return actionID;
                 }
                 // Fuma Shuriken
                 if (IsEnabled(Preset.NINPvP_ST_FumaShuriken) && !LocalPlayer.HasStatus(Buffs.FleetingRaijuReady) && HasCharges(FumaShuriken) &&
-                    (!InMeleeRange() && GetRemainingCharges(FumaShuriken) > 0 || 
+                    (!InMeleeRange() && GetRemainingCharges(FumaShuriken) > 0 ||
                      InMeleeRange() && GetRemainingCharges(FumaShuriken) > NINPvP_ST_FumaShuriken_RangedCharges))
                     return OriginalHook(FumaShuriken);
             }
-            return actionID;
+
+            if (LocalPlayer.HasStatus(Buffs.Hidden))
+                return Assassinate;
+
+            if (LocalPlayer.HasStatus(Buffs.ThreeMudra))
+                return ForkedRaiju;
+
+            if (ActionReady(FleetingRaiju))
+                return FleetingRaiju;
+
+            if (LocalPlayer.HasStatus(Buffs.ZeshoMeppoReady))
+                return ZeshoMeppo;
+
+            if (ActionReady(GustSlash))
+                return GustSlash;
+
+            if (ActionReady(AeolianEdge))
+                return AeolianEdge;
+
+            return SpinningEdge;
         }
     }
 
@@ -255,9 +274,9 @@ internal static class NINPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not FumaShuriken) 
+            if (actionID is not FumaShuriken)
                 return actionID;
-            
+
             bool mudraMode = LocalPlayer.HasStatus(Buffs.ThreeMudra);
             var jobMaxHp = LocalPlayer.MaxHp;
             var maxHPThreshold = jobMaxHp - 8000;
@@ -325,7 +344,7 @@ internal static class NINPvP
                 }
 
                 if (IsEnabled(Preset.NINPvP_AoE_FumaShuriken) && !LocalPlayer.HasStatus(Buffs.FleetingRaijuReady) && HasCharges(FumaShuriken) &&
-                    (!InMeleeRange() && GetRemainingCharges(FumaShuriken) > 0 || 
+                    (!InMeleeRange() && GetRemainingCharges(FumaShuriken) > 0 ||
                      InMeleeRange() && GetRemainingCharges(FumaShuriken) > NINPvP_AoE_FumaShuriken_RangedCharges))
                     return OriginalHook(FumaShuriken);
 

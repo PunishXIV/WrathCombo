@@ -1,8 +1,9 @@
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.BRDPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.BRDPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -62,9 +63,9 @@ internal static class BRDPvP
         protected internal override Preset Preset => Preset.BRDPvP_BurstMode;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not PowerfulShot) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, PowerfulShot))
                 return actionID;
-            
+
             var canWeave = CanWeave(0.5f);
             uint harmonicCharges = GetRemainingCharges(HarmonicArrow);
 
@@ -104,7 +105,7 @@ internal static class BRDPvP
                 }
                 return OriginalHook(PowerfulShot); // Main shot but also Pitch Perfect
             }
-            return actionID;
+            return PowerfulShot;
         }                       
     }
 }

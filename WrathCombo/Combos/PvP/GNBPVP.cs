@@ -1,9 +1,10 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.GNBPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using WrathCombo.Window.Functions;
+using static WrathCombo.Combos.PvP.GNBPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -92,7 +93,9 @@ internal static class GNBPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (KeenEdge or BrutalShell or SolidBarrel or BurstStrike)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, KeenEdge, BrutalShell, SolidBarrel, BurstStrike))
+                return actionID;
+
             int corundumThreshold = GNBPvP_CorundumThreshold;
             int blastingZoneThreshold = GNBPvP_BlastingZoneThreshold; 
 
@@ -133,7 +136,17 @@ internal static class GNBPvP
                 if (IsEnabled(Preset.GNBPvP_ST_GnashingFang) && (ActionReady(GnashingFang) || OriginalHook(GnashingFang) != GnashingFang))
                     return OriginalHook(GnashingFang);
             }
-            return actionID;
+
+            if (ActionReady(BrutalShell))
+                return BrutalShell;
+
+            if (ActionReady(SolidBarrel))
+                return SolidBarrel;
+
+            if (ActionReady(BurstStrike))   
+                return BurstStrike;
+
+            return KeenEdge;
         }
     }
     internal class GNBPvP_GnashingFang : CustomCombo
