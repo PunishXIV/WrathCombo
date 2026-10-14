@@ -183,24 +183,24 @@ internal partial class DNC
                     ImGui.Spacing();
                     DrawRadioButton(DNC_ST_OpenerSelection,
                         "Standard: 15s Countdown",
-                        "Requires at least a 15s cooldown\nand that you start Standard Step at 15s.",
+                        "Requires at least a 15s countdown\nand that you start Standard Step at 15s.",
                         (int)Openers.FifteenSecond, descriptionAsTooltip: true);
                     DrawRadioButton(DNC_ST_OpenerSelection,
                         "Standard: 7s Countdown",
-                        "Requires at least a 7s cooldown\nand that you start Standard Step at 7s.\nPerforms worse than 15s.",
+                        "Requires at least a 7s countdown\nand that you start Standard Step at 7s.\nPerforms worse than 15s.",
                         (int)Openers.SevenSecond, descriptionAsTooltip: true);
                     DrawRadioButton(DNC_ST_OpenerSelection,
                         "Technical: 30s Countdown",
-                        "Requires a 30s cooldown\nand that you start Standard Step at 30s.\nNot generally recommended.\nWill align buffs worse than Standard 15s.\nNot recommended if Standard Step would pull.",
+                        "Requires a 30s countdown\nand that you start Standard Step at 30s.\nNot generally recommended.\nWill align buffs worse than Standard 15s.\nNot recommended if Standard Step would pull.",
                         (int)Openers.ThirtySecondTech, descriptionAsTooltip: true);
                     DrawRadioButton(DNC_ST_OpenerSelection,
                         "Technical: 7s Countdown",
-                        "Requires at least a 7s cooldown.\nDoes NOT contain Standard Step.\nNot generally recommended.",
-                        (int)Openers.SevenPlusSecondTech, descriptionAsTooltip: true);
-                    DrawRadioButton(DNC_ST_OpenerSelection,
-                        "Technical: 7s Countdown (Alternative)",
-                        "Requires at least a 7s cooldown.\nDoes NOT contain Standard Step.\nNot generally recommended.",
+                        "Requires at least a 7s countdown.\nDoes NOT contain Standard Step.\nNot generally recommended.",
                         (int)Openers.SevenSecondTech, descriptionAsTooltip: true);
+                    DrawRadioButton(DNC_ST_OpenerSelection,
+                        "Technical: 7s+ Countdown (Alernative)",
+                        "Requires at least a 7s countdown and Standard Step performed beforehand.\nCountdown timer should then be approximately 3s less than the current cooldown of Finishing Move.\nNot generally recommended, only for coordinated use only.",
+                        (int)Openers.SevenPlusSecondTech, descriptionAsTooltip: true);
 
                     DrawAdditionalBoolChoice(DNC_ST_OpenerOption_Peloton,
                         $"Include {Peloton.ActionName()}", "");

@@ -1,9 +1,10 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.DRKPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using WrathCombo.Window.Functions;
+using static WrathCombo.Combos.PvP.DRKPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -49,11 +50,11 @@ internal class DRKPvP
             switch (preset)
             {
                 case Preset.DRKPvP_Shadowbringer:
-                    DrawSliderInt(20, 100, ShadowbringerThreshold, "HP% to be at or Above to use ", 
+                    DrawSliderInt(20, 100, ShadowbringerThreshold, "HP% to be at or Above to use ",
                         itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
                     break;
 
-                case Preset.DRKPvP_Rampart: 
+                case Preset.DRKPvP_Rampart:
                     DrawSliderInt(1, 100, DRKPvP_RampartThreshold, "Use Rampart below set threshold for self");
                     break;
             }
@@ -66,9 +67,9 @@ internal class DRKPvP
         protected internal override Preset Preset => Preset.DRKPvP_Burst;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (HardSlash or SyphonStrike or Souleater)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, HardSlash, SyphonStrike, Souleater))
                 return actionID;
-            
+
             bool canWeave = CanWeave();
             int shadowBringerThreshold = ShadowbringerThreshold;
 
@@ -101,23 +102,20 @@ internal class DRKPvP
                         return OriginalHook(Shadowbringer);
                 }
 
-                if (InMeleeRange())
-                {
-                    if (IsEnabled(Preset.DRKPvP_Impalement) && ActionReady(Impalement))
-                        return OriginalHook(Impalement);
-
-                    if (ComboTimer > 1f)
-                    {
-                        if (ComboAction == HardSlash)
-                            return OriginalHook(SyphonStrike);
-
-                        if (ComboAction == SyphonStrike)
-                            return OriginalHook(Souleater);
-                    }
-                    return OriginalHook(HardSlash);
-                }
+                if (NumberOfEnemiesInRange(Impalement) > 0 && IsEnabled(Preset.DRKPvP_Impalement) && ActionReady(Impalement))
+                    return OriginalHook(Impalement);
             }
-            return actionID;
+
+            if (ComboTimer > 1f)
+            {
+                if (ComboAction == HardSlash)
+                    return OriginalHook(SyphonStrike);
+
+                if (ComboAction == SyphonStrike)
+                    return OriginalHook(Souleater);
+            }
+            return OriginalHook(HardSlash);
+
         }
     }
 }

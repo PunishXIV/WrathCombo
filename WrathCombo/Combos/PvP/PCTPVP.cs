@@ -1,8 +1,9 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.PCTPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.PCTPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -14,6 +15,11 @@ internal static class PCTPvP
         FireInRed = 39191,
         AeroInGreen = 39192,
         WaterInBlue = 39193,
+        BlizzardInCyan = 39194,
+
+        StoneInYellow = 39195,
+        ThunderInMagenta = 39196,
+
         HolyInWhite = 39198,
         CreatureMotif = 39204,
         LivingMuse = 39209,
@@ -79,9 +85,9 @@ internal static class PCTPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (FireInRed or AeroInGreen or WaterInBlue)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, FireInRed, AeroInGreen, WaterInBlue))
                 return actionID;
-            
+
             #region Variables
             bool isMoving = IsMoving();
             bool hasTarget = HasTarget();
@@ -136,7 +142,23 @@ internal static class PCTPvP
                     hasTarget && ((isMoving && hasSubtractivePalette) || (!isMoving && !hasSubtractivePalette)))
                     return OriginalHook(SubtractivePalette);
             }
-            return actionID;
+
+            if (ActionReady(AeroInGreen))
+                return AeroInGreen;
+
+            if (ActionReady(WaterInBlue))
+                return WaterInBlue;
+
+            if (ActionReady(BlizzardInCyan))
+                return BlizzardInCyan;
+
+            if (ActionReady(StoneInYellow))
+                return StoneInYellow;
+
+            if (ActionReady(ThunderInMagenta))
+                return ThunderInMagenta;
+
+            return FireInRed;
         }
         internal class PCTPvP_OneButtonMotifs : CustomCombo
         {

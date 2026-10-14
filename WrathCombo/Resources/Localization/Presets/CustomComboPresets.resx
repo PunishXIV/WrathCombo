@@ -9030,7 +9030,7 @@ Enabling Gekko and Kasha combo options makes this a one button basic combo.</val
     <value>Adds Adloquium when target is below set health</value>
   </data>
   <data name="SCHPvP_Adlo_Name" xml:space="preserve">
-    <value>Adlo Option</value>
+    <value>Adloquium Option</value>
   </data>
   <data name="SCHPvP_Biolysis_Desc" xml:space="preserve">
     <value>Adds Biolysis use on cooldown to Burst Mode.</value>

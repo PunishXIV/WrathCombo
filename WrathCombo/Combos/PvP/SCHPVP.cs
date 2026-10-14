@@ -2,9 +2,10 @@
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.SCHPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.SCHPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -14,7 +15,7 @@ internal static class SCHPvP
     internal class Role : PvPHealer;
     public const uint
         Broil = 29231,
-        Adloquilum = 29232,
+        Adloquium = 29232,
         Biolysis = 29233,
         DeploymentTactics = 29234,
         Expedient = 29236,
@@ -49,12 +50,12 @@ internal static class SCHPvP
             switch (preset)
             {
                 case Preset.SCHPvP_Diabrosis:
-                    DrawSliderInt(0, 100, SCHPvP_DiabrosisThreshold, "Target HP% to use Diabrosis");
+                    DrawSliderInt(0, 100, SCHPvP_DiabrosisThreshold, $"Target HP% to use {PvPHealer.Diabrosis.ActionName()}");
                     break;
 
                 case Preset.SCHPvP_Adlo:
-                    DrawAdditionalBoolChoice(SCHPvP_Adlo_Retarget, "Retarget Adlo","Will use Heal stack.(In Wrath Settings)");
-                    DrawSliderInt(1, 100, SCHPvP_AdloThreshold, "HP% to use Adlo");
+                    DrawAdditionalBoolChoice(SCHPvP_Adlo_Retarget, $"Retarget {Adloquium.ActionName()}", "");
+                    DrawSliderInt(1, 100, SCHPvP_AdloThreshold, $"HP% to use {Adloquium.ActionName()}");
                     break;
                 
             }
@@ -68,9 +69,10 @@ internal static class SCHPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Broil || !InCombat()) 
+
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Broil))
                 return actionID;
-            
+
             // Uses Chain Stratagem when available
             if (IsEnabled(Preset.SCHPvP_ChainStratagem) && IsOffCooldown(ChainStratagem))
                 return ChainStratagem;                    
@@ -99,12 +101,13 @@ internal static class SCHPvP
             {
                 IGameObject? healTarget = SCHPvP_Adlo_Retarget ? SimpleTarget.Stack.AllyToHealPVP : SimpleTarget.Stack.Allies;
                 
-                if (!healTarget.HasStatus(Buffs.Catalyze) && GetTargetHPPercent(healTarget) <= SCHPvP_AdloThreshold && ActionReady(Adloquilum))
+                if (!healTarget.HasStatus(Buffs.Catalyze) && GetTargetHPPercent(healTarget) <= SCHPvP_AdloThreshold && ActionReady(Adloquium))
                     return SCHPvP_Adlo_Retarget
-                        ? Adloquilum.Retarget(Broil, healTarget)
-                        : Adloquilum;
+                        ? Adloquium.Retarget(Broil, healTarget)
+                        : Adloquium;
             }
-            return actionID;
+
+            return Broil;
         }
     }
     
@@ -114,9 +117,9 @@ internal static class SCHPvP
 
         protected override uint Invoke(uint actionID)
         {
-            return actionID is not Adloquilum 
+            return actionID is not Adloquium 
                 ? actionID 
-                : Adloquilum.Retarget(SimpleTarget.Stack.AllyToHealPVP);
+                : Adloquium.Retarget(SimpleTarget.Stack.AllyToHealPVP);
         }
     }
 }

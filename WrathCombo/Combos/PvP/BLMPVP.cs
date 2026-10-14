@@ -1,9 +1,12 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
+using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.BLMPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.BLMPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -134,11 +137,11 @@ internal static class BLMPvP
                 case Preset.BLMPvP_PhantomDart:
                     DrawSliderInt(1, 100, BLMPvP_PhantomDartThreshold, "Target HP% to use Phantom Dart at or below");
                     break;
-                
+
                 case Preset.BLMPvP_Manipulation_Feature:
                     DrawSliderInt(2500, 10000, BLMPvP_Manipulation_Feature_PurifyMPThreshold, "Do not use Purify below set MP.");
                     break;
-                    
+
             }
         }
     }
@@ -150,11 +153,12 @@ internal static class BLMPvP
 
         protected override uint Invoke(uint actionID)
         {
-            bool actionIsFire = actionID is Fire or Fire3 or Fire4 or HighFire2 or Flare;
-            bool actionIsIce = actionID is Blizzard or Blizzard3 or Blizzard4 or HighBlizzard2 or Freeze;
+            var actions = BLMPVP_BurstButtonOption == 1 ? new uint[] { Fire, Fire3, Fire4, HighFire2, Flare, Blizzard, Blizzard3, Blizzard4, HighBlizzard2, Freeze } : new uint[] { Fire, Fire3, Fire4, HighFire2, Flare };
 
-            if (!actionIsFire && (!actionIsIce || BLMPVP_BurstButtonOption != 1)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, actions))
                 return actionID;
+
+            Svc.Log.Debug($"{BLMPVP_BurstButtonOption.Value}");
 
             #region Variables
             float targetCurrentPercentHp = GetTargetHPPercent();
@@ -173,7 +177,7 @@ internal static class BLMPvP
             bool targetHasHeavy = CurrentTarget.HasStatus(PvPCommon.Debuffs.Heavy, true);
             bool isPlayerTargeted = CurrentTarget?.TargetObjectId == LocalPlayer.GameObjectId;
             bool isParadoxPrimed = LocalPlayer.HasStatus(Buffs.UmbralIce1) || LocalPlayer.HasStatus(Buffs.AstralFire1);
-            bool isMovingAdjusted = TimeMoving.TotalMilliseconds / 1000f >= BLMPvP_Movement_Threshold;
+            bool isMovingAdjusted = TimeMoving.TotalMilliseconds / 1000f >= BLMPvP_Movement_Threshold && BLMPVP_BurstButtonOption == 0;
             bool isResonanceExpiring = LocalPlayer.HasStatus(Buffs.SoulResonance) && LocalPlayer.Status(Buffs.SoulResonance).RemainingTimeOrZero() <= 10;
             bool hasUmbralIce = LocalPlayer.HasStatus(Buffs.UmbralIce1) || LocalPlayer.HasStatus(Buffs.UmbralIce2) || LocalPlayer.HasStatus(Buffs.UmbralIce3);
             bool isElementalStarDelayed = LocalPlayer.HasStatus(Buffs.ElementalStar) && LocalPlayer.Status(Buffs.ElementalStar).RemainingTimeOrZero() <= 20;
@@ -242,10 +246,17 @@ internal static class BLMPvP
             if (hasParadox && ((isParadoxPrimed && !hasResonance) || (hasAstralFire && isMoving)))
                 return OriginalHook(Paradox);
 
-            // Basic Spells
-            return isMovingAdjusted && BLMPVP_BurstButtonOption == 0
+            if (actionID is All.SingleTargetDPS)
+            {
+                return isMovingAdjusted || (isMoving && BLMPVP_BurstButtonOption == 1) ? OriginalHook(Blizzard) : OriginalHook(Fire);
+            }
+            else
+            {
+                return isMovingAdjusted
+                // Basic Spells
                 ? OriginalHook(Blizzard)
                 : OriginalHook(actionID);
+            }
         }
     }
     internal class BLMPvP_Manipulation_Feature : CustomCombo
@@ -254,9 +265,9 @@ internal static class BLMPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not AetherialManipulation) 
+            if (actionID is not AetherialManipulation)
                 return actionID;
-            
+
             bool hasCrowdControl = LocalPlayer.HasStatus(PvPCommon.Debuffs.Stun, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.DeepFreeze, true) ||
                                    LocalPlayer.HasStatus(PvPCommon.Debuffs.Bind, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.Silence, true) || LocalPlayer.HasStatus(PvPCommon.Debuffs.MiracleOfNature, true);
 

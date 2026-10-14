@@ -1,8 +1,9 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
-using static WrathCombo.Window.Functions.UserConfig;
+using WrathCombo.Native;
 using static WrathCombo.Combos.PvP.PLDPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -14,6 +15,9 @@ internal static class PLDPvP
         FastBlade = 29058,
         RiotBlade = 29059,
         RoyalAuthority = 29060,
+        Attonement = 29061,
+        Supplication = 41428,
+        Sepulchre = 41429,
         ShieldSmite = 41430,
         HolySpirit = 29062,
         Imperator = 41431,
@@ -74,9 +78,9 @@ internal static class PLDPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (FastBlade or RiotBlade or RoyalAuthority)) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, FastBlade, RiotBlade, RoyalAuthority))
                 return actionID;
-            
+
             if (IsEnabled(Preset.PLDPvP_Rampart) && PvPTank.CanRampart(PLDPvP_RampartThreshold))
                 return PvPTank.Rampart;
 
@@ -112,7 +116,23 @@ internal static class PLDPvP
                 if (!InMeleeRange() || !LocalPlayer.HasStatus(Buffs.AttonementReady) && !LocalPlayer.HasStatus(Buffs.SupplicationReady) && !LocalPlayer.HasStatus(Buffs.SepulchreReady))
                     return HolySpirit;
             }
-            return actionID;
+
+            if (ActionReady(Attonement))
+                return Attonement;
+
+            if (ActionReady(Supplication))
+                return Supplication;
+
+            if (ActionReady(Sepulchre))
+                return Sepulchre;   
+
+            if (ActionReady(RiotBlade))
+                return RiotBlade;
+
+            if (ActionReady(RoyalAuthority))
+                return RoyalAuthority;
+
+            return FastBlade;
         }
     }
 }

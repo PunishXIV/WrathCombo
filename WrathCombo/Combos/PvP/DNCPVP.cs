@@ -1,9 +1,10 @@
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.DNCPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.DNCPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -25,7 +26,8 @@ internal static class DNCPvP
         CuringWaltz = 29429,
         EnAvant = 29430,
         ClosedPosition = 29431,
-        Contradance = 29432;
+        Contradance = 29432,
+        DanceOfTheDawn = 41472;
     
     internal class Buffs
     {
@@ -38,7 +40,8 @@ internal static class DNCPvP
             HoningDance = 3162,
             Acclaim = 3163,
             HoningOvation = 3164,
-            ClosedPosition = 2026;
+            ClosedPosition = 2026,
+            SoloStep = 4313;
     }
     #endregion
 
@@ -76,7 +79,8 @@ internal static class DNCPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Cascade or Fountain or ReverseCascade or Fountainfall)) return actionID;
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Cascade, ReverseCascade, Fountain, Fountainfall))
+                return actionID;
 
             #region Variables
             bool starfallDanceReady = !GetCooldown(StarfallDance).IsCooldown;
@@ -122,7 +126,22 @@ internal static class DNCPvP
             if (!starfallDance && starfallDanceReady && InActionRange(StarfallDance) && !enemyGuarded) // 5y below max to avoid waste
                 return OriginalHook(StarfallDance);
 
-            return actionID;
+            if (ActionReady(DanceOfTheDawn))
+                return DanceOfTheDawn;
+
+            if (ActionReady(SaberDance))
+                return SaberDance;
+
+            if (ActionReady(Fountainfall))
+                return Fountainfall;
+
+            if (ActionReady(ReverseCascade))
+                return ReverseCascade;
+
+            if (ActionReady(Fountain))
+                return Fountain;
+
+            return Cascade;
         }
     }
 }

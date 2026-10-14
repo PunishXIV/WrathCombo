@@ -197,7 +197,7 @@ public partial class WrathCombo
 
             case "pvp":
                 HandleOpenCommand(tab: OpenWindow.PvP, forceOpen: true); break;
-            
+
             case "customactions":
             case "custom": // unlisted
                 HandleOpenCommand(tab: OpenWindow.CustomActions, forceOpen: true); break;
@@ -897,6 +897,7 @@ public partial class WrathCombo
                 if (toggle)
                     PresetStorage.TogglePreset(preset, ConfigChangeSource.Command);
             }
+            DuoLog.Information($"{Player.Job} Burst Custom {(toggle ? "TOGGLED" : resume ? "RESUMED" : "HELD")}");
             return;
         }
 

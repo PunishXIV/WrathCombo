@@ -837,6 +837,8 @@ internal partial class DNC
             SkipSteps.Add(([7], () => !DNC_ST_OpenerOption_Peloton));
 
         public override bool HasCooldowns() =>
+            LocalPlayer.HasStatus(Buffs.LastDanceReady) &&
+            GetCooldownRemainingTime(FinishingMove) <= 13 &&
             ActionReady(TechnicalStep) &&
             IsOffCooldown(Devilment) &&
             !InCombat();

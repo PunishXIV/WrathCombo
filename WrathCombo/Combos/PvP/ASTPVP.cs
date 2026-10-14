@@ -2,9 +2,10 @@
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.ASTPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.ASTPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -93,7 +94,7 @@ internal static class ASTPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Malefic)
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, Malefic))
                 return actionID;
 
             // Card Draw
@@ -158,7 +159,7 @@ internal static class ASTPvP
                             : AspectedBenefic;
                 }
             }
-            return actionID;
+            return OriginalHook(Malefic);
         }
     }
 

@@ -1,8 +1,9 @@
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
-using static WrathCombo.Combos.PvP.MCHPvP.Config;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
+using static WrathCombo.Combos.PvP.MCHPvP.Config;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -84,7 +85,7 @@ internal static class MCHPvP
         protected internal override Preset Preset => Preset.MCHPvP_BurstMode;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not BlastCharge) 
+            if (!CustomActionHelper.OneButtonRotationChecker(actionID, CustomActionType.SingleTargetDPS, BlastCharge))
                 return actionID;
 
             #region Variables
@@ -150,7 +151,7 @@ internal static class MCHPvP
                         return OriginalHook(ChainSaw);
                 }
             }
-            return actionID;
+            return BlastCharge;
         }
     }
 }

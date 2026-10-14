@@ -62,7 +62,7 @@ internal partial class SCH : Healer
             var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 99);
             
             if (target is not null && ActionReady(dotAction) && target.CanApplyStatus(dotDebuffID) && !JustUsedOn(dotAction, target) && PartyInCombat())
-                return dotAction.Retarget(BroilList.ToArray(), target);
+                return dotAction.Retarget(actionID, target);
 
             //Ruin 2 Movement
             if (ActionReady(Ruin2) && IsMoving() && InCombat())
