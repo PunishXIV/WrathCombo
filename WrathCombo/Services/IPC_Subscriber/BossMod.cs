@@ -1,5 +1,6 @@
 ﻿#region
 
+using Dalamud;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.EzIpcManager;
@@ -86,7 +87,9 @@ internal sealed class BossModIPC(
     {
         var entryPoint = isReborn ? Plugin : GetTickService();
 
-        var rotationManager = entryPoint.GetFoP("_rotation");
+        var wndRotation = entryPoint.GetFoP("_wndRotation");
+
+        var rotationManager = isReborn ? entryPoint.GetFoP("_rotation") : wndRotation?.GetFoP("_mgr");
         if (rotationManager is null)
         {
             PluginLog.Debug(
@@ -160,11 +163,13 @@ internal sealed class BossModIPC(
     {
         var entryPoint = isReborn ? Plugin : GetTickService();
 
-        var rotationManager = entryPoint.GetFoP("_rotation");
+        var wndRotation = entryPoint.GetFoP("_wndRotation");
+
+        var rotationManager = isReborn ? entryPoint.GetFoP("_rotation") : wndRotation?.GetFoP("_mgr");
         if (rotationManager is null)
         {
             PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access RotationManager");
+                    $"[ConflictingPlugins] [{PluginName}] Could not access RotationManager [GetPresets]");
             yield return null;
         }
 
@@ -245,7 +250,9 @@ internal sealed class BossModIPC(
 
         var tickServiceValue = GetTickService();
 
-        var amex = tickServiceValue.GetFoP("_amex");
+        var wndRotation = tickServiceValue.GetFoP("_wndRotation");
+
+        var amex = wndRotation.GetFoP("_amex");
         if (amex == null)
         {
             PluginLog.Debug(
@@ -389,7 +396,9 @@ internal sealed class BossModIPC(
         }
         else
         {
-            var rotationManager = entryPoint.GetFoP("_rotation");
+            var wndRotation = entryPoint.GetFoP("_wndRotation");
+
+            var rotationManager = wndRotation?.GetFoP("_mgr");
             if (rotationManager is null)
             {
                 PluginLog.Debug(
