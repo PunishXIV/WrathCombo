@@ -13,6 +13,7 @@ internal partial class BLU
         public static UserInt
             BLU_DoTHP = new("BLU_DoTHP", 2),
             BLU_DoTTime = new("BLU_DoTTime", 3),
+            BLU_RevengeBlastHP = new("BLU_RevengeBlastHP", 20),
             BLU_Balance_Content = new("BLU_Balance_Content", 1),
             BLU_SelectedOpener = new("BLU_SelectedOpener", 0);
         public static UserBool
@@ -25,6 +26,11 @@ internal partial class BLU
         {
             switch (preset)
             {
+                case Preset.BLU_ST_DPS_RevengeBlast:
+                    DrawSliderInt(1, 100, BLU_RevengeBlastHP,
+                        "Use Revenge Blast when player HP is at or below this percentage.");
+                    break;
+
                 case Preset.BLU_ST_DPS_Opener:
                     DrawBossOnlyChoice(BLU_Balance_Content);
                     ImGuiEx.TextUnderlined("Select Opener");
