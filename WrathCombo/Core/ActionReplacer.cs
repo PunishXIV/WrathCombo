@@ -29,23 +29,14 @@ namespace WrathCombo.Core;
 /// <summary> This class facilitates action+icon replacement. </summary>
 internal sealed class ActionReplacer : IDisposable
 {
-    public delegate uint GetActionDelegate(IntPtr actionManager, uint actionID);
-
     public readonly List<CustomCombo> CustomCombos;
-    public readonly Hook<GetActionDelegate> getActionHook;
+    public readonly Hook<ActionManager.Delegates.GetAdjustedActionId> getActionHook;
     public bool ActionReplacingEnabled => getActionHook.IsEnabled;
     private readonly Hook<IsActionReplaceableDelegate> isActionReplaceableHook;
-
     public readonly Dictionary<uint, uint> LastActionInvokeFor = [];
 
-    /// <summary>
-    ///     Critical for the hook, do not remove or modify.
-    /// </summary>
-    // ReSharper disable once FieldCanBeMadeReadOnly.Local
-    private IntPtr _actionManager = IntPtr.Zero;
-
     /// <summary> Initializes a new instance of the <see cref="ActionReplacer" /> class. </summary>
-    public ActionReplacer()
+    public unsafe ActionReplacer()
     {
         CustomCombos = Assembly.GetAssembly(typeof(CustomCombo))!.GetTypes()
             .Where(t => !t.IsAbstract && t.BaseType == typeof(CustomCombo))
@@ -54,9 +45,7 @@ internal sealed class ActionReplacer : IDisposable
             .OrderByDescending(x => x.Preset)
             .ToList();
 
-        // ReSharper disable once RedundantCast
-        // Must keep the nint cast
-        getActionHook = Svc.Hook.HookFromAddress<GetActionDelegate>((nint)ActionManager.Addresses.GetAdjustedActionId.Value, GetAdjustedActionDetour);
+        getActionHook = Svc.Hook.HookFromAddress<ActionManager.Delegates.GetAdjustedActionId>((nint)ActionManager.Addresses.GetAdjustedActionId.Value, GetAdjustedActionDetour);
         isActionReplaceableHook = Svc.Hook.HookFromAddress<IsActionReplaceableDelegate>(Service.Address.IsActionIdReplaceable, IsActionReplaceableDetour);
 
         if (Service.Configuration.ActionChanging)
@@ -85,8 +74,8 @@ internal sealed class ActionReplacer : IDisposable
     /// <summary> Calls the original hook. </summary>
     /// <param name="actionID"> Action ID. </param>
     /// <returns> The result from the hook. </returns>
-    internal uint OriginalHook(uint actionID) =>
-        getActionHook.Original(_actionManager, actionID);
+    internal unsafe uint OriginalHook(uint actionID) =>
+        getActionHook.Original(ActionManager.Instance(), actionID);
 
     public void EnableActionReplacingIfRequired()
     {
@@ -110,7 +99,7 @@ internal sealed class ActionReplacer : IDisposable
     ///     delegate, but is not used in the method.<br />
     ///     Do not remove or modify the <see langword="IntPtr" /> parameter.
     /// </remarks>
-    private uint GetAdjustedActionDetour(IntPtr _, uint actionID)
+    private uint GetAdjustedActionDetour(ActionManager* actionManager, uint actionID)
     {
         try
         {
