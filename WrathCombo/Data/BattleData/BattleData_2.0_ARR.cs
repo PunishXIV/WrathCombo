@@ -2,8 +2,9 @@
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using System.Linq;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using WrathCombo.Extensions;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.CustomComboNS.Functions.WrathMath;
 
 namespace WrathCombo.Data.BattleData
 {
