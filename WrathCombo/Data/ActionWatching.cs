@@ -625,7 +625,9 @@ public static class ActionWatching
                 }
 
                 // Clear any dodgy leftover targets
-                if (!Svc.Objects.Any(x => x.GameObjectId == actionManager->QueuedTargetId.Id))
+                // Preserve the no-target sentinel used by queued ground actions.
+                if (actionManager->QueuedTargetId.Id != 0xE000_0000 &&
+                    !Svc.Objects.Any(x => x.GameObjectId == actionManager->QueuedTargetId.Id))
                     actionManager->QueuedTargetId = 0;
 
                 // However, if we have a queued target ID assume that's what we want and not whatever current retargeting is. TODO: Setting?
