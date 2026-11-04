@@ -18,6 +18,27 @@ internal partial class BLU
 {
     private static bool _surpanakhaReady;
 
+    private static bool HandlePhantomFlurry(ref uint action)
+    {
+        var remaining = LocalPlayer!.Status(Buffs.PhantomFlurry).RemainingTimeOrZero();
+        if (remaining <= 0)
+            return false;
+
+        action = remaining <= 1f
+            ? OriginalHook(PhantomFlurry)
+            : All.Cease;
+        return true;
+    }
+
+    private static bool TryWhiteDeath(out uint action)
+    {
+        action = OriginalHook(ColdFog);
+        return IsEnabled(Preset.BLU_ColdFogWhiteDeath) &&
+               IsSpellActive(ColdFog) &&
+               action != ColdFog &&
+               ActionReady(action);
+    }
+
     private static IGameObject? Target =>
         SimpleTarget.HardTarget.IfHostile() ??
         SimpleTarget.LastHostileHardTarget;
@@ -78,6 +99,7 @@ internal partial class BLU
     private static bool UseConvictionMarcato(ref uint actionID)
     {
         if (!ActionReady(ConvictionMarcato) ||
+            JustUsed(ConvictionMarcato) ||
             !LocalPlayer.HasStatus(Buffs.WingedRedemption))
             return false;
 
@@ -114,11 +136,8 @@ internal partial class BLU
 
     private static bool UsePrimalCDs(ref uint actionID, uint retargetFrom, Preset option)
     {
-        if (LocalPlayer.HasStatus(Buffs.PhantomFlurry))
-        {
-            actionID = OriginalHook(PhantomFlurry);
+        if (HandlePhantomFlurry(ref actionID))
             return true;
-        }
 
         if (LocalPlayer.Status(Buffs.WingedReprobation)?.Param > 1 &&
             ActionReady(WingedReprobation))
@@ -338,9 +357,13 @@ internal partial class BLU
         var instinct = onAoE ? Preset.BLU_AoE_DPS_BasicInstinct : Preset.BLU_ST_DPS_BasicInstinct;
         var sardine = onAoE ? Preset.BLU_AoE_DPS_FlyingSardine : Preset.BLU_ST_DPS_FlyingSardine;
         var primals = onAoE ? Preset.BLU_AoE_DPS_Primals : Preset.BLU_ST_DPS_Primals;
+        var holdBurstForMightyGuard =
+            IsEnabled(Preset.BLU_ST_DPS_MightyGuardBurstBlock) &&
+            HasDPSMimicry &&
+            LocalPlayer!.HasStatus(Buffs.MightyGuard);
 
-        if (LocalPlayer!.Status(Buffs.PhantomFlurry).RemainingTimeOrZero() > 0)
-            return All.Cease;
+        if (HandlePhantomFlurry(ref actionID))
+            return actionID;
 
         if (LocalPlayer.HasStatus(Buffs.WaningNocturne))
             return actionID;
@@ -348,7 +371,8 @@ internal partial class BLU
         if (UseSoloInstinct(ref actionID, instinct))
             return actionID;
 
-        if (!onAoE &&
+        if (!holdBurstForMightyGuard &&
+            !onAoE &&
             IsEnabled(Preset.BLU_ST_DPS_Opener) &&
             Opener().FullOpener(ref actionID))
         {
@@ -360,13 +384,15 @@ internal partial class BLU
         if (UseFlyingSardine(ref actionID, retargetFrom, sardine))
             return actionID;
 
-        if (UsePrimalCDs(ref actionID, retargetFrom, primals))
+        if (!holdBurstForMightyGuard &&
+            UsePrimalCDs(ref actionID, retargetFrom, primals))
             return actionID;
 
-        if (!onAoE && UseDoT(ref actionID, false))
+        if (!holdBurstForMightyGuard && !onAoE && UseDoT(ref actionID, false))
             return actionID;
 
-        if (!onAoE &&
+        if (!holdBurstForMightyGuard &&
+            !onAoE &&
             IsEnabled(Preset.BLU_ST_DPS_TripleTrident) &&
             ActionReady(TripleTrident) &&
             InActionRange(TripleTrident))
@@ -381,6 +407,17 @@ internal partial class BLU
         }
         else if (IsEnabled(Preset.BLU_ST_DPS_SharpenedKnife) && UseSharpenedKnife())
             return SharpenedKnife;
+
+        if (!onAoE &&
+            IsEnabled(Preset.BLU_ST_DPS_RevengeBlast) &&
+            IsSpellActive(RevengeBlast) &&
+            PlayerHealthPercentageHp() <= BLU_RevengeBlastHP &&
+            InMeleeRange() &&
+            ActionReady(RevengeBlast))
+            return RevengeBlast;
+
+        if (TryWhiteDeath(out uint whiteDeath))
+            return whiteDeath;
 
         return IsSpellActive(SonicBoom) ? SonicBoom : actionID;
     }
@@ -467,8 +504,20 @@ internal partial class BLU
                 return Electrogenesis;
             if (IsEnabled(Preset.BLU_AoE_Tank_HydroPull) && IsSpellActive(HydroPull))
                 return HydroPull;
+            if (TryWhiteDeath(out uint whiteDeath))
+                return whiteDeath;
             return IsSpellActive(SonicBoom) ? SonicBoom : actionID;
         }
+
+        if (IsEnabled(Preset.BLU_ST_DPS_RevengeBlast) &&
+            IsSpellActive(RevengeBlast) &&
+            PlayerHealthPercentageHp() <= BLU_RevengeBlastHP &&
+            InMeleeRange() &&
+            ActionReady(RevengeBlast))
+            return RevengeBlast;
+
+        if (TryWhiteDeath(out uint rangedWhiteDeath))
+            return rangedWhiteDeath;
 
         if (IsSpellActive(SonicBoom) && !InMeleeRange())
             return SonicBoom;
@@ -562,7 +611,11 @@ internal partial class BLU
         ];
 
         public override bool HasCooldowns() =>
-            ActionReady(MoonFlute);
+            ActionReady(MoonFlute) &&
+            (!IsSpellActive(Nightbloom) || ActionReady(Nightbloom)) &&
+            (!IsSpellActive(BeingMortal) || ActionReady(BeingMortal)) &&
+            (!IsSpellActive(PhantomFlurry) || ActionReady(PhantomFlurry)) &&
+            (!IsSpellActive(Surpanakha) || GetRemainingCharges(Surpanakha) == 4);
     }
 
     internal class BLUMoonFluteOpener : BLUOpenerBase
@@ -602,17 +655,17 @@ internal partial class BLU
             ([6], () => !IsSpellActive(JKick) || BLU_ManualJKick || !ActionReady(JKick)),
             ([7], () => !IsSpellActive(TripleTrident) || !ActionReady(TripleTrident)),
             ([8], () => !IsSpellActive(Nightbloom) || !ActionReady(Nightbloom)),
-            ([9], () => !IsSpellActive(WingedReprobation) || !ActionReady(WingedReprobation)),
+            ([9], () => !IsSpellActive(WingedReprobation) || LocalPlayer.HasStatus(Buffs.WingedRedemption)),
             ([10], () => !IsSpellActive(FeatherRain) || !ActionReady(FeatherRain)),
             ([11], () => !IsSpellActive(SeaShanty) || !ActionReady(SeaShanty)),
-            ([12], () => !IsSpellActive(WingedReprobation) || !ActionReady(WingedReprobation)),
+            ([12], () => !IsSpellActive(WingedReprobation) || LocalPlayer.HasStatus(Buffs.WingedRedemption)),
             ([13], () => !IsSpellActive(ShockStrike) || !ActionReady(ShockStrike)),
             ([14], () => !IsSpellActive(BeingMortal) || !ActionReady(BeingMortal)),
             ([15], () => HasHealerMimicry || !IsSpellActive(Bristle) || LocalPlayer.HasStatus(Buffs.Bristle)),
             ([16], () => HasHealerMimicry || !ActionReady(Role.Swiftcast)),
             ([17, 18, 19, 20], () => !IsSpellActive(Surpanakha) || !ActionReady(Surpanakha)),
             ([21], () => HasHealerMimicry || !IsSpellActive(MatraMagic) || !LocalPlayer.HasStatus(Buffs.DPSMimicry) || !ActionReady(MatraMagic)),
-            ([22], () => !IsSpellActive(PhantomFlurry) || !ActionReady(PhantomFlurry))
+            ([22], () => !IsSpellActive(PhantomFlurry))
         ];
 
         public override List<int> AllowUpgradeSteps { get; set; } = [9, 12];
@@ -670,7 +723,7 @@ internal partial class BLU
             ([16, 17, 18, 19], () => !IsSpellActive(Surpanakha) || !ActionReady(Surpanakha)),
             ([20], () => HasHealerMimicry || !IsSpellActive(MatraMagic) || !LocalPlayer.HasStatus(Buffs.DPSMimicry) || !ActionReady(MatraMagic)),
             ([21], () => !IsSpellActive(BeingMortal) || !ActionReady(BeingMortal)),
-            ([22], () => !IsSpellActive(PhantomFlurry) || !ActionReady(PhantomFlurry))
+            ([22], () => !IsSpellActive(PhantomFlurry))
         ];
     }
 
