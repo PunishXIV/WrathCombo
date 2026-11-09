@@ -63,12 +63,12 @@ internal sealed class ActionReplacer : IDisposable
         isActionReplaceableHook.Dispose();
     }
 
-    private ulong IsActionReplaceableDetour(uint actionID)
+    private bool IsActionReplaceableDetour(uint actionID)
     {
         if (actionID >= All.SingleTargetDPS && Service.Configuration.CustomActionSettings.AlwaysShowIcon)
-            return 0;
+            return false;
 
-        return 1;
+        return true;
     }
 
     /// <summary> Calls the original hook. </summary>
@@ -202,7 +202,7 @@ internal sealed class ActionReplacer : IDisposable
         return false;
     }
 
-    private delegate ulong IsActionReplaceableDelegate(uint actionID);
+    private delegate bool IsActionReplaceableDelegate(uint actionID);
 
     #region Restrict combos to current job
 
