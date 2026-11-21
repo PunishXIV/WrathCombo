@@ -80,7 +80,7 @@ internal partial class NIN : Melee
             if (CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID) ||
                 CanUseSuiton && TrickCD <= 18 && MudraState.CastSuiton(ref actionID) ||
                 CanUseRaiton && MudraState.CastRaiton(ref actionID) ||
-                !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID))
+                !ActionLearned(Raiton) && ActionReady(Ten) && MudraState.CastFumaShuriken(ref actionID))
                 return actionID;
 
             #endregion
@@ -207,7 +207,7 @@ internal partial class NIN : Melee
                 CanUseHuton && TrickCD <= 18 && MudraState.CastHuton(ref actionID) ||
                 CanUseDoton && GetTargetHPPercent() >= 30 && MudraState.CastDoton(ref actionID) ||
                 CanUseKaton && MudraState.CastKaton(ref actionID) ||
-                !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID))
+                !ActionLearned(Katon) && ActionReady(Ten) && MudraState.CastFumaShuriken(ref actionID))
                 return actionID;
 
             #endregion
@@ -356,7 +356,7 @@ internal partial class NIN : Melee
                     IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Raiton) &&
                     CanUseRaiton && MudraState.CastRaiton(ref actionID) ||
                     IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Raiton) &&
-                    !ActionLearned(Raiton) && MudraState.CastFumaShuriken(ref actionID))
+                    !ActionLearned(Raiton) && ActionReady(Ten) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
 
@@ -517,7 +517,7 @@ internal partial class NIN : Melee
                     IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon) &&
                     CanUseKaton && MudraState.CastKaton(ref actionID) ||
                     IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon) &&
-                    !ActionLearned(Katon) && MudraState.CastFumaShuriken(ref actionID))
+                    !ActionLearned(Katon) && ActionReady(Ten) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
 
