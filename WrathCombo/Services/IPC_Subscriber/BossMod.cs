@@ -56,14 +56,34 @@ internal sealed class BossModIPC(
         }
     }
 
-    private object? GetRotationManager(bool isReborn)
+    private bool CallIpc(Func<bool> ipc, string name)
     {
-        var entryPoint = isReborn ? Plugin : GetTickService();
-        var wndRotation = entryPoint?.GetFoP("_wndRotation");
-        var rotationManager = isReborn
-            ? entryPoint?.GetFoP("_rotation")
-            : wndRotation?.GetFoP("_mgr");
+        if (!IsEnabled)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"IPC is not enabled.");
+            return false;
+        }
 
+        try
+        {
+            var result = ipc();
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{PluginName}] `{name}`: {result}");
+            return result;
+        }
+        catch (Exception e)
+        {
+            PluginLog.Warning($"[ConflictingPlugins] [{PluginName}] " +
+                              $"`{name}` failed: " +
+                              e.ToStringFull());
+            return false;
+        }
+    }
+
+    private object? GetRebornRotationManager()
+    {
+        var rotationManager = Plugin.GetFoP("_rotation");
         if (rotationManager is not null)
             return rotationManager;
 
@@ -124,59 +144,19 @@ internal sealed class BossModIPC(
 
     public bool HasAutomaticActionsQueued() => HasAutomaticActionsQueuedCore();
 
-    private object? GetTickService()
+    private IEnumerable<object?> GetRebornModules()
     {
-        var tickServiceType = Plugin.GetType().Assembly.GetType("BossMod.Services.TickService");
-        if (tickServiceType is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access TickServiceType");
-            return null;
-        }
-
-        var host = Plugin.GetType().BaseType.GetProperty("Host").GetValue(Plugin);
-        if (host is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access Host");
-            return null;
-        }
-
-        var services = host.GetType().GetProperty("Services").GetValue(host);
-        if (services is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access Services");
-            return null;
-        }
-
-        var tickServiceValue = services.GetType().GetMethod("GetService").Invoke(services, [tickServiceType]);
-        if (tickServiceValue is null)
-        {
-            PluginLog.Debug(
-                    $"[ConflictingPlugins] [{PluginName}] Could not access TickServiceValue");
-            return null;
-        }
-
-        return tickServiceValue;
-    }
-
-    private IEnumerable<object?> GetModules(bool isReborn)
-    {
-        var rotationManager = GetRotationManager(isReborn);
+        var rotationManager = GetRebornRotationManager();
         if (rotationManager is null)
             yield break;
 
-        if (isReborn)
-        {
-            var preset = rotationManager.GetFoP("Preset");
-            var modules = preset?.GetFoP("Modules");
-            if (modules is not null)
-                foreach (var module in GetIndexedItems(modules))
-                    yield return module;
-        }
+        var preset = rotationManager.GetFoP("Preset");
+        var presetModules = preset?.GetFoP("Modules");
+        if (presetModules is not null)
+            foreach (var module in GetIndexedItems(presetModules))
+                yield return module;
 
-        var presets = rotationManager.GetFoP(isReborn ? "ActiveModules" : "Presets");
+        var presets = rotationManager.GetFoP("ActiveModules");
         if (presets is null)
         {
             PluginLog.Debug(
@@ -186,27 +166,15 @@ internal sealed class BossModIPC(
 
         foreach (var item in GetIndexedItems(presets))
         {
-            if (item is null)
-                continue;
-
-            var modules = item.GetFoP(isReborn ? "Module" : "Modules");
-            if (modules is null)
-                continue;
-
-            if (isReborn)
-            {
-                yield return modules;
-                continue;
-            }
-
-            foreach (var module in GetIndexedItems(modules))
+            var module = item?.GetFoP("Module");
+            if (module is not null)
                 yield return module;
         }
     }
 
-    private IEnumerable<object?> GetModuleTypes(bool isReborn)
+    private IEnumerable<object?> GetRebornModuleTypes()
     {
-        foreach (var module in GetModules(isReborn))
+        foreach (var module in GetRebornModules())
         {
             if (module is null)
                 continue;
@@ -216,16 +184,15 @@ internal sealed class BossModIPC(
         }
     }
 
-    private IEnumerable<object?> GetPresets(bool isReborn)
+    private IEnumerable<object?> GetRebornPresets()
     {
-        var rotationManager = GetRotationManager(isReborn);
+        var rotationManager = GetRebornRotationManager();
         if (rotationManager is null)
             yield break;
 
-        if (isReborn)
-            yield return rotationManager.GetFoP("Preset");
+        yield return rotationManager.GetFoP("Preset");
 
-        var presets = rotationManager.GetFoP(isReborn ? "ActiveModules" : "Presets");
+        var presets = rotationManager.GetFoP("ActiveModules");
         if (presets is null)
         {
             PluginLog.Debug(
@@ -245,50 +212,36 @@ internal sealed class BossModIPC(
 
     public bool IsAutoTargetingEnabled(bool isReborn)
     {
+        if (!isReborn)
+            return CallIpc(_isAutoTargetActive, "Rotation.IsAutoTargetActive");
+
         if (!IsPluginLoaded())
             return false;
 
-        foreach (var preset in GetPresets(isReborn))
+        foreach (var preset in GetRebornPresets())
         {
             if (preset is null || preset.GetFoP<string>("Name") == "VBM Multibox")
                 continue;
 
-            var modules = preset.GetFoP(isReborn ? "Module" : "Modules");
-            if (modules is null)
-                continue;
-
-            if (isReborn)
-            {
-                if (IsAutoTargetModule(modules))
-                    return true;
-            }
-            else
-            {
-                foreach (var module in GetIndexedItems(modules))
-                    if (IsAutoTargetModule(module))
-                        return true;
-            }
+            if (IsAutoTargetModule(preset.GetFoP("Module")))
+                return true;
         }
 
         return false;
     }
 
-    public bool IsUsingCustomQueuing()
-    {
-        if (!IsPluginLoaded())
-            return false;
-
-        var wndRotation = GetTickService()?.GetFoP("_wndRotation");
-        var amex = wndRotation?.GetFoP("_amex");
-        return IsManualQueueSettingEnabled(amex, "UseManualQueue", "ManualQueue.Enabled");
-    }
+    public bool IsUsingCustomQueuing() =>
+        CallIpc(_isManualQueueEnabled, "Rotation.ActionTweaks.IsManualQueueEnabled");
 
     public bool IsUsingAutorotation(bool isReborn)
     {
+        if (!isReborn)
+            return CallIpc(_isAutorotationActive, "Rotation.IsAutorotationActive");
+
         if (!IsPluginLoaded())
             return false;
 
-        var modules = GetModuleTypes(isReborn);
+        var modules = GetRebornModuleTypes();
         foreach (var module in modules)
         {
             if (module is Type mt && !mt.FullName.Contains("MiscAI"))
@@ -311,43 +264,21 @@ internal sealed class BossModIPC(
 
     public bool IsAITargetingEnabled(bool isReborn)
     {
+        if (!isReborn)
+            return CallIpc(_isAiAutoTargetEnabled, "AI.IsAutoTargetEnabled");
+
         if (!IsPluginLoaded())
             return false;
 
-        var entryPoint = isReborn ? Plugin : GetTickService();
-        if (isReborn)
-        {
-            var ai = Plugin.GetFoP("_ai");
-            var beh = ai.GetType().GetField("Beh").GetValue(ai);
-            var enabled = beh is not null;
+        var ai = Plugin.GetFoP("_ai");
+        var beh = ai.GetType().GetField("Beh").GetValue(ai);
+        if (beh is null)
+            return false;
 
-            if (!enabled)
-                return false;
+        var config = beh.GetFoP("_config");
+        var target = config.GetFoP<bool>("ManualTarget");
 
-            var config = beh.GetFoP("_config");
-            var target = config.GetFoP<bool>("ManualTarget");
-
-            return !target;
-        }
-        else
-        {
-            var wndRotation = entryPoint.GetFoP("_wndRotation");
-
-            var rotationManager = wndRotation?.GetFoP("_mgr");
-            if (rotationManager is null)
-            {
-                PluginLog.Debug(
-                        $"[ConflictingPlugins] [{PluginName}] Could not access RotationManager");
-                return false;
-            }
-
-            var ai = rotationManager.GetFoP("_aiConfig");
-
-            var enabled = ai.GetFoP<bool>("Enabled");
-            var target = ai.GetFoP<bool>("ForbidActions");
-
-            return enabled && !target;
-        }
+        return !target;
     }
 
     public DateTime LastModified()
@@ -367,8 +298,11 @@ internal sealed class BossModIPC(
         }
     }
 
-    internal bool IsSmartTargetEnabled()
+    internal bool IsSmartTargetEnabled(bool isReborn)
     {
+        if (!isReborn)
+            return CallIpc(_isSmartTargetingEnabled, "Rotation.ActionTweaks.IsSmartTargetingEnabled");
+
         if (!IsPluginLoaded())
             return false;
 
@@ -382,5 +316,20 @@ internal sealed class BossModIPC(
 
     [EzIPC("BossMod.Configuration.LastModified", false)]
     private readonly Func<DateTime> _lastModified = null!;
+
+    [EzIPC("BossMod.Rotation.IsAutoTargetActive", false)]
+    private readonly Func<bool> _isAutoTargetActive = null!;
+
+    [EzIPC("BossMod.Rotation.IsAutorotationActive", false)]
+    private readonly Func<bool> _isAutorotationActive = null!;
+
+    [EzIPC("BossMod.Rotation.ActionTweaks.IsManualQueueEnabled", false)]
+    private readonly Func<bool> _isManualQueueEnabled = null!;
+
+    [EzIPC("BossMod.Rotation.ActionTweaks.IsSmartTargetingEnabled", false)]
+    private readonly Func<bool> _isSmartTargetingEnabled = null!;
+
+    [EzIPC("BossMod.AI.IsAutoTargetEnabled", false)]
+    private readonly Func<bool> _isAiAutoTargetEnabled = null!;
 #pragma warning restore CS8618, CS0649
 }
