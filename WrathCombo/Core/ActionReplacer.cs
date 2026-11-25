@@ -99,7 +99,7 @@ internal sealed class ActionReplacer : IDisposable
     ///     delegate, but is not used in the method.<br />
     ///     Do not remove or modify the <see langword="IntPtr" /> parameter.
     /// </remarks>
-    private uint GetAdjustedActionDetour(ActionManager* actionManager, uint actionID)
+    private unsafe uint GetAdjustedActionDetour(ActionManager* actionManager, uint actionID)
     {
         try
         {

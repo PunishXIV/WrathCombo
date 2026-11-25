@@ -486,6 +486,14 @@ public static class ConflictingPlugins
                 .ToArray();
         }
 
+        if (ConflictingPluginsChecks.BossMod.RetargetingConflicted)
+        {
+            conflicts = conflicts.Append(new Conflict(
+                    "BossMod", ConflictType.Settings,
+                    "Smart Ability Targeting is Enabled [uncheck 'Smart ability targeting']"))
+                .ToArray();
+        }
+
         if (ConflictingPluginsChecks.BossMod.AutorotationConflicted)
         {
             conflicts = conflicts.Append(new Conflict(
