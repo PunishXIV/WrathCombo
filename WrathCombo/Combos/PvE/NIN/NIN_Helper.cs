@@ -493,6 +493,8 @@ internal partial class NIN
                     return true;
                 }
 
+                if (!ActionReady(Ten)) return false;
+
                 CurrentMudra = MudraState.CastingFumaShuriken;
                 actionID = LocalPlayer.HasStatus(Buffs.Kassatsu) ? TenCombo : Ten;
                 return true;
