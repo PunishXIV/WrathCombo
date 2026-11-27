@@ -1956,6 +1956,15 @@ public enum Preset
     [JobInfo(Job.BLU)]
     BLU_ST_DPS_SharpenedKnife = 70036,
 
+    [BlueInactive(BLU.RevengeBlast)]
+    [JobInfo(Job.BLU)]
+    BLU_ST_DPS_RevengeBlast = 70077,
+
+    [ParentCombo(BLU_ST_DPS)]
+    [BlueDPS]
+    [JobInfo(Job.BLU)]
+    BLU_ST_DPS_MightyGuardBurstBlock = 70079,
+
     [ParentCombo(BLU_ST_DPS)]
     [BlueInactive(BLU.FlyingSardine)]
     [BlueDPS]
@@ -2266,6 +2275,10 @@ public enum Preset
     #endregion
 
     #region Miscellaneous
+
+    [BlueInactive(BLU.ColdFog)]
+    [JobInfo(Job.BLU)]
+    BLU_ColdFogWhiteDeath = 70078,
 
     [BlueInactive(BLU.MoonFlute, BLU.Tingle, BLU.ShockStrike, BLU.Whistle, BLU.FinalSting)]
     [ReplaceSkill(BLU.FinalSting)]
