@@ -174,9 +174,9 @@ internal static class UpcomingPositionalHintService
     private static byte RequiredAngle(PositionalDirection direction) =>
         direction switch
         {
-            PositionalDirection.Rear => (byte)CustomComboFunctions.AttackAngle.Rear,
-            PositionalDirection.Flank => (byte)CustomComboFunctions.AttackAngle.Flank,
-            _ => (byte)CustomComboFunctions.AttackAngle.Unknown,
+            PositionalDirection.Rear => (byte)WrathMath.AttackAngle.Rear,
+            PositionalDirection.Flank => (byte)WrathMath.AttackAngle.Flank,
+            _ => (byte)WrathMath.AttackAngle.Unknown,
         };
 
     private static bool IsExpired(PositionalHintSnapshot snapshot)
